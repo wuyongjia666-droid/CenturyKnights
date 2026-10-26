@@ -346,11 +346,24 @@ func _rebuild() -> void:
 		ac.add_theme_constant_override("separation", 4)
 		p.add_child(ac)
 		if unlocked and lv < 3:
-			var b := UIKit.cta_button("升级属地", "A" if focused else "", 190, 32)
+			var b := UIKit.cta_button(Locale.t("holding_upgrade_btn"), "A" if focused else "", 190, 32)
+			b.name = "HoldingUpgrade_%s" % bid
+			var uprev: Dictionary = GameState.holding_upgrade_preview(bid)
+			var utip = Locale.t("holding_upgrade_cost_tip", [int(uprev.get("cost_s", 0)), int(uprev.get("cost_f", 0)), int(uprev.get("next", 0))])
+			if bool(uprev.get("short", false)):
+				utip = Locale.t("holding_upgrade_short_tip", [utip])
+				b.disabled = true
+			b.tooltip_text = utip
 			b.pressed.connect(func(): _upgrade(bid))
 			ac.add_child(b)
+		elif unlocked:
+			var b2 := UIKit.ghost_button(Locale.t("holding_upgrade_max_tip"), 190, 32)
+			b2.name = "HoldingUpgrade_%s" % bid
+			b2.disabled = true
+			b2.tooltip_text = Locale.t("holding_upgrade_max_tip")
+			ac.add_child(b2)
 		else:
-			var b2 := UIKit.ghost_button("已满级" if unlocked else "前置未满足", 190, 32)
+			var b2 := UIKit.ghost_button("前置未满足", 190, 32)
 			b2.disabled = true
 			ac.add_child(b2)
 		if unlocked:
@@ -359,10 +372,12 @@ func _rebuild() -> void:
 			ac.add_child(sr)
 			if st != null:
 				var bc := UIKit.ghost_button("撤庄头", 93, 26)
+				bc.name = "HoldingStewardClear_%s" % bid
 				bc.pressed.connect(func(): _clear_steward(bid))
 				sr.add_child(bc)
 			else:
 				var bs := UIKit.ghost_button("委任庄头", 93, 26)
+				bs.name = "HoldingStewardAssign_%s" % bid
 				bs.pressed.connect(func(): _open_picker(bid))
 				sr.add_child(bs)
 			var pb := UIKit.ghost_button("巡此路线", 93, 26)
@@ -391,11 +406,14 @@ func _upgrade(hid: String) -> void:
 		Sfx.miss()
 
 func _clear_steward(hid: String) -> void:
-	GameState.clear_steward(hid)
-	GameState.save_game()
-	_msg.text = "已撤下庄头"
-	Sfx.confirm()
-	_after_change()
+	var r: Dictionary = GameState.clear_steward(hid)
+	_msg.text = str(r.get("msg", Locale.t("holding_steward_cleared_short")))
+	if bool(r.get("ok", false)):
+		GameState.save_game()
+		Sfx.confirm()
+		_after_change()
+	else:
+		Sfx.miss()
 
 func _open_picker(hid: String) -> void:
 	_picker_hid = hid
@@ -438,6 +456,8 @@ func _open_picker(hid: String) -> void:
 		row.add_child(lab)
 		var cid = c.id
 		var bb = UIKit.make_accent_button("委任", 80)
+		bb.name = "StewardPick_%s" % str(cid)
+		bb.tooltip_text = Locale.t("holding_steward_pick_tip")
 		bb.pressed.connect(func(): _do_assign(cid))
 		row.add_child(bb)
 	var close = UIKit.make_button("关闭", 100)
@@ -900,12 +920,29 @@ func _m_holding(hid: String) -> Control:
 	v.add_child(ar)
 	var bid := hid
 	var up := MobilePage.button(Locale.t("mw_91c7146a") if lv < 3 else Locale.t("mw_8fde9e92"), lv < 3, func(): _upgrade(bid))
-	up.disabled = lv >= 3
+	up.name = "HoldingUpgrade_%s" % bid
+	var uprev_m: Dictionary = GameState.holding_upgrade_preview(bid)
+	up.disabled = lv >= 3 or bool(uprev_m.get("short", false)) or bool(uprev_m.get("maxed", false))
+	if bool(uprev_m.get("maxed", false)):
+		up.tooltip_text = Locale.t("holding_upgrade_max_tip")
+	elif bool(uprev_m.get("short", false)):
+		var cost_tip := Locale.t("holding_upgrade_cost_tip", [
+			int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))
+		])
+		up.tooltip_text = Locale.t("holding_upgrade_short_tip", [cost_tip])
+	else:
+		up.tooltip_text = Locale.t("holding_upgrade_cost_tip", [
+			int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))
+		])
 	ar.add_child(up)
 	if st != null:
-		ar.add_child(MobilePage.button(Locale.t("mw_14f8cc32"), false, func(): _clear_steward(bid)))
+		var mbc := MobilePage.button(Locale.t("mw_14f8cc32"), false, func(): _clear_steward(bid))
+		mbc.name = "HoldingStewardClear_%s" % bid
+		ar.add_child(mbc)
 	else:
-		ar.add_child(MobilePage.button(Locale.t("mw_23073274"), false, func(): _open_picker(bid)))
+		var mbs := MobilePage.button(Locale.t("mw_23073274"), false, func(): _open_picker(bid))
+		mbs.name = "HoldingStewardAssign_%s" % bid
+		ar.add_child(mbs)
 	var pb := MobilePage.button(Locale.t("mw_4f279682"), false, func(): _do_patrol_one(bid))
 	pb.name = "HoldingPatrol_%s" % bid
 	var prev: Dictionary = GameState.holding_patrol_preview(bid)
@@ -941,6 +978,7 @@ func _m_picker(hid: String) -> void:
 		row.add_child(lab)
 		var cid := str(c.id)
 		var bb := MobilePage.button(Locale.t("mw_assign"), true, func(): _do_assign(cid), 150)
+		bb.name = "StewardPick_%s" % cid
 		bb.size_flags_horizontal = Control.SIZE_SHRINK_END
 		row.add_child(bb)
 	v.add_child(MobilePage.button(Locale.t("ux_field_close"), false, func():
