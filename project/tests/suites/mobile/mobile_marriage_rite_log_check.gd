@@ -48,6 +48,7 @@ func _open_page() -> Control:
 	_cand.age = 24
 	_cand.rank = "knight"
 	_cand.blood_mix = {"sm_tide": 1.0}
+	_cand.in_roster = false  ## court post (factory default); else A4 bond clobbers RiteExplain
 	_cand.ensure_genome()
 	GameState.characters[_cand.id] = _cand
 	GameState.marriage_candidates = [_cand]

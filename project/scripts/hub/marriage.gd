@@ -112,16 +112,18 @@ func _build() -> void:
 	help.position = Vector2(1106, 158)
 	help.pressed.connect(func(): CKHelpCodex.open(self, true))
 	add_child(help)
-	_posts_label = UIKit.mono(Locale.t("ux_marriage_posts", [_nation_name(_post_nation)]), 9, UIKit.TEXT_FAINT)
-	_posts_label.position = Vector2(42, 204)
-	add_child(_posts_label)
+	## 廷帖|同袍 on the posts row (y≈200): left of posts label, clear of SuitorBar (y158–190)
+	## and of CandidateTabs (x≥300). Narrow/mobile hide or tuck this bar.
 	_source_bar = HBoxContainer.new()
 	_source_bar.name = "SourceModeBar"
-	_source_bar.position = Vector2(42, 178)
-	_source_bar.size = Vector2(420, 28)
+	_source_bar.position = Vector2(42, 200)
+	_source_bar.size = Vector2(168, 28)
 	_source_bar.add_theme_constant_override("separation", 8)
 	add_child(_source_bar)
 	_refresh_source_bar()
+	_posts_label = UIKit.mono(Locale.t("ux_marriage_posts", [_nation_name(_post_nation)]), 9, UIKit.TEXT_FAINT)
+	_posts_label.position = Vector2(220, 204)
+	add_child(_posts_label)
 	_list = VBoxContainer.new()   # legacy handle (unused for layout)
 	_list.visible = false
 	add_child(_list)
@@ -922,6 +924,12 @@ func apply_mobile_layout() -> void:
 	var wide := vp.x >= 1100.0 and vp.y >= 680.0
 	_narrow = not wide
 	if wide:
+		if _source_bar:
+			_source_bar.visible = true
+			_source_bar.position = Vector2(42, 200)
+			_source_bar.size = Vector2(168, 28)
+		if _posts_label:
+			_posts_label.position = Vector2(220, 204)
 		_rect_principal = Rect2(42, 244, 386, 252)
 		_rect_harmony = Rect2(448, 244, 384, 264)
 		_rect_spouse = Rect2(852, 244, 386, 252)
@@ -959,6 +967,8 @@ func apply_mobile_layout() -> void:
 			_suitor_bar.clip_contents = true
 		if _posts_label:
 			_posts_label.visible = false
+		if _source_bar:
+			_source_bar.visible = false
 		if _tabs:
 			_tabs.position = Vector2(margin, 154)
 			_tabs.size = Vector2(vp.x - margin * 2.0, 26)
