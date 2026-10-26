@@ -1,7 +1,8 @@
 extends Node
 ## Fat heraldry E2E: castle annex serve-list leftovers.
-## Infirmary/academy rows wear 族徽. Embassy rows wear 敌徽. Treasury wears 团徽.
-## Desktop + mobile. Fails when AnnexRowArms is missing. Page header chrome stays.
+## Infirmary heal rows wear InnHealArms. Academy rows wear AnnexRowArms 族徽.
+## Embassy rows wear 敌徽. Treasury wears 团徽.
+## Desktop + mobile. Fails when the row shield is missing. Page header chrome stays.
 
 const SCN := preload("res://scenes/hub/annex.tscn")
 var _fails: Array = []
@@ -68,12 +69,13 @@ func _collect(n: Node, node_name: String, out: Array) -> void:
 	for c in n.get_children():
 		_collect(c, node_name, out)
 
-func _assert_person(page: Node, where: String) -> void:
+func _assert_person(page: Node, where: String, node_name: String = "AnnexRowArms") -> void:
 	var lead: CKCharacter = GameState.get_leader()
 	var fam := CKHeraldry.core_key(GameState.arms_for_character(lead))
 	var ban := CKHeraldry.core_key(CKHeraldryChrome.company_spec())
-	var arms := _arms(page)
-	_ok(not arms.is_empty(), "%s AnnexRowArms" % where)
+	var arms: Array = []
+	_collect(page, node_name, arms)
+	_ok(not arms.is_empty(), "%s %s" % [where, node_name])
 	var hit := false
 	for a in arms:
 		_ok(str(a.get_meta("arms_kind", "")) == "gen2_06", "%s person 族徽" % where)
@@ -113,7 +115,7 @@ func _run_desktop() -> void:
 	_boot()
 	var inf := _open("infirmary")
 	await _settle(10)
-	_assert_person(inf, "desk-infirmary")
+	_assert_person(inf, "desk-infirmary", "InnHealArms")
 	inf.queue_free()
 	await _settle(2)
 	var emb := _open("embassy")
