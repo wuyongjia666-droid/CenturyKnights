@@ -644,6 +644,81 @@ static func evacuate_cache(id: String) -> Dictionary:
 
 
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
+## Under siege: pull +1 garrison from the nearest sister stockade that can spare one (leave ≥1).
+static func sister_relief_preview(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if (st.threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_sister_need_threat")}
+	if int(st.garrison) >= garrison_max(id):
+		return {"ok": false, "msg": Locale.t("atlas_sister_full") % garrison_max(id)}
+	var from_anchor := str(site(id).get("anchor", ""))
+	var best_id := ""
+	var best_name := ""
+	var best_days := 999999
+	var best_gar := 0
+	for oid in owned_ids():
+		if oid == id:
+			continue
+		var ost := state(oid)
+		if not bool(ost.stockade):
+			continue
+		var og := int(ost.garrison)
+		if og < 2:
+			continue
+		var oanch := str(site(oid).get("anchor", ""))
+		var dist := 3
+		if from_anchor != "" and from_anchor == str(World.pos):
+			var pv: Dictionary = World.travel_preview(oanch)
+			if bool(pv.get("ok", false)):
+				dist = int(pv.get("days", 3))
+		elif from_anchor != "" and oanch != from_anchor:
+			dist = 4
+		else:
+			dist = 1
+		if dist < best_days:
+			best_days = dist
+			best_id = oid
+			best_name = str(site(oid).get("name", oid))
+			best_gar = og
+	if best_id == "":
+		return {"ok": false, "msg": Locale.t("atlas_sister_none")}
+	return {"ok": true, "from_id": best_id, "from_name": best_name,
+		"from_garrison": best_gar, "days": best_days}
+
+
+static func call_sister_garrison(id: String) -> Dictionary:
+	var prev: Dictionary = sister_relief_preview(id)
+	if not bool(prev.get("ok", false)):
+		return prev
+	var from_id := str(prev.get("from_id", ""))
+	var st := state(id)
+	var src := state(from_id)
+	src.garrison = int(src.garrison) - 1
+	st.garrison = int(st.garrison) + 1
+	_put(from_id, src)
+	_put(id, st)
+	var to_name := str(site(id).get("name", id))
+	var from_name := str(prev.get("from_name", from_id))
+	var msg := Locale.t("atlas_sister_ok") % [from_name, to_name, int(st.garrison), int(src.garrison)]
+	_log(msg)
+	World.mark_siege_sister({
+		"to_id": id,
+		"to_name": to_name,
+		"from_id": from_id,
+		"from_name": from_name,
+		"garrison": int(st.garrison),
+		"from_garrison": int(src.garrison),
+		"days": int(prev.get("days", 0)),
+		"hold_pct": int(round(hold_chance(id) * 100.0)),
+	})
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "from_id": from_id, "garrison": int(st.garrison),
+		"from_garrison": int(src.garrison), "msg": msg}
+
+
 ## Chance a neutral site draws multi-faction tug-of-war this month.
 static func neutral_contest_chance(id: String) -> float:
 	var s := site(id)
