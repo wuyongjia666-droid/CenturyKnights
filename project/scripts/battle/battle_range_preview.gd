@@ -115,11 +115,12 @@ static func tap_cell(host, screen_pos: Vector2, resolved: Vector2i = _UNRESOLVED
 
 
 static func playable_inset(host) -> Rect2:
-	var stage: Rect2 = BattlePick._stage_rect(host)
-	var reserve := 0.0
-	if int(host.get("preview_attack_ui")) >= 0 or bool(host.get("attack_mode")):
-		reserve = BattleCombatFrame.forecast_band(DeviceProfile.is_mobile())
-	var inset := BattleCombatFrame.play_inset(stage, reserve, 0.0)
+	# Shared with confirm chips / settle so select→range→confirm→camera agree.
+	return BattleBoardInset.for_host(host)
+
+
+## Public notch clip for BoardInset / confirm settle (same body as _clip_notch).
+static func clip_notch(host, inset: Rect2) -> Rect2:
 	return _clip_notch(host, inset)
 
 
