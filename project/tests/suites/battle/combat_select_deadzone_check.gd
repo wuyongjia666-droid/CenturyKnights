@@ -257,17 +257,22 @@ func _e2e_sticky_pan_empty() -> String:
 		return "sticky setup select failed"
 	# Expire select-lock so a misclassified tap would deselect.
 	_battle.set_meta("m_select_burst_msec", Time.get_ticks_msec() - 1000)
+	# Select focus-pan can park `_board_pan` on a clamp edge; +x drift then looks
+	# like sticky swallow. Park mid-stage with headroom, then recompute halo.
+	BattlePick.cancel_focus_tween(_battle)
+	BattleTouchConfirm.end_gesture(_battle)
+	_battle._board_pan = Vector2.ZERO
+	_battle._board_zoom = 1.0
+	_battle._clamp_board_pan()
+	_battle._apply_board_xform()
+	await _settle(2)
 	var halo := _screen(_cell_local(Vector2i(4, 3), Vector2(0.18, 0.5)))
 	if BattlePick.near_selected_unit(_battle, halo, _player_i):
 		return "live soft halo still sticky"
-	# Stop any leftover focus tween so settle cannot yank the pan back mid-gesture.
-	BattlePick.cancel_focus_tween(_battle)
-	await _settle(2)
 	var pan0: Vector2 = _battle._board_pan
 	var base: float = _battle._board_router._slop()
 	# Drift past base slop but under sticky*1.55 — if sticky wrongly applied, stays tap.
-	# 1.50 (was 1.35): CI headless sometimes needs more travel to clear slop noise.
-	var drift := base * 1.65
+	var drift := base * 1.40
 	_touch(0, true, halo)
 	await get_tree().process_frame
 	await get_tree().process_frame
