@@ -144,3 +144,9 @@
 - 各章 `tavern` 拍在 `_tvx6` 后、`_ret_mv4` 前加 `_rtn1`–`_rtn6` 回堡靴程口头，全库去重；收束非旁白。
 - 验收：`content_season_return_boot_chain_check` — hub chip → 靴程针口头。
 - 不碰 `_arr`/`_tvp`/`_tvn`/`_tvx`/`_lop`/`_cls`/`_wex`/`_ink`/`_opn`。
+
+## 挂板前息口头加厚（board-approach）
+
+- 各章 `tavern` 拍在 `_ret_mv3` 后、`_tvp1` 前加 `_brd1`–`_brd6` 挂板前息口头，全库去重；收束非旁白。
+- 验收：`content_season_board_approach_chain_check` — hub chip → 板前针口头。
+- 不碰 `_arr` / `_tvp` / `_tvn` / `_tvx` / `_rtn` / `_lop` / `_cls` / `_wex` / `_ink` / `_aud`。
