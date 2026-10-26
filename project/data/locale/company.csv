@@ -670,3 +670,18 @@ works_fx_forge_hi,；精灰刃,; fine blade
 works_fx_shrine,丰收与祈愈增强,Stronger harvest/heal
 works_fx_shrine_hi,；月结微愈,; monthly heal
 works_echo_head,工事月回读 // WORKS ECHO,Works month echo
+atlas_smith_echo_buy,铁匠·%s购「%s」（-%d银）,Smith · %s bought "%s" (-%d silver)
+atlas_smith_echo_forge,铁匠·%s打造「%s」（工钱 %d）,Smith · %s forged "%s" (labor %d)
+atlas_smith_echo_forge_mats,铁匠·%s购料打造「%s」（工钱 %d · 料 %d）,Smith · %s forged "%s" (labor %d · mats %d)
+atlas_produce_echo_buy,产地·%s购入%s×%d（-%d银）,Produce · %s bought %s×%d (-%d silver)
+atlas_gate_forge_bad_city,无此城,Unknown city
+atlas_gate_forge_need_here,须身在%s,Must be at %s
+atlas_gate_forge_no_stock,此铺不卖,Not sold here
+atlas_gate_forge_locked,尚未解锁,Not unlocked
+atlas_gate_forge_short_buy,银币不足（购需 %d）,Short silver (buy needs %d)
+atlas_gate_forge_need_mats,材料不足，先购料或直接购买,Need mats — buy mats or purchase
+atlas_gate_forge_bad_mode,未知购装方式,Unknown buy mode
+atlas_gate_forge_btn,城门购装 · %d 银,Gate buy · %d silver
+atlas_gate_forge_btn_mats,城门购料打造 · %d 银,Gate forge mats · %d silver
+atlas_gate_forge_btn_forge,城门打造 · %d 银,Gate forge · %d silver
+atlas_smith_echo_head,铁匠月回读 // SMITH ECHO,Smith month echo
