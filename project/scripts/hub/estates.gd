@@ -926,9 +926,14 @@ func _m_holding(hid: String) -> Control:
 	if bool(uprev_m.get("maxed", false)):
 		up.tooltip_text = Locale.t("holding_upgrade_max_tip")
 	elif bool(uprev_m.get("short", false)):
-		up.tooltip_text = Locale.t("holding_upgrade_short_tip", [Locale.t("holding_upgrade_cost_tip", [int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))])])
+		var cost_tip := Locale.t("holding_upgrade_cost_tip", [
+			int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))
+		])
+		up.tooltip_text = Locale.t("holding_upgrade_short_tip", [cost_tip])
 	else:
-		up.tooltip_text = Locale.t("holding_upgrade_cost_tip", [int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))])
+		up.tooltip_text = Locale.t("holding_upgrade_cost_tip", [
+			int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))
+		])
 	ar.add_child(up)
 	if st != null:
 		var mbc := MobilePage.button(Locale.t("mw_14f8cc32"), false, func(): _clear_steward(bid))
