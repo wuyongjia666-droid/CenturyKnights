@@ -1174,8 +1174,26 @@ func _tab_market() -> void:
 	_head(p, Vector2(18, 14), "市集", "MARKET · SUPPLY-DRIVEN PRICES")
 	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
 	var cap := UIKit.mono("货舱 %d/%d   ·   粮/铁/药材直接入库，不占货舱" % [World.cargo_used(), World.cargo_cap()], 9, UIKit.TEXT_DIM, false)
-	cap.position = Vector2(420, 20)
-	p.add_child(cap)
+	var refresh := UIKit.ghost_button(Locale.t("city_market_refresh_btn"), 108, 28 if not _mob else MobilePage.HIT)
+	refresh.name = "MarketRefresh"
+	refresh.pressed.connect(func(): _do(World.refresh_market(city)))
+	if _mob:
+		refresh.custom_minimum_size = Vector2(108, MobilePage.HIT)
+		var top_row := HBoxContainer.new()
+		top_row.name = "MarketTopRow"
+		top_row.position = Vector2(18, 40)
+		top_row.size = Vector2(maxf(320.0, _m_body_w - 36.0), MobilePage.HIT)
+		top_row.add_theme_constant_override("separation", 8)
+		cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		top_row.add_child(cap)
+		top_row.add_child(refresh)
+		p.add_child(top_row)
+	else:
+		cap.position = Vector2(420, 20)
+		p.add_child(cap)
+		refresh.position = Vector2(728, 14)
+		p.add_child(refresh)
 	var y0 := 56.0
 	var loops: Array = World.produce_trade_loop(city)
 	var known_loops: Array = []
@@ -1264,20 +1282,26 @@ func _tab_market() -> void:
 		row.add_child(_line(bt, bcol, 12, 230 * k))
 		var acts := HBoxContainer.new()
 		acts.add_theme_constant_override("separation", 4)
-		for a in [["买1", 1, true], ["买5", 5, true], ["卖1", 1, false], ["卖全", -1, false]]:
-			var qty := int(a[1])
-			var is_buy := bool(a[2])
+		for a in [["买1", "buy1", 1, true], ["买5", "buy5", 5, true], ["卖1", "sell1", 1, false], ["卖全", "sell_all", -1, false]]:
+			var qty := int(a[2])
+			var is_buy := bool(a[3])
 			var q2 := qty if qty > 0 else have
+			var good_id := gs
+			var trade_qty := q2
 			var b := UIKit.ghost_button(str(a[0]), 52, 28)
-			b.name = "Mkt_%s_%s" % [gs, str(a[0])]
+			b.name = "Mkt_%s_%s" % [gs, str(a[1])]
 			if is_buy:
-				b.disabled = World.stock(city, gs) < q2 or GameState.silver < World.quote_buy(city, gs, q2) or (str(World.goods[gs].get("store", "")) == "" and World.cargo_used() + q2 > World.cargo_cap())
-				b.tooltip_text = "共 %d 银" % World.quote_buy(city, gs, q2)
-				b.pressed.connect(func(): _do(World.market_buy(city, gs, q2)))
+				var stock_ok := World.stock(city, good_id) >= trade_qty
+				var silver_ok := GameState.silver >= World.quote_buy(city, good_id, trade_qty)
+				var store_kind := str(World.goods[good_id].get("store", ""))
+				var cargo_ok := store_kind != "" or World.cargo_used() + trade_qty <= World.cargo_cap()
+				b.disabled = not (stock_ok and silver_ok and cargo_ok)
+				b.tooltip_text = "共 %d 银" % World.quote_buy(city, good_id, trade_qty)
+				b.pressed.connect(func(): _do(World.market_buy(city, good_id, trade_qty)))
 			else:
-				b.disabled = have <= 0 or q2 <= 0
-				b.tooltip_text = "共 %d 银" % World.quote_sell(city, gs, maxi(1, q2))
-				b.pressed.connect(func(): _do(World.market_sell(city, gs, q2)))
+				b.disabled = have <= 0 or trade_qty <= 0
+				b.tooltip_text = "共 %d 银" % World.quote_sell(city, good_id, maxi(1, trade_qty))
+				b.pressed.connect(func(): _do(World.market_sell(city, good_id, trade_qty)))
 			acts.add_child(b)
 		if _mob and _m_body_w >= 1200.0:
 			# wide phone: trade buttons stay on the price row, pushed to the right
@@ -1810,19 +1834,44 @@ func selftest() -> Dictionary:
 	if hired.derived_atk() < atk_h0:
 		return {"ok": false, "msg": "hire equip did not hold atk"}
 	msgs.append("hire equip")
-	# market: buy 1 of the first produced good
+	# market: buy 1 of the first produced good, sell 1 back, refresh when stock drained
 	_set_tab("market")
 	await get_tree().process_frame
 	var g := str(World.node(city).get("produce", ["grain"])[0])
-	var mb := _body.find_child("Mkt_%s_买1" % g, true, false) as Button
+	var mb := _body.find_child("Mkt_%s_buy1" % g, true, false) as Button
 	if mb == null or mb.disabled:
 		return {"ok": false, "msg": "market buy button missing/disabled for " + g}
 	var h0 := World.have_good(g)
+	var silver0 := GameState.silver
 	mb.pressed.emit()
 	await get_tree().process_frame
 	if World.have_good(g) != h0 + 1:
 		return {"ok": false, "msg": "market buy via UI failed"}
+	if GameState.silver >= silver0:
+		return {"ok": false, "msg": "market buy did not spend silver"}
 	msgs.append("market buy")
+	var sell_btn := _body.find_child("Mkt_%s_sell1" % g, true, false) as Button
+	if sell_btn == null or sell_btn.disabled:
+		return {"ok": false, "msg": "market sell button missing/disabled for " + g}
+	var h1 := World.have_good(g)
+	sell_btn.pressed.emit()
+	await get_tree().process_frame
+	if World.have_good(g) != h1 - 1:
+		return {"ok": false, "msg": "market sell via UI failed"}
+	msgs.append("market sell")
+	# drain one unit of stock then refresh
+	World.market[city][g] = 0
+	_render_tab()
+	await get_tree().process_frame
+	var ref := _body.find_child("MarketRefresh", true, false) as Button
+	if ref == null:
+		return {"ok": false, "msg": "MarketRefresh missing"}
+	var st0 := World.stock(city, g)
+	ref.pressed.emit()
+	await get_tree().process_frame
+	if World.stock(city, g) <= st0:
+		return {"ok": false, "msg": "market refresh did not restock"}
+	msgs.append("market refresh")
 	# board: accept first unlocked offer via the detail button
 	_set_tab("board")
 	for q in World.board(city):
