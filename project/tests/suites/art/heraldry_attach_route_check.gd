@@ -1,7 +1,9 @@
 extends Node
 ## Fat Field route coverage — attach_* + place_* child field_route live meta E2E
 ## for tavern/hire, castle view, board, genealogy wall, marriage/succession,
-## deploy muster, plus card/forecast/report/annex/forge/train. Source vows.
+## deploy muster, atlas travel/camp/encounter/aftermath, city/nation/rite/muster,
+## battle HUD, field banner, hourglass/blood/market/skill/roster banners.
+## Source vows.
 
 var _fails: Array = []
 
@@ -32,6 +34,12 @@ func _boot() -> void:
 	GameState.new_game("战旗", "霜旗", GameState.crest_color)
 	GameState.chapter0_flags["chapter0_done"] = true
 	GameState.chapter0_flags["ch0_playing"] = false
+	GameState.set_flag("chapter0_done", true)
+	UnlockSchedule.install()
+	World.events_enabled = false
+	World.rivals_enabled = false
+	World.pos = "ash_capital"
+	World.arrive("ash_capital")
 
 
 func _run() -> void:
@@ -42,6 +50,7 @@ func _run() -> void:
 	await _report_annex_forge(leader)
 	await _wall_tree_house_train(leader)
 	await _place_major_strips(leader)
+	await _atlas_city_battle_strips(leader)
 	_source_contracts()
 
 
@@ -244,6 +253,104 @@ func _place_major_strips(leader) -> void:
 	await _settle()
 
 
+
+func _atlas_city_battle_strips(leader) -> void:
+	var root := Control.new()
+	root.name = "AtlasBattleHost"
+	root.size = Vector2(1280, 720)
+	add_child(root)
+
+	var travel := CKHeraldryField.place_travel_crest_strip(root, Vector2(8, 8), "ashbanner")
+	_ok(travel != null and str(travel.get_meta("field_route", "")) == "travel_strip", "travel_strip route")
+	var tco := travel.find_child("CastleArms", true, false) if travel != null else null
+	var tter := travel.find_child("TerritoryArms", true, false) if travel != null else null
+	_ok(tco != null and str(tco.get_meta("field_route", "")) == "strip_company", "travel strip_company")
+	_ok(tter != null and str(tter.get_meta("field_route", "")) == "travel_territory", "travel_territory")
+
+	var camp := CKHeraldryField.place_camp_crest_strip(root, Vector2(200, 8), "ashbanner")
+	_ok(camp != null and str(camp.get_meta("field_route", "")) == "camp_strip", "camp_strip route")
+	var cter := camp.find_child("TerritoryArms", true, false) if camp != null else null
+	_ok(cter != null and str(cter.get_meta("field_route", "")) == "camp_territory", "camp_territory")
+
+	var enc := CKHeraldryField.place_encounter_crest_strip(root, Vector2(400, 8), "ashbanner")
+	_ok(enc != null and str(enc.get_meta("field_route", "")) == "encounter_strip", "encounter_strip route")
+	var efoe := enc.find_child("FoeArms", true, false) if enc != null else null
+	_ok(efoe != null and str(efoe.get_meta("field_route", "")) == "encounter_foe", "encounter_foe")
+
+	var aft := CKHeraldryField.place_aftermath_crest_strip(root, Vector2(600, 8), "ashbanner")
+	_ok(aft != null and str(aft.get_meta("field_route", "")) == "aftermath_strip", "aftermath_strip route")
+	var afoe := aft.find_child("FoeArms", true, false) if aft != null else null
+	_ok(afoe != null and str(afoe.get_meta("field_route", "")) == "aftermath_foe", "aftermath_foe")
+
+	var city := CKHeraldryField.place_city_crest_strip(root, "ash_capital", Vector2(8, 80))
+	_ok(city != null and str(city.get_meta("field_route", "")) == "city_strip", "city_strip route")
+	var cnat := city.find_child("CityNationArms", true, false) if city != null else null
+	_ok(cnat != null and str(cnat.get_meta("field_route", "")) == "city_nation", "city_nation")
+
+	var nat := CKHeraldryField.place_nation_crest_strip(root, "ashbanner", Vector2(200, 80))
+	_ok(nat != null and str(nat.get_meta("field_route", "")) == "nation_strip", "nation_strip route")
+	var nn := nat.find_child("CityNationArms", true, false) if nat != null else null
+	_ok(nn != null and str(nn.get_meta("field_route", "")) == "nation_arms", "nation_arms")
+
+	var rite := CKHeraldryField.place_rite_crest_strip(root, leader, Vector2(400, 80))
+	_ok(rite != null and str(rite.get_meta("field_route", "")) == "rite_strip", "rite_strip route")
+	var rl := rite.find_child("LeaderArms", true, false) if rite != null else null
+	_ok(rl != null and str(rl.get_meta("field_route", "")) == "rite_leader", "rite_leader")
+
+	var muster := CKHeraldryField.place_muster_crest_strip(root, leader, Vector2(600, 80))
+	_ok(muster != null and str(muster.get_meta("field_route", "")) == "muster_strip", "muster_strip route")
+	var ml := muster.find_child("LeaderArms", true, false) if muster != null else null
+	_ok(ml != null and str(ml.get_meta("field_route", "")) == "muster_leader", "muster_leader")
+
+	var field := CKHeraldryField.place_field_crest_strip(root, Vector2(8, 160))
+	_ok(field != null and str(field.get_meta("field_route", "")) == "field_strip", "field_strip route")
+	var fb := field.find_child("FieldBanner", true, false) if field != null else null
+	_ok(fb != null and str(fb.get_meta("field_route", "")) == "field_banner", "field_banner")
+
+	var hud := CKHeraldryField.place_battle_hud_crest_strips(root, "ashbanner", Vector2(1280, 720), {}, false, false)
+	_ok(hud != null and str(hud.get_meta("field_route", "")) == "battle_hud_strip", "battle_hud_strip route")
+	var pa := hud.find_child("PlayerArms", true, false) if hud != null else null
+	var ea := hud.find_child("EnemyArms", true, false) if hud != null else null
+	_ok(pa != null and str(pa.get_meta("field_route", "")) == "battle_hud_player", "battle_hud_player")
+	_ok(ea != null and str(ea.get_meta("field_route", "")) == "battle_hud_enemy", "battle_hud_enemy")
+
+	var hg := CKHeraldryField.place_hourglass_crest_strip(root, Vector2(200, 160))
+	var hbn := hg.find_child("HourglassBanner", true, false) if hg != null else null
+	_ok(hbn != null and str(hbn.get_meta("field_route", "")) == "hourglass_banner", "hourglass_banner")
+
+	var blood := CKHeraldryField.place_blood_crest_strip(root, Vector2(360, 160))
+	var bbn := blood.find_child("BloodBanner", true, false) if blood != null else null
+	_ok(bbn != null and str(bbn.get_meta("field_route", "")) == "blood_banner", "blood_banner")
+
+	var market := CKHeraldryField.place_market_crest_strip(root, Vector2(520, 160))
+	var mbn := market.find_child("MarketBanner", true, false) if market != null else null
+	_ok(mbn != null and str(mbn.get_meta("field_route", "")) == "market_banner", "market_banner")
+
+	var skill := CKHeraldryField.place_skill_crest_strip(root, Vector2(680, 160))
+	var sbn := skill.find_child("SkillBanner", true, false) if skill != null else null
+	_ok(sbn != null and str(sbn.get_meta("field_route", "")) == "skill_banner", "skill_banner")
+
+	var roster := CKHeraldryField.place_roster_crest_strip(root, Vector2(840, 160))
+	var rbn := roster.find_child("RosterBanner", true, false) if roster != null else null
+	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "roster_banner", "roster_banner")
+
+	var gaz := CKHeraldryField.place_gazette_crest_strip(root, "ashbanner", Vector2(8, 240))
+	var gnat := gaz.find_child("GazetteNationArms", true, false) if gaz != null else null
+	_ok(gnat != null and str(gnat.get_meta("field_route", "")) == "gazette_nation", "gazette_nation")
+
+
+	var dialogue := CKHeraldryField.place_dialogue_crest_strip(root, Vector2(200, 240))
+	var dbn := dialogue.find_child("DialogueBanner", true, false) if dialogue != null else null
+	_ok(dbn != null and str(dbn.get_meta("field_route", "")) == "dialogue_banner", "dialogue_banner")
+
+	var shell := CKHeraldryField.place_shell_crest_strip(root, Vector2(400, 240))
+	var sbn2 := shell.find_child("CastleBanner", true, false) if shell != null else null
+	_ok(sbn2 != null and str(sbn2.get_meta("field_route", "")) == "shell_banner", "shell_banner")
+
+	root.queue_free()
+	await _settle()
+
+
 func _source_contracts() -> void:
 	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
 	for pair in [
@@ -290,6 +397,35 @@ func _source_contracts() -> void:
 		["shrine_heal", "shrine_heal"],
 		["shrine_heal_focus", "shrine_heal_focus"],
 		["strip_company", "strip_company"],
+		["travel_strip", "travel_strip"],
+		["travel_territory", "travel_territory"],
+		["camp_strip", "camp_strip"],
+		["camp_territory", "camp_territory"],
+		["encounter_strip", "encounter_strip"],
+		["encounter_foe", "encounter_foe"],
+		["aftermath_strip", "aftermath_strip"],
+		["aftermath_foe", "aftermath_foe"],
+		["city_strip", "city_strip"],
+		["city_nation", "city_nation"],
+		["nation_strip", "nation_strip"],
+		["nation_arms", "nation_arms"],
+		["rite_strip", "rite_strip"],
+		["rite_leader", "rite_leader"],
+		["muster_strip", "muster_strip"],
+		["muster_leader", "muster_leader"],
+		["field_strip", "field_strip"],
+		["field_banner", "field_banner"],
+		["battle_hud_strip", "battle_hud_strip"],
+		["battle_hud_player", "battle_hud_player"],
+		["battle_hud_enemy", "battle_hud_enemy"],
+		["hourglass_banner", "hourglass_banner"],
+		["blood_banner", "blood_banner"],
+		["market_banner", "market_banner"],
+		["skill_banner", "skill_banner"],
+		["roster_banner", "roster_banner"],
+		["gazette_nation", "gazette_nation"],
+		["dialogue_banner", "dialogue_banner"],
+		["shell_banner", "shell_banner"],
 	]:
 		var route: String = pair[0]
 		var lit := field.find('set_meta("field_route", "%s")' % route) >= 0
