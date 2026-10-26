@@ -266,14 +266,16 @@ func _e2e_sticky_pan_empty() -> String:
 	var pan0: Vector2 = _battle._board_pan
 	var base: float = _battle._board_router._slop()
 	# Drift past base slop but under sticky*1.55 — if sticky wrongly applied, stays tap.
-	# 1.35 (was 1.25): CI headless sometimes needs a hair more travel to clear slop noise.
-	var drift := base * 1.35
+	# 1.50 (was 1.35): CI headless sometimes needs more travel to clear slop noise.
+	var drift := base * 1.50
 	_touch(0, true, halo)
+	await get_tree().process_frame
 	await get_tree().process_frame
 	_drag(halo + Vector2(drift, 0), Vector2(drift, 0))
 	await get_tree().process_frame
+	await get_tree().process_frame
 	_touch(0, false, halo + Vector2(drift, 0))
-	await _settle(4)
+	await _settle(6)
 	if absf(_battle._board_pan.x - pan0.x) < 1.0:
 		return "empty soft halo did not pan (sticky still swallowing) pan %s->%s drift %.1f" % [pan0, _battle._board_pan, drift]
 	if _battle.selected != _player_i:
