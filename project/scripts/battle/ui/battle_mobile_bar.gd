@@ -64,7 +64,8 @@ static func rebuild(host) -> void:
 	elif int(host.preview_attack_ui) >= 0:
 		_rebuild_confirm(host, row, h, land, false)
 	else:
-		# Match desktop order: Attack / Art / Wait / End turn.
+		# Match desktop order + Y1-A T-P12 Next: Next / Attack / Art / Wait / End turn.
+		command(row, Locale.t("formation_next"), h, false, func(): BattleFormationCycle.apply_next(host), false)
 		command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode, false)
 		command(row, Locale.t("shell_41ec1a25"), h, false, host._cycle_skill, false)
 		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected, false)
