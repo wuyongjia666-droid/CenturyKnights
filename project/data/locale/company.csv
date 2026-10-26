@@ -641,3 +641,32 @@ holding_upgrade_btn,升级属地,Upgrade holding
 holding_upgrade_cost_tip,%d银/%d粮 → Lv%d,%d silver / %d food → Lv%d
 holding_upgrade_short_tip,缺料·%s,Short · %s
 holding_upgrade_max_tip,已满级,Already max
+holding_unlock_unknown,未知属地,Unknown holding
+holding_unlock_owned,属地已开垦,Holding already unlocked
+holding_unlock_quest,前置任务未完成,Quest gate not cleared
+holding_unlock_short,开垦需 %d银/%d粮,Need %d silver / %d food to claim
+holding_unlock_log,属地开垦：%s,Holding claimed: %s
+holding_unlock_ok,开垦 %s,Claimed %s
+holding_echo_unlock,开垦·%s（-%d银/-%d粮）,Claim · %s (-%d silver / -%d food)
+holding_unlock_btn,开垦属地,Claim holding
+holding_unlock_cost_tip,%d银/%d粮 开垦,%d silver / %d food to claim
+holding_unlock_short_tip,缺料·%s,Short · %s
+holding_unlock_gate_tip,前置未满足,Prerequisite unmet
+works_upgrade_locked,无此工事,Unknown works
+works_upgrade_maxed,%s 已至满级,%s already max level
+works_upgrade_short,不足：需 %d银/%d铁/%d粮,Need %d silver / %d iron / %d food
+works_upgrade_log,工事升级：%s → Lv%d（%s）,Works upgrade: %s → Lv%d (%s)
+works_upgrade_ok,%s 升至 Lv%d。%s,%s raised to Lv%d. %s
+works_echo_upgrade,工事·%s→Lv%d（-%d银/-%d铁/-%d粮）,Works · %s→Lv%d (-%d silver / -%d iron / -%d food)
+works_upgrade_btn,升级工事,Upgrade works
+works_fx_hall,出战编队上限 → %d,Deploy cap → %d
+works_fx_hall_hi,；月结厅堂津贴,; hall stipend
+works_fx_barracks,传习次数 → %d；月结士气,Tutor slots → %d; morale
+works_fx_barracks_hi,；课次提高,; more sessions
+works_fx_market,市集买卖价改善,Better market prices
+works_fx_market_hi,；月结商税,; market tax
+works_fx_forge,打造更省料,Cheaper crafting
+works_fx_forge_hi,；精灰刃,; fine blade
+works_fx_shrine,丰收与祈愈增强,Stronger harvest/heal
+works_fx_shrine_hi,；月结微愈,; monthly heal
+works_echo_head,工事月回读 // WORKS ECHO,Works month echo

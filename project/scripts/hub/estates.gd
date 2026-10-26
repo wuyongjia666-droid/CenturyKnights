@@ -363,9 +363,23 @@ func _rebuild() -> void:
 			b2.tooltip_text = Locale.t("holding_upgrade_max_tip")
 			ac.add_child(b2)
 		else:
-			var b2 := UIKit.ghost_button("前置未满足", 190, 32)
-			b2.disabled = true
-			ac.add_child(b2)
+			var uprev_u: Dictionary = GameState.holding_unlock_preview(bid)
+			if bool(uprev_u.get("quest_ready", false)):
+				var bu := UIKit.cta_button(Locale.t("holding_unlock_btn"), "", 190, 32)
+				bu.name = "HoldingUnlock_%s" % bid
+				var utip_u = Locale.t("holding_unlock_cost_tip", [int(uprev_u.get("cost_s", 0)), int(uprev_u.get("cost_f", 0))])
+				if bool(uprev_u.get("short", false)):
+					utip_u = Locale.t("holding_unlock_short_tip", [utip_u])
+					bu.disabled = true
+				bu.tooltip_text = utip_u
+				bu.pressed.connect(func(): _claim(bid))
+				ac.add_child(bu)
+			else:
+				var b2 := UIKit.ghost_button(Locale.t("holding_unlock_gate_tip"), 190, 32)
+				b2.name = "HoldingUnlock_%s" % bid
+				b2.disabled = true
+				b2.tooltip_text = Locale.t("holding_unlock_gate_tip")
+				ac.add_child(b2)
 		if unlocked:
 			var sr := HBoxContainer.new()
 			sr.add_theme_constant_override("separation", 6)
@@ -399,6 +413,16 @@ func _upgrade(hid: String) -> void:
 	var r = GameState.upgrade_holding(hid)
 	_msg.text = str(r.get("msg", ""))
 	if r.get("ok"):
+		Sfx.confirm()
+		GameState.save_game()
+		_after_change()
+	else:
+		Sfx.miss()
+
+func _claim(hid: String) -> void:
+	var r: Dictionary = GameState.claim_holding(hid)
+	_msg.text = str(r.get("msg", ""))
+	if bool(r.get("ok", false)):
 		Sfx.confirm()
 		GameState.save_game()
 		_after_change()
@@ -890,6 +914,21 @@ func _m_holding(hid: String) -> Control:
 	var dsc := str(def.desc) + tail
 	v.add_child(MobilePage.label(dsc, UIKit.TEXT_DIM, MobilePage.FONT, true))
 	if not unlocked:
+		var ar_u := HBoxContainer.new()
+		ar_u.add_theme_constant_override("separation", 8)
+		v.add_child(ar_u)
+		var uprev_u: Dictionary = GameState.holding_unlock_preview(hid)
+		var bu := MobilePage.button(Locale.t("holding_unlock_btn"), bool(uprev_u.get("quest_ready", false)), func(): _claim(hid))
+		bu.name = "HoldingUnlock_%s" % hid
+		bu.disabled = (not bool(uprev_u.get("quest_ready", false))) or bool(uprev_u.get("short", false))
+		if not bool(uprev_u.get("quest_ready", false)):
+			bu.tooltip_text = Locale.t("holding_unlock_gate_tip")
+		elif bool(uprev_u.get("short", false)):
+			var tip_u := Locale.t("holding_unlock_cost_tip", [int(uprev_u.get("cost_s", 0)), int(uprev_u.get("cost_f", 0))])
+			bu.tooltip_text = Locale.t("holding_unlock_short_tip", [tip_u])
+		else:
+			bu.tooltip_text = Locale.t("holding_unlock_cost_tip", [int(uprev_u.get("cost_s", 0)), int(uprev_u.get("cost_f", 0))])
+		ar_u.add_child(bu)
 		return card
 	var pv = GameState.holding_yield_preview(hid)
 	var ytxt := Locale.t("mw_c7eee1dc") % [int(pv.food), int(pv.silver)]
