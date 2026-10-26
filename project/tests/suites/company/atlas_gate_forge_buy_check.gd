@@ -180,7 +180,11 @@ func _api_forge_mats_echo() -> void:
 	_ok(int(World.armory.get(REGIONAL, 0)) >= 1, "armory after forge_mats")
 	_ok(str(World.city_gate.get("last_mode", "")) == "forge_mats", "gate last_mode forge_mats")
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
-	_ok(str(snap.get("smith", "")).find("料") >= 0 or str(snap.get("smith", "")).find("mats") >= 0 or str(snap.get("smith", "")) != "", "month_echo.smith forge_mats: %s" % snap.get("smith", ""))
+	var smith_echo := str(snap.get("smith", ""))
+	_ok(
+		smith_echo.find("料") >= 0 or smith_echo.find("mats") >= 0 or smith_echo != "",
+		"month_echo.smith forge_mats: %s" % smith_echo
+	)
 	print("api forge mats echo ok")
 
 
