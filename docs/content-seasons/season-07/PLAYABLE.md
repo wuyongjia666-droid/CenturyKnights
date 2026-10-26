@@ -149,7 +149,24 @@
 
 - 各章 visit 拍（audit/birth/hourglass）拍首加 `_vop1`–`_vop6` 入厅整装口头（`_vhg`/`_msr` 前），全库去重；收束非旁白。
 - 验收：`content_season_visit_open_chain_check` — hub chip → 入厅针口头。
-- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_opn`/`_cls`/`_sec`/`_tvp`。
+- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_cls`/`_sec`/`_tvp`。
+
+## 墨干合页口头加厚（ink-dry）
+
+- 各章 `ledger` 拍在 `_ldg_end` 后、`_cls1` 前加 `_ink1`–`_ink6` 墨干合页口头，全库去重；收束非旁白。
+- 验收：`content_season_ink_dry_chain_check` — hub chip → 墨干针口头。
+- 不碰 `_lop`/`_ldg`/`_cls`/`_bpl`/`_aud`/`_vex`/`_msr`/`_opn`。
+
+## 访月落笔口头加厚（audit-pen）
+
+- 各章 visit 拍（audit/birth/hourglass）在 `_vhg` 前加 `_aud1`–`_aud6` 落笔口头，全库去重；收束非旁白。
+- 验收：`content_season_audit_pen_chain_check` — hub chip → 落笔针口头。
+- 不碰 `_vop`/`_vhg`/`_msr`/`_bpl`/`_lop`/`_cls`/`_sec`/`_tvp`/`_wex`/`_opn`/`_vex`。
+
+## 战后收锋口头加厚（battle-settle）
+- 各章试锋胜后 `_win4` 后、`mid_lost`（若有）前加 `_wex1`–`_wex6` 收锋口头，全库去重；收束非旁白。
+- 验收：`content_season_battle_settle_chain_check` — hub chip → 收锋针口头。
+- 不碰 `_bpl`/`_tvx`/`_lop`/`_vop`/`_opn`/`_vex`/`_thm`/`_sec`。
 
 ## 回堡靴程口头加厚（return-boot）
 
@@ -162,3 +179,9 @@
 - 各章 `tavern` 拍在 `_ret_mv3` 后、`_tvp1` 前加 `_brd1`–`_brd6` 挂板前息口头，全库去重；收束非旁白。
 - 验收：`content_season_board_approach_chain_check` — hub chip → 板前针口头。
 - 不碰 `_arr` / `_tvp` / `_tvn` / `_tvx` / `_rtn` / `_lop` / `_cls` / `_wex` / `_ink` / `_aud`。
+
+## 板后耳语口头加厚（after-board-hush）
+
+- 各章 `tavern` 拍在 `_tvp6` 后、`_tvn1` 前加 `_aft1`–`_aft6` 板后耳语口头，全库去重；收束非旁白。
+- 验收：`content_season_after_board_hush_chain_check` — hub chip → 板后针口头。
+- 不碰 `_arr`/`_tvp`/`_tvn`/`_tvx`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`。
