@@ -524,7 +524,7 @@ func hold_march(dest: String) -> Dictionary:
 	if dest == "" or dest == pos or not nodes.has(dest):
 		march_hold = {}
 		return {}
-	var pv: Dictionary = travel_preview(dest)
+	var pv: Dictionary = seal_aware_travel_preview(dest)
 	if not bool(pv.get("ok", false)):
 		march_hold = {}
 		return {}
@@ -692,7 +692,7 @@ func march_hold_text() -> String:
 	var dest := str(march_hold.get("dest", ""))
 	if not nodes.has(dest):
 		return ""
-	var pv: Dictionary = travel_preview(dest)
+	var pv: Dictionary = seal_aware_travel_preview(dest)
 	var per := food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
 	return Locale.t("atlas_hold_line") % [
@@ -988,6 +988,19 @@ func travel_preview(to_id: String) -> Dictionary:
 			"danger": danger, "borders": borders, "short_food": GameState.food < food, "hot_legs": _count_hot_legs(leg_readouts)}
 
 
+## Prefer a recorded winter-seal bypass for HUD / hold_march food math.
+## Keeps travel_preview as the raw shortest path so CKRoadSeal.compare stays honest.
+func seal_aware_travel_preview(to_id: String) -> Dictionary:
+	if str(seal_detour.get("dest", "")) == to_id:
+		var via := seal_detour_remaining()
+		if via.size() >= 2:
+			var along := _preview_along(via)
+			if bool(along.get("ok", false)):
+				along["seal_bypass"] = true
+				return along
+	return travel_preview(to_id)
+
+
 func road_kind_zh(kind: String) -> String:
 	match kind:
 		"sea":
@@ -1132,7 +1145,7 @@ func close_city_visit() -> Dictionary:
 			guide = turn
 	var pv := {}
 	if guide != "" and guide != pos and nodes.has(guide):
-		pv = travel_preview(guide)
+		pv = seal_aware_travel_preview(guide)
 	var days_left := 0
 	if not quest.is_empty():
 		days_left = maxi(0, int(quest.get("deadline", 0)) - days_total)
@@ -1366,14 +1379,8 @@ func begin_travel(to_id: String) -> Dictionary:
 		return {"ok": false, "msg": "先处理眼前的事件"}
 	if to_id == pos:
 		return {"ok": false, "msg": "已在此地"}
-	var pv := travel_preview(to_id)
-	# Prefer a recorded winter-seal detour so halt/resume does not snap onto a sealed shortest road.
-	if str(seal_detour.get("dest", "")) == to_id:
-		var via := seal_detour_remaining()
-		if via.size() >= 2:
-			var along := _preview_along(via)
-			if bool(along.get("ok", false)):
-				pv = along
+	# Prefer recorded winter-seal bypass so halt/resume does not snap onto a sealed shortest road.
+	var pv := seal_aware_travel_preview(to_id)
 	if not pv.ok:
 		return pv
 	if GameState.silver < int(pv.fare):

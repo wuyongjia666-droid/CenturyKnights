@@ -1328,7 +1328,7 @@ func _render_region_profile(p: Panel, nid: String) -> void:
 	kv.add_child(UIKit.kv_row("都城", str(World.node(str(nat.get("capital", ""))).get("name", "—")), UIKit.TEXT, 224))
 	kv.add_child(UIKit.kv_row("过境关税", "%d 银" % World.toll_for(nid), UIKit.TEXT, 224))
 	kv.add_child(UIKit.kv_row("名匠", str(nat.get("smith", "")), UIKit.TEXT, 224))
-	var pv: Dictionary = World.travel_preview(str(nat.get("capital", "")))
+	var pv: Dictionary = World.seal_aware_travel_preview(str(nat.get("capital", "")))
 	kv.add_child(UIKit.kv_row("至都城", "%d 日" % int(pv.get("days", 0)) if bool(pv.get("ok", false)) else "已在此", UIKit.TEXT, 224))
 	var cl := UIKit.body_label(str(nat.get("culture", "")), UIKit.TEXT_DIM, 11)
 	cl.position = Vector2(16, 348)
@@ -1529,6 +1529,8 @@ func _render_hud() -> void:
 	var warn := ""
 	if bool(pv.short_food):
 		warn = Locale.t("atlas_warn_food")
+	elif bool(pv.get("seal_bypass", false)):
+		warn = Locale.t("atlas_warn_seal_bypass")
 	elif not (pv.borders as Array).is_empty():
 		warn = Locale.t("atlas_warn_border") % "、".join(pv.borders)
 	elif hot_n > 0:
@@ -1579,7 +1581,7 @@ func _info_region(nid: String) -> void:
 	_preview = {}
 	var cap := str(World.nations.get(nid, {}).get("capital", ""))
 	if World.nation_of(World.pos) != nid and cap != "":
-		_preview = World.travel_preview(cap)
+		_preview = World.seal_aware_travel_preview(cap)
 	_render_right()
 	_render_hud()
 	_roads.queue_redraw()
@@ -1598,7 +1600,7 @@ func _on_region_pressed(nid: String) -> void:
 	_preview = {}
 	var cap := str(World.nations.get(nid, {}).get("capital", ""))
 	if World.nation_of(World.pos) != nid and cap != "":
-		_preview = World.travel_preview(cap)
+		_preview = World.seal_aware_travel_preview(cap)
 	_render_right()
 	_render_hud()
 	_roads.queue_redraw()
@@ -1630,7 +1632,7 @@ func _select_node(id: String) -> void:
 		_preview = {}
 	else:
 		_sel = id
-		_preview = World.travel_preview(id) if id != World.pos else {}
+		_preview = World.seal_aware_travel_preview(id) if id != World.pos else {}
 	for k in _node_btn.keys():
 		var b: Button = _node_btn[k]
 		b.scale = Vector2(1.18, 1.18) if str(k) == id else Vector2.ONE
@@ -4314,6 +4316,10 @@ func _m_route(box: Control) -> void:
 		var food_warn := _m_label(Locale.t("atlas_warn_food"), UIKit.EMBER)
 		food_warn.name = "RouteWarn"
 		box.add_child(food_warn)
+	elif bool(pv.get("seal_bypass", false)):
+		var bypass_warn := _m_label(Locale.t("atlas_warn_seal_bypass"), UIKit.EMBER)
+		bypass_warn.name = "RouteWarn"
+		box.add_child(bypass_warn)
 	elif not (pv.borders as Array).is_empty():
 		box.add_child(_m_label(Locale.t("mob_ui_028") % "、".join(pv.borders), UIKit.TEXT_DIM))
 	elif hot_n > 0:
