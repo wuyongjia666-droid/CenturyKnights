@@ -1237,6 +1237,8 @@ func _draw_overlay() -> void:
 	BattleAttackAim.draw(self, overlay)
 	BattleSkillHealPreview.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
+	BattleDualLedger.draw_done_marks(self, overlay)
+	BattleStanceReadable.draw_moved_chip(self, overlay)
 	BattleLandStrike.draw(self, overlay)
 	BattleTurnBridge.draw_ready_pulse(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
