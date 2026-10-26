@@ -139,6 +139,7 @@ static func drag_commit_enabled() -> bool:
 
 static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
+	BattleLandStrike.clear(host)
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
@@ -164,6 +165,8 @@ static func confirm_move(host) -> void:
 	BattleCombatFrame.follow_cells(host, [cell], 0.0)
 	# T-P15: keep the mover's figure out of the notch lip and the info column.
 	BattleActionSettle.apply(host, cell, [])
+	# T-P22: post-land strike peek — body chrome on in-reach foes + frame them.
+	BattleLandStrike.after_land(host)
 
 
 static func confirm_attack(host) -> void:
