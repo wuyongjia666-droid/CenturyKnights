@@ -530,13 +530,8 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 	marks.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marks.add_theme_constant_override("separation", 4)
 	col.add_child(marks)
-	var arms := CKHeraldryChrome.make_person_arms(p, Vector2(28, 34))
-	arms.name = "ChipArms"
-	marks.add_child(arms)
-	var badge := CKHeraldryChrome.make_rank_badge(str(p.rank), 22)
-	badge.name = "ChipBadge"
-	badge.set_meta("rank_id", str(p.rank))
-	marks.add_child(badge)
+	CKHeraldryField.attach_dossier_chip_arms(marks, p, Vector2(28, 34))
+	CKHeraldryField.attach_dossier_chip_badge(marks, str(p.rank), 22)
 	var captured := p
 	b.pressed.connect(func():
 		Sfx.click()
@@ -599,7 +594,7 @@ func _life(mid: Control, c: CKCharacter) -> void:
 	box.add_child(CKPageKit.text(status, UIKit.OK if why == "" else UIKit.DANGER, 13, 400))
 	## 私囊 plate: person PurseArms + silver readout.
 	var purse_n := CKPurse.get_purse(c)
-	CKHeraldryChrome.place_purse_plate(box, c, purse_n, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
+	CKHeraldryField.place_purse_plate(box, c, purse_n, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
 
 
 func _tutor_feel(parent: Node, focus: CKCharacter) -> void:
@@ -700,17 +695,7 @@ func _show_crest() -> void:
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(dim)
-	var tr := TextureRect.new()
-	tr.name = "CrestTexture"
-	tr.texture = CKHeraldryChrome.person_banner(_focus, 320, 440)
-	tr.set_meta("arms_kind", CKHeraldryChrome.arms_kind_key(_focus))
-	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(_focus)))
-	tr.position = Vector2(480, 96)
-	tr.size = Vector2(320, 440)
-	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.add_child(tr)
+	var tr := CKHeraldryField.attach_dossier_crest_banner(layer, _focus, Vector2(480, 96), Vector2(320, 440))
 	var cap := UIKit.body_label(CKHeraldryChrome.arms_kind_label(_focus), UIKit.TEXT, 16)
 	cap.name = "CrestCaption"
 	cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

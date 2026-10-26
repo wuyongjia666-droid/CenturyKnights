@@ -150,7 +150,10 @@ func _run_mobile() -> void:
 
 func _run_sort_probe() -> void:
 	var chrome := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
-	_ok(chrome.find("CKHeraldryField.sync_battle_order_crests") >= 0, "hud sync mounts Field order strip")
+	var field_src := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
+	_ok(field_src.find("static func sync_battle_hud_crests") >= 0, "field owns hud sync")
+	_ok(field_src.find("sync_battle_order_crests") >= 0, "hud sync mounts Field order strip")
+	_ok(chrome.find("CKHeraldryField.sync_battle_hud_crests") >= 0, "chrome hud sync shim → Field")
 	var train := FileAccess.get_file_as_string("res://scripts/hub/train.gd")
 	_ok(train.find("sync_battle_order_crests") < 0, "train scene left alone")
 	var deploy := FileAccess.get_file_as_string("res://scripts/hub/deploy.gd")

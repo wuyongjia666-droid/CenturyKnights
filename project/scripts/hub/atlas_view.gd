@@ -762,7 +762,13 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 	# overlays: quest objective ◆ / turn-in ✓ / mainline ★
 	var badges: Array = []
 	for mk in markers.get(id, []):
-		badges.append(["✓", UIKit.OK] if str(mk.kind) == "turnin" else ["◆", UIKit.DANGER])
+		var mk_kind := str(mk.kind)
+		if mk_kind == "turnin":
+			badges.append(["✓", UIKit.OK])
+		elif mk_kind == "pickup":
+			badges.append(["◇", UIKit.ACCENT])
+		else:
+			badges.append(["◆", UIKit.DANGER])
 	if str(mm.get("node", "")) == id:
 		badges.append(["★", UIKit.EMBER])
 	if id == str(World.nations.get(_view, {}).get("capital", "")):
@@ -1216,7 +1222,10 @@ func _render_right() -> void:
 	var mm: Dictionary = World.mainline_marker()
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
-		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 12)
+		var mk_kind := str(mk.kind)
+		var mark_txt := Locale.t("atlas_mark_turnin") if mk_kind == "turnin" else (Locale.t("atlas_mark_pickup") if mk_kind == "pickup" else Locale.t("atlas_mark_objective"))
+		var mark_col := UIKit.OK if mk_kind == "turnin" else (UIKit.ACCENT if mk_kind == "pickup" else UIKit.DANGER)
+		var ql := UIKit.body_label("%s %s" % [mark_txt, q.title], mark_col, 12)
 		ql.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		ql.clip_text = false
 		ql.custom_minimum_size = Vector2(col_w, 0)
@@ -1261,12 +1270,25 @@ func _render_right() -> void:
 	go.pressed.connect(_start_travel)
 	p.add_child(go)
 	var readies := World.ready_turn_ins_here().size() if _sel == World.pos else 0
-	var enter_label := Locale.t("atlas_enter_turnin") % readies if readies > 0 else Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
-	var enter := UIKit.ghost_button(enter_label, 148 if readies > 0 else 108, 32)
+	var pickups := World.gather_pickups_here().size() if _sel == World.pos else 0
+	var enter_label := Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
+	var enter_w := 108
+	if readies > 0:
+		enter_label = Locale.t("atlas_enter_turnin") % readies
+		enter_w = 148
+	elif pickups > 0:
+		enter_label = Locale.t("atlas_enter_pickup") % pickups
+		enter_w = 148
+	var enter := UIKit.ghost_button(enter_label, enter_w, 32)
 	enter.name = "EnterButton"
 	enter.position = Vector2(16, 518)
 	enter.disabled = _busy or _sel != World.pos or not World.encounter.is_empty()
-	enter.pressed.connect(_enter_here)
+	enter.pressed.connect(func():
+		if readies > 0:
+			GameState.set_meta("city_tab", "board")
+		elif pickups > 0:
+			GameState.set_meta("city_tab", "market")
+		_enter_here())
 	p.add_child(enter)
 	var ch := UIKit.ghost_button("主线章节", 108, 32)
 	ch.name = "ChapterButton"
@@ -1396,7 +1418,7 @@ func _render_hud() -> void:
 	var terr_nid := World.nation_of(World.pos)
 	if terr_nid == "" and not World.encounter.is_empty():
 		terr_nid = str(World.encounter.get("nation", ""))
-	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(700, 8), terr_nid, Vector2(32, 38))
+	CKHeraldryField.place_travel_crest_strip(p, Vector2(700, 8), terr_nid, Vector2(32, 38))
 	var eh := UIKit.mono("TRAVEL // 行军推演", 9, UIKit.ACCENT)
 	eh.position = Vector2(16, 10)
 	p.add_child(eh)
@@ -1844,9 +1866,12 @@ func _after_arrival() -> void:
 		return
 	if _check_arbitrage_arrival():
 		return
+	var pickups_n := World.gather_pickups_here().size()
 	if readies > 0:
 		_show_toast(Locale.t("atlas_arrive_turnin") % [n.get("name", ""), readies], UIKit.OK)
 		_show_turnin_modal(readies)
+	elif pickups_n > 0:
+		_show_toast(Locale.t("atlas_arrive_pickup") % [n.get("name", ""), pickups_n], UIKit.ACCENT)
 	else:
 		_show_toast(Locale.t("atlas_arrive_plain") % n.get("name", ""), UIKit.OK)
 
@@ -2042,7 +2067,7 @@ func _paint_sortie_garrison(p: Control) -> void:
 func _show_travel_halt_modal() -> void:
 	var p := _modal_panel(260)
 	p.name = "TravelHaltModal"
-	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(World.pos), Vector2(36, 44))
+	CKHeraldryField.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(World.pos), Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_travel_halt_title"), 22)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
@@ -2099,7 +2124,7 @@ func _show_stopover_modal() -> void:
 		h = maxf(h, 400.0)
 	var p := _modal_panel(h)
 	p.name = "StopoverModal"
-	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
+	CKHeraldryField.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_stopover_title"), 22)
 	t.position = Vector2(24, 20)
 	p.add_child(t)
@@ -3313,9 +3338,9 @@ func _show_event_modal(ev: Dictionary) -> void:
 	if ev_nid == "":
 		ev_nid = World.nation_of(World.pos)
 	if camp_like:
-		CKHeraldryChrome.place_camp_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
+		CKHeraldryField.place_camp_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
 	else:
-		CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
+		CKHeraldryField.place_travel_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
 	var tag := "NIGHT CAMP" if camp_like else "ROAD EVENT"
 	var el := UIKit.mono("%s // %s" % [tag, World.node(str(ev.get("b", ""))).get("name", "")], 9, UIKit.ACCENT)
 	el.position = Vector2(24, 18)
@@ -3438,7 +3463,7 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	var foe_nid := str(af.get("nation", ""))
 	if foe_nid == "":
 		foe_nid = str(World.encounter.get("nation", ""))
-	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), foe_nid, Vector2(36, 44))
+	CKHeraldryField.place_aftermath_crest_strip(p, Vector2(400, 14), foe_nid, Vector2(36, 44))
 	var tag := Locale.t("atlas_battle_aftermath_win_en") if win else Locale.t("atlas_battle_aftermath_lose_en")
 	if str(af.get("kind", "")) == "rival":
 		tag = Locale.t("atlas_rival_aftermath_en") if win else Locale.t("atlas_rival_aftermath_lose_en")
@@ -3576,9 +3601,9 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 		var road_nid := str(af.get("nation", ""))
 		if road_nid == "":
 			road_nid = World.nation_of(str(af.get("node", World.pos)))
-		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), road_nid, Vector2(36, 44))
+		CKHeraldryField.place_aftermath_crest_strip(p, Vector2(400, 14), road_nid, Vector2(36, 44))
 	else:
-		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(436, 14), "", Vector2(36, 44))
+		CKHeraldryField.place_aftermath_crest_strip(p, Vector2(436, 14), "", Vector2(36, 44))
 	var tag := Locale.t("atlas_aftermath_en")
 	if is_danger:
 		tag = Locale.t("atlas_aftermath_danger_en")
@@ -3619,7 +3644,7 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)
 	p.name = "EncounterModal"
-	CKHeraldryChrome.place_encounter_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
+	CKHeraldryField.place_encounter_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
 	var el := UIKit.mono("ENCOUNTER // %s" % str(World.data.get("biome_keyword", {}).get(str(World.node(str(enc.get("node", ""))).get("biome", "")), "")).to_upper(), 9, UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -3703,10 +3728,11 @@ func _toast_quest_guide(nid: String) -> void:
 	var place := str(World.node(nid).get("name", nid))
 	for mk in World.quest_markers().get(nid, []):
 		var q: Dictionary = mk.quest
-		var col := UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER
+		var mk_kind := str(mk.kind)
+		var col := UIKit.OK if mk_kind == "turnin" else (UIKit.ACCENT if mk_kind == "pickup" else UIKit.DANGER)
 		_show_toast(Locale.t("wq_atlas_focus") % [str(q.get("title", "")), place], col)
 		return
-	# gather (no map marker) or deep-link without an active marker
+	# deep-link without an active marker overlay
 	for q2 in World.active:
 		if World.quest_guide_node(q2) == nid:
 			_show_toast(Locale.t("wq_atlas_focus") % [str(q2.get("title", "")), place], UIKit.ACCENT)
@@ -3866,10 +3892,24 @@ func _arb_pending_text(plan: Dictionary) -> String:
 	var g := str(plan.get("good", ""))
 	var dest := str(plan.get("sell_city", ""))
 	var dname := str(World.node(dest).get("name", dest))
-	return Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+	var base := Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+	var days := int(plan.get("march_days", 0))
+	var food := int(plan.get("march_food", 0))
+	if days <= 0:
+		var m: Dictionary = World.arbitrage_march_preview(dest)
+		days = int(m.get("days", 0))
+		food = int(m.get("food", 0))
+	if days > 0:
+		base += " · " + (Locale.t("atlas_arb_march_days") % [days, food])
+		var bypass := bool(plan.get("seal_bypass", false))
+		if not bypass:
+			bypass = bool(World.arbitrage_march_preview(dest).get("seal_bypass", false))
+		if bypass:
+			base += Locale.t("atlas_arb_bypass")
+	return base
 
 func _start_arbitrage_from_profile(good: String, sell_city: String) -> void:
-	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city)
+	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city, true)
 	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
 	if not bool(r.get("ok", false)):
 		return
@@ -4429,9 +4469,14 @@ func _m_actions() -> void:
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()
+		var pickup_n := World.gather_pickups_here().size()
 		if ready_n > 0:
 			b = MobilePage.button(Locale.t("atlas_enter_turnin") % ready_n, true, func():
 				GameState.set_meta("city_tab", "board")
+				_enter_here())
+		elif pickup_n > 0:
+			b = MobilePage.button(Locale.t("atlas_enter_pickup") % pickup_n, true, func():
+				GameState.set_meta("city_tab", "market")
 				_enter_here())
 		else:
 			b = MobilePage.button(Locale.t("mob_ui_037") % [Locale.t("mob_ui_038") if str(n.kind) == "castle" else World.kind_zh(_sel), str(n.get("name", ""))], true, _enter_here)
@@ -4452,8 +4497,11 @@ func _m_actions() -> void:
 		var gate_n: Dictionary = World.node(World.pos)
 		var gate_label := Locale.t("atlas_enter_kind") % World.kind_zh(World.pos)
 		var ready_n := World.ready_turn_ins_here().size()
+		var pickup_n := World.gather_pickups_here().size()
 		if ready_n > 0:
 			gate_label = Locale.t("atlas_enter_turnin") % ready_n
+		elif pickup_n > 0:
+			gate_label = Locale.t("atlas_enter_pickup") % pickup_n
 		elif str(gate_n.get("kind", "")) == "castle":
 			gate_label = Locale.t("mob_ui_037") % [Locale.t("mob_ui_038"), str(gate_n.get("name", ""))]
 		else:
@@ -4471,7 +4519,7 @@ func _m_log() -> void:
 	crest_row.name = "TravelCrestHost"
 	crest_row.custom_minimum_size = Vector2(0, 44)
 	box.add_child(crest_row)
-	CKHeraldryChrome.place_travel_crest_strip(crest_row, Vector2(0, 2), World.nation_of(World.pos), Vector2(36, 44))
+	CKHeraldryField.place_travel_crest_strip(crest_row, Vector2(0, 2), World.nation_of(World.pos), Vector2(36, 44))
 	box.add_child(UIKit.title_label(Locale.t("mob_ui_041") % here.get("name", ""), 28))
 	if not World.last_city_sortie.is_empty():
 		var sh := _m_label(World.city_sortie_hud_text(), UIKit.EMBER)

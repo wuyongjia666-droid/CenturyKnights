@@ -241,10 +241,29 @@ opening_herb_escort_foe,劫道匪帮,Road bandits
 opening_herb_escort_missing,开局药材护送未就绪,Opening herb escort not ready
 opening_herb_escort_active,已在护送药材,Already escorting the herbs
 wq_accept_ok,接下委托「%s」——期限 %d 日。下一步：%s,Accepted「%s」— %d days left. Next: %s
+wq_accept_supply_days,补给城「%s」约 %d 日 · 粮 %d,Supply city "%s" ~%d days · food %d
 wq_hint_travel,打开舆图，启程前往「%s」（图上有 ◆ 标记）,Open the atlas and travel to 「%s」(◆ on the map)
 wq_hint_fight,打开舆图前往「%s」，抵达后点「进剿目标」,Open the atlas, reach 「%s」, then Engage
 wq_hint_clear,打开舆图，沿「%s」一带的危险路段行军清剿,Open the atlas and clear the danger roads near 「%s」
 wq_hint_gather,凑齐「%s」×%d 后，到「%s」交付（市集可买）,Gather 「%s」×%d, then turn in at 「%s」(markets sell them)
+wq_accept_wrong_city,须在发布委托的城中接取,Accept only at the issuing city
+wq_hint_gather_buy,打开舆图前往「%s」市集，购入「%s」×%d（图上有 ◇ 物产标记）,Open the atlas to 「%s」 market and buy 「%s」×%d (◇ supply mark)
+wq_board_supply,采购城,Supply city
+wq_board_supply_march,补给行程,Supply march
+wq_board_supply_days,约 %d 日 · 粮 %d,~%d days · food %d
+wq_mkt_gather_banner,委托急需：%s ×%d（还差 %d）——下方「委托购入」一键买齐,Commission needs: %s ×%d (%d short) — use GatherBuy below
+wq_mkt_gather_buy,委托购入 ×%d,GatherBuy ×%d
+wq_mkt_gather_cost,约 %d 银,~%d silver
+wq_mkt_gather_turnin_days,交货尚余 %d 日,%d days to turn-in
+wq_mkt_gather_turnin_food,粮 %d,food %d
+wq_mkt_gather_turnin_bypass,冬封旁路,winter bypass
+wq_board_supply_bypass,（冬封旁路）,(winter bypass)
+wq_gather_buy_none,此处无可购入的物产委托,No gather commission to buy here
+wq_gather_buy_blocked,无法购入物产委托,Cannot buy gather goods
+wq_gather_buy_silver,银币不足（需 %d）,Not enough silver (need %d)
+wq_gather_buy_cargo,货舱已满,Cargo full
+wq_gather_buy_stock,市集存货不足,Market stock short
+wq_gather_buy_done,委托购入 %s ×%d（-%d 银）,Commission buy %s ×%d (−%d silver)
 wq_hint_turnin,打开舆图前往「%s」交付（图上有 ✓ 标记）,Open the atlas and turn in at 「%s」(✓ on the map)
 wq_goto_atlas,去舆图看目标,See objective on atlas
 wq_atlas_focus,委托「%s」目标：%s —— 选中后点「启程前往」,Commission 「%s」 → %s — select it, then Travel
@@ -252,7 +271,12 @@ wq_atlas_focus_plain,已为你定位到「%s」——选中后点「启程前往
 pressure_month_report,正月开销：%s -%d 银（库银余 %d）,January dues: %s -%d silver (%d left)
 pressure_forecast,正月开销（预计）：%s 约 %d 银,January dues (estimate): %s about %d silver
 atlas_enter_kind,进入%s,Enter %s
+atlas_mark_pickup,◇ 物产,◇ Supply
+atlas_mark_turnin,✓ 交付,✓ Turn-in
+atlas_mark_objective,◆ 目标,◆ Objective
 atlas_enter_turnin,进城交付（%d）,Enter to turn in (%d)
+atlas_enter_pickup,进城采购（%d）,Enter to buy supply (%d)
+atlas_arrive_pickup,抵达 %s · %d 件委托可在此采购物产,Arrived %s · %d commission(s) can buy supply here
 atlas_arrive_turnin,抵达 %s · %d 件委托可交付,Arrived %s · %d ready to turn in
 atlas_arrive_plain,抵达 %s,Arrived %s
 atlas_travel_halt_title,行军途中,On the road
@@ -390,6 +414,9 @@ atlas_arb_pending,跑单中：%s ×%d → %s,Armed: %s ×%d → %s
 atlas_arb_sell_now,出手,Sell now
 atlas_arb_sell_title,跑单到手,Arbitrage landed
 atlas_arb_march,启程出手,March to sell
+atlas_arb_short_food,粮不够跑单（需 %d）,Not enough food for arbitrage march (need %d)
+atlas_arb_march_days,出手行程约 %d 日 · 粮 %d,Sell march ~%d days · food %d
+atlas_arb_bypass,（冬封旁路）,(winter bypass)
 atlas_occupy_en,OCCUPY // GARRISON,OCCUPY // GARRISON
 atlas_occupy_title,占领 · %s,Occupy · %s
 atlas_occupy_body,驻军 %d / %d。增派人手或立屯营，守住刚夺下的中立领地。,Garrison %d / %d. Reinforce or raise a stockade to hold the seat you just took.
@@ -584,3 +611,15 @@ atlas_resume_go_named,续行至 %s,Resume to %s
 atlas_resume_fail,还不能续行,Cannot resume yet
 atlas_camp_halt,粮草告急，在此停军,Rations low — halt here
 atlas_camp_halted,已在 %s 停军，补给后续行。,Halted at %s. Resupply then resume.
+holding_patrol_cost,%d银/%d粮,%d silver / %d food
+holding_patrol_short,缺料·%s,Short · %s
+holding_patrol_cd_tip,冷却%d,Cooldown %d
+holding_patrol_boost_tip,巡防中%d,Patrolling %d
+holding_echo_patrol_one,巡防·%s（-%d银/-%d粮）,Patrol · %s (-%d silver / -%d food)
+holding_echo_patrol_all,全堡巡防（-%d银/-%d粮）,Castle patrol (-%d silver / -%d food)
+smith_forge_short_mats,缺材料：%s,Missing mats: %s
+smith_forge_mats_unstocked,市集缺打造材料,Market lacks forge mats
+smith_forge_short_silver,购料+工钱不足（需 %d 银）,Need %d silver for mats+labor
+smith_forge_bought_mats_done,打造完成：「%s」（工钱 %d · 购料 %d 银）,Forged "%s" (labor %d · mats %d silver)
+smith_forge_buy_mats_btn,购料打造 · %d,Buy mats & forge · %d
+smith_forge_why_buy_mats,缺料可市集购入再打造（购料 %d + 工钱 %d）。,Missing mats — buy at market then forge (mats %d + labor %d).

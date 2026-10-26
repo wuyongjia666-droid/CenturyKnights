@@ -82,7 +82,7 @@ func _crest_pulse_place() -> void:
 	root.size = Vector2(720, 1280)
 	add_child(root)
 	await _settle(2)
-	var strip: Control = CKHeraldryChrome.place_battle_hud_crest_strips(
+	var strip: Control = CKHeraldryField.place_battle_hud_crest_strips(
 		root, "ashbanner", Vector2(720, 1280), {"top": 40.0}, true, false
 	)
 	_ok(strip != null, "placed strip")

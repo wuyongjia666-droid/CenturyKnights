@@ -219,10 +219,7 @@ func _build() -> void:
 	dim.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_vow_panel.add_child(dim)
 	var vp := UIKit.panel_at(_vow_panel, Rect2(220, 120, 840, 420), 12, true)
-	var vow_arms := CKHeraldryChrome.make_company_arms(Vector2(40, 48))
-	vow_arms.name = "VowCompanyArms"
-	vow_arms.position = Vector2(28, 16)
-	vp.add_child(vow_arms)
+	CKHeraldryField.attach_vow_company_arms(vp, Vector2(28, 16), Vector2(40, 48))
 	var ve := UIKit.mono("VOW RITUAL // 誓约仪式", 10, UIKit.ACCENT)
 	ve.position = Vector2(80, 22)
 	vp.add_child(ve)

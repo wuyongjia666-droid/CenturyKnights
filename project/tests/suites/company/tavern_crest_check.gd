@@ -11,6 +11,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("TAVERN FIELD CREST PASS")
 		print("TAVERN CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -67,6 +68,8 @@ func _assert_filled(page: Node, where: String) -> void:
 	var strips: Array = []
 	_collect(page, "TavernCrestStrip", strips)
 	_ok(not strips.is_empty(), "%s TavernCrestStrip" % where)
+	if not strips.is_empty():
+		_ok(str(strips[0].get_meta("field_route", "")) == "tavern_strip", "%s tavern field_route" % where)
 	if strips.is_empty():
 		return
 	var strip: Node = strips[0]

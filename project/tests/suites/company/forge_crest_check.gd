@@ -116,7 +116,9 @@ func _run_mobile() -> void:
 		await _settle(8)
 	_assert_page(page, "mob")
 	var bar := page.find_child("MobileTopBar", true, false)
-	_ok(bar != null and bar.find_child("ForgeFocusStrip", true, false) != null, "mob strip on top bar")
+	var _fs = bar.find_child("ForgeFocusStrip", true, false) if bar else null
+	_ok(bar != null and _fs != null, "mob strip on top bar")
+	_ok(_fs != null and str(_fs.get_meta("field_route", "")) == "forge_focus", "mob forge_focus")
 	page.queue_free()
 	await _settle(2)
 	OS.set_environment("CK_FORCE_MOBILE", "")
