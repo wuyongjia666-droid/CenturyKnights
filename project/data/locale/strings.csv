@@ -901,3 +901,4 @@ shell_lock_aim_mark,缠,Bound
 shell_wounded_aim_mark,伤,Wounded
 shell_lethal_aim_mark,斩,Lethal
 shell_flank_aim_mark,夹,Flank
+shell_counter_aim_mark,反,Counter
