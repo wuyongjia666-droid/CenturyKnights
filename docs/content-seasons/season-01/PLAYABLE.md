@@ -105,3 +105,9 @@
 - 各章 visit 拍（hourglass/audit/birth）在 `_vhg` 后加 `_msr1`–`_msr6` 季题整装口头，全库去重；收束非旁白。
 - 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
 - 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。
+
+## 酒馆离店口头加厚（tavern-exit）
+
+- 各章 `tavern` 在 `_tvn` 后、`ret_mv` 前加 `_tvx1`–`_tvx6` 离店口头，全库去重；收束非旁白。
+- 验收：`content_season_tavern_exit_chain_check` — hub chip → 离店针口头。
+- 不碰 `_bpl`/`_arr`/`_lop`/`_cls`/`_sec`/`_tvp`。
