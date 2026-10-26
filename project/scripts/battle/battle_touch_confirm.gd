@@ -148,6 +148,7 @@ static func clear(host, refocus_selection: bool = true) -> void:
 			BattlePick.focus_selected(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
+	BattleTerrainDefTelegraph.clear(host)
 	ForecastPanel.refresh(host)
 
 
@@ -372,6 +373,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			if host.overlay:
 				host.overlay.queue_redraw()
 			ForecastPanel.refresh(host)
+			BattleTerrainDefTelegraph.refresh(host)
 			# T-P4: do not soft-follow mid unit-drag (mobile_safe_area: unit drag must not pan).
 			# Camera settles on confirm_attack / focus_selected instead.
 		else:
