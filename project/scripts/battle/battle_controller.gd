@@ -255,6 +255,7 @@ func _process(delta: float) -> void:
 		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
 		or BattlePhaseFeel.end_alpha(self) > 0.0
 		or BattleEngageCutscene.bridge_alpha(self) > 0.0
+		or BattleTurnBridge.pulse_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
 	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
@@ -1220,6 +1221,7 @@ func _draw_overlay() -> void:
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleLandStrike.draw(self, overlay)
+	BattleTurnBridge.draw_ready_pulse(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	BattleLinkTelegraph.draw(self, overlay)
@@ -2230,6 +2232,7 @@ func _start_player_turn() -> void:
 	moved_this_select = false
 	_theme_banter("turn")
 	BattleStory.on_player_turn(self, map_id)
+	BattleTurnBridge.note_player_return(self)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()

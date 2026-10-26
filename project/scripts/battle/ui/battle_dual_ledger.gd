@@ -1,8 +1,8 @@
 class_name BattleDualLedger
 extends RefCounted
-## Y1-A T-P10 + T-P14: in-battle dual ledger — injured / lamp / ready.
-## T-P14 deepen: ready count on player turn + injured foot marks on map.
-## Read-only chrome under ObjectiveHud. Never steals InputRouter taps.
+## Y1-A T-P10 + T-P14 + turn-bridge: injured / lamp / ready.
+## Ready count on player turn + injured foot marks; Ready label taps cycle formation.
+## Panel stays IGNORE; only Ready STOP catches taps (board InputRouter untouched).
 
 const NAME := "BattleDualLedger"
 const DESK_AT := Vector2(904, 58)
@@ -166,9 +166,12 @@ static func attach(host: Node) -> void:
 	row.add_child(injured)
 	var ready := Label.new()
 	ready.name = "Ready"
-	ready.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ready.mouse_filter = Control.MOUSE_FILTER_STOP
+	ready.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	ready.add_theme_font_size_override("font_size", 13)
 	ready.add_theme_color_override("font_color", UIKit.ACCENT)
+	ready.gui_input.connect(func(ev: InputEvent) -> void: _on_ready_input(host, ev))
+	ready.tooltip_text = BattleObjectives.text("dual_ledger_ready_hint")
 	row.add_child(ready)
 	var lamp := Label.new()
 	lamp.name = "Lamp"
@@ -229,10 +232,15 @@ static func refresh(host: Node) -> void:
 		inj.text = BattleObjectives.text("dual_ledger_injured") % injured_n
 		inj.add_theme_color_override("font_color", UIKit.DANGER if injured_n > 0 else UIKit.TEXT)
 	if ready:
+		ready.mouse_filter = Control.MOUSE_FILTER_STOP
 		if turn == "player":
 			ready.visible = true
 			ready.text = BattleObjectives.text("dual_ledger_ready") % ready_n
-			ready.add_theme_color_override("font_color", UIKit.ACCENT if ready_n > 0 else UIKit.TEXT)
+			var pulse := BattleTurnBridge.pulse_alpha(host)
+			var col := UIKit.ACCENT if ready_n > 0 else UIKit.TEXT
+			if pulse > 0.0 and ready_n > 0:
+				col = Color(minf(1.0, col.r + 0.25 * pulse), minf(1.0, col.g + 0.2 * pulse), minf(1.0, col.b + 0.1 * pulse), 1.0)
+			ready.add_theme_color_override("font_color", col)
 		else:
 			ready.visible = false
 	if lamp:
