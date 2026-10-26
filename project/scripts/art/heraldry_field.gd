@@ -6,7 +6,9 @@ extends RefCounted
 ## castle panorama lineage, castle-home roster row, marriage protocol / succession /
 ## heir-trial duel strips, house-card person arms, banner-school train
 ## (pupil focus strip + row person arms), roster crest/row/hire plate,
-## dialogue / save / battle-order / board / tavern-annex Field plates.
+## dialogue / save / battle-order / board / tavern-annex Field plates,
+## infirmary / deploy / office Field arms,
+## and skill-tree / lineage-info Field arms.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -879,3 +881,133 @@ static func _order_before(a: Dictionary, b: Dictionary) -> bool:
 	if int(a["agi"]) != int(b["agi"]):
 		return int(a["agi"]) > int(b["agi"])
 	return int(a["idx"]) < int(b["idx"])
+
+## Infirmary heal roster row: one person shield (族徽|旗徽). No company pair, no cadency.
+static func attach_infirmary_heal_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "InnHealArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "InnHealArms"
+	arms.set_meta("field_route", "infirmary_heal")
+	row.add_child(arms)
+	if row is Container:
+		row.move_child(arms, 0)
+	return arms
+
+
+## Deploy muster strip: 团徽 + one leader shield. No leader → 团徽 only.
+static func place_deploy_muster_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if leader != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "MusterCrestStrip", at, Vector2(w, shield.y))
+	var extra: TextureRect = null
+	if leader != null:
+		extra = CKHeraldryChrome.make_person_arms(leader, shield)
+		extra.name = "LeaderArms"
+	_pair(host, shield, extra)
+	host.set_meta("field_route", "deploy_muster")
+	host.set_meta("has_leader", leader != null)
+	return host
+
+
+## Deploy slot card: one person shield. Position matches the legacy plate inset.
+static func attach_deploy_slot_arms(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	var at := Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
+	return place_deploy_slot_arms(parent, c, at, arms_sz)
+
+
+static func place_deploy_slot_arms(parent: Control, c, at: Vector2, arms_sz: Vector2 = Vector2(36, 44)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "DeployArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "DeployArms"
+	arms.position = at
+	arms.set_meta("field_route", "deploy_slot")
+	parent.add_child(arms)
+	return arms
+
+
+## Focused deploy metrics: one person shield for the selected knight.
+static func attach_deploy_focus_arms(parent: Control, c, at: Vector2, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "FocusArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "FocusArms"
+	arms.position = at
+	arms.set_meta("field_route", "deploy_focus")
+	parent.add_child(arms)
+	if parent is Container:
+		parent.move_child(arms, 0)
+	return arms
+
+
+## Estates field-book / 属事处 row: one person shield. No marshalling with the office strip.
+static func attach_office_field_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "FieldRowArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "FieldRowArms"
+	arms.set_meta("field_route", "office_field")
+	row.add_child(arms)
+	if row is Container:
+		row.move_child(arms, 0)
+	return arms
+
+## Skill tree header: 团徽 + skill banner cloth (SkillCrestStrip / SkillBanner).
+static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "SkillCrestStrip")
+	var host := Control.new()
+	host.name = "SkillCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "skill_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "SkillBanner"
+	bn.tooltip_text = Locale.t("lb_skill_arms")
+	bn.set_meta("arms_kind", "lb_skill_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Skill detail/head host: selected roster member person arms (SkillPersonArms), prepended.
+static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if host == null or c == null:
+		return null
+	_retire(host, "SkillPersonArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "SkillPersonArms"
+	arms.tooltip_text = Locale.t("lb_skill_arms")
+	arms.set_meta("field_route", "skill_person")
+	host.add_child(arms)
+	host.move_child(arms, 0)
+	return arms
+
+
+## Lineage-info dossier plate: person arms (PersonArms). field_route marks Field ownership.
+static func attach_lineage_info_arms(parent: Control, c, arms_sz: Vector2 = Vector2(48, 58)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "PersonArms")
+	_retire(parent, "LineageInfoArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "PersonArms"
+	arms.set_meta("field_route", "lineage_info")
+	parent.add_child(arms)
+	return arms
