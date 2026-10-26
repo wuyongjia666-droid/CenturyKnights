@@ -1641,3 +1641,75 @@ static func attach_vow_company_arms(parent: Node, at: Vector2 = Vector2.ZERO, ar
 	parent.add_child(arms)
 	return arms
 
+
+## Rival-houses list/head: enemy nation arms (RivalArms).
+static func attach_rival_arms(parent: Node, house, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
+	if parent == null or house == null:
+		return null
+	_retire(parent, "RivalArms")
+	var arms := CKHeraldryChrome.make_rival_arms(house, arms_sz)
+	arms.name = "RivalArms"
+	arms.position = at
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.set_meta("field_route", "rival_arms")
+	parent.add_child(arms)
+	return arms
+
+
+## Unit-dossier relation chip: person arms (ChipArms).
+static func attach_dossier_chip_arms(parent: Node, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "ChipArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "ChipArms"
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.set_meta("field_route", "dossier_chip")
+	parent.add_child(arms)
+	return arms
+
+
+## Unit-dossier relation chip: rank badge (ChipBadge).
+static func attach_dossier_chip_badge(parent: Node, rank: String, badge_size: int = 22) -> TextureRect:
+	if parent == null:
+		return null
+	_retire(parent, "ChipBadge")
+	var badge := CKHeraldryChrome.make_rank_badge(str(rank), badge_size)
+	badge.name = "ChipBadge"
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.set_meta("field_route", "dossier_chip_badge")
+	badge.set_meta("rank_id", str(rank))
+	parent.add_child(badge)
+	return badge
+
+
+## Lineage-info dossier: rank badge beside PersonArms.
+static func attach_lineage_rank_badge(parent: Node, rank: String, at: Vector2 = Vector2.ZERO, badge_size: int = 32) -> TextureRect:
+	if parent == null:
+		return null
+	_retire(parent, "RankBadge")
+	_retire(parent, "LineageRankBadge")
+	var badge := CKHeraldryChrome.make_rank_badge(str(rank), badge_size)
+	badge.name = "RankBadge"
+	badge.position = at
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.set_meta("field_route", "lineage_rank_badge")
+	badge.set_meta("rank_id", str(rank))
+	parent.add_child(badge)
+	return badge
+
+
+## Bloodline-codex nation rail: compact 邦徽 (CodexRailArms).
+static func attach_codex_rail_arms(parent: Node, nation_id: String, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(22, 26)) -> TextureRect:
+	if parent == null or str(nation_id) == "":
+		return null
+	_retire(parent, "CodexRailArms")
+	var arms := CKHeraldryChrome.make_city_nation_arms(str(nation_id), arms_sz)
+	arms.name = "CodexRailArms"
+	arms.position = at
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.set_meta("field_route", "codex_rail")
+	arms.set_meta("nation_id", str(nation_id))
+	parent.add_child(arms)
+	return arms
+

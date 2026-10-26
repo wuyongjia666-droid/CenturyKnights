@@ -530,13 +530,8 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 	marks.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marks.add_theme_constant_override("separation", 4)
 	col.add_child(marks)
-	var arms := CKHeraldryChrome.make_person_arms(p, Vector2(28, 34))
-	arms.name = "ChipArms"
-	marks.add_child(arms)
-	var badge := CKHeraldryChrome.make_rank_badge(str(p.rank), 22)
-	badge.name = "ChipBadge"
-	badge.set_meta("rank_id", str(p.rank))
-	marks.add_child(badge)
+	CKHeraldryField.attach_dossier_chip_arms(marks, p, Vector2(28, 34))
+	CKHeraldryField.attach_dossier_chip_badge(marks, str(p.rank), 22)
 	var captured := p
 	b.pressed.connect(func():
 		Sfx.click()

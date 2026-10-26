@@ -309,6 +309,26 @@ static func attach_ladder_badge(parent: Node, rank: String, badge_size: int = 26
 static func attach_vow_company_arms(parent: Node, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
 	return CKHeraldryField.attach_vow_company_arms(parent, at, arms_sz)
 
+static func attach_rival_arms(parent: Node, house, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
+	return CKHeraldryField.attach_rival_arms(parent, house, at, arms_sz)
+
+
+static func attach_dossier_chip_arms(parent: Node, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	return CKHeraldryField.attach_dossier_chip_arms(parent, c, arms_sz)
+
+
+static func attach_dossier_chip_badge(parent: Node, rank: String, badge_size: int = 22) -> TextureRect:
+	return CKHeraldryField.attach_dossier_chip_badge(parent, rank, badge_size)
+
+
+static func attach_lineage_rank_badge(parent: Node, rank: String, at: Vector2 = Vector2.ZERO, badge_size: int = 32) -> TextureRect:
+	return CKHeraldryField.attach_lineage_rank_badge(parent, rank, at, badge_size)
+
+
+static func attach_codex_rail_arms(parent: Node, nation_id: String, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(22, 26)) -> TextureRect:
+	return CKHeraldryField.attach_codex_rail_arms(parent, nation_id, at, arms_sz)
+
+
 static func issuer_spec(issuer_id: String) -> Dictionary:
 	if issuer_is_home(issuer_id):
 		return company_spec()

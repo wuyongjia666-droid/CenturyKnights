@@ -38,9 +38,7 @@ func _ready() -> void:
 		var mark := CKCourtChrome.nation_mark(str(nid))
 		mark.position = Vector2(6, 4)
 		b.add_child(mark)
-		var rail_arms := CKHeraldryChrome.make_city_nation_arms(str(nid), Vector2(22, 26))
-		rail_arms.position = Vector2(170, 8)
-		b.add_child(rail_arms)
+		CKHeraldryField.attach_codex_rail_arms(b, str(nid), Vector2(170, 8), Vector2(22, 26))
 		var nm := UIKit.body_label(str(nat.get("name", nid)), UIKit.TEXT, 14)
 		nm.name = "NationName"
 		nm.position = Vector2(48, 12)

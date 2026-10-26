@@ -59,6 +59,20 @@ func _assert_page(page: Node, where: String) -> void:
 		_ok(lab != null, "%s PurseSilver label" % where)
 	var dos := FileAccess.get_file_as_string("res://scripts/hub/unit_dossier.gd")
 	_ok(dos.find("CKHeraldryField.place_purse_plate") >= 0, "%s dossier calls Field purse" % where)
+	_ok(dos.find("CKHeraldryField.attach_dossier_chip_arms") >= 0, "%s dossier calls Field chip arms" % where)
+	_ok(dos.find("CKHeraldryField.attach_dossier_chip_badge") >= 0, "%s dossier calls Field chip badge" % where)
+	var chips: Array = []
+	for n in page.find_children("ChipArms", "", true, false):
+		if str(n.get_meta("field_route", "")) == "dossier_chip":
+			chips.append(n)
+	_ok(chips.size() >= 1, "%s ChipArms field_route count>=1 got %d" % [where, chips.size()])
+	for ca in chips:
+		_ok(str(ca.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s ChipArms kind" % where)
+	var badges: Array = []
+	for n in page.find_children("ChipBadge", "", true, false):
+		if str(n.get_meta("field_route", "")) == "dossier_chip_badge":
+			badges.append(n)
+	_ok(badges.size() >= 1, "%s ChipBadge field_route count>=1 got %d" % [where, badges.size()])
 	var yt_src := FileAccess.get_file_as_string("res://scripts/hub/sui_yeartrace_ui.gd")
 	_ok(yt_src.find("CKHeraldryField.attach_yeartrace_arms") >= 0, "%s yeartrace calls Field" % where)
 
