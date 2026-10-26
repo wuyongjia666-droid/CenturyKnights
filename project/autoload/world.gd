@@ -90,6 +90,9 @@ var last_siege_muster: Dictionary = {}  # cache→garrison under siege
 var last_siege_sister: Dictionary = {}  # sister stockade garrison relief
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
+var march_hold: Dictionary = {}  # halted march dest; survives city enter/exit
+var march_resume: Dictionary = {}  # readable chip while a halted march is moving again
+var city_gate: Dictionary = {}  # last gate crossing: in / out, city, rations
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -210,6 +213,9 @@ func reset() -> void:
 	last_siege_sister = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
+	march_hold = {}
+	march_resume = {}
+	city_gate = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -257,6 +263,7 @@ func to_save() -> Dictionary:
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
 		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "arbitrage": arbitrage, "chain_progress": chain_progress,
 		"territory": CKTerritory.to_save(),
+		"march_hold": march_hold, "march_resume": march_resume, "city_gate": city_gate,
 	}
 
 func from_save(d: Dictionary) -> void:
@@ -301,6 +308,13 @@ func from_save(d: Dictionary) -> void:
 	last_siege_sister = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
+	march_hold = _saved_dict(d.get("march_hold", {}))
+	march_resume = _saved_dict(d.get("march_resume", {}))
+	city_gate = _saved_dict(d.get("city_gate", {}))
+	if not nodes.has(str(march_hold.get("dest", ""))):
+		march_hold = {}
+	if str(city_gate.get("city", "")) != "" and not nodes.has(str(city_gate.get("city", ""))):
+		city_gate = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -337,6 +351,11 @@ func from_save(d: Dictionary) -> void:
 	rival_thefts = d.get("rival_thefts", []) if typeof(d.get("rival_thefts", [])) == TYPE_ARRAY else []
 	arbitrage = d.get("arbitrage", {}) if typeof(d.get("arbitrage", {})) == TYPE_DICTIONARY else {}
 	world_changed.emit()
+
+func _saved_dict(src) -> Dictionary:
+	if typeof(src) != TYPE_DICTIONARY:
+		return {}
+	return (src as Dictionary).duplicate(true)
 
 func _int_dict(src) -> Dictionary:
 	var out := {}
@@ -462,6 +481,122 @@ func take_march_muster() -> Dictionary:
 
 func dismiss_march_muster() -> void:
 	last_march_muster = {}
+
+
+func note_city_gate(dir: String) -> Dictionary:
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	var cname := str(node(pos).get("name", pos))
+	city_gate = {
+		"dir": dir,
+		"city": pos,
+		"city_name": cname,
+		"party": party_size(),
+		"food": GameState.food,
+		"per_day": per,
+		"cover_days": cover,
+		"ration_text": food_ration_text(),
+		"warn": cover <= 2,
+	}
+	return city_gate.duplicate(true)
+
+
+func city_gate_text() -> String:
+	if city_gate.is_empty():
+		return ""
+	var dir := str(city_gate.get("dir", "in"))
+	var city := str(city_gate.get("city", pos))
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	var key := "atlas_gate_out" if dir == "out" else "atlas_gate_in"
+	var line: String = Locale.t(key) % [str(node(city).get("name", city)), food_ration_text(), cover]
+	if cover <= 2:
+		line += " " + Locale.t("atlas_gate_warn")
+	return line
+
+
+## Remember where a halted company was going. City enter/exit reloads the atlas.
+func hold_march(dest: String) -> Dictionary:
+	if dest == "" or dest == pos or not nodes.has(dest):
+		march_hold = {}
+		return {}
+	var pv: Dictionary = travel_preview(dest)
+	if not bool(pv.get("ok", false)):
+		march_hold = {}
+		return {}
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	march_hold = {
+		"dest": dest,
+		"dest_name": str(node(dest).get("name", dest)),
+		"from": pos,
+		"days": int(pv.get("days", 0)),
+		"food_need": int(pv.get("food", 0)),
+		"cover_days": cover,
+		"warn": bool(pv.get("short_food", false)) or cover < int(pv.get("days", 0)),
+	}
+	world_changed.emit()
+	return march_hold.duplicate(true)
+
+
+func march_hold_text() -> String:
+	if march_hold.is_empty():
+		return ""
+	var dest := str(march_hold.get("dest", ""))
+	if not nodes.has(dest):
+		return ""
+	var pv: Dictionary = travel_preview(dest)
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	return Locale.t("atlas_hold_line") % [
+		str(node(dest).get("name", dest)), int(pv.get("days", 0)), int(pv.get("food", 0)), cover,
+	]
+
+
+func note_march_resume(dest: String) -> void:
+	if dest == "" or not nodes.has(dest):
+		march_resume = {}
+		return
+	march_resume = {
+		"dest": dest,
+		"dest_name": str(node(dest).get("name", dest)),
+		"days": remaining_route_days(),
+		"food": GameState.food,
+		"per_day": food_per_day(),
+		"ration_text": food_ration_text(),
+	}
+
+
+func march_resume_text() -> String:
+	if march_resume.is_empty():
+		return ""
+	return Locale.t("atlas_resume_chip") % [
+		str(march_resume.get("dest_name", "")), food_ration_text(), remaining_route_days(), GameState.food,
+	]
+
+
+## Camp warning → stop at the settlement ahead and keep the original destination.
+func halt_from_camp() -> Dictionary:
+	last_supply_halt = {}
+	var dest := str(travel.get("dest", ""))
+	pending_event = {}
+	var info := {}
+	if travel.has("pending_arrive"):
+		info = _arrive_leg(str(travel.pending_arrive))
+	if not info.get("encounter", {}).is_empty() or not encounter.is_empty():
+		march_hold = {}
+		march_resume = {}
+		return {"ok": true, "encounter": info.get("encounter", encounter), "pos": pos}
+	if is_traveling():
+		dest = str(travel.get("dest", dest))
+		cancel_travel()
+		if dest != "" and dest != pos and nodes.has(dest):
+			var held := hold_march(dest)
+			held["ok"] = true
+			held["pos"] = pos
+			return held
+	march_hold = {}
+	return {"ok": true, "pos": pos, "dest": "", "arrived": true}
 
 
 func cargo_cap() -> int:
@@ -969,6 +1104,8 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 	var rem_f := remaining_route_food()
 	var per := food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
+	var thin := per > 0 and cover <= 1 and GameState.food > 0 and is_traveling()
+	var short := (rem_d > 0 and GameState.food < rem_f) or thin
 	return {
 		"food": GameState.food,
 		"per_day": per,
@@ -976,7 +1113,7 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 		"remain_days": rem_d,
 		"remain_food": rem_f,
 		"cover_days": cover,
-		"short": GameState.food < rem_f,
+		"short": short,
 		"a": str(e.get("a", "")),
 		"b": str(e.get("b", "")),
 	}
@@ -1088,12 +1225,14 @@ func begin_travel(to_id: String) -> Dictionary:
 	if GameState.silver < int(pv.fare):
 		return {"ok": false, "msg": "船资不足（需 %d 银）" % int(pv.fare)}
 	travel = {"route": pv.path, "leg": 0, "dest": to_id}
+	march_hold = {}
 	_tlog("启程 → %s（预计 %d 日）" % [node(to_id).get("name", to_id), int(pv.days)])
 	world_changed.emit()
 	return {"ok": true, "preview": pv}
 
 func cancel_travel() -> void:
 	travel = {}
+	march_resume = {}
 	world_changed.emit()
 
 ## Executes the next road leg. Returns {"arrived": bool, "pos": id, "event": {}, "encounter": {}, "msg": ""}.
@@ -1158,6 +1297,7 @@ func _arrive_leg(b: String) -> Dictionary:
 	var info := arrive(b)
 	if not travel.is_empty() and (b == str(travel.dest) or int(travel.leg) >= travel.route.size() - 1):
 		travel = {}
+		march_resume = {}
 		info["arrived"] = true
 	if not info.get("encounter", {}).is_empty():
 		travel = {}
@@ -2936,8 +3076,11 @@ func forced_halt_march() -> Dictionary:
 	var here := pos
 	cancel_travel()
 	last_supply_halt = {}
+	var held := {}
+	if dest != "" and dest != here and nodes.has(dest):
+		held = hold_march(dest)
 	_tlog(Locale.t("atlas_supply_stop_log") % node(here).get("name", here))
-	return {"ok": true, "dest": dest, "pos": here, "msg": Locale.t("atlas_supply_stop_ok") % node(here).get("name", here)}
+	return {"ok": true, "dest": dest, "pos": here, "hold": held, "msg": Locale.t("atlas_supply_stop_ok") % node(here).get("name", here)}
 
 ## 改道：from failed status, re-post the same step as a fresh offer at its issuer.
 func reroute_failed_chain(chain_id: String) -> Dictionary:
