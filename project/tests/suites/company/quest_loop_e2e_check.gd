@@ -105,8 +105,15 @@ func _run_world(kind: String, q: Dictionary, city: String) -> void:
 	var guide := str(acc.get("guide_node", ""))
 	_row(kind, "guidance", guide != "" and str(acc.get("hint", "")) != "" and str(acc.msg).find(str(acc.hint)) >= 0, "guide=%s" % guide)
 	_row(kind, "todo_on", _todo_quests() >= 1, "count=%d" % _todo_quests())
-	if kind != "gather":
-		_row(kind, "atlas_marker", World.quest_markers().has(guide), guide)
+	_row(kind, "atlas_marker", World.quest_markers().has(guide), guide)
+	if kind == "gather":
+		var mks: Array = World.quest_markers().get(guide, [])
+		var pickup_ok := false
+		for mk in mks:
+			if str(mk.get("kind", "")) == "pickup":
+				pickup_ok = true
+				break
+		_row(kind, "pickup_marker", pickup_ok, guide)
 	var issuer := str(q.issuer)
 	var rep0 := World.rep_of(issuer)
 	if kind == "gather":
