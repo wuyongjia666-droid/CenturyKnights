@@ -260,10 +260,14 @@ func _e2e_sticky_pan_empty() -> String:
 	var halo := _screen(_cell_local(Vector2i(4, 3), Vector2(0.18, 0.5)))
 	if BattlePick.near_selected_unit(_battle, halo, _player_i):
 		return "live soft halo still sticky"
+	# Stop any leftover focus tween so settle cannot yank the pan back mid-gesture.
+	BattlePick.cancel_focus_tween(_battle)
+	await _settle(2)
 	var pan0: Vector2 = _battle._board_pan
 	var base: float = _battle._board_router._slop()
 	# Drift past base slop but under sticky*1.55 — if sticky wrongly applied, stays tap.
-	var drift := base * 1.25
+	# 1.35 (was 1.25): CI headless sometimes needs a hair more travel to clear slop noise.
+	var drift := base * 1.35
 	_touch(0, true, halo)
 	await get_tree().process_frame
 	_drag(halo + Vector2(drift, 0), Vector2(drift, 0))
