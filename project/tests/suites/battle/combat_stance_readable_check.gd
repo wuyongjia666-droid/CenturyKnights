@@ -238,6 +238,11 @@ func _free_battle() -> void:
 
 
 func _set_window() -> void:
+	# Match range-preview: disable content-scale so visible_rect tracks PHONE
+	# (otherwise _mobile_landscape sees design 1280×720 and flakes in headless).
+	var win := get_tree().root
+	win.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+	win.size = PHONE
 	DisplayServer.window_set_size(PHONE)
 	OS.set_environment("CK_SAFE_INSETS", "48,0,0,24")
 	await _settle(2)
