@@ -27,12 +27,12 @@ static func support(host, ui: int, sid: String) -> void:
 		for ou in host.units:
 			if ou.team == "player" and ou.char.hp > 0:
 				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
-		host._spawn_dmg(u.pos, "圣域", Color(0.7, 0.85, 1.0))
+		host._spawn_dmg(u.pos, Locale.t("shell_skill_sanctuary_mark"), Color(0.7, 0.85, 1.0))
 	host._consume_skill(u.char, sid)
 	u.done = true
 	host.selected = -1
 	Sfx.confirm()
-	host._log("%s 释放「%s」，治疗 %d 人" % [u.char.name, sk.get("name", ""), healed])
+	host._log(Locale.t("shell_skill_heal_cast_log") % [u.char.name, sk.get("name", ""), healed])
 	host.map_draw.queue_redraw()
 	host._refresh_info()
 	host._check_end()
@@ -56,11 +56,11 @@ static func buff(host, ui: int, sid: String) -> void:
 		u.char.temp_leave_free = true
 	if sk.get("clear_combat_lock"):
 		u.char.temp_combat_lock = 0
-		host._spawn_dmg(u.pos, "拆锁", Color(0.5, 0.85, 1.0))
+		host._spawn_dmg(u.pos, Locale.t("shell_skill_break_lock_mark"), Color(0.5, 0.85, 1.0))
 		host._spawn_slash(u.pos, "spark")
 	if sk.get("terrain_ward"):
 		u.char.temp_terrain_ward = true
-		host._spawn_dmg(u.pos, "地利", Color(0.55, 0.9, 0.55))
+		host._spawn_dmg(u.pos, Locale.t("shell_skill_terrain_ward_mark"), Color(0.55, 0.9, 0.55))
 		host._spawn_slash(u.pos, "shield")
 	if sk.get("leave_free") or sk.get("clear_combat_lock") or sk.get("ignore_zoc"):
 		if ui == host.selected:
@@ -76,8 +76,8 @@ static func buff(host, ui: int, sid: String) -> void:
 	host._consume_skill(u.char, sid)
 	var note = ""
 	if sk.get("zoc_aura"):
-		note = "（控带强化）"
-	host._log("%s 释放「%s」%s" % [u.char.name, sk.get("name", ""), note])
+		note = Locale.t("shell_skill_zoc_aura_note")
+	host._log(Locale.t("shell_skill_buff_cast_log") % [u.char.name, sk.get("name", ""), note])
 	Sfx.confirm()
 	Sfx.skill()
 	host._refresh_info()
