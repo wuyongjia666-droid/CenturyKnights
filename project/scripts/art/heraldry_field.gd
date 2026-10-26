@@ -1597,3 +1597,47 @@ static func attach_lineage_info_arms(parent: Control, c, arms_sz: Vector2 = Vect
 	arms.set_meta("field_route", "lineage_info")
 	parent.add_child(arms)
 	return arms
+
+
+## Title-promote request row: leader person arms (LeaderArms).
+static func attach_title_leader_arms(parent: Node, leader, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(44, 52)) -> TextureRect:
+	if parent == null or leader == null:
+		return null
+	_retire(parent, "LeaderArms")
+	var arms := CKHeraldryChrome.make_person_arms(leader, arms_sz)
+	arms.name = "LeaderArms"
+	arms.position = at
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.set_meta("field_route", "title_leader")
+	parent.add_child(arms)
+	return arms
+
+
+## Title ladder chip: rank badge (LadderBadge).
+static func attach_ladder_badge(parent: Node, rank: String, badge_size: int = 26) -> TextureRect:
+	if parent == null:
+		return null
+	_retire(parent, "LadderBadge")
+	var badge := CKHeraldryChrome.make_rank_badge(str(rank), badge_size)
+	badge.name = "LadderBadge"
+	badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.set_meta("field_route", "title_ladder_badge")
+	badge.set_meta("rank_id", str(rank))
+	parent.add_child(badge)
+	return badge
+
+
+## Marriage vow ritual plate: company arms (VowCompanyArms).
+static func attach_vow_company_arms(parent: Node, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
+	if parent == null:
+		return null
+	_retire(parent, "VowCompanyArms")
+	var arms := CKHeraldryChrome.make_company_arms(arms_sz)
+	arms.name = "VowCompanyArms"
+	arms.position = at
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.set_meta("field_route", "marriage_vow")
+	parent.add_child(arms)
+	return arms
+

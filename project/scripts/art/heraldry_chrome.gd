@@ -297,6 +297,18 @@ static func make_row_arms(c, size: Vector2 = Vector2(28, 34)) -> TextureRect:
 static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
 	return CKHeraldryField.place_muster_crest_strip(parent, leader, at, shield)
 
+
+static func attach_title_leader_arms(parent: Node, leader, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(44, 52)) -> TextureRect:
+	return CKHeraldryField.attach_title_leader_arms(parent, leader, at, arms_sz)
+
+
+static func attach_ladder_badge(parent: Node, rank: String, badge_size: int = 26) -> TextureRect:
+	return CKHeraldryField.attach_ladder_badge(parent, rank, badge_size)
+
+
+static func attach_vow_company_arms(parent: Node, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
+	return CKHeraldryField.attach_vow_company_arms(parent, at, arms_sz)
+
 static func issuer_spec(issuer_id: String) -> Dictionary:
 	if issuer_is_home(issuer_id):
 		return company_spec()

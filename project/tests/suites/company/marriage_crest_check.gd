@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	await _run_helpers()
+	_run_vow_sources()
 	if _fails.is_empty():
 		print("MARRIAGE CREST PASS")
 		get_tree().quit(0)
@@ -128,3 +129,19 @@ func _run_helpers() -> void:
 	var strip2 := CKHeraldryField.place_marriage_crest_strip(host, lead, cand, Vector2(20, 20), Vector2(28, 34))
 	_ok(strip2 != null and host.get_node_or_null("MarriageCrestStrip") == strip2, "helper re-place")
 	host.queue_free()
+
+
+func _run_vow_sources() -> void:
+	var hub := FileAccess.get_file_as_string("res://scripts/hub/marriage.gd")
+	_ok(hub.find("CKHeraldryField.attach_vow_company_arms") >= 0, "vow → Field")
+	_ok(hub.find("VowCompanyArms") < 0 or hub.find("attach_vow_company_arms") >= 0, "vow not raw Chrome")
+	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
+	_ok(field.find("static func attach_vow_company_arms") >= 0, "field owns vow arms")
+	var host := Control.new()
+	get_tree().root.add_child(host)
+	var arms := CKHeraldryField.attach_vow_company_arms(host, Vector2(2, 2), Vector2(40, 48))
+	_ok(arms != null and arms.name == "VowCompanyArms", "api vow name")
+	_ok(arms != null and str(arms.get_meta("field_route", "")) == "marriage_vow", "api vow route")
+	_ok(arms != null and str(arms.get_meta("arms_kind", "")) == "gen2_36", "api vow 团徽")
+	host.queue_free()
+
