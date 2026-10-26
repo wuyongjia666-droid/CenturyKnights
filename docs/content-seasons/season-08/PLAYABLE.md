@@ -149,3 +149,9 @@
 - 验收：`content_season_ink_dry_chain_check` — hub chip → 墨干针口头。
 - 不碰 `_lop`/`_ldg`/`_cls`/`_bpl`/`_aud`/`_vex`/`_msr`/`_opn`。
 - 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_opn`/`_cls`/`_sec`/`_tvp`。
+
+## 回堡靴程口头加厚（return-boot）
+
+- 各章 `tavern` 拍在 `_tvx6` 后、`_ret_mv4` 前加 `_rtn1`–`_rtn6` 回堡靴程口头，全库去重；收束非旁白。
+- 验收：`content_season_return_boot_chain_check` — hub chip → 靴程针口头。
+- 不碰 `_arr`/`_tvp`/`_tvn`/`_tvx`/`_lop`/`_cls`/`_wex`/`_ink`/`_opn`。
