@@ -220,7 +220,7 @@ func _node(c: CKCharacter, at: Vector2, is_focus: bool) -> Button:
 	sub.size = Vector2(NODE.x - 8, 30 if mob else 16)
 	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(sub)
-	CKHeraldryChrome.attach_node_chrome(b, c, NODE)
+	CKHeraldryField.attach_tree_node_arms(b, c, NODE)
 	b.pressed.connect(func():
 		if _drag_dist > DRAG_SLOP:
 			return
