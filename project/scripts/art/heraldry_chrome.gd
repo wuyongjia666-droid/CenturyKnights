@@ -884,43 +884,18 @@ static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 
 ## Skill-tree header: 团徽 + 技徽旗布 (SkillCrestStrip).
 static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("SkillCrestStrip")
-	if old:
-		old.name = "_SkillCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "SkillCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "SkillBanner"
-	bn.tooltip_text = Locale.t("lb_skill_arms")
-	bn.set_meta("arms_kind", "lb_skill_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_skill_crest_strip(parent, at, shield, banner)
 
 
 ## Prepend SkillPersonArms into a detail/head host for the selected roster member.
 static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> void:
-	if host == null or c == null:
-		return
-	var old := host.get_node_or_null("SkillPersonArms")
-	if old:
-		old.name = "_SkillPersonArmsDying"
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "SkillPersonArms"
-	arms.tooltip_text = Locale.t("lb_skill_arms")
-	host.add_child(arms)
-	host.move_child(arms, 0)
+	CKHeraldryField.attach_skill_person_arms(host, c, arms_sz)
+
+## Lineage-info dossier plate person arms (LineageInfoArms).
+static func attach_lineage_info_arms(parent: Control, c, arms_sz: Vector2 = Vector2(48, 58)) -> TextureRect:
+	return CKHeraldryField.attach_lineage_info_arms(parent, c, arms_sz)
+
+
 
 
 ## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip).
