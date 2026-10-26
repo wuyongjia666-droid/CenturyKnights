@@ -19,6 +19,8 @@ static func step(host) -> String:
 		has_preview = true
 	if BattleSkillHealPreview.latched(host):
 		has_preview = true
+	if BattleSkillBuffPreview.latched(host):
+		has_preview = true
 	if has_preview:
 		# Prefer T-P16 back_out: stop follow tween, keep camera (no yank to unit).
 		if not BattleConfirmAffordance.back_out(host):
@@ -44,6 +46,7 @@ static func _exit_modes(host) -> void:
 	host.skill_mode = false
 	host.active_skill_id = ""
 	BattleSkillHealPreview.clear(host)
+	BattleSkillBuffPreview.clear(host)
 	var ui := int(host.selected)
 	if ui >= 0 and ui < host.units.size() and str(host.units[ui].team) == "player" and not bool(host.units[ui].done):
 		if host.has_method("_compute_move_cells"):
