@@ -630,3 +630,4 @@ holding_steward_cleared_short,已撤下庄头,Steward cleared
 holding_steward_pick_tip,委任此人管此地,Assign this roster member
 holding_echo_steward_on,庄头·%s 就任 %s,Steward · %s takes %s
 holding_echo_steward_off,庄头·%s 卸任 %s,Steward · %s leaves %s
+holding_steward_locked,属地未开垦,Holding not unlocked

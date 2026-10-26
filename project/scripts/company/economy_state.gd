@@ -259,7 +259,7 @@ static func assign_steward(host, hid: String, cid: String) -> Dictionary:
 
 static func clear_steward(host, hid: String) -> Dictionary:
 	if not host.holdings.has(hid):
-		return {"ok": false, "msg": "属地未开垦"}
+		return {"ok": false, "msg": Locale.t("holding_steward_locked")}
 	var cur := str(host.holdings[hid].get("steward_id", ""))
 	if cur == "":
 		return {"ok": false, "msg": Locale.t("holding_steward_none")}
