@@ -1,6 +1,7 @@
 extends Node
 ## Hub → 章 → 门槛外望口头 `_rim`。
-## S01–S10；插在首拍 `_ods6` 后、离开该拍前。不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`。
+## S01–S10；插在首拍 `_ods6` 后、离开该拍前。
+## 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`。
 ## 禁 EmptyHost / month_echo / 新 season。
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
