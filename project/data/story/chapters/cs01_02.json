@@ -1284,6 +1284,42 @@
           }
         },
         {
+          "id": "cs0102_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs01_mid_fought" },
+          "text": "桥泥上的脚窝浅了。浅处，才看得出谁退了。"
+        },
+        {
+          "id": "cs0102_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs01_mid_fought" },
+          "text": "芦里没再晃。晃的是风，不是刀。"
+        },
+        {
+          "id": "cs0102_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs01_mid_fought" },
+          "text": "吴钩影短。短了，副页才敢翻。"
+        },
+        {
+          "id": "cs0102_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs01_mid_fought" },
+          "text": "袖口的泥我拍净。净了，字才不脏。"
+        },
+        {
+          "id": "cs0102_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs01_mid_fought" },
+          "text": "旗角别扫桥栏。栏上的霜，比血干净。"
+        },
+        {
+          "id": "cs0102_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs01_mid_fought" },
+          "text": "这一锋补过欠。桥我还过，副页我认。"
+        },
+        {
           "speaker": "旁白",
           "text": "锋收回来。副页纸还钉着。空格旁那拨，没散。",
           "when": {

@@ -445,6 +445,42 @@
           }
         },
         {
+          "id": "cs0201_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "院墙外影子散尽。婚约灯芯，终于不跳了。"
+        },
+        {
+          "id": "cs0201_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "院门清了。清了，产房那边才听得见笑。"
+        },
+        {
+          "id": "cs0201_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "烟不往里灌。灌烟的日子，今晚掐断。"
+        },
+        {
+          "id": "cs0201_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "墨盘还温。温着写，字会听话。"
+        },
+        {
+          "id": "cs0201_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "旗别卷太紧。紧旗像怕，婚约看见会皱。"
+        },
+        {
+          "id": "cs0201_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "锋验过。灯下签婚约，字是我的。"
+        },
+        {
           "id": "cs02_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。院墙外的影子还在。婚约灯还没点。",

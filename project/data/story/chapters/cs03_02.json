@@ -1284,6 +1284,42 @@
           }
         },
         {
+          "id": "cs0302_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "粮袋口扎紧。紧处，抢粮的影退到埂下。"
+        },
+        {
+          "id": "cs0302_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "空袋吓人。满袋今晚，埂上站得住。"
+        },
+        {
+          "id": "cs0302_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "粮沉肩，心反而轻。轻的是怕，不是粮。"
+        },
+        {
+          "id": "cs0302_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "袋角的谷我拍回。一粒也不喂坡下那拨。"
+        },
+        {
+          "id": "cs0302_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "旗杆抵着袋。抵住，风也掏不走。"
+        },
+        {
+          "id": "cs0302_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "锋护过粮。袋我背得，埂我过。"
+        },
+        {
           "speaker": "旁白",
           "text": "锋收回来。榜阴纸还钉着。粮行旁那拨，没散。",
           "when": {

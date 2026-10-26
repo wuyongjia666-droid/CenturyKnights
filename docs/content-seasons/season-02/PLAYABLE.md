@@ -147,7 +147,11 @@
 - 各章 visit 拍（audit/birth/hourglass）在 `_vhg` 前加 `_aud1`–`_aud6` 落笔口头，全库去重；收束非旁白。
 - 验收：`content_season_audit_pen_chain_check` — hub chip → 落笔针口头。
 - 不碰 `_vop`/`_vhg`/`_msr`/`_bpl`/`_lop`/`_cls`/`_sec`/`_tvp`/`_wex`/`_opn`/`_vex`。
-- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_opn`/`_cls`/`_sec`/`_tvp`。
+
+## 战后收锋口头加厚（battle-settle）
+- 各章试锋胜后 `_win4` 后、`mid_lost`（若有）前加 `_wex1`–`_wex6` 收锋口头，全库去重；收束非旁白。
+- 验收：`content_season_battle_settle_chain_check` — hub chip → 收锋针口头。
+- 不碰 `_bpl`/`_tvx`/`_lop`/`_vop`/`_opn`/`_vex`/`_thm`/`_sec`。
 
 ## 回堡靴程口头加厚（return-boot）
 

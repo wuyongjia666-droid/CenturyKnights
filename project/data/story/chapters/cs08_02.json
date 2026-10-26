@@ -891,6 +891,42 @@
           }
         },
         {
+          "id": "cs0802_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "碑阴拓完。完处，抢拓那拨退到槐影外。"
+        },
+        {
+          "id": "cs0802_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "拓要自己按。按实，才不像偷来的影。"
+        },
+        {
+          "id": "cs0802_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "碑上的凉渡到腕。腕定了，字才不抖。"
+        },
+        {
+          "id": "cs0802_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "拓纸我卷齐。齐了，阴面不皱。"
+        },
+        {
+          "id": "cs0802_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "旗别扫碑座。座上的苔，比刀干净。"
+        },
+        {
+          "id": "cs0802_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "锋护过碑。拓我按得，阴面我收。"
+        },
+        {
           "id": "cs08b_br_lost",
           "speaker": "旁白",
           "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",

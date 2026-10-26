@@ -853,6 +853,42 @@
           }
         },
         {
+          "id": "cs0502_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "链环扣死。死扣处，夺链那拨退到阶下。"
+        },
+        {
+          "id": "cs0502_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "链要扣。扣死，才不像挂着玩的铜响。"
+        },
+        {
+          "id": "cs0502_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "环声一下实。假环再摇，也接不上这声。"
+        },
+        {
+          "id": "cs0502_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "扣眼我验过。过了，才敢松手。"
+        },
+        {
+          "id": "cs0502_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "旗别缠链。缠了，链像绳，不像证。"
+        },
+        {
+          "id": "cs0502_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "锋护过链。扣我锁得，阶下不问。"
+        },
+        {
           "id": "cs05b_br_lost",
           "speaker": "旁白",
           "text": "锋收回来。回读纸还钉着。椅旁那拨，没散。",
