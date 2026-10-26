@@ -27,6 +27,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	var eb := UIKit.mono("POST-ACTION REPORT // %s // CENTURY KNIGHTS" % ("STAGE CLEARED" if win else "MISSION FAILED"), 9, col, false)
 	eb.position = Vector2(42, 22)
 	root.add_child(eb)
+	CKHeraldryField.place_report_crest_strip(root, Vector2(700, 12), CKHeraldryChrome.battle_foe_nation_for(host), Vector2(36, 44))
 	var rec := UIKit.tag_chip("ROUND %02d" % maxi(1, host._round_no), col)
 	rec.position = Vector2(1238 - rec.get_minimum_size().x, 18)
 	root.add_child(rec)
@@ -52,7 +53,9 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 			tot += 1
 			if bool(exp_before.get(u.char.id, [0, false])[1]):
 				lost += 1
-	_kpi_card(root, Rect2(860, 62, 180, 64), "CASUALTY STATUS", Locale.t("shell_743453d5") if lost == 0 else Locale.t("shell_02be2aed") % lost, UIKit.OK if lost == 0 else UIKit.DANGER)
+	var cas_txt := Locale.t("shell_743453d5") if lost == 0 else Locale.t("shell_02be2aed") % lost
+	var cas_col := UIKit.OK if lost == 0 else UIKit.DANGER
+	_kpi_card(root, Rect2(860, 62, 180, 64), "CASUALTY STATUS", cas_txt, cas_col)
 	var grade := "S" if win and lost == 0 and host._round_no <= 6 else ("A" if win and lost == 0 else ("B" if win else "—"))
 	_kpi_card(root, Rect2(1052, 62, 186, 64), "COMBAT RATING", "GRADE %s" % grade, col)
 	var hl := UIKit.hairline(Color(1, 1, 1, 0.08))
@@ -72,6 +75,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 		pr.size = Vector2(52, 52)
 		pr.custom_minimum_size = Vector2(52, 52)
 		root.add_child(pr)
+		CKHeraldryField.attach_report_row_arms(root, c, Vector2(60, y + 40), Vector2(22, 26))
 		var nh := HBoxContainer.new()
 		nh.position = Vector2(124, y + 14)
 		nh.add_theme_constant_override("separation", 8)
@@ -80,7 +84,8 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 		nh.add_child(UIKit.tag_chip(str(GameState.get_job(c.job_id).get("name", "")), UIKit.ACCENT))
 		nh.add_child(UIKit.mono("LV.%02d" % c.level, 10, UIKit.TEXT_FAINT, false))
 		var fell := bool(exp_before.get(c.id, [0, false])[1])
-		var st := UIKit.body_label((Locale.t("shell_b883c04b") if fell else "HP %d / %d" % [c.hp, c.max_hp]) if win else Locale.t("shell_12e258e0"), UIKit.DANGER if fell else UIKit.TEXT_FAINT, 11)
+		var st_txt := Locale.t("shell_12e258e0") if not win else (Locale.t("shell_b883c04b") if fell else "HP %d / %d" % [c.hp, c.max_hp])
+		var st := UIKit.body_label(st_txt, UIKit.DANGER if fell else UIKit.TEXT_FAINT, 11)
 		st.autowrap_mode = TextServer.AUTOWRAP_OFF
 		st.position = Vector2(124, y + 38)
 		root.add_child(st)
@@ -101,11 +106,18 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	# right: spoils
 	UIKit.section_head(root, Vector2(752, 180), Locale.t("shell_34f6bccc") if win else Locale.t("shell_bda544ee"), "SPOILS OF VICTORY" if win else "AFTER ACTION", 486, "")
 	UIKit.panel_at(root, Rect2(752, 210, 486, 228), 8)
-	var spoils: Array = [[Locale.t("shell_946c7148"), Locale.t("shell_28034c74"), "+%d" % purse, UIKit.ACCENT, "DEPOSITED"], [Locale.t("shell_fe3695dc"), Locale.t("shell_1ae08583"), "+8", UIKit.OK, "ACQUIRED"]]
+	var spoils: Array = [
+		[Locale.t("shell_946c7148"), Locale.t("shell_28034c74"), "+%d" % purse, UIKit.ACCENT, "DEPOSITED"],
+		[Locale.t("shell_fe3695dc"), Locale.t("shell_1ae08583"), "+8", UIKit.OK, "ACQUIRED"],
+	]
 	if sp_gain > 0:
 		spoils.append([Locale.t("shell_9c678de1"), Locale.t("shell_ed24d742"), "+%d" % sp_gain, UIKit.ACCENT, "UNLOCKED"])
 	if not win:
-		spoils = [[Locale.t("shell_acf014bf"), Locale.t("shell_141d265b"), Locale.t("shell_d046ac70"), UIKit.OK, "SAFE"], [Locale.t("shell_b894a8c9"), Locale.t("shell_ea18aad3"), "100%", UIKit.OK, "RESTORED"], [Locale.t("shell_c5134eb1"), Locale.t("shell_a5dfcb81"), Locale.t("shell_e2d53a6d"), UIKit.DANGER, "RETRY"]]
+		spoils = [
+			[Locale.t("shell_acf014bf"), Locale.t("shell_141d265b"), Locale.t("shell_d046ac70"), UIKit.OK, "SAFE"],
+			[Locale.t("shell_b894a8c9"), Locale.t("shell_ea18aad3"), "100%", UIKit.OK, "RESTORED"],
+			[Locale.t("shell_c5134eb1"), Locale.t("shell_a5dfcb81"), Locale.t("shell_e2d53a6d"), UIKit.DANGER, "RETRY"],
+		]
 	var sy := 224.0
 	for sp in spoils:
 		var row := Panel.new()

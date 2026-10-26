@@ -25,11 +25,16 @@ festival_spring_blurb,联姻的帖子在这个月换一轮,Marriage letters refr
 festival_tourney,比武,Muster of arms
 festival_tourney_blurb,旗下较技，奖的是声望。竞技场规则战还没接上,Reputation only until the arena rules land
 festival_tourney_purse,比武散场，灰烬邦记下了旗,The muster is noted
+forge_craft_done,打造完成：灰刃 +2 攻,Forged: Ash blade +2 ATK
+forge_craft_done_fine,打造完成：灰刃·精 +3 攻,Forged: Fine ash blade +3 ATK
+forge_craft_equipped,%s 装备%s%s,%s equipped %s%s
 forge_modify,改造装备,Modify gear
 forge_plus_fail,改造 +%d 没成，材料已经入炉,Plus %d failed and the materials are spent
 forge_plus_max,已经加到三成,Already at plus 3
 forge_plus_ok,改造成了 +%d,Forged to plus %d
 forge_plus_short,铁或银不够,Short on iron or silver
+forge_weapon,灰刃,Ash blade
+forge_weapon_fine,灰刃·精,Fine ash blade
 heirloom_none,手里没有传家宝,No heirloom
 heirloom_not_vaulted,宝库里没有这件,Not in the treasury
 heirloom_store,收入宝库,Store heirloom
@@ -473,6 +478,11 @@ atlas_siege_loot_body_lost,%s 攻陷「%s」：粮仓被洗劫 %d（仓空）。
 atlas_siege_loot_ok,已知晓,Understood
 atlas_siege_loot_hold_log,「%s」守住了据点，粮仓仍失 %d。,"%s" held — cache still lost %d.
 atlas_siege_loot_lost_log,「%s」失守，粮仓被劫 %d。,"%s" fell — cache looted %d.
+atlas_convoy_need_threat,无围城威胁，不必撤仓。,No siege threat — no need to evacuate.
+atlas_convoy_ok_stockade,「%s」粮仓撤运 %d 至「%s」（途损 %d）。,"%s" evacuated %d food to "%s" (spoilage %d).
+atlas_convoy_ok_company,「%s」粮仓撤入行囊 %d（途损 %d）。,"%s" evacuated %d food into the company (spoilage %d).
+atlas_siege_evacuate,撤仓护粮,Evacuate cache
+atlas_siege_evacuate_done,粮仓已撤：%s,Cache evacuated: %s
 atlas_season_spring,春,Spring
 atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn
@@ -520,3 +530,20 @@ atlas_muster_ration,口粮：%s,Rations: %s
 atlas_muster_on_march,行军中已并入编制，确认后继续赶路。,Joined on the march — continue after confirm.
 atlas_muster_in_camp,已并入灰旗编制。,Joined the Ash Banner muster.
 atlas_muster_continue,确认编成,Confirm muster
+atlas_contest_en,CONTEST // 拉锯,CONTEST // TUG
+atlas_contest_title,中立领地拉锯,Neutral site contested
+atlas_contest_body,「%s」（锚地 %s）正被多方争夺：%s。%s,"%s" (anchor %s) is contested by: %s. %s
+atlas_contest_phase_declared,争夺初起，尚有一月可截击。,Race just started — about one month to intervene.
+atlas_contest_phase_imminent,胜负在即，再不截击将由强势一方吞并。,Decision imminent — strongest faction claims if unanswered.
+atlas_contest_seize,驰援截击,March to seize
+atlas_contest_seize_now,就地强攻,Assault now
+atlas_contest_seize_go,启程截击「%s」,Marching to seize "%s"
+atlas_contest_watch,观望,Stand aside
+atlas_contest_watch_ok,观望「%s」拉锯，容后再决。,Watching the race for "%s".
+atlas_contest_later,稍后,Later
+atlas_contest_bandit,%s流寇,Bandits of %s
+atlas_contest_log,中立「%s」拉锯起：%s,Neutral "%s" contested: %s
+atlas_contest_resolved,「%s」拉锯落幕 · %s 得手,"%s" contest ends · %s claims it
+atlas_contest_summary,拉锯中：%s,Contested: %s
+atlas_contest_gone,拉锯已散。,Contest already settled.
+atlas_contest_factions,争夺方：%s,Factions: %s

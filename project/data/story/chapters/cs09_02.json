@@ -385,6 +385,26 @@
           "text": "假血一夜，验册就脏。"
         },
         {
+          "id": "cs0902_vhg1",
+          "speaker": "听回",
+          "text": "验册副页薄。薄页上的空，像未刺的第二针。"
+        },
+        {
+          "id": "cs0902_vhg2",
+          "speaker": "听回",
+          "text": "验册不改月份。改的是你敢不敢把未验写成未验。"
+        },
+        {
+          "id": "cs0902_vhg3",
+          "speaker": "leader",
+          "text": "验册空着末格。我留空，不拿第一针去填。"
+        },
+        {
+          "id": "cs0902_vhg4",
+          "speaker": "苇原·灯影",
+          "text": "灯照针尖。尖亮，假验更无处躲。"
+        },
+        {
           "id": "cs0902_vis_mv1",
           "speaker": "旁白",
           "text": "验册夹缝里夹着一粒沙。不知谁带进来的。"
@@ -603,7 +623,7 @@
           "speaker": "旁白",
           "text": "锋再定。血巾二次验干，卖泼的连声都没了。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -611,7 +631,7 @@
           "speaker": "掌柜",
           "text": "二次验比一次验短。短，是因为已经清。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -619,7 +639,7 @@
           "speaker": "槐里·青禾",
           "text": "巾角旧星旁又干一星。两星，才像足验。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -627,7 +647,7 @@
           "speaker": "leader",
           "text": "锋再问一次。血，仍我的。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -637,10 +657,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs09_02_mid_lost"
+                "flag": "cs09_mid_lost"
               },
               {
-                "not_flag": "cs09_02_mid_fought"
+                "not_flag": "cs09_mid_fought"
               }
             ]
           }
@@ -654,10 +674,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs09_02_mid_fought"
+                "not_flag": "cs09_mid_fought"
               },
               {
-                "not_flag": "cs09_02_mid_lost"
+                "not_flag": "cs09_mid_lost"
               }
             ]
           },
@@ -668,10 +688,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs09_02_mid_fought"
+                "cs09_mid_fought"
               ],
               "lose_flags": [
-                "cs09_02_mid_lost"
+                "cs09_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -688,10 +708,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs09_02_mid_fought"
+                "not_flag": "cs09_mid_fought"
               },
               {
-                "flag": "cs09_02_mid_lost"
+                "flag": "cs09_mid_lost"
               }
             ]
           },
@@ -702,10 +722,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs09_02_mid_fought"
+                "cs09_mid_fought"
               ],
               "lose_flags": [
-                "cs09_02_mid_lost"
+                "cs09_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -725,10 +745,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs09_02_mid_fought"
+                    "not_flag": "cs09_mid_fought"
                   },
                   {
-                    "not_flag": "cs09_02_mid_lost"
+                    "not_flag": "cs09_mid_lost"
                   }
                 ]
               },
@@ -743,10 +763,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs09_02_mid_fought"
+                    "not_flag": "cs09_mid_fought"
                   },
                   {
-                    "flag": "cs09_02_mid_lost"
+                    "flag": "cs09_mid_lost"
                   }
                 ]
               },
@@ -902,6 +922,36 @@
           "id": "cs0902_ret_mv3",
           "speaker": "岁吏",
           "text": "真事回堡。"
+        },
+        {
+          "id": "cs0902_tvp1",
+          "speaker": "旁白",
+          "text": "验册空行用朱丝拦着，丝下仍是白。"
+        },
+        {
+          "id": "cs0902_tvp2",
+          "speaker": "掌柜",
+          "text": "白不是空着好玩。是等验完的人自己写。"
+        },
+        {
+          "id": "cs0902_tvp3",
+          "speaker": "槐里·青禾",
+          "text": "催血名的笔最快。快笔最易写成别人的。"
+        },
+        {
+          "id": "cs0902_tvp4",
+          "speaker": "书记官",
+          "text": "验空并排。并排着白，也比假红强。"
+        },
+        {
+          "id": "cs0902_tvp5",
+          "speaker": "老管事",
+          "text": "假红挂一夜，仇来一季。"
+        },
+        {
+          "id": "cs0902_tvp6",
+          "speaker": "leader",
+          "text": "空行我留。催名的，先过朱丝。"
         },
         {
           "id": "cs0902_tvn1",
@@ -1099,9 +1149,29 @@
           "text": "新泼的不认。"
         },
         {
-          "id": "cs09b_le_18",
-          "speaker": "旁白",
-          "text": "厅灯灭一盏。验册小灯还亮。"
+          "id": "cs0902_ldg1",
+          "speaker": "岁吏",
+          "text": "两星干并排，复验合册才敢。"
+        },
+        {
+          "id": "cs0902_ldg2",
+          "speaker": "书记官",
+          "text": "卖泼的声，湿着也不进。"
+        },
+        {
+          "id": "cs0902_ldg3",
+          "speaker": "槐里·青禾",
+          "text": "巾角旧星旁新星，足验。"
+        },
+        {
+          "id": "cs0902_ldg4",
+          "speaker": "leader",
+          "text": "复验并排。厅灯可灭一盏，验册小灯不灭。"
+        },
+        {
+          "id": "cs0902_ldg_end",
+          "speaker": "leader",
+          "text": "第二道巾印旁，灰旗堡验册柜等合页。"
         }
       ]
     }

@@ -463,7 +463,7 @@
         {
           "id": "cs03_02_hourglass_1",
           "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对粮。",
+          "text": "沙漏边上，回读只问一句：你敢不敢对粮。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -617,7 +617,7 @@
         {
           "id": "cs03_02_hourglass_15",
           "speaker": "旁白",
-          "text": "两行终于对上。一对，就不敢假填·朝报。",
+          "text": "两行对准了。一对上，假填就站不住·朝报。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0302_vhg1",
+          "speaker": "岁吏",
+          "text": "榜阴贴着正榜。阴面的空，比阳面更刺眼。"
+        },
+        {
+          "id": "cs0302_vhg2",
+          "speaker": "书记官",
+          "text": "朝报不改月份。改的是你敢不敢念阴面的缺口。"
+        },
+        {
+          "id": "cs0302_vhg3",
+          "speaker": "leader",
+          "text": "榜阴空着。我对着缺口，不拿阳面的满去盖。"
+        },
+        {
+          "id": "cs0302_vhg4",
+          "speaker": "苇原·灯影",
+          "text": "阴面灯更冷。冷着，字才不糊。"
         },
         {
           "id": "cs0302_vis_mv1",
@@ -996,7 +1016,7 @@
           "speaker": "旁白",
           "text": "锋再定。粮袋口扎紧，抢粮那拨退到埂下。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1004,7 +1024,7 @@
           "speaker": "掌柜",
           "text": "空袋吓人。满袋，今晚不怕。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1012,7 +1032,7 @@
           "speaker": "槐里·青禾",
           "text": "粮沉肩，心反而轻。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1020,7 +1040,7 @@
           "speaker": "leader",
           "text": "锋护过粮。袋，我背得。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1029,10 +1049,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs03_02_mid_lost"
+                "flag": "cs03_mid_lost"
               },
               {
-                "not_flag": "cs03_02_mid_fought"
+                "not_flag": "cs03_mid_fought"
               }
             ]
           },
@@ -1047,10 +1067,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs03_02_mid_fought"
+                "not_flag": "cs03_mid_fought"
               },
               {
-                "not_flag": "cs03_02_mid_lost"
+                "not_flag": "cs03_mid_lost"
               }
             ]
           },
@@ -1061,10 +1081,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs03_02_mid_fought"
+                "cs03_mid_fought"
               ],
               "lose_flags": [
-                "cs03_02_mid_lost"
+                "cs03_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1081,10 +1101,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs03_02_mid_fought"
+                "not_flag": "cs03_mid_fought"
               },
               {
-                "flag": "cs03_02_mid_lost"
+                "flag": "cs03_mid_lost"
               }
             ]
           },
@@ -1095,10 +1115,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs03_02_mid_fought"
+                "cs03_mid_fought"
               ],
               "lose_flags": [
-                "cs03_02_mid_lost"
+                "cs03_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1118,10 +1138,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs03_02_mid_fought"
+                    "not_flag": "cs03_mid_fought"
                   },
                   {
-                    "not_flag": "cs03_02_mid_lost"
+                    "not_flag": "cs03_mid_lost"
                   }
                 ]
               },
@@ -1136,10 +1156,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs03_02_mid_fought"
+                    "not_flag": "cs03_mid_fought"
                   },
                   {
-                    "flag": "cs03_02_mid_lost"
+                    "flag": "cs03_mid_lost"
                   }
                 ]
               },
@@ -1388,6 +1408,36 @@
           "id": "cs0302_ret_mv3",
           "speaker": "岁吏",
           "text": "钉住回堡。"
+        },
+        {
+          "id": "cs0302_tvp1",
+          "speaker": "旁白",
+          "text": "榜阴拓本反着光，字像从板背透出来。"
+        },
+        {
+          "id": "cs0302_tvp2",
+          "speaker": "掌柜",
+          "text": "阴面的字，挂正面也藏不住。藏不住才真。"
+        },
+        {
+          "id": "cs0302_tvp3",
+          "speaker": "岁吏",
+          "text": "真功不怕阴。怕阴的，是只写了阳面的人。"
+        },
+        {
+          "id": "cs0302_tvp4",
+          "speaker": "老旗手",
+          "text": "旗在榜下站过。站过，阴面也有根。"
+        },
+        {
+          "id": "cs0302_tvp5",
+          "speaker": "石垒·晚担",
+          "text": "根在，并排才稳。稳了再喝酒。"
+        },
+        {
+          "id": "cs0302_tvp6",
+          "speaker": "leader",
+          "text": "阴面我留。催功栏的话，先过我这一盏。"
         },
         {
           "id": "cs0302_tvn1",
@@ -1693,15 +1743,29 @@
           "text": "数要真。"
         },
         {
-          "id": "cs03_02_ledger_19",
+          "id": "cs0302_ldg1",
+          "speaker": "岁吏",
+          "text": "回粮与功阴并排，袋口扎紧才进册。"
+        },
+        {
+          "id": "cs0302_ldg2",
+          "speaker": "书记官",
+          "text": "抢粮的影，只记埂下不记正行。"
+        },
+        {
+          "id": "cs0302_ldg3",
+          "speaker": "石垒·晚担",
+          "text": "谷壳香还在袖里——香在，粮就在。"
+        },
+        {
+          "id": "cs0302_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。榜阴本在柜里。",
-          "stage": {
-            "card": "六　入册",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "回粮并排。灯不灭，榜阴在柜。"
+        },
+        {
+          "id": "cs0302_ldg_end",
+          "speaker": "leader",
+          "text": "粮秤星旁，灰旗堡榜阴柜等回粮数。"
         }
       ],
       "actions": []

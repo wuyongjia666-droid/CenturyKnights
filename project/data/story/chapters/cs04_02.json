@@ -463,7 +463,7 @@
         {
           "id": "cs04_02_hourglass_1",
           "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对行。",
+          "text": "沙漏边上，回读只问一句：你敢不敢对行。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -617,7 +617,7 @@
         {
           "id": "cs04_02_hourglass_15",
           "speaker": "旁白",
-          "text": "两行终于对上。一对，就不敢假填·家训。",
+          "text": "两行对准了。一对上，假填就站不住·家训。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0402_vhg1",
+          "speaker": "书记官",
+          "text": "训阴写在轴背。背着的字，要翻过来才见。"
+        },
+        {
+          "id": "cs0402_vhg2",
+          "speaker": "书记官",
+          "text": "翻轴前先听沙。沙停，阴训才准你念。"
+        },
+        {
+          "id": "cs0402_vhg3",
+          "speaker": "leader",
+          "text": "训阴空着一行。我翻过来念，不装没看见。"
+        },
+        {
+          "id": "cs0402_vhg4",
+          "speaker": "石垒·晚担",
+          "text": "轴背沾了沙。沙在，假补更显眼。"
         },
         {
           "id": "cs0402_vis_mv1",
@@ -996,7 +1016,7 @@
           "speaker": "旁白",
           "text": "锋再定。契纸角压住，抢契那拨退到廊外。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1004,7 +1024,7 @@
           "speaker": "掌柜",
           "text": "契要压。压住，才不像飞的。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1012,7 +1032,7 @@
           "speaker": "槐里·青禾",
           "text": "墨干了。干了，字才是自己的。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1020,7 +1040,7 @@
           "speaker": "leader",
           "text": "锋护过契。字，我签得。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1029,10 +1049,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs04_02_mid_lost"
+                "flag": "cs04_mid_lost"
               },
               {
-                "not_flag": "cs04_02_mid_fought"
+                "not_flag": "cs04_mid_fought"
               }
             ]
           },
@@ -1047,10 +1067,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs04_02_mid_fought"
+                "not_flag": "cs04_mid_fought"
               },
               {
-                "not_flag": "cs04_02_mid_lost"
+                "not_flag": "cs04_mid_lost"
               }
             ]
           },
@@ -1061,10 +1081,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs04_02_mid_fought"
+                "cs04_mid_fought"
               ],
               "lose_flags": [
-                "cs04_02_mid_lost"
+                "cs04_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1081,10 +1101,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs04_02_mid_fought"
+                "not_flag": "cs04_mid_fought"
               },
               {
-                "flag": "cs04_02_mid_lost"
+                "flag": "cs04_mid_lost"
               }
             ]
           },
@@ -1095,10 +1115,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs04_02_mid_fought"
+                "cs04_mid_fought"
               ],
               "lose_flags": [
-                "cs04_02_mid_lost"
+                "cs04_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1118,10 +1138,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs04_02_mid_fought"
+                    "not_flag": "cs04_mid_fought"
                   },
                   {
-                    "not_flag": "cs04_02_mid_lost"
+                    "not_flag": "cs04_mid_lost"
                   }
                 ]
               },
@@ -1136,10 +1156,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs04_02_mid_fought"
+                    "not_flag": "cs04_mid_fought"
                   },
                   {
-                    "flag": "cs04_02_mid_lost"
+                    "flag": "cs04_mid_lost"
                   }
                 ]
               },
@@ -1388,6 +1408,36 @@
           "id": "cs0402_ret_mv3",
           "speaker": "岁吏",
           "text": "挂完回。"
+        },
+        {
+          "id": "cs0402_tvp1",
+          "speaker": "旁白",
+          "text": "训阴写在绢背，迎灯才见针脚似的细字。"
+        },
+        {
+          "id": "cs0402_tvp2",
+          "speaker": "掌柜",
+          "text": "细字也要钉牢。钉不牢，绢一抖字就逃。"
+        },
+        {
+          "id": "cs0402_tvp3",
+          "speaker": "苇原·灯影",
+          "text": "逃字的训，听着像劝别人。"
+        },
+        {
+          "id": "cs0402_tvp4",
+          "speaker": "石垒·晚担",
+          "text": "绣词催得急，针脚必乱。乱了明年拆。"
+        },
+        {
+          "id": "cs0402_tvp5",
+          "speaker": "老旗手",
+          "text": "旗边别刮绢。刮毛了，阴面更糊。"
+        },
+        {
+          "id": "cs0402_tvp6",
+          "speaker": "leader",
+          "text": "训行仍并。催绣词的，先看自己针脚。"
         },
         {
           "id": "cs0402_tvn1",
@@ -1693,15 +1743,29 @@
           "text": "我走实步。"
         },
         {
-          "id": "cs04_02_ledger_19",
+          "id": "cs0402_ldg1",
+          "speaker": "岁吏",
+          "text": "契缝与训阴并排，墨干才算自己的字。"
+        },
+        {
+          "id": "cs0402_ldg2",
+          "speaker": "书记官",
+          "text": "抢契的风，掀不进录。"
+        },
+        {
+          "id": "cs0402_ldg3",
+          "speaker": "老旗手",
+          "text": "旗在契案立过——字有根。"
+        },
+        {
+          "id": "cs0402_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。训阴本在柜里。",
-          "stage": {
-            "card": "六　入册",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "契压住。灯不灭，训阴在柜。"
+        },
+        {
+          "id": "cs0402_ldg_end",
+          "speaker": "leader",
+          "text": "契角压平处，灰旗堡训阴柜等签字。"
         }
       ],
       "actions": []
