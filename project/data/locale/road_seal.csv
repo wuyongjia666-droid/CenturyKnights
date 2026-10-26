@@ -33,3 +33,9 @@ seal_force_none,这条路没有封口可刮。,This road has no seal to force.
 seal_hop_fail,绕行没能走到 %s,The detour did not reach %s
 seal_hop_sealed,绕行仍踩上封路 %s,The detour still uses the sealed road %s
 seal_march_fail,这程没有走成。,The march did not start.
+seal_resume_none,无绕路可续,No detour left to resume
+seal_resume_broken,绕路已断,The detour path is broken
+seal_resume_sealed,续行撞上封路,Resume hit a sealed road
+seal_resume_halted,中途停驻,Halted mid-detour
+seal_resume_miss,未抵达,Did not reach the destination
+atlas_no_route,无路可达,No route

@@ -549,6 +549,13 @@ func _refresh_top() -> void:
 		["粮", "%d（%d 日）" % [GameState.food, food_days], UIKit.OK if food_days >= 6 else UIKit.DANGER],
 		["士气", str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER],
 	]
+	var seal_chip: Dictionary = World.seal_bypass_chip()
+	if bool(seal_chip.get("show", false)):
+		chips.append([
+			Locale.t("atlas_chip_seal_bypass"),
+			Locale.t("atlas_chip_seal_days") % int(seal_chip.get("seal_need", 0)),
+			UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER,
+		])
 	var back_t := "返回城堡"
 	if _mob:
 		var parts := PackedStringArray()
@@ -755,7 +762,13 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 	# overlays: quest objective ◆ / turn-in ✓ / mainline ★
 	var badges: Array = []
 	for mk in markers.get(id, []):
-		badges.append(["✓", UIKit.OK] if str(mk.kind) == "turnin" else ["◆", UIKit.DANGER])
+		var mk_kind := str(mk.kind)
+		if mk_kind == "turnin":
+			badges.append(["✓", UIKit.OK])
+		elif mk_kind == "pickup":
+			badges.append(["◇", UIKit.ACCENT])
+		else:
+			badges.append(["◆", UIKit.DANGER])
 	if str(mm.get("node", "")) == id:
 		badges.append(["★", UIKit.EMBER])
 	if id == str(World.nations.get(_view, {}).get("capital", "")):
@@ -1004,6 +1017,12 @@ func _render_left() -> void:
 	var ration_row := UIKit.kv_row(Locale.t("atlas_ration_label"), World.food_ration_text(), UIKit.TEXT, 140)
 	ration_row.name = "MarchRationRow"
 	kv.add_child(ration_row)
+	var seal_chip: Dictionary = World.seal_bypass_chip()
+	if bool(seal_chip.get("show", false)):
+		var seal_col: Color = UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER
+		var seal_row := UIKit.kv_row(Locale.t("atlas_chip_seal_bypass"), Locale.t("atlas_chip_seal_days") % int(seal_chip.get("seal_need", 0)), seal_col, 140)
+		seal_row.name = "PartySealBypassRow"
+		kv.add_child(seal_row)
 	kv.add_child(UIKit.kv_row("货舱", "%d / %d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT, 140))
 	kv.add_child(UIKit.kv_row("委托", "%d / %d" % [World.active.size(), int(World.rules.get("active_limit", 5))], UIKit.ACCENT, 140))
 	kv.add_child(UIKit.kv_row("战力层级", "T%d" % World.world_tier(), UIKit.TEXT, 140))
@@ -1203,7 +1222,10 @@ func _render_right() -> void:
 	var mm: Dictionary = World.mainline_marker()
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
-		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 12)
+		var mk_kind := str(mk.kind)
+		var mark_txt := Locale.t("atlas_mark_turnin") if mk_kind == "turnin" else (Locale.t("atlas_mark_pickup") if mk_kind == "pickup" else Locale.t("atlas_mark_objective"))
+		var mark_col := UIKit.OK if mk_kind == "turnin" else (UIKit.ACCENT if mk_kind == "pickup" else UIKit.DANGER)
+		var ql := UIKit.body_label("%s %s" % [mark_txt, q.title], mark_col, 12)
 		ql.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		ql.clip_text = false
 		ql.custom_minimum_size = Vector2(col_w, 0)
@@ -1248,12 +1270,25 @@ func _render_right() -> void:
 	go.pressed.connect(_start_travel)
 	p.add_child(go)
 	var readies := World.ready_turn_ins_here().size() if _sel == World.pos else 0
-	var enter_label := Locale.t("atlas_enter_turnin") % readies if readies > 0 else Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
-	var enter := UIKit.ghost_button(enter_label, 148 if readies > 0 else 108, 32)
+	var pickups := World.gather_pickups_here().size() if _sel == World.pos else 0
+	var enter_label := Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
+	var enter_w := 108
+	if readies > 0:
+		enter_label = Locale.t("atlas_enter_turnin") % readies
+		enter_w = 148
+	elif pickups > 0:
+		enter_label = Locale.t("atlas_enter_pickup") % pickups
+		enter_w = 148
+	var enter := UIKit.ghost_button(enter_label, enter_w, 32)
 	enter.name = "EnterButton"
 	enter.position = Vector2(16, 518)
 	enter.disabled = _busy or _sel != World.pos or not World.encounter.is_empty()
-	enter.pressed.connect(_enter_here)
+	enter.pressed.connect(func():
+		if readies > 0:
+			GameState.set_meta("city_tab", "board")
+		elif pickups > 0:
+			GameState.set_meta("city_tab", "market")
+		_enter_here())
 	p.add_child(enter)
 	var ch := UIKit.ghost_button("主线章节", 108, 32)
 	ch.name = "ChapterButton"
@@ -1328,7 +1363,7 @@ func _render_region_profile(p: Panel, nid: String) -> void:
 	kv.add_child(UIKit.kv_row("都城", str(World.node(str(nat.get("capital", ""))).get("name", "—")), UIKit.TEXT, 224))
 	kv.add_child(UIKit.kv_row("过境关税", "%d 银" % World.toll_for(nid), UIKit.TEXT, 224))
 	kv.add_child(UIKit.kv_row("名匠", str(nat.get("smith", "")), UIKit.TEXT, 224))
-	var pv: Dictionary = World.travel_preview(str(nat.get("capital", "")))
+	var pv: Dictionary = World.seal_aware_travel_preview(str(nat.get("capital", "")))
 	kv.add_child(UIKit.kv_row("至都城", "%d 日" % int(pv.get("days", 0)) if bool(pv.get("ok", false)) else "已在此", UIKit.TEXT, 224))
 	var cl := UIKit.body_label(str(nat.get("culture", "")), UIKit.TEXT_DIM, 11)
 	cl.position = Vector2(16, 348)
@@ -1529,6 +1564,8 @@ func _render_hud() -> void:
 	var warn := ""
 	if bool(pv.short_food):
 		warn = Locale.t("atlas_warn_food")
+	elif bool(pv.get("seal_bypass", false)):
+		warn = Locale.t("atlas_warn_seal_bypass")
 	elif not (pv.borders as Array).is_empty():
 		warn = Locale.t("atlas_warn_border") % "、".join(pv.borders)
 	elif hot_n > 0:
@@ -1579,7 +1616,7 @@ func _info_region(nid: String) -> void:
 	_preview = {}
 	var cap := str(World.nations.get(nid, {}).get("capital", ""))
 	if World.nation_of(World.pos) != nid and cap != "":
-		_preview = World.travel_preview(cap)
+		_preview = World.seal_aware_travel_preview(cap)
 	_render_right()
 	_render_hud()
 	_roads.queue_redraw()
@@ -1598,7 +1635,7 @@ func _on_region_pressed(nid: String) -> void:
 	_preview = {}
 	var cap := str(World.nations.get(nid, {}).get("capital", ""))
 	if World.nation_of(World.pos) != nid and cap != "":
-		_preview = World.travel_preview(cap)
+		_preview = World.seal_aware_travel_preview(cap)
 	_render_right()
 	_render_hud()
 	_roads.queue_redraw()
@@ -1630,7 +1667,7 @@ func _select_node(id: String) -> void:
 		_preview = {}
 	else:
 		_sel = id
-		_preview = World.travel_preview(id) if id != World.pos else {}
+		_preview = World.seal_aware_travel_preview(id) if id != World.pos else {}
 	for k in _node_btn.keys():
 		var b: Button = _node_btn[k]
 		b.scale = Vector2(1.18, 1.18) if str(k) == id else Vector2.ONE
@@ -1829,9 +1866,12 @@ func _after_arrival() -> void:
 		return
 	if _check_arbitrage_arrival():
 		return
+	var pickups_n := World.gather_pickups_here().size()
 	if readies > 0:
 		_show_toast(Locale.t("atlas_arrive_turnin") % [n.get("name", ""), readies], UIKit.OK)
 		_show_turnin_modal(readies)
+	elif pickups_n > 0:
+		_show_toast(Locale.t("atlas_arrive_pickup") % [n.get("name", ""), pickups_n], UIKit.ACCENT)
 	else:
 		_show_toast(Locale.t("atlas_arrive_plain") % n.get("name", ""), UIKit.OK)
 
@@ -2071,11 +2111,17 @@ func _show_stopover_modal() -> void:
 	var n: Dictionary = World.node(here)
 	var per := World.food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
-	var days := 7
+	# Winter seal / held march: buy enough for the bypass remain, not a flat 7.
+	var held := _halted_dest if _halted_dest != "" else str(World.march_hold.get("dest", ""))
+	var days := World.stopover_resupply_days(held, 7)
 	var q: Dictionary = World.resupply_quote(here, days)
+	var seal_need := World.seal_aware_remain_days(held)
+	var show_seal_cover := seal_need > 0 and held != "" and held != here and str(World.seal_detour.get("dest", "")) == held
 	var h := 320.0
 	if _halted_dest != "" and _halted_dest != here:
 		h = 360.0
+	if show_seal_cover:
+		h = maxf(h, 400.0)
 	var p := _modal_panel(h)
 	p.name = "StopoverModal"
 	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
@@ -2091,19 +2137,34 @@ func _show_stopover_modal() -> void:
 	food_l.name = "StopoverFood"
 	food_l.position = Vector2(24, 112)
 	p.add_child(food_l)
+	var tip_y := 134.0
+	if show_seal_cover:
+		var seal_tip := UIKit.body_label(Locale.t("atlas_stopover_seal_cover") % seal_need, UIKit.EMBER, 12)
+		seal_tip.name = "StopoverSealCover"
+		seal_tip.position = Vector2(24, 132)
+		seal_tip.size = Vector2(452, 18)
+		seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		seal_tip.clip_text = true
+		p.add_child(seal_tip)
+		tip_y = 152.0
 	# Produce loop teaser at stopover
 	var best: Dictionary = World.best_produce_trade(here)
 	if not best.is_empty():
 		var tip := UIKit.body_label(Locale.t("atlas_trade_loop_best") % [str(best.name), str(best.sell_name), int(best.margin)], UIKit.EMBER, 12)
 		tip.name = "StopoverTradeTip"
-		tip.position = Vector2(24, 134)
+		tip.position = Vector2(24, tip_y)
 		tip.size = Vector2(452, 18)
 		tip.autowrap_mode = TextServer.AUTOWRAP_OFF
 		tip.clip_text = true
 		p.add_child(tip)
+	var actions_y := 160.0
+	if show_seal_cover:
+		actions_y = 178.0
+	if not best.is_empty() and show_seal_cover:
+		actions_y = 198.0
 	var v := VBoxContainer.new()
 	v.name = "StopoverActions"
-	v.position = Vector2(24, 160)
+	v.position = Vector2(24, actions_y)
 	v.add_theme_constant_override("separation", 8)
 	p.add_child(v)
 	var buy := UIKit.cta_button(Locale.t("atlas_stopover_buy") % [int(q.get("days", days)), int(q.get("qty", 0)), int(q.get("cost", 0))], "A", 452, 40)
@@ -2336,7 +2397,10 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 	if stock.is_empty():
 		stock = World.stockade_cache_option()
 	var has_cache := not stock.is_empty() and int(stock.get("cache", 0)) > 0
+	var seal_tip_on := bool(halt.get("seal_bypass", false))
 	var h := 420.0 if has_cache else 360.0
+	if seal_tip_on:
+		h += 24.0
 	var panel := _modal_panel(h)
 	panel.name = "SupplyHaltModal"
 	var el := UIKit.mono(Locale.t("atlas_supply_halt_en"), 9, UIKit.DANGER)
@@ -2356,6 +2420,15 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 	body.custom_minimum_size = Vector2(452, 0)
 	panel.add_child(body)
 	var y := 164.0
+	if bool(halt.get("seal_bypass", false)):
+		var seal_tip := UIKit.body_label(Locale.t("atlas_supply_halt_seal") % int(halt.get("seal_need", 0)), UIKit.EMBER, 12)
+		seal_tip.name = "SupplyHaltSeal"
+		seal_tip.position = Vector2(24, 148)
+		seal_tip.size = Vector2(452, 18)
+		seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		seal_tip.clip_text = true
+		panel.add_child(seal_tip)
+		y = 176.0
 	var forage := UIKit.cta_button(Locale.t("atlas_supply_forage"), "A", 452, 42)
 	forage.name = "SupplyForage"
 	forage.position = Vector2(24, y)
@@ -3205,9 +3278,7 @@ func _paint_march_readouts(p: Control, with_button: bool) -> void:
 	var y := 118.0
 	var show_gate := str(World.city_gate.get("dir", "")) == "out" and str(World.city_gate.get("city", "")) == World.pos and not World.is_traveling()
 	if show_gate:
-		var per_now := World.food_per_day()
-		var cover_now := 0 if per_now <= 0 else int(GameState.food / per_now)
-		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if cover_now <= 2 else UIKit.ACCENT, 12)
+		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if bool(World.city_gate.get("warn", false)) else UIKit.ACCENT, 12)
 		strip.name = "CityGateStrip"
 		strip.autowrap_mode = TextServer.AUTOWRAP_OFF
 		strip.clip_text = true
@@ -3295,6 +3366,15 @@ func _show_event_modal(ev: Dictionary) -> void:
 		cl.clip_text = true
 		p.add_child(cl)
 		camp_y = 196.0
+		if bool(cr.get("seal_bypass", false)):
+			var seal_tip := UIKit.body_label(Locale.t("atlas_camp_seal_bypass") % int(cr.get("seal_need", 0)), UIKit.EMBER, 12)
+			seal_tip.name = "CampSealBypass"
+			seal_tip.position = Vector2(24, 188)
+			seal_tip.size = Vector2(452, 18)
+			seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+			seal_tip.clip_text = true
+			p.add_child(seal_tip)
+			camp_y = 214.0
 	var v := VBoxContainer.new()
 	v.position = Vector2(24, camp_y)
 	v.add_theme_constant_override("separation", 8)
@@ -3648,10 +3728,11 @@ func _toast_quest_guide(nid: String) -> void:
 	var place := str(World.node(nid).get("name", nid))
 	for mk in World.quest_markers().get(nid, []):
 		var q: Dictionary = mk.quest
-		var col := UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER
+		var mk_kind := str(mk.kind)
+		var col := UIKit.OK if mk_kind == "turnin" else (UIKit.ACCENT if mk_kind == "pickup" else UIKit.DANGER)
 		_show_toast(Locale.t("wq_atlas_focus") % [str(q.get("title", "")), place], col)
 		return
-	# gather (no map marker) or deep-link without an active marker
+	# deep-link without an active marker overlay
 	for q2 in World.active:
 		if World.quest_guide_node(q2) == nid:
 			_show_toast(Locale.t("wq_atlas_focus") % [str(q2.get("title", "")), place], UIKit.ACCENT)
@@ -4293,6 +4374,10 @@ func _m_route(box: Control) -> void:
 		var food_warn := _m_label(Locale.t("atlas_warn_food"), UIKit.EMBER)
 		food_warn.name = "RouteWarn"
 		box.add_child(food_warn)
+	elif bool(pv.get("seal_bypass", false)):
+		var bypass_warn := _m_label(Locale.t("atlas_warn_seal_bypass"), UIKit.EMBER)
+		bypass_warn.name = "RouteWarn"
+		box.add_child(bypass_warn)
 	elif not (pv.borders as Array).is_empty():
 		box.add_child(_m_label(Locale.t("mob_ui_028") % "、".join(pv.borders), UIKit.TEXT_DIM))
 	elif hot_n > 0:
@@ -4370,9 +4455,14 @@ func _m_actions() -> void:
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()
+		var pickup_n := World.gather_pickups_here().size()
 		if ready_n > 0:
 			b = MobilePage.button(Locale.t("atlas_enter_turnin") % ready_n, true, func():
 				GameState.set_meta("city_tab", "board")
+				_enter_here())
+		elif pickup_n > 0:
+			b = MobilePage.button(Locale.t("atlas_enter_pickup") % pickup_n, true, func():
+				GameState.set_meta("city_tab", "market")
 				_enter_here())
 		else:
 			b = MobilePage.button(Locale.t("mob_ui_037") % [Locale.t("mob_ui_038") if str(n.kind) == "castle" else World.kind_zh(_sel), str(n.get("name", ""))], true, _enter_here)
@@ -4393,8 +4483,11 @@ func _m_actions() -> void:
 		var gate_n: Dictionary = World.node(World.pos)
 		var gate_label := Locale.t("atlas_enter_kind") % World.kind_zh(World.pos)
 		var ready_n := World.ready_turn_ins_here().size()
+		var pickup_n := World.gather_pickups_here().size()
 		if ready_n > 0:
 			gate_label = Locale.t("atlas_enter_turnin") % ready_n
+		elif pickup_n > 0:
+			gate_label = Locale.t("atlas_enter_pickup") % pickup_n
 		elif str(gate_n.get("kind", "")) == "castle":
 			gate_label = Locale.t("mob_ui_037") % [Locale.t("mob_ui_038"), str(gate_n.get("name", ""))]
 		else:

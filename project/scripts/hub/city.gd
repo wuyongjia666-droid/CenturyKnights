@@ -430,9 +430,20 @@ func _render_side() -> void:
 	gate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	gate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p.add_child(gate)
+	var seal_offer: Dictionary = World.city_seal_resupply_offer()
+	var back_y := 566.0
+	if bool(seal_offer.get("needed", false)):
+		var days := int(seal_offer.get("days", 7))
+		var seal_btn := UIKit.cta_button(Locale.t("atlas_city_seal_resupply_btn") % days, "R", 348, 36)
+		seal_btn.name = "CitySealResupply"
+		seal_btn.position = Vector2(18, 498)
+		seal_btn.disabled = not bool(seal_offer.get("ok", false))
+		seal_btn.pressed.connect(_on_city_seal_resupply)
+		p.add_child(seal_btn)
+		back_y = 548.0
 	var back := UIKit.cta_button(Locale.t("atlas_gate_leave"), "ESC", 348, 40)
 	back.name = "BackToAtlas"
-	back.position = Vector2(18, 566)
+	back.position = Vector2(18, back_y)
 	back.pressed.connect(_back)
 	p.add_child(back)
 
@@ -1231,6 +1242,44 @@ func _tab_market() -> void:
 		sl.clip_text = true
 		strip.add_child(sl)
 		y0 = 156.0 if not _mob else float(48 + MobilePage.HIT + 16)
+	var pickups: Array = World.gather_pickups_here() if city == World.pos else []
+	if not pickups.is_empty():
+		var offer: Dictionary = World.gather_buy_offer()
+		var need_g := str(offer.get("good", ""))
+		var need_q := int(offer.get("qty", 0))
+		var cost_n := int(offer.get("cost", 0))
+		var gb := Panel.new()
+		gb.name = "GatherSupplyStrip"
+		var gy := y0
+		gb.position = Vector2(18, gy)
+		gb.size = Vector2(812, 56 if not _mob else float(MobilePage.HIT + 20))
+		gb.add_theme_stylebox_override("panel", UIKit.flat_box(Color(UIKit.OK.r, UIKit.OK.g, UIKit.OK.b, 0.12), Color(UIKit.OK, 0.4), 8))
+		p.add_child(gb)
+		var banner := Locale.t("wq_mkt_gather_banner") % [str(offer.get("good_name", need_g)), int(pickups[0].get("qty", need_q)), need_q]
+		if cost_n > 0:
+			banner += " · " + (Locale.t("wq_mkt_gather_cost") % cost_n)
+		var turnin_days := int(offer.get("turnin_days", 0))
+		var turnin_food := int(offer.get("turnin_food", 0))
+		if turnin_days > 0:
+			banner += " · " + (Locale.t("wq_mkt_gather_turnin_days") % turnin_days)
+			if turnin_food > 0:
+				banner += " · " + (Locale.t("wq_mkt_gather_turnin_food") % turnin_food)
+			if bool(offer.get("turnin_seal_bypass", false)):
+				banner += " · " + Locale.t("wq_mkt_gather_turnin_bypass")
+		var gl := UIKit.body_label(banner, UIKit.OK, 12)
+		gl.name = "GatherSupplyLine"
+		gl.position = Vector2(10, 6)
+		gl.size = Vector2(560, 44)
+		gl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		gb.add_child(gl)
+		var buy_n := maxi(1, need_q)
+		var gbb := UIKit.cta_button(Locale.t("wq_mkt_gather_buy") % buy_n, "A", 200, 32 if not _mob else MobilePage.HIT)
+		gbb.name = "GatherBuy"
+		gbb.position = Vector2(590, 10 if not _mob else 4)
+		gbb.disabled = not bool(offer.get("ok", false))
+		gbb.pressed.connect(func(): _do(World.gather_buy_here()))
+		gb.add_child(gbb)
+		y0 = gy + gb.size.y + 10.0
 	var hdr := HBoxContainer.new()
 	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)
@@ -1432,6 +1481,17 @@ func _tab_board() -> void:
 	kv.add_child(UIKit.kv_row("门槛", "城声望 %d%s" % [int(sel.get("req_rep", 0)), " · 邦交 %d" % need_n if need_n > 0 else ""], UIKit.TEXT_DIM, 380))
 	if str(sel.kind) == "gather":
 		kv.add_child(UIKit.kv_row("所需", "%s ×%d（持有 %d）" % [World.good_name(str(sel.good)), int(sel.qty), World.have_good(str(sel.good))], UIKit.TEXT, 380))
+		var supply := World.gather_supply_city(sel)
+		if supply != "":
+			kv.add_child(UIKit.kv_row(Locale.t("wq_board_supply"), str(World.node(supply).get("name", supply)), UIKit.ACCENT, 380))
+			var march: Dictionary = World.gather_supply_march_preview(sel)
+			if not march.is_empty() and int(march.get("days", 0)) >= 0:
+				var march_txt := Locale.t("wq_board_supply_days") % [int(march.get("days", 0)), int(march.get("food", 0))]
+				if bool(march.get("seal_bypass", false)):
+					march_txt += Locale.t("wq_board_supply_bypass")
+				var march_lbl := UIKit.kv_row(Locale.t("wq_board_supply_march"), march_txt, UIKit.OK, 380)
+				march_lbl.name = "BoardSupplyMarch"
+				kv.add_child(march_lbl)
 	elif str(sel.kind) == "clear":
 		kv.add_child(UIKit.kv_row("目标路段", "%s — %s" % [World.node(str(sel.edge[0])).get("name", ""), World.node(str(sel.edge[1])).get("name", "")], UIKit.DANGER, 380))
 	else:
@@ -1719,6 +1779,15 @@ func _toast_msg(text: String, col: Color) -> void:
 	tw.tween_interval(2.4)
 	tw.tween_property(_toast, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(func(): _toast.visible = false)
+
+
+func _on_city_seal_resupply() -> void:
+	var r: Dictionary = World.city_seal_resupply()
+	if bool(r.get("ok", false)):
+		_toast_msg(str(r.get("msg", "")), UIKit.OK)
+		_refresh_all()
+	else:
+		_toast_msg(str(r.get("msg", Locale.t("atlas_resupply_fail_stock"))), UIKit.DANGER)
 
 func _back() -> void:
 	World.note_city_gate("out")

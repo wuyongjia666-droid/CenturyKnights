@@ -241,10 +241,29 @@ opening_herb_escort_foe,劫道匪帮,Road bandits
 opening_herb_escort_missing,开局药材护送未就绪,Opening herb escort not ready
 opening_herb_escort_active,已在护送药材,Already escorting the herbs
 wq_accept_ok,接下委托「%s」——期限 %d 日。下一步：%s,Accepted「%s」— %d days left. Next: %s
+wq_accept_supply_days,补给城「%s」约 %d 日 · 粮 %d,Supply city "%s" ~%d days · food %d
 wq_hint_travel,打开舆图，启程前往「%s」（图上有 ◆ 标记）,Open the atlas and travel to 「%s」(◆ on the map)
 wq_hint_fight,打开舆图前往「%s」，抵达后点「进剿目标」,Open the atlas, reach 「%s」, then Engage
 wq_hint_clear,打开舆图，沿「%s」一带的危险路段行军清剿,Open the atlas and clear the danger roads near 「%s」
 wq_hint_gather,凑齐「%s」×%d 后，到「%s」交付（市集可买）,Gather 「%s」×%d, then turn in at 「%s」(markets sell them)
+wq_accept_wrong_city,须在发布委托的城中接取,Accept only at the issuing city
+wq_hint_gather_buy,打开舆图前往「%s」市集，购入「%s」×%d（图上有 ◇ 物产标记）,Open the atlas to 「%s」 market and buy 「%s」×%d (◇ supply mark)
+wq_board_supply,采购城,Supply city
+wq_board_supply_march,补给行程,Supply march
+wq_board_supply_days,约 %d 日 · 粮 %d,~%d days · food %d
+wq_mkt_gather_banner,委托急需：%s ×%d（还差 %d）——下方「委托购入」一键买齐,Commission needs: %s ×%d (%d short) — use GatherBuy below
+wq_mkt_gather_buy,委托购入 ×%d,GatherBuy ×%d
+wq_mkt_gather_cost,约 %d 银,~%d silver
+wq_mkt_gather_turnin_days,交货尚余 %d 日,%d days to turn-in
+wq_mkt_gather_turnin_food,粮 %d,food %d
+wq_mkt_gather_turnin_bypass,冬封旁路,winter bypass
+wq_board_supply_bypass,（冬封旁路）,(winter bypass)
+wq_gather_buy_none,此处无可购入的物产委托,No gather commission to buy here
+wq_gather_buy_blocked,无法购入物产委托,Cannot buy gather goods
+wq_gather_buy_silver,银币不足（需 %d）,Not enough silver (need %d)
+wq_gather_buy_cargo,货舱已满,Cargo full
+wq_gather_buy_stock,市集存货不足,Market stock short
+wq_gather_buy_done,委托购入 %s ×%d（-%d 银）,Commission buy %s ×%d (−%d silver)
 wq_hint_turnin,打开舆图前往「%s」交付（图上有 ✓ 标记）,Open the atlas and turn in at 「%s」(✓ on the map)
 wq_goto_atlas,去舆图看目标,See objective on atlas
 wq_atlas_focus,委托「%s」目标：%s —— 选中后点「启程前往」,Commission 「%s」 → %s — select it, then Travel
@@ -252,7 +271,12 @@ wq_atlas_focus_plain,已为你定位到「%s」——选中后点「启程前往
 pressure_month_report,正月开销：%s -%d 银（库银余 %d）,January dues: %s -%d silver (%d left)
 pressure_forecast,正月开销（预计）：%s 约 %d 银,January dues (estimate): %s about %d silver
 atlas_enter_kind,进入%s,Enter %s
+atlas_mark_pickup,◇ 物产,◇ Supply
+atlas_mark_turnin,✓ 交付,✓ Turn-in
+atlas_mark_objective,◆ 目标,◆ Objective
 atlas_enter_turnin,进城交付（%d）,Enter to turn in (%d)
+atlas_enter_pickup,进城采购（%d）,Enter to buy supply (%d)
+atlas_arrive_pickup,抵达 %s · %d 件委托可在此采购物产,Arrived %s · %d commission(s) can buy supply here
 atlas_arrive_turnin,抵达 %s · %d 件委托可交付,Arrived %s · %d ready to turn in
 atlas_arrive_plain,抵达 %s,Arrived %s
 atlas_travel_halt_title,行军途中,On the road
@@ -318,6 +342,7 @@ atlas_chip_hot_v,%d 段,%d
 atlas_leg_line,%s › %s · %d日 · 险%s · %s%s,"%s › %s · %d d · risk %s · %s%s"
 atlas_leg_more,另有 %d 段…,+%d more legs…
 atlas_warn_food,粮草不足以走完全程——断粮会每日损失士气。,Not enough food for the whole march — starvation drains morale daily.
+atlas_warn_seal_bypass,冬封旁路预览 · 日数与粮耗按绕行计。,Winter bypass preview · days and food use the detour.
 atlas_warn_border,过境：%s,Crossing: %s
 atlas_warn_hot,途中有 %d 段高危路——伏击更密。,%d high-risk leg(s) ahead — ambushes more likely.
 atlas_hud_go,启程,March
@@ -337,12 +362,14 @@ atlas_stopover_buy,买 %d 日口粮（%d 粮 · %d 银）,Buy %d days (%d grain 
 atlas_stopover_market,进城市集,Enter market
 atlas_stopover_resume,补给后继续前往 %s,Resupply then resume to %s
 atlas_stopover_dismiss,稍后再说,Later
+atlas_stopover_seal_cover,冬封绕行尚余 %d 日，按旁路备粮。,Winter detour still has %d days — buying for the bypass.
 atlas_resupply_ok,补给 +%d 粮（-%d 银）· 现有 %d,Resupplied +%d food (-%d silver) · now %d
 atlas_resupply_fail_stock,此地粮货不足,Not enough grain in stock here
 atlas_resupply_fail_silver,银币不足（需 %d）,Not enough silver (need %d)
 atlas_camp_readout,现有粮 %d · 日耗 %d · 余程 %d 日需 %d%s,Food %d · burn %d/day · %d days left need %d%s
 atlas_camp_short,（粮不足）, (short)
 atlas_camp_ok,（够走）, (enough)
+atlas_camp_seal_bypass,冬封旁路余程 %d 日 — 宿营按绕行计粮。,Winter bypass still has %d days — camp rations follow the detour.
 atlas_trade_loop_en,产线,LOOP
 atlas_trade_loop_title,产地买卖,Produce trade
 atlas_trade_loop_line,%s 买 %d → %s 卖 %d（%+d）,"%s buy %d → %s sell %d (%+d)"
@@ -422,6 +449,7 @@ atlas_supply_forage,路边觅食,Forage roadside
 atlas_supply_press,硬闯续行,Press on starving
 atlas_supply_forced_stop,强制停靠补给,Forced halt & resupply
 atlas_supply_halt_later,稍后,Later
+atlas_supply_halt_seal,冬封旁路余程仍有 %d 日 — 续行仍走旁路。,Winter bypass still has %d days — resume stays on the detour.
 atlas_supply_halt_log,断粮强制停靠于「%s」（%d 日）,Forced supply halt at "%s" (%d day(s))
 atlas_supply_forage_log,觅食得粮 +%d,Foraged +%d food
 atlas_supply_forage_ok,觅食得粮 +%d，可续行,Foraged +%d food; march can resume
@@ -504,6 +532,8 @@ atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn
 atlas_season_winter,冬,Winter
 atlas_chip_season,季,Season
+atlas_chip_seal_bypass,旁路,Bypass
+atlas_chip_seal_days,%d 日,%d d
 atlas_ration_label,日耗粮,Rations/day
 atlas_ration_value,%d（%s %s）,%d (%s %s)
 atlas_ration_value_weather,%d（%s·%s %s）,%d (%s·%s %s)
@@ -567,6 +597,10 @@ atlas_gate_leave,出城,Leave the gate
 atlas_gate_in,进城 · %s · %s · 余粮 %d 日,Entered %s · %s · %d days of food
 atlas_gate_out,出城 · %s · %s · 余粮 %d 日,Left %s · %s · %d days of food
 atlas_gate_warn,粮草见底，先补再走。,Rations are thin. Resupply before the next march.
+atlas_gate_seal_warn,冬封旁路尚余 %d 日，出城前先补够绕行粮。,Winter bypass still needs %d days — resupply for the detour before leaving.
+atlas_city_seal_resupply_btn,按旁路补粮（%d 日）,Buy grain for bypass (%d days)
+atlas_city_seal_resupply_done,已按冬封旁路备粮 %d 日 · 现有 %d,Stocked %d days for the winter bypass · now %d
+atlas_city_seal_resupply_none,旁路粮已够，无需再补,Bypass rations already cover the remain
 atlas_hold_line,停军 · 续行至 %s · %d 日 · 耗粮 %d · 余 %d 日,Halted · resume to %s · %d days · need %d · %d days of food left
 atlas_resume_chip,续行至 %s · %s · 还要 %d 日 · 粮 %d,Resuming to %s · %s · %d days left · food %d
 atlas_resume_go,续行,Resume march
