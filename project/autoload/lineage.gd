@@ -133,13 +133,23 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 	# Seed 91's century sim calls marry() and must keep the old 2-tick countdown
 	# with no extra draw. Player weddings pass paced=true for the 9–11 month term.
 	var mother = target if target.gender == "f" else suitor
+	var sire = suitor if mother == target else target
 	var conceived := true
 	var due := 2
-	if paced:
+	if str(mother.gender) != "f":
+		conceived = false
+		due = 0
+	elif int(mother.pregnant_months) >= 0:
+		conceived = true
+		due = int(mother.blood_meta.get("gestation_term", int(mother.pregnant_months) + 1))
+		if str(mother.blood_meta.get("sire_id", "")) == "":
+			mother.blood_meta["sire_id"] = str(sire.id)
+	elif paced:
 		conceived = CKFamilyState.begin_pregnancy(GameState, mother)
 		due = int(mother.blood_meta.get("gestation_term", CKFamilyState.TERM_MONTHS)) if conceived else 0
 	else:
 		mother.pregnant_months = 1
+		mother.blood_meta["sire_id"] = str(sire.id)
 	## Teaching flag stays captain-only; other cast weddings must not trip chapter0 gates.
 	if bool(suitor.is_leader):
 		GameState.chapter0_flags["married"] = true
@@ -161,13 +171,15 @@ func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
 	var father: CKCharacter = b if a.gender == "f" and b.gender == "m" else a
 	var mother: CKCharacter = a if father == b else b
 	var combat: Dictionary = CKFamilyState.combat_expectation(a, b)
+	# Birth does not grant a title. Keep the historical draw so this panel does not shift later rolls.
+	_child_rank(a, b)
 	return {
 		"blood_mix": mix,
 		"apt_min": apt["min"],
 		"apt_max": apt["max"],
 		"trait_probs": trait_probs,
 		"appearance_probs": look_probs,
-		"rank_hint": _child_rank(a, b),
+		"rank_hint": "knight",
 		"sig_probs": CKBloodline.forecast(father, mother),
 		"sig_zh": CKBloodline.forecast_zh(father, mother),
 		"combat": combat,
@@ -176,11 +188,42 @@ func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
 		"royal_tiers": combat.get("royal_tiers", []),
 	}
 
+func _sire_of(mother: CKCharacter) -> CKCharacter:
+	if mother == null or typeof(mother.blood_meta) != TYPE_DICTIONARY:
+		return null
+	var sid := str(mother.blood_meta.get("sire_id", ""))
+	if sid == "":
+		sid = str(mother.spouse_id)
+	if sid == "":
+		return null
+	return GameState.characters.get(sid)
+
+
+func _blank_sire() -> CKCharacter:
+	var blank := CKCharacter.new()
+	blank.gender = "m"
+	blank.rank = "knight"
+	blank.blood_mix = {"common_ash": 1.0}
+	blank.traits = []
+	return blank
+
+
+func _teaching_birth(mother: CKCharacter, father: CKCharacter) -> bool:
+	var lead := GameState.get_leader()
+	if lead == null:
+		return false
+	if mother != null and mother.id == lead.id:
+		return true
+	if father != null and father.id == lead.id:
+		return true
+	return false
+
+
 func birth_child(mother: CKCharacter) -> CKCharacter:
-	var father_id = mother.spouse_id
-	var father: CKCharacter = GameState.characters.get(father_id)
-	if father == null:
-		father = GameState.get_leader()
+	## Biological father is the sire stamped at conception. A dead spouse stays the parent.
+	## Never substitute the current leader — that wrote the captain onto a mercenary's child.
+	var recorded := _sire_of(mother)
+	var father: CKCharacter = recorded if recorded != null else _blank_sire()
 	var child := CKCharacter.new()
 	child.id = CharacterFactory.next_id("child")
 	var rng = GameState.rng
@@ -191,10 +234,10 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	child.is_child = true
 	child.in_roster = false
 	child.birthday_month = Calendar.month
-	child.parent_ids = [father.id if father else "", mother.id]
+	child.parent_ids = [recorded.id if recorded != null else "", mother.id]
 	# Family arms: child joins its own family line (father's if he has one, else mother's). Families never merge.
-	if father and str(father.family_id) != "":
-		child.family_id = str(father.family_id)
+	if recorded != null and str(recorded.family_id) != "":
+		child.family_id = str(recorded.family_id)
 	else:
 		child.family_id = str(mother.family_id)
 	child.blood_mix = _mix_blood(
@@ -247,18 +290,23 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	for note in CKBloodline.on_birth(child, father, mother):
 		GameState.lineage_log.append(note)
 		GameState.log_event(note)
-	for note in CKCourt.stamp_child(child, father, mother):
+	for note in CKCourt.stamp_child(child, recorded if recorded != null else father, mother):
 		GameState.lineage_log.append(note)
 		GameState.log_event(note)
-	child.rank = _child_rank(father if father else mother, mother)
+	# Same draw as the old birth rank, then discard it. Only the succession heir receives a title.
+	_child_rank(father, mother)
+	child.rank = "knight"
+	child.blood_meta.erase("title")
+	child.blood_meta.erase("title_from")
 	child.job_id = "light_inf"
 	child.recalc_hp()
 	GameState.claim_id(child)
 	GameState.characters[child.id] = child
 	mother.children_ids.append(child.id)
-	if father:
-		father.children_ids.append(child.id)
-	GameState.chapter0_flags["child_born"] = true
+	if recorded != null:
+		recorded.children_ids.append(child.id)
+	if _teaching_birth(mother, recorded):
+		GameState.chapter0_flags["child_born"] = true
 	GameState.log_event("初啼入谱：%s。血胤 %s。族谱新页已开，旅馆闲话会传『灰旗有后』。" % [child.name, child.bloodline_display()])
 	GameState.mark_dirty()
 	return child
@@ -546,7 +594,17 @@ func regency_status() -> String:
 	var ward: CKCharacter = GameState.characters.get(str(regency().get("ward", "")))
 	if ward == null or not ward.alive:
 		return ""
-	return Locale.t("lineage_regency_status", [ward.name, int(ward.age), Calendar.ADULT_AGE])
+	var line := Locale.t("lineage_regency_status", [ward.name, int(ward.age), Calendar.ADULT_AGE])
+	var names: Array = []
+	var ids = regency().get("elders", [])
+	if typeof(ids) == TYPE_ARRAY:
+		for eid in ids:
+			var elder: CKCharacter = GameState.characters.get(str(eid))
+			if elder != null and elder.alive and elder != ward:
+				names.append(elder.name)
+	if names.is_empty():
+		return line
+	return "%s (%s)" % [line, ", ".join(names)]
 
 ## Calendar calls this when a child comes of age; hands the banner back if they are the ward.
 func end_regency_if_ward(c: CKCharacter) -> String:
@@ -665,6 +723,52 @@ func close_after_battle() -> Dictionary:
 	return {"ok": false, "msg": msg, "dynasty_end": true, "reason": "wipeout"}
 
 
+func _can_take_banner(c: CKCharacter, leader_id: String) -> bool:
+	if c == null or _heir_score(c) < 0.0:
+		return false
+	if c.in_roster:
+		return true
+	return _is_descendant(c, leader_id)
+
+
+## Living adults who cannot take the banner sit as regents. Oldest first, two seats.
+func pick_regents(leader: CKCharacter, heir: CKCharacter) -> Array:
+	var lid := str(leader.id) if leader != null else ""
+	var pool: Array = []
+	for c in GameState.characters.values():
+		if c == null or not c.alive or c == heir or c == leader:
+			continue
+		if int(c.age) < Calendar.ADULT_AGE or bool(c.is_child):
+			continue
+		if _can_take_banner(c, lid):
+			continue
+		pool.append(c)
+	pool.sort_custom(func(a: CKCharacter, b: CKCharacter) -> bool:
+		if int(a.age) != int(b.age):
+			return int(a.age) > int(b.age)
+		return str(a.id) < str(b.id))
+	return pool.slice(0, 2)
+
+
+func _pass_title(from: CKCharacter, heir: CKCharacter) -> void:
+	if from == null or heir == null:
+		return
+	if typeof(heir.blood_meta) != TYPE_DICTIONARY:
+		heir.blood_meta = {}
+	var office := CKCourt.current_title(from)
+	var have := CKCourt.current_title(heir)
+	var oi := CKCharacter.RANK_ORDER.find(office)
+	var hi := CKCharacter.RANK_ORDER.find(have)
+	if oi < 0:
+		oi = 0
+	if hi < 0:
+		hi = 0
+	var kept := office if oi >= hi else have
+	heir.blood_meta["title"] = kept
+	heir.blood_meta["title_from"] = from.id
+	heir.rank = kept
+
+
 func transfer_banner(reason: String) -> Dictionary:
 	var leader := GameState.get_leader()
 	if leader == null:
@@ -698,7 +802,19 @@ func transfer_banner(reason: String) -> Dictionary:
 		# (cannot deploy) until they come of age; the player still makes the house decisions.
 		heir.is_child = true
 		heir.in_roster = false
-		GameState.house_mods["regency"] = {"ward": heir.id, "since": Calendar.label(), "until_age": Calendar.ADULT_AGE}
+		var elders := pick_regents(leader, heir)
+		var elder_ids: Array = []
+		var elder_names: Array = []
+		for elder in elders:
+			elder_ids.append(elder.id)
+			elder_names.append(elder.name)
+		GameState.house_mods["regency"] = {
+			"ward": heir.id,
+			"since": Calendar.label(),
+			"until_age": Calendar.ADULT_AGE,
+			"elders": elder_ids,
+		}
+		GameState.house_mods["regency_names"] = elder_names
 	else:
 		heir.is_child = false
 		heir.in_roster = true
@@ -710,6 +826,7 @@ func transfer_banner(reason: String) -> Dictionary:
 		if typeof(heir.blood_meta) != TYPE_DICTIONARY:
 			heir.blood_meta = {}
 		heir.blood_meta["joined_house"] = true
+	_pass_title(leader, heir)
 	var verbs := {"abdicate": "传旗", "retire": "退役交旗", "death": "辞世，旗交"}
 	var verb := str(verbs.get(reason, "交旗"))
 	var msg := "%s %s %s。" % [leader.name, verb, heir.name]
@@ -717,6 +834,10 @@ func transfer_banner(reason: String) -> Dictionary:
 		msg = Locale.t("lineage_roster_heir", [leader.name, heir.name])
 	elif minor:
 		msg = Locale.t("lineage_regency_begin", [leader.name, heir.name, int(heir.age), Calendar.ADULT_AGE])
+		var named: Array = GameState.house_mods.get("regency_names", [])
+		if typeof(named) == TYPE_ARRAY and not named.is_empty():
+			msg = "%s (%s)" % [msg, ", ".join(named)]
+		GameState.house_mods.erase("regency_names")
 	GameState.add_lineage_event(msg)
 	_Ambitions.on_banner(heir)
 	GameState.mark_dirty()

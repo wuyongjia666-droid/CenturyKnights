@@ -129,7 +129,20 @@ static func remit_to_flag(c: CKCharacter) -> Dictionary:
 	set_purse(c, 0)
 	GameState.silver += bag
 	GameState.log_event(Locale.t("purse_remit_log") % [c.name, bag])
-	return {"ok": true, "msg": Locale.t("purse_remit_ok") % bag, "silver": bag}
+	GameState.mark_dirty()
+	return {"ok": true, "dir": "to_flag", "msg": Locale.t("purse_remit_ok") % bag, "silver": bag}
+
+
+static func pull_from_flag(c: CKCharacter, amount: int = 0) -> Dictionary:
+	## Flag silver never moves into a purse. Wages are earned; they are not a transfer back.
+	return {
+		"ok": false,
+		"dir": "to_purse",
+		"silver": 0,
+		"asked": maxi(0, amount),
+		"purse": get_purse(c),
+		"msg": Locale.t("purse_one_way"),
+	}
 
 
 static func is_care_locked(c: CKCharacter) -> bool:
@@ -235,14 +248,27 @@ static func assign_field(c: CKCharacter, holding_id: String) -> Dictionary:
 	return {"ok": true, "msg": Locale.t("purse_assigned") % c.name}
 
 
+static func is_field_kin(c: CKCharacter) -> bool:
+	## Non-combat relatives draw field wages. A hired sword does not.
+	if c == null:
+		return false
+	if c.is_leader or c.is_child:
+		return true
+	if not c.parent_ids.is_empty():
+		return true
+	if str(c.spouse_id) != "":
+		return true
+	if str(c.family_id) != "":
+		return true
+	if bool(c.blood_meta.get("joined_house", false)):
+		return true
+	return false
+
+
 static func _is_hireling(c: CKCharacter) -> bool:
 	if c == null or c.is_leader or c.is_child:
 		return false
-	if not c.parent_ids.is_empty():
-		return false
-	if str(c.spouse_id) != "":
-		return false
-	return true
+	return not is_field_kin(c)
 
 
 static func apply_monthly_wages(host) -> String:
@@ -276,7 +302,7 @@ static func apply_monthly_wages(host) -> String:
 				continue
 			if int(c.age) >= 8 and int(c.age) <= 15 and not c.in_roster:
 				workers.append({"c": c, "role": "child", "wage": CHILD_WAGE})
-			elif int(c.age) >= 16 and not _is_hireling(c):
+			elif int(c.age) >= 16 and is_field_kin(c):
 				workers.append({"c": c, "role": "field", "wage": FIELD_WAGE})
 		var need := 0
 		for w in workers:
