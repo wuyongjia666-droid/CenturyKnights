@@ -1,14 +1,16 @@
 class_name BattleDualLedger
 extends RefCounted
-## Y1-A T-P10 + T-P14 + turn-bridge: injured / lamp / ready.
-## Ready count on player turn + injured foot marks; Ready label taps cycle formation.
-## Panel stays IGNORE; only Ready STOP catches taps (board InputRouter untouched).
+## Y1-A T-P10 + T-P14 + turn-bridge + stance: injured / lamp / ready / done.
+## Ready taps cycle formation (STOP only); Done count + gray foot marks.
+## Panel stays IGNORE; board InputRouter untouched.
 
 const NAME := "BattleDualLedger"
 const DESK_AT := Vector2(904, 58)
-const DESK_SIZE := Vector2(420, 36)
+const DESK_SIZE := Vector2(480, 36)
 const INJURED_FOOT_R := 0.18
 const INJURED_FOOT_A := 0.42
+const DONE_FOOT_R := 0.16
+const DONE_FOOT_A := 0.38
 
 ## Resolve HUD whether it sits on host or was adopted into MobileSideCol.
 static func _hud(host: Node) -> Control:
@@ -76,6 +78,71 @@ static func ready_indices(units) -> Array[int]:
 		if hp <= 0:
 			continue
 		out.append(i)
+	return out
+
+
+## Living done player count (本回合已动完).
+static func count_done(units) -> int:
+	return done_indices(units).size()
+
+
+static func done_indices(units) -> Array[int]:
+	var out: Array[int] = []
+	if units == null:
+		return out
+	for i in range(units.size()):
+		var u = units[i]
+		if typeof(u) != TYPE_DICTIONARY:
+			continue
+		if str(u.get("team", "")) != "player":
+			continue
+		if not bool(u.get("done", false)):
+			continue
+		var ch = u.get("char", null)
+		var hp := 0
+		if typeof(ch) == TYPE_DICTIONARY:
+			hp = int(ch.get("hp", 0))
+		elif ch != null and "hp" in ch:
+			hp = int(ch.hp)
+		if hp <= 0:
+			continue
+		out.append(i)
+	return out
+
+
+## Map cells of living done players (gray foot marks).
+static func done_cells(units) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	if units == null:
+		return out
+	for u in units:
+		if u == null:
+			continue
+		var team := str(u.get("team") if typeof(u) == TYPE_DICTIONARY else u.team)
+		if team != "player":
+			continue
+		var done := bool(u.get("done") if typeof(u) == TYPE_DICTIONARY else u.done)
+		if not done:
+			continue
+		var alive := true
+		if typeof(u) == TYPE_DICTIONARY:
+			alive = bool(u.get("alive", true))
+		elif "alive" in u:
+			alive = bool(u.alive)
+		if not alive:
+			continue
+		var ch = u.get("char") if typeof(u) == TYPE_DICTIONARY else u.char
+		if ch == null:
+			continue
+		var hp := 0
+		if typeof(ch) == TYPE_DICTIONARY:
+			hp = int(ch.get("hp", 0))
+		elif "hp" in ch:
+			hp = int(ch.hp)
+		if hp <= 0:
+			continue
+		var pos = u.get("pos") if typeof(u) == TYPE_DICTIONARY else u.pos
+		out.append(pos)
 	return out
 
 
@@ -173,6 +240,12 @@ static func attach(host: Node) -> void:
 	ready.gui_input.connect(func(ev: InputEvent) -> void: _on_ready_input(host, ev))
 	ready.tooltip_text = BattleObjectives.text("dual_ledger_ready_hint")
 	row.add_child(ready)
+	var done := Label.new()
+	done.name = "Done"
+	done.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	done.add_theme_font_size_override("font_size", 13)
+	done.add_theme_color_override("font_color", UIKit.TEXT)
+	row.add_child(done)
 	var lamp := Label.new()
 	lamp.name = "Lamp"
 	lamp.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -225,9 +298,24 @@ static func refresh(host: Node) -> void:
 	var ready_n := count_ready(units)
 	var pair := lamp_pair(host)
 	var turn := str(host.turn_team) if "turn_team" in host else "player"
+	var done_n := count_done(units)
 	var inj := hud.get_node_or_null("Row/Injured") as Label
 	var ready := hud.get_node_or_null("Row/Ready") as Label
+	var done := hud.get_node_or_null("Row/Done") as Label
 	var lamp := hud.get_node_or_null("Row/Lamp") as Label
+	var row := hud.get_node_or_null("Row") as HBoxContainer
+	if done == null and row != null:
+		done = Label.new()
+		done.name = "Done"
+		done.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		done.add_theme_font_size_override("font_size", 13)
+		done.add_theme_color_override("font_color", UIKit.TEXT)
+		var lamp_i := row.get_node_or_null("Lamp")
+		if lamp_i != null:
+			row.add_child(done)
+			row.move_child(done, lamp_i.get_index())
+		else:
+			row.add_child(done)
 	if inj:
 		inj.text = BattleObjectives.text("dual_ledger_injured") % injured_n
 		inj.add_theme_color_override("font_color", UIKit.DANGER if injured_n > 0 else UIKit.TEXT)
@@ -243,10 +331,18 @@ static func refresh(host: Node) -> void:
 			ready.add_theme_color_override("font_color", col)
 		else:
 			ready.visible = false
+	if done:
+		if turn == "player":
+			done.visible = true
+			done.text = BattleObjectives.text("dual_ledger_done") % done_n
+			done.add_theme_color_override("font_color", UIKit.TEXT if done_n > 0 else Color(UIKit.TEXT.r, UIKit.TEXT.g, UIKit.TEXT.b, 0.55))
+		else:
+			done.visible = false
 	if lamp:
 		lamp.text = BattleObjectives.text("dual_ledger_lamp") % [pair.x, pair.y]
 	hud.set_meta("injured_n", injured_n)
 	hud.set_meta("ready_n", ready_n)
+	hud.set_meta("done_n", done_n)
 	hud.set_meta("lamp_cur", pair.x)
 	hud.set_meta("lamp_max", pair.y)
 
@@ -274,6 +370,30 @@ static func draw_injured_marks(host, overlay: CanvasItem) -> void:
 		overlay.draw_circle(foot, r, tone)
 		overlay.draw_arc(foot, r, 0.0, TAU, 28, Color(UIKit.DANGER.r, UIKit.DANGER.g, UIKit.DANGER.b, 0.85), 1.5)
 
+
+
+## Gray foot discs under living done players — stance dual-ledger deepen.
+static func draw_done_marks(host, overlay: CanvasItem) -> void:
+	if host == null or overlay == null:
+		return
+	var units = host.units
+	var cells: Array[Vector2i] = done_cells(units)
+	if cells.is_empty():
+		return
+	var origin: Vector2 = host.ORIGIN
+	var cell_px := float(host.CELL)
+	var pan: Vector2 = host._board_pan if "_board_pan" in host else Vector2.ZERO
+	var zoom := float(host._board_zoom) if "_board_zoom" in host else 1.0
+	if zoom < 0.001:
+		zoom = 1.0
+	var cpx := cell_px * zoom
+	var tone := Color(0.55, 0.58, 0.62, DONE_FOOT_A)
+	for cell in cells:
+		var top_left := origin * zoom + Vector2(cell) * cpx + pan
+		var foot := top_left + Vector2(cpx * 0.5, cpx * BattlePick.FIG_FEET)
+		var r := cpx * DONE_FOOT_R
+		overlay.draw_circle(foot, r, tone)
+		overlay.draw_arc(foot, r, 0.0, TAU, 24, Color(0.72, 0.74, 0.78, 0.80), 1.4)
 
 
 static func _ready_pulse_alpha(host) -> float:
