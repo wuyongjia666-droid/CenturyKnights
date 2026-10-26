@@ -1959,6 +1959,7 @@ func _tab_sundry() -> void:
 		buy.pressed.connect(func(): _sundry_result(CKSundries.buy(city, iid)))
 		row.add_child(buy)
 		var use := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		use.name = "SundryUse_" + iid
 		var can: Dictionary = CKSundries.usable(iid)
 		use.disabled = not bool(can.get("ok", false))
 		use.tooltip_text = str(can.get("msg", ""))
@@ -1984,11 +1985,14 @@ func _tab_sundry() -> void:
 		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		r2.add_child(nm)
 		var ub := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		ub.name = "SundryUse_" + k2
 		var can2: Dictionary = CKSundries.usable(k2)
 		ub.disabled = not bool(can2.get("ok", false))
+		ub.tooltip_text = str(can2.get("msg", ""))
 		ub.pressed.connect(func(): _sundry_result(CKSundries.use(k2, "", city)))
 		r2.add_child(ub)
 		var sb := UIKit.ghost_button(Locale.t("sundry_sell"), 120, 48)
+		sb.name = "SundrySell_" + k2
 		sb.pressed.connect(func(): _sundry_result(CKSundries.sell_half(city, k2)))
 		r2.add_child(sb)
 		v.add_child(r2)
