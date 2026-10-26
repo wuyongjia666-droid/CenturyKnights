@@ -129,6 +129,8 @@ func _run_mobile() -> void:
 	_assert_heal_filled(page, "mob")
 	var heal := page.find_child("HealCard", true, false)
 	_ok(heal != null and heal.find_child("ShrineHealStrip", true, false) != null, "mob strip on HealCard")
+	var _hs = heal.find_child("ShrineHealStrip", true, false) if heal else null
+	_ok(_hs != null and str(_hs.get_meta("field_route", "")) == "shrine_heal", "shrine_heal route")
 	page.queue_free()
 	await _settle(2)
 	OS.set_environment("CK_FORCE_MOBILE", "")
