@@ -231,13 +231,19 @@ static func _take(city: String) -> Dictionary:
 		"rep_to": REP_DEST,
 		"rep_from": REP_FROM,
 	}
+	var cname := str(World.node(city).get("name", city))
+	var dname := str(World.node(dest).get("name", dest))
+	var gname := World.good_name(good)
+	CKEconomyState.month_echo_note(
+		"produce",
+		Locale.t("atlas_produce_echo_specialty_take") % [cname, gname, QTY, TAKE_SILVER, dname]
+	)
 	GameState.mark_dirty()
 	World.world_changed.emit()
-	var dname := str(World.node(dest).get("name", dest))
 	return {
 		"ok": true,
 		"phase": "carrying",
-		"msg": Locale.t("spec_took") % [World.good_name(good), QTY, dname, TAKE_SILVER],
+		"msg": Locale.t("spec_took") % [gname, QTY, dname, TAKE_SILVER],
 	}
 
 
@@ -269,11 +275,15 @@ static func _deliver() -> Dictionary:
 		_cargo_add(reward, rq)
 		gifted = true
 	GameState.story.flags.erase(RUN_KEY)
-	GameState.mark_dirty()
-	World.world_changed.emit()
 	var oname := str(World.node(origin).get("name", origin))
 	var gname := World.good_name(str(active.get("good", "")))
 	var city_name := str(World.node(dest).get("name", dest))
+	CKEconomyState.month_echo_note(
+		"produce",
+		Locale.t("atlas_produce_echo_specialty_deliver") % [city_name, gname, pay, oname]
+	)
+	GameState.mark_dirty()
+	World.world_changed.emit()
 	if gifted:
 		return {
 			"ok": true,
