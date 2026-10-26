@@ -178,6 +178,9 @@ func _ready() -> void:
 		if selected >= 0:
 			return InputRouter.LONG_MS_SELECTED
 		return InputRouter.LONG_MS
+	# Y1-A T-P15: notch-lip presses on a body get a wider tap slop.
+	_board_router.edge_fn = func(origin: Vector2) -> bool:
+		return BattleEdgePick.press_in_band(self, origin)
 	_init_map()
 	Sfx.play_ambience(AtlasArt.biome_for_map(map_id))
 	_deploy()
@@ -1361,6 +1364,7 @@ func apply_mobile_layout() -> void:
 	_place_mobile_bar()
 	if terrain.size() > 0:
 		_layout_board()
+	BattleEdgePick.note_layout(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
 	CKHeraldryChrome.sync_battle_hud_crests(self)

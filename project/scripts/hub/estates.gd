@@ -729,7 +729,7 @@ func _fill_field_list() -> void:
 		row.name = "FieldRow_%s" % str(c.id)
 		row.add_theme_constant_override("separation", 8)
 		row.custom_minimum_size.y = 48
-		CKHeraldryChrome.attach_field_row_arms(row, c, Vector2(26, 32) if has_meta("m_on") else Vector2(28, 34))
+		CKHeraldryField.attach_office_field_arms(row, c, Vector2(26, 32) if has_meta("m_on") else Vector2(28, 34))
 		var lab := UIKit.body_label(Locale.t("ux_field_row") % [c.name, c.age, purse, _field_status(c)], UIKit.TEXT, 14)
 		lab.custom_minimum_size.x = 340
 		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

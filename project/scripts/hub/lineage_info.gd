@@ -358,9 +358,9 @@ static func render(host: Control, c, action_text: String, action_cb: Callable, e
 	jb.size = Vector2(218, 20)
 	jb.position = Vector2(156, 110)
 	p.add_child(jb)
-	var arms := CKHeraldryChrome.make_person_arms(c, Vector2(48, 58))
-	arms.position = Vector2(156, 132)
-	p.add_child(arms)
+	var arms := CKHeraldryField.attach_lineage_info_arms(p, c, Vector2(48, 58))
+	if arms != null:
+		arms.position = Vector2(156, 132)
 	var kind := UIKit.body_label(CKHeraldryChrome.arms_kind_label(c), UIKit.TEXT_DIM, 11)
 	kind.name = "ArmsKind"
 	kind.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -443,8 +443,7 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	var rr := HBoxContainer.new()
 	rr.add_theme_constant_override("separation", 8)
 	col.add_child(rr)
-	var arms := CKHeraldryChrome.make_person_arms(c, Vector2(48, 58))
-	rr.add_child(arms)
+	var arms := CKHeraldryField.attach_lineage_info_arms(rr, c, Vector2(48, 58))
 	var badge := CKHeraldryChrome.make_rank_badge(str(c.rank), 36)
 	badge.custom_minimum_size = Vector2(36, 48)
 	rr.add_child(badge)

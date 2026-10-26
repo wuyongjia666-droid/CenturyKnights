@@ -156,6 +156,7 @@ func set_unit(c, team: String = "player") -> void:
 	CKHeraldryField.attach_card_arms(self, c, team, foe)
 	if _mob:
 		_fit_mobile()
+		landscape_readable()
 
 func _make_chip(c, sid: String, enemy: bool) -> Control:
 	var sk: Dictionary = GameState.get_skill(sid)
@@ -270,4 +271,41 @@ func _fit_mobile() -> void:
 	_stats.position = Vector2(0, sy)
 	_stats.size = Vector2(_w, 56)
 	custom_minimum_size = Vector2(_w, sy + 60.0)
+	size = custom_minimum_size
+
+
+## Phone landscape: wrap the name and stats, and let empty card chrome pass taps.
+## Skill buttons stay STOP. Idempotent — positions are absolute, not cumulative.
+func landscape_readable() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	clip_contents = false
+	if not _mob:
+		return
+	var x0 := _name.position.x
+	var text_w := maxf(48.0, _w - x0)
+	_sub.clip_text = false
+	_sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_sub.position = Vector2(x0, 0)
+	_sub.size = Vector2(text_w, 28)
+	_sub.custom_minimum_size = _sub.size
+	_name.clip_text = false
+	_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_name.position = Vector2(x0, 30)
+	_name.size = Vector2(text_w, 52)
+	_name.custom_minimum_size = _name.size
+	_hp.position = Vector2(x0, 88)
+	_hp_txt.clip_text = false
+	_hp_txt.position = Vector2(x0, 100)
+	_hp_txt.size = Vector2(text_w, 28)
+	if _chips != null:
+		_chips.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_chips.position = Vector2(0, PH + 28.0)
+	_stats.clip_text = false
+	_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var chip_h := 0.0 if _chips == null else _chips.size.y
+	var stat_y := PH + 28.0 + chip_h + 8.0
+	_stats.position = Vector2(0, stat_y)
+	_stats.size = Vector2(_w, 72)
+	_stats.custom_minimum_size = Vector2(_w, 72)
+	custom_minimum_size = Vector2(_w, stat_y + 80.0)
 	size = custom_minimum_size
