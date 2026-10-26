@@ -43,16 +43,29 @@ func _api_preview_reject_and_claim() -> String:
 	GameState.quest_done.erase(QID)
 	GameState.silver = 200
 	GameState.food = 80
+	var err := _api_quest_gate()
+	if err != "":
+		return err
+	err = _api_short_gate()
+	if err != "":
+		return err
+	err = _api_claim_ok()
+	if err != "":
+		return err
+	return ""
 
+
+func _api_quest_gate() -> String:
 	var prev_q: Dictionary = GameState.holding_unlock_preview(HID)
 	if bool(prev_q.get("quest_ready", false)) or bool(prev_q.get("claimable", false)):
 		return "expected quest gate: %s" % str(prev_q)
 	var bad_q: Dictionary = GameState.claim_holding(HID)
-	if bool(bad_q.get("ok", false)):
-		return "quest gate should reject"
-	if GameState.holdings.has(HID):
-		return "holding leaked on quest reject"
+	if bool(bad_q.get("ok", false)) or GameState.holdings.has(HID):
+		return "quest gate should reject (ok=%s has=%s)" % [str(bad_q.get("ok")), str(GameState.holdings.has(HID))]
+	return ""
 
+
+func _api_short_gate() -> String:
 	GameState.quest_done[QID] = true
 	GameState.silver = 5
 	GameState.food = 1
@@ -60,11 +73,12 @@ func _api_preview_reject_and_claim() -> String:
 	if not bool(prev_s.get("quest_ready", false)) or not bool(prev_s.get("short", false)):
 		return "expected short after quest: %s" % str(prev_s)
 	var bad_s: Dictionary = GameState.claim_holding(HID)
-	if bool(bad_s.get("ok", false)):
-		return "short should reject"
-	if GameState.holdings.has(HID):
-		return "holding leaked on short"
+	if bool(bad_s.get("ok", false)) or GameState.holdings.has(HID):
+		return "short should reject (ok=%s has=%s)" % [str(bad_s.get("ok")), str(GameState.holdings.has(HID))]
+	return ""
 
+
+func _api_claim_ok() -> String:
 	GameState.silver = 200
 	GameState.food = 80
 	var prev: Dictionary = GameState.holding_unlock_preview(HID)
@@ -78,17 +92,13 @@ func _api_preview_reject_and_claim() -> String:
 	var ok: Dictionary = GameState.claim_holding(HID)
 	if not bool(ok.get("ok", false)):
 		return "claim failed: %s" % str(ok)
-	if not GameState.holdings.has(HID):
-		return "holding not owned after claim"
-	if int(GameState.holding_level(HID)) != 1:
-		return "level not 1 after claim"
+	if not GameState.holdings.has(HID) or int(GameState.holding_level(HID)) != 1:
+		return "holding not owned lv1 after claim"
 	if int(GameState.silver) != before_s - 25 or int(GameState.food) != before_f - 5:
 		return "silver/food delta"
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	if str(snap.get("unlock", "")) == "":
 		return "month_echo unlock empty: %s" % str(snap)
-
-	# owned reject
 	var again: Dictionary = GameState.claim_holding(HID)
 	if bool(again.get("ok", false)):
 		return "owned should reject"
