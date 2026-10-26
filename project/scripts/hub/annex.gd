@@ -228,7 +228,7 @@ func render() -> void:
 			wrap.name = "AnnexServeRow"
 			wrap.add_theme_constant_override("separation", 8)
 			wrap.custom_minimum_size = Vector2(548, 44)
-			CKHeraldryField.attach_annex_row_arms(wrap, "person", c)
+			CKHeraldryField.attach_infirmary_heal_arms(wrap, c)
 			var kb := UIKit.make_accent_button(lab, 500) if on else UIKit.ghost_button(lab, 500, 44)
 			kb.name = "InnKnight_" + str(c.id)
 			kb.custom_minimum_size = Vector2(500, 44)
@@ -428,7 +428,7 @@ func _m_render() -> void:
 			wrap.name = "AnnexServeRow"
 			wrap.add_theme_constant_override("separation", 8)
 			wrap.custom_minimum_size = Vector2(0, 56)
-			CKHeraldryField.attach_annex_row_arms(wrap, "person", c)
+			CKHeraldryField.attach_infirmary_heal_arms(wrap, c)
 			var kb := MobilePage.button(lab, on, func():
 				for x in GameState.roster():
 					if str(x.id) == cid:
