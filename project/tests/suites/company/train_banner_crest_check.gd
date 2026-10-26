@@ -66,6 +66,7 @@ func _collect(n: Node, node_name: String, out: Array) -> void:
 
 func _assert_page(page: Node, where: String) -> void:
 	var strip := page.find_child("TrainFocusStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "train_focus", "train_focus")
 	_ok(strip != null, "%s TrainFocusStrip" % where)
 	if strip != null:
 		var ca := strip.find_child("CastleArms", true, false)

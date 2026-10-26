@@ -52,6 +52,7 @@ func _boot_with_heir() -> CKCharacter:
 
 func _assert_page(page: Node, where: String) -> void:
 	var strip := page.find_child("SuccessionCrestStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "succession_strip", "succession_strip")
 	_ok(strip != null, "%s SuccessionCrestStrip" % where)
 	if strip != null:
 		var ca := strip.find_child("CastleArms", true, false)

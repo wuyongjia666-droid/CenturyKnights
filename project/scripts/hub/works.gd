@@ -29,8 +29,8 @@ func _place_works_crests() -> void:
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
 	var host: Node = _body if _body != null else self
-	CKHeraldryChrome.place_company_header(host, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
-	CKHeraldryChrome.place_castle_banner_strip(host, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+	CKHeraldryField.place_company_header(host, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryField.place_banner_plate(host, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
