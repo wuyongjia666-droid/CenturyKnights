@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: blood crest (desk + mobile).
+## Fat heraldry E2E: blood via CKHeraldryField (BloodCrestStrip + BloodQueueArms).
 
 const SCN := preload("res://scenes/hub/blood_test.tscn")
 var _fails: Array = []
@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("BLOOD FIELD CREST PASS")
 		print("BLOOD CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -41,8 +42,12 @@ func _assert_page(page: Node, where: String) -> void:
 	var bd = page.find_child("BloodCrestStrip", true, false)
 	_ok(bd != null, "%s BloodCrestStrip" % where)
 	if bd != null:
+		_ok(str(bd.get_meta("field_route", "")) == "blood_strip", "%s strip field_route" % where)
 		var bn = bd.find_child("BloodBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_blood_arms", "%s BloodBanner" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/blood_test.gd")
+	_ok(src.find("CKHeraldryField.place_blood_crest_strip") >= 0, "%s hub calls Field strip" % where)
+	_ok(src.find("CKHeraldryField.attach_blood_queue_arms") >= 0, "%s hub calls Field queue" % where)
 
 
 func _run_desktop() -> void:

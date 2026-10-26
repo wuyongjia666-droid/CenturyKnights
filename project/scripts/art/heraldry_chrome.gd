@@ -856,30 +856,9 @@ static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2
 	box.add_child(head)
 	box.move_child(head, 0)
 
-## Market desk strip: 团徽 + 市集旗布 (MarketCrestStrip). Distinct from CityCrestStrip.
+## Market desk strip. Field owns MarketCrestStrip.
 static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("MarketCrestStrip")
-	if old:
-		old.name = "_MarketCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "MarketCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "MarketBanner"
-	bn.tooltip_text = Locale.t("lb_market_arms")
-	bn.set_meta("arms_kind", "lb_market_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_market_crest_strip(parent, at, shield, banner)
 
 
 ## Skill-tree header: 团徽 + 技徽旗布 (SkillCrestStrip).
@@ -923,97 +902,24 @@ static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector
 	host.move_child(arms, 0)
 
 
-## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip).
+## Hourglass / 时漏 strip. Field owns HourglassCrestStrip.
 static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("HourglassCrestStrip")
-	if old:
-		old.name = "_HourglassCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "HourglassCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "HourglassBanner"
-	bn.tooltip_text = Locale.t("lb_hourglass_arms")
-	bn.set_meta("arms_kind", "lb_hourglass_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_hourglass_crest_strip(parent, at, shield, banner)
 
 
-## Castle overview strip: 团徽 + 城堡旗布 (CastleViewCrestStrip). Distinct from CastleBannerStrip.
+## Castle overview strip. Field owns CastleViewCrestStrip.
 static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("CastleViewCrestStrip")
-	if old:
-		old.name = "_CastleViewCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "CastleViewCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "CastleViewBanner"
-	bn.tooltip_text = Locale.t("lb_castle_view_arms")
-	bn.set_meta("arms_kind", "lb_castle_view_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_castle_view_crest_strip(parent, at, shield, banner)
 
 
-## Blood-assay strip: 团徽 + 血验旗布 (BloodCrestStrip).
+## Blood-assay strip. Field owns BloodCrestStrip.
 static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("BloodCrestStrip")
-	if old:
-		old.name = "_BloodCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "BloodCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "BloodBanner"
-	bn.tooltip_text = Locale.t("lb_blood_arms")
-	bn.set_meta("arms_kind", "lb_blood_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_blood_crest_strip(parent, at, shield, banner)
 
 
-## Pin BloodQueueArms on a queue row (person awaiting assay).
+## Pin BloodQueueArms. Field owns the person arms.
 static func attach_blood_queue_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> void:
-	if row == null or c == null:
-		return
-	var old := row.get_node_or_null("BloodQueueArms")
-	if old:
-		old.name = "_BloodQueueArmsDying"
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "BloodQueueArms"
-	arms.tooltip_text = Locale.t("lb_blood_arms")
-	row.add_child(arms)
-	row.move_child(arms, 0)
+	CKHeraldryField.attach_blood_queue_arms(row, c, arms_sz)
 
 ## Dialogue / chapter plate. Field owns DialogueCrestStrip.
 static func place_dialogue_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:

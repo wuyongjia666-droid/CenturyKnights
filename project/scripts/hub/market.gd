@@ -73,7 +73,7 @@ func _place_market_crests(at_y: float = 8.0) -> void:
 		CKHeraldryChrome.place_city_crest_strip(self, city, Vector2(42, at_y), Vector2(36, 44))
 	var mob := DeviceProfile.is_mobile()
 	var mat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 220.0), at_y)
-	CKHeraldryChrome.place_market_crest_strip(self, mat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
+	CKHeraldryField.place_market_crest_strip(self, mat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
 
 func _render() -> void:
 	if MobilePage.active(self):

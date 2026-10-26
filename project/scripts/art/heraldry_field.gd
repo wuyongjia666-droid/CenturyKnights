@@ -6,7 +6,8 @@ extends RefCounted
 ## castle panorama lineage, castle-home roster row, marriage protocol / succession /
 ## heir-trial duel strips, house-card person arms, banner-school train
 ## (pupil focus strip + row person arms), roster crest/row/hire plate,
-## dialogue / save / battle-order / board / tavern-annex Field plates.
+## dialogue / save / battle-order / board / tavern-annex Field plates,
+## and hourglass / castle-view / blood-assay / market Field strips.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -879,3 +880,114 @@ static func _order_before(a: Dictionary, b: Dictionary) -> bool:
 	if int(a["agi"]) != int(b["agi"]):
 		return int(a["agi"]) > int(b["agi"])
 	return int(a["idx"]) < int(b["idx"])
+
+
+## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip).
+static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "HourglassCrestStrip")
+	var host := Control.new()
+	host.name = "HourglassCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "hourglass_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "HourglassBanner"
+	bn.tooltip_text = Locale.t("lb_hourglass_arms")
+	bn.set_meta("arms_kind", "lb_hourglass_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Castle overview strip: 团徽 + 城堡旗布 (CastleViewCrestStrip). Distinct from CastleBannerStrip.
+static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "CastleViewCrestStrip")
+	var host := Control.new()
+	host.name = "CastleViewCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "castle_view_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "CastleViewBanner"
+	bn.tooltip_text = Locale.t("lb_castle_view_arms")
+	bn.set_meta("arms_kind", "lb_castle_view_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Blood-assay strip: 团徽 + 血验旗布 (BloodCrestStrip).
+static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "BloodCrestStrip")
+	var host := Control.new()
+	host.name = "BloodCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "blood_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "BloodBanner"
+	bn.tooltip_text = Locale.t("lb_blood_arms")
+	bn.set_meta("arms_kind", "lb_blood_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Pin BloodQueueArms on a queue row (person awaiting assay).
+static func attach_blood_queue_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "BloodQueueArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "BloodQueueArms"
+	arms.tooltip_text = Locale.t("lb_blood_arms")
+	arms.set_meta("field_route", "blood_queue")
+	row.add_child(arms)
+	if row is Container:
+		row.move_child(arms, 0)
+	return arms
+
+
+## Market desk strip: 团徽 + 市集旗布 (MarketCrestStrip). Distinct from CityCrestStrip.
+static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "MarketCrestStrip")
+	var host := Control.new()
+	host.name = "MarketCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "market_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "MarketBanner"
+	bn.tooltip_text = Locale.t("lb_market_arms")
+	bn.set_meta("arms_kind", "lb_market_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host

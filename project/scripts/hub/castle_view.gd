@@ -58,7 +58,7 @@ func _place_castle_view_crests() -> void:
 	var mob := DeviceProfile.is_mobile()
 	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
 	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
-	CKHeraldryChrome.place_castle_view_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+	CKHeraldryField.place_castle_view_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
 	_place_panorama_lineage()
 
 
