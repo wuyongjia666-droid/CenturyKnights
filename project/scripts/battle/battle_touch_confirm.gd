@@ -14,8 +14,11 @@ extends RefCounted
 ## attack ghost gets aim line + pulse juice.
 ## Y1-A T-P6: confirm_attack stamps m_attack_confirm_msec for settle juice path.
 ## Y1-A T-P13: confirm does not refocus the attacker (that yanked the preview
-## camera). Strike ring + ribbon/chip live here; pair framing is BattleCombatFrame.
+## camera). Strike ring + ribbon live here; pair framing is BattleCombatFrame.
 ## ck_unit_drag is set before the hover refresh so a unit drag does not pan.
+## Y1-A T-P16: confirm/cancel chips are screen-sized hit targets. A latched
+## preview pans instead of sticky-committing. Mobile post-confirm uses the
+## readable settle region so it does not fight T-P15.
 ## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel;
 ## invalid-target reject pulse lives here (keeps battle_controller under the line gate).
 
@@ -139,6 +142,7 @@ static func drag_commit_enabled() -> bool:
 
 static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
+	BattleLandStrike.clear(host)
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
@@ -148,6 +152,8 @@ static func clear(host, refocus_selection: bool = true) -> void:
 			BattlePick.focus_selected(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
+	BattleLinkTelegraph.clear(host)
+	BattleFoeOpeningTelegraph.clear(host)
 	ForecastPanel.refresh(host)
 
 
@@ -160,8 +166,16 @@ static func confirm_move(host) -> void:
 	BattlePick.focus_follow_preview(host)
 	clear(host, false)
 	commit_move(host, cell)
+	# T-P22: post-land strike peek — body chrome on in-reach foes + frame them.
+	BattleLandStrike.after_land(host)
+	# T-P16: one camera into the readable inset. Desktop still uses T-P13 follow.
+	if BattleConfirmAffordance.yields_post_camera(host):
+		BattleConfirmAffordance.settle_camera(host, cell, [])
+		return
 	BattlePick.focus_cell(host, cell)
 	BattleCombatFrame.follow_cells(host, [cell], 0.0)
+	# T-P15: keep the mover's figure out of the notch lip and the info column.
+	BattleActionSettle.apply(host, cell, [])
 
 
 static func confirm_attack(host) -> void:
@@ -174,18 +188,36 @@ static func confirm_attack(host) -> void:
 		impact = host.units[ui].pos
 		note_confirm_strike(host, impact)
 	# Do not refocus the attacker — that tween fought the defender frame.
+	var actor := Vector2i(-1, -1)
+	var actor_i := int(host.selected)
+	if actor_i >= 0 and actor_i < host.units.size():
+		actor = host.units[actor_i].pos
 	clear(host, false)
 	if host.selected < 0 or ui < 0 or ui >= host.units.size():
 		return
 	# T-P6: confirm→hit settle path — stamp confirm; resolve refreshes hit/miss/kill juice.
 	host.set_meta("m_attack_confirm_msec", Time.get_ticks_msec())
 	host._do_attack(host.selected, ui)
+	if actor_i >= 0 and actor_i < host.units.size():
+		actor = host.units[actor_i].pos
 	var landed := impact
 	if ui < host.units.size() and host.units[ui].char.hp > 0:
 		landed = host.units[ui].pos
-		BattlePick.focus_cell(host, landed)
+	# T-P16: framing only the defender slides the actor out of the settle region.
+	if BattleConfirmAffordance.yields_post_camera(host):
+		var also: Array = []
+		if landed.x >= 0 and landed != actor:
+			also.append(landed)
+		BattleConfirmAffordance.settle_camera(host, actor, also)
+		return
 	if landed.x >= 0:
+		BattlePick.focus_cell(host, landed)
 		BattleCombatFrame.follow_cells(host, [landed], 0.0)
+	# T-P15: the actor stays readable even when the pair does not fit.
+	var also: Array = []
+	if landed.x >= 0 and landed != actor:
+		also.append(landed)
+	BattleActionSettle.apply(host, actor, also)
 
 
 static func overflow_menu(host) -> void:
@@ -275,6 +307,12 @@ static func is_unit_drag(host, g: Dictionary) -> bool:
 		# Set before the controller's hover refresh so the drag cannot pan.
 		_mark_unit_drag(host, cached)
 		return cached
+	# T-P16: preview is already showing. A new finger pans; it must not sticky-commit.
+	if BattleConfirmAffordance.preview_latched(host):
+		host.set_meta("drag_origin", origin)
+		host.set_meta("drag_unit", false)
+		_mark_unit_drag(host, false)
+		return false
 	var unit := _press_on_selected(host, origin)
 	host.set_meta("drag_origin", origin)
 	host.set_meta("drag_unit", unit)
@@ -359,6 +397,8 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			if host.overlay:
 				host.overlay.queue_redraw()
 			ForecastPanel.refresh(host)
+			BattleLinkTelegraph.refresh(host)
+			BattleFoeOpeningTelegraph.refresh(host)
 			# T-P4: do not soft-follow mid unit-drag (mobile_safe_area: unit drag must not pan).
 			# Camera settles on confirm_attack / focus_selected instead.
 		else:
@@ -517,7 +557,7 @@ static func draw_preview(host) -> void:
 				var back: Vector2 = tip - dir * float(juice.chev_len)
 				overlay.draw_line(tip, back + ortho, col, float(juice.aim_w), true)
 				overlay.draw_line(tip, back - ortho, col, float(juice.aim_w), true)
-			_draw_attack_chip(overlay, from.lerp(acenter, 0.55), _attack_preview_info(host), float(cell), attack_preview_pulse())
+	BattleConfirmAffordance.draw(overlay, host, _attack_preview_info(host))
 	_draw_confirm_strike(host, overlay)
 
 
@@ -556,26 +596,6 @@ static func _draw_corner_brackets(overlay, rect: Rect2, length: float, color: Co
 	overlay.draw_line(Vector2(x0, y1), Vector2(x0, y1 - span), color, width, true)
 	overlay.draw_line(Vector2(x1, y1), Vector2(x1 - span, y1), color, width, true)
 	overlay.draw_line(Vector2(x1, y1), Vector2(x1, y1 - span), color, width, true)
-
-
-static func _draw_attack_chip(overlay, mid: Vector2, info: Dictionary, cell_px: float, pulse: float) -> void:
-	var lines := BattleCombatFrame.chip_lines(info)
-	if lines.is_empty():
-		return
-	var font := UIKit.font("bold")
-	var fs := int(clampf(cell_px * 0.22, 18.0, 28.0))
-	var widest := 48.0
-	for line in lines:
-		widest = maxf(widest, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
-	var plate_h := float(lines.size()) * (float(fs) + 4.0) + 12.0
-	var plate_w := widest + 18.0
-	var plate := Rect2(mid - Vector2(plate_w * 0.5, plate_h * 0.5), Vector2(plate_w, plate_h))
-	overlay.draw_rect(plate, Color(0.05, 0.06, 0.09, 0.86))
-	overlay.draw_rect(plate, Color(UIKit.DANGER, 0.75 + 0.2 * pulse), false, 2.0)
-	var y := plate.position.y + float(fs) + 4.0
-	for line in lines:
-		overlay.draw_string(font, Vector2(plate.position.x + 8.0, y), line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, UIKit.TEXT)
-		y += float(fs) + 4.0
 
 
 static func _draw_confirm_strike(host, overlay) -> void:

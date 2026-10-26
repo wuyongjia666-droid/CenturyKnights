@@ -5,7 +5,7 @@ extends RefCounted
 const COL := "MobileSideCol"
 const FONT := 22
 const HIT := 76.0
-const SKIP := ["CommandRow", "CommandRow2", "ControlsTip", "BoardXform"]
+const SKIP := ["CommandRow", "CommandRow2", "ControlsTip", "BoardXform", "BattleDualLedger"]
 
 
 static func attach(host: Control, x: float, w: float) -> void:
@@ -31,6 +31,8 @@ static func attach(host: Control, x: float, w: float) -> void:
 		host.child_entered_tree.connect(_defer_adopt.bind(host))
 	sc.position = Vector2(x, top)
 	sc.size = Vector2(w, h)
+	# T-P15: keep the column off the board and stop the card clipping / eating taps.
+	BattleEdgePick.note_layout(host)
 
 
 static func _defer_adopt(n: Node, host: Control) -> void:

@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: skill tree crest (desk + mobile).
+## Fat heraldry E2E: skill tree via CKHeraldryField (SkillCrestStrip + SkillPersonArms), desk + mobile.
 
 const SCN := preload("res://scenes/hub/skill_tree.tscn")
 var _fails: Array = []
@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("SKILL FIELD CREST PASS")
 		print("SKILL TREE CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -42,9 +43,13 @@ func _assert_page(page: Node, where: String) -> void:
 	var sk = page.find_child("SkillCrestStrip", true, false)
 	_ok(sk != null, "%s SkillCrestStrip" % where)
 	if sk != null:
+		_ok(str(sk.get_meta("field_route", "")) == "skill_strip", "%s strip field_route" % where)
 		var bn = sk.find_child("SkillBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_skill_arms", "%s SkillBanner" % where)
-	_ok(page.find_child("SkillPersonArms", true, false) != null, "%s SkillPersonArms" % where)
+	var spa = page.find_child("SkillPersonArms", true, false)
+	_ok(spa != null, "%s SkillPersonArms" % where)
+	if spa != null:
+		_ok(str(spa.get_meta("field_route", "")) == "skill_person", "%s SkillPersonArms field_route" % where)
 
 
 func _run_desktop() -> void:

@@ -240,7 +240,7 @@ func _place_dialogue_crests() -> void:
 	var mob := DeviceProfile.is_mobile()
 	var at := Vector2(1120, 18) if not mob else Vector2(maxf(20.0, size.x - 140.0) if size.x > 400.0 else 1120.0, 8)
 	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
-	CKHeraldryChrome.place_dialogue_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+	CKHeraldryField.place_dialogue_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
 
 
 func _load_beat(beat_id: String) -> void:
@@ -521,25 +521,25 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 		if lead_plate != null:
 			test_capture["portrait_kind"] = "narrator_leader"
 			_portrait.texture = lead_plate
-			CKHeraldryChrome.attach_dialogue_speaker_arms(_portrait, narr_lead, Vector2(28, 34))
+			CKHeraldryField.attach_dialogue_speaker_arms(_portrait, narr_lead, Vector2(28, 34))
 			return
 	test_capture["portrait_who"] = who.id if who != null else ""
 	if narr:
 		test_capture["portrait_kind"] = "narrator"
 		_portrait.set_meta("story_narrator", true)
 		_portrait.texture = null
-		CKHeraldryChrome.attach_dialogue_speaker_arms(_portrait, null)
+		CKHeraldryField.attach_dialogue_speaker_arms(_portrait, null)
 		return
 	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, PORTRAIT_PX)
 	if plate != null:
 		test_capture["portrait_kind"] = "plate"
 		_portrait.texture = plate
-		CKHeraldryChrome.attach_dialogue_speaker_arms(_portrait, who, Vector2(28, 34))
+		CKHeraldryField.attach_dialogue_speaker_arms(_portrait, who, Vector2(28, 34))
 		return
 	# Supporting cast / villains: silhouette at display size until a plate lands (C-04).
 	test_capture["portrait_kind"] = "silhouette"
 	_portrait.texture = UnitArt.speaker_silhouette(speaker, PORTRAIT_PX)
-	CKHeraldryChrome.attach_dialogue_speaker_arms(_portrait, who, Vector2(28, 34))
+	CKHeraldryField.attach_dialogue_speaker_arms(_portrait, who, Vector2(28, 34))
 
 
 func _refresh_actions() -> void:
