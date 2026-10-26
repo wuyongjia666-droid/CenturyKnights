@@ -7,6 +7,9 @@ class_name CKRoadSeal
 const WINDOW_DAYS := 8
 const SEAL_DANGER := 3
 const FORCE_MORALE := 6
+## U+00D7. The map draws its own cross; this mark only tags the sealed hop in
+## path text, and it has to be a glyph already in the Noto CJK subset.
+const MARK := "×"
 
 static func seal_active() -> bool:
 	return Calendar.season_id() == "winter" and World.day <= WINDOW_DAYS
@@ -69,7 +72,7 @@ static func path_text(path: Array) -> String:
 		var id := str(path[i])
 		var name := str(World.node(id).get("name", id))
 		if i > 0 and is_sealed(str(path[i - 1]), id):
-			bits.append("✕ %s" % name)
+			bits.append("%s %s" % [MARK, name])
 		else:
 			bits.append(name)
 	return " › ".join(bits)

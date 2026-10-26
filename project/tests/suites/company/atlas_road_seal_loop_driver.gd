@@ -52,7 +52,7 @@ func _api_rules() -> void:
 	_ok(CKRoadSeal.sealed_count() >= 1, "at least one sealed road")
 	var cmp: Dictionary = CKRoadSeal.compare(DEST)
 	_ok(bool(cmp.get("sealed", false)), "direct route to 狼脊村 is sealed")
-	_ok(str(cmp.get("direct_text", "")).find("✕") >= 0, "direct text marks the seal")
+	_ok(str(cmp.get("direct_text", "")).find(CKRoadSeal.MARK) >= 0, "direct text marks the seal")
 	var detour: Dictionary = cmp.get("detour", {})
 	_ok(bool(detour.get("ok", false)), "a detour exists")
 	_ok(int(detour.get("extra_days", 0)) >= 1, "detour costs extra days (%s)" % detour.get("extra_days", 0))
@@ -144,9 +144,9 @@ func _ui_loop() -> void:
 	var sheet := page.find_child("BlockedRoadSheet", true, false)
 	_ok(sheet != null, "BlockedRoadSheet is up")
 	var direct := page.find_child("SealDirect", true, false) as Label
-	_ok(direct != null and direct.text.find("✕") >= 0, "sheet shows the sealed leg")
+	_ok(direct != null and direct.text.find(CKRoadSeal.MARK) >= 0, "sheet shows the sealed leg")
 	var detour_path := page.find_child("SealDetourPath", true, false) as Label
-	_ok(detour_path != null and detour_path.text.find("✕") < 0 and detour_path.text.find("绕") >= 0, "sheet shows a clear detour")
+	_ok(detour_path != null and detour_path.text.find(CKRoadSeal.MARK) < 0 and detour_path.text.find("绕") >= 0, "sheet shows a clear detour")
 	var food := page.find_child("SealFood", true, false) as Label
 	_ok(food != null and food.text.find("120") >= 0, "sheet shows rations on hand")
 	var go_name := "GoButton" if mobile else "HudGo"
