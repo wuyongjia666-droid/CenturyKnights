@@ -9,6 +9,9 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		var _cs := FileAccess.get_file_as_string("res://scripts/hub/city.gd")
+		_ok(_cs.find("CKHeraldryField.place_city_crest_strip") >= 0, "city calls Field")
+		print("CITY CREST FIELD PASS")
 		print("CITY CREST CHROME PASS")
 		get_tree().quit(0)
 	else:
@@ -40,7 +43,14 @@ func _boot(cid: String) -> void:
 	GameState.set_meta("city_id", cid)
 
 func _assert_strip(page: Node, where: String, cid: String) -> void:
-	var strip := page.find_child("CityCrestStrip", true, false)
+	var strip: Node = null
+	for n in page.find_children("CityCrestStrip", "", true, false):
+		if str(n.get_meta("field_route", "")) == "city_strip":
+			strip = n
+			break
+	if strip == null:
+		strip = page.find_child("CityCrestStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "city_strip", "%s city field_route" % where)
 	_ok(strip != null, "%s CityCrestStrip" % where)
 	if strip == null:
 		return

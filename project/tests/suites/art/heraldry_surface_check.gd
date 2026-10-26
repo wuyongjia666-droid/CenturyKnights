@@ -266,9 +266,9 @@ func _run() -> void:
 		return
 
 	# ── Board unit shields ────────────────────────────────────────
-	_ok(CKHeraldryChrome.token_shield_core(leader, "player") == CKHeraldry.core_key(fam_spec), "token shield leader not 族徽")
-	_ok(CKHeraldryChrome.token_shield_core(loner, "player") == CKHeraldry.core_key(ban_spec), "token shield loner not 旗徽")
-	_ok(CKHeraldryChrome.token_shield_core(leader, "enemy") == "", "enemy token must not carry player arms")
+	_ok(CKHeraldryField.token_shield_core(leader, "player") == CKHeraldry.core_key(fam_spec), "token shield leader not 族徽")
+	_ok(CKHeraldryField.token_shield_core(loner, "player") == CKHeraldry.core_key(ban_spec), "token shield loner not 旗徽")
+	_ok(CKHeraldryField.token_shield_core(leader, "enemy") == "", "enemy token must not carry player arms")
 	var lead_tex := CKHeraldryChrome.person_shield(leader, 24, 28)
 	var lone_tex := CKHeraldryChrome.person_shield(loner, 24, 28)
 	_ok(lead_tex != null and lone_tex != null, "person_shield null")
@@ -279,7 +279,7 @@ func _run() -> void:
 	## Blit into a blank board image and confirm pixels changed
 	var blank := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	blank.fill(Color(0, 0, 0, 0))
-	CKHeraldryChrome.blit_token_shield(blank, leader, "player")
+	CKHeraldryField.blit_token_shield(blank, leader, "player")
 	var painted := false
 	for y in 64:
 		for x in 64:
@@ -289,6 +289,20 @@ func _run() -> void:
 		if painted:
 			break
 	_ok(painted, "blit_token_shield left image empty")
+	# Field ownership vows (token shield)
+	var field_src := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
+	_ok(field_src.find("static func token_shield_core") >= 0, "field owns token_shield_core")
+	_ok(field_src.find("static func blit_token_shield") >= 0, "field owns blit_token_shield")
+	var chrome_src := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
+	_ok(chrome_src.find("CKHeraldryField.token_shield_core") >= 0, "chrome token_core shim → Field")
+	_ok(chrome_src.find("CKHeraldryField.blit_token_shield") >= 0, "chrome blit shim → Field")
+	var unit_src := FileAccess.get_file_as_string("res://scripts/art/unit_art.gd")
+	_ok(unit_src.find("CKHeraldryField.token_shield_core") >= 0, "unit_art token_core → Field")
+	_ok(unit_src.find("CKHeraldryField.blit_token_shield") >= 0, "unit_art blit → Field")
+	_ok(unit_src.find("CKHeraldryChrome.token_shield_core") < 0, "unit_art no Chrome token_core")
+	_ok(unit_src.find("CKHeraldryChrome.blit_token_shield") < 0, "unit_art no Chrome blit")
+	# Shim parity
+	_ok(CKHeraldryChrome.token_shield_core(leader, "player") == CKHeraldryField.token_shield_core(leader, "player"), "chrome token shim parity")
 	## board_pawn_texture cache key includes arms core (family != loner)
 	var pawn_l := UnitArt.board_pawn_texture(leader, "player", 64, false)
 	var pawn_n := UnitArt.board_pawn_texture(loner, "player", 64, false)
@@ -300,7 +314,7 @@ func _run() -> void:
 	var city_host := Control.new()
 	city_host.name = "CityCrestHost"
 	get_tree().root.add_child(city_host)
-	var city_strip := CKHeraldryChrome.place_city_crest_strip(city_host, "ash_capital", Vector2(8, 8), Vector2(36, 44))
+	var city_strip := CKHeraldryField.place_city_crest_strip(city_host, "ash_capital", Vector2(8, 8), Vector2(36, 44))
 	_ok(city_strip != null and city_strip.name == "CityCrestStrip", "CityCrestStrip missing")
 	if city_strip != null:
 		var ca2 := city_strip.find_child("CastleArms", true, false)
@@ -320,7 +334,7 @@ func _run() -> void:
 	get_tree().root.add_child(nat_host)
 	var nat_ids: Array = CKBloodline.nation_ids()
 	var sample_nid := str(nat_ids[0]) if not nat_ids.is_empty() else "ashbanner"
-	var nat_strip := CKHeraldryChrome.place_nation_crest_strip(nat_host, sample_nid, Vector2(10, 10), Vector2(36, 44))
+	var nat_strip := CKHeraldryField.place_nation_crest_strip(nat_host, sample_nid, Vector2(10, 10), Vector2(36, 44))
 	_ok(nat_strip != null and nat_strip.name == "NationCrestStrip", "NationCrestStrip missing")
 	if nat_strip != null:
 		var nca := nat_strip.find_child("CastleArms", true, false)
@@ -335,14 +349,14 @@ func _run() -> void:
 	var rite_host := Control.new()
 	rite_host.name = "RiteCrestHost"
 	get_tree().root.add_child(rite_host)
-	var rite_strip := CKHeraldryChrome.place_rite_crest_strip(rite_host, leader, Vector2(10, 10), Vector2(36, 44))
+	var rite_strip := CKHeraldryField.place_rite_crest_strip(rite_host, leader, Vector2(10, 10), Vector2(36, 44))
 	_ok(rite_strip != null and rite_strip.name == "RiteCrestStrip", "RiteCrestStrip missing")
 	if rite_strip != null:
 		_ok(rite_strip.find_child("CastleArms", true, false) != null, "rite CastleArms")
 		var rla := rite_strip.find_child("LeaderArms", true, false)
 		_ok(rla != null, "rite LeaderArms")
 		_ok(bool(rite_strip.get_meta("has_heir", false)), "rite has_heir meta")
-	var rite_empty := CKHeraldryChrome.place_rite_crest_strip(rite_host, null, Vector2(10, 80), Vector2(36, 44))
+	var rite_empty := CKHeraldryField.place_rite_crest_strip(rite_host, null, Vector2(10, 80), Vector2(36, 44))
 	_ok(rite_empty != null and rite_empty.find_child("LeaderArms", true, false) == null, "rite empty no LeaderArms")
 	rite_host.queue_free()
 
@@ -401,7 +415,7 @@ func _run() -> void:
 	var host := Control.new()
 	host.name = "AftermathHost"
 	get_tree().root.add_child(host)
-	var af_strip := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 10), "ashbanner", Vector2(36, 44))
+	var af_strip := CKHeraldryField.place_aftermath_crest_strip(host, Vector2(10, 10), "ashbanner", Vector2(36, 44))
 	_ok(af_strip != null and af_strip.name == "AftermathCrestStrip", "AftermathCrestStrip missing")
 	if af_strip != null:
 		var ca := af_strip.find_child("CastleArms", true, false)
@@ -417,7 +431,7 @@ func _run() -> void:
 			_ok(str(foe.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec("ashbanner")), "aftermath foe core")
 			_ok(str(foe.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "foe must not equal company")
 	## Company-only strip (halt / calm road) has no FoeArms
-	var af_halt := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 80), "", Vector2(36, 44))
+	var af_halt := CKHeraldryField.place_aftermath_crest_strip(host, Vector2(10, 80), "", Vector2(36, 44))
 	_ok(af_halt != null, "company-only strip missing")
 	if af_halt != null:
 		_ok(af_halt.find_child("CastleArms", true, false) != null, "halt CastleArms missing")
@@ -598,7 +612,7 @@ func _run() -> void:
 	var field_host := Control.new()
 	field_host.name = "FieldCrestHost"
 	get_tree().root.add_child(field_host)
-	var field_strip := CKHeraldryChrome.place_field_crest_strip(field_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	var field_strip := CKHeraldryField.place_field_crest_strip(field_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
 	_ok(field_strip != null and field_strip.name == "FieldCrestStrip", "FieldCrestStrip missing")
 	if field_strip != null:
 		_ok(field_strip.find_child("CastleArms", true, false) != null, "field CastleArms")
@@ -607,7 +621,7 @@ func _run() -> void:
 	var frow := HBoxContainer.new()
 	frow.name = "FieldRowProbe"
 	field_host.add_child(frow)
-	CKHeraldryChrome.attach_field_row_arms(frow, leader, Vector2(28, 34))
+	CKHeraldryField.attach_field_row_arms(frow, leader, Vector2(28, 34))
 	_ok(frow.find_child("FieldRowArms", true, false) != null, "FieldRowArms attached")
 	field_host.queue_free()
 

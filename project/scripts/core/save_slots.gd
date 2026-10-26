@@ -152,7 +152,7 @@ func _place_shell_crests() -> void:
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
 	var ban := Vector2(28, 38) if not mob else Vector2(24, 32)
 	CKHeraldryField.place_shell_crest_strip(self, Vector2(1120, 18) if not mob else Vector2(1120, 8), hdr, ban)
-	CKHeraldryChrome.place_company_header(self, Vector2(1180, 18) if not mob else Vector2(1180, 8), hdr)
+	CKHeraldryField.place_company_header(self, Vector2(1180, 18) if not mob else Vector2(1180, 8), hdr)
 
 func _load(slot: String) -> void:
 	if GameState.load_from_slot(slot):
