@@ -255,7 +255,7 @@
         {
           "id": "cs05b_hg_1",
           "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对看。"
+          "text": "沙漏边上，回读只问一句：你敢不敢对看。"
         },
         {
           "id": "cs05b_hg_2",
@@ -351,6 +351,26 @@
           "id": "cs05b_hg_17",
           "speaker": "苇原·灯影",
           "text": "带牌去。牌上写回读，不写急。"
+        },
+        {
+          "id": "cs0502_vhg1",
+          "speaker": "岁吏",
+          "text": "回读页夹着空椅图。图上无人，沙漏仍走。"
+        },
+        {
+          "id": "cs0502_vhg2",
+          "speaker": "听回",
+          "text": "回读不改月份。改的是你敢不敢承认椅还空。"
+        },
+        {
+          "id": "cs0502_vhg3",
+          "speaker": "leader",
+          "text": "回读页空着椅位。我盯着空，不拿旧名去填。"
+        },
+        {
+          "id": "cs0502_vhg4",
+          "speaker": "苇原·灯影",
+          "text": "灯照椅背。背凉，字不敢糊。"
         },
         {
           "id": "cs0502_vis_mv1",
@@ -595,7 +615,7 @@
           "speaker": "旁白",
           "text": "锋再定。链环扣死，夺链那拨退到阶下。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -603,7 +623,7 @@
           "speaker": "掌柜",
           "text": "链要扣。扣死，才不像挂着玩的。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -611,7 +631,7 @@
           "speaker": "槐里·青禾",
           "text": "环声一下实，假环就响不起来。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -619,7 +639,7 @@
           "speaker": "leader",
           "text": "锋护过链。扣，我锁得。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -629,10 +649,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs05_02_mid_lost"
+                "flag": "cs05_mid_lost"
               },
               {
-                "not_flag": "cs05_02_mid_fought"
+                "not_flag": "cs05_mid_fought"
               }
             ]
           }
@@ -646,10 +666,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs05_02_mid_fought"
+                "not_flag": "cs05_mid_fought"
               },
               {
-                "not_flag": "cs05_02_mid_lost"
+                "not_flag": "cs05_mid_lost"
               }
             ]
           },
@@ -660,10 +680,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs05_02_mid_fought"
+                "cs05_mid_fought"
               ],
               "lose_flags": [
-                "cs05_02_mid_lost"
+                "cs05_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -680,10 +700,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs05_02_mid_fought"
+                "not_flag": "cs05_mid_fought"
               },
               {
-                "flag": "cs05_02_mid_lost"
+                "flag": "cs05_mid_lost"
               }
             ]
           },
@@ -694,10 +714,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs05_02_mid_fought"
+                "cs05_mid_fought"
               ],
               "lose_flags": [
-                "cs05_02_mid_lost"
+                "cs05_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -717,10 +737,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs05_02_mid_fought"
+                    "not_flag": "cs05_mid_fought"
                   },
                   {
-                    "not_flag": "cs05_02_mid_lost"
+                    "not_flag": "cs05_mid_lost"
                   }
                 ]
               },
@@ -735,10 +755,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs05_02_mid_fought"
+                    "not_flag": "cs05_mid_fought"
                   },
                   {
-                    "flag": "cs05_02_mid_lost"
+                    "flag": "cs05_mid_lost"
                   }
                 ]
               },
@@ -1078,9 +1098,29 @@
           "text": "并排留真。今日记下。"
         },
         {
-          "id": "cs05b_ld_19",
+          "id": "cs0502_ldg1",
+          "speaker": "岁吏",
+          "text": "链环扣死与回读并排，假环响不进册。"
+        },
+        {
+          "id": "cs0502_ldg2",
+          "speaker": "书记官",
+          "text": "夺链的阶下影，不进回读。"
+        },
+        {
+          "id": "cs0502_ldg3",
+          "speaker": "槐里·青禾",
+          "text": "环声一下实，回读才像有主。"
+        },
+        {
+          "id": "cs0502_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。回读本在柜里。"
+          "text": "链死并排。灯不灭，回读在柜。"
+        },
+        {
+          "id": "cs0502_ldg_end",
+          "speaker": "leader",
+          "text": "环扣旁，灰旗堡回读柜等真链。"
         }
       ],
       "actions": []

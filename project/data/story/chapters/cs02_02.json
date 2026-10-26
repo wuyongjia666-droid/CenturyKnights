@@ -463,7 +463,7 @@
         {
           "id": "cs02_02_hourglass_1",
           "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对偏。",
+          "text": "沙漏边上，回读只问一句：你敢不敢对偏。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -617,7 +617,7 @@
         {
           "id": "cs02_02_hourglass_15",
           "speaker": "旁白",
-          "text": "两行终于对上。一对，就不敢假填·婚盏。",
+          "text": "两行对准了。一对上，假填就站不住·婚盏。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0202_vhg1",
+          "speaker": "老管事",
+          "text": "副笺比正笺薄。薄处更见字，也更见空。"
+        },
+        {
+          "id": "cs0202_vhg2",
+          "speaker": "书记官",
+          "text": "对偏之前，先听沙。沙停，偏才露形。"
+        },
+        {
+          "id": "cs0202_vhg3",
+          "speaker": "leader",
+          "text": "副笺空着偏栏。我敢对偏，才敢让月份记。"
+        },
+        {
+          "id": "cs0202_vhg4",
+          "speaker": "槐里·青禾",
+          "text": "笺角卷了。卷处藏不住假填。"
         },
         {
           "id": "cs0202_vis_mv1",
@@ -1026,7 +1046,7 @@
           "speaker": "旁白",
           "text": "锋再定。脉纸边的手稳了，抢脉那拨散了。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1034,7 +1054,7 @@
           "speaker": "老旗手",
           "text": "脉要静。静了，旗也不抖。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1042,7 +1062,7 @@
           "speaker": "槐里·青禾",
           "text": "纸上那道跳，终于听得清。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1050,7 +1070,7 @@
           "speaker": "leader",
           "text": "锋护过脉。纸，我按得。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1059,10 +1079,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs02_02_mid_lost"
+                "flag": "cs02_mid_lost"
               },
               {
-                "not_flag": "cs02_02_mid_fought"
+                "not_flag": "cs02_mid_fought"
               }
             ]
           },
@@ -1077,10 +1097,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs02_02_mid_fought"
+                "not_flag": "cs02_mid_fought"
               },
               {
-                "not_flag": "cs02_02_mid_lost"
+                "not_flag": "cs02_mid_lost"
               }
             ]
           },
@@ -1091,10 +1111,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs02_02_mid_fought"
+                "cs02_mid_fought"
               ],
               "lose_flags": [
-                "cs02_02_mid_lost"
+                "cs02_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1111,10 +1131,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs02_02_mid_fought"
+                "not_flag": "cs02_mid_fought"
               },
               {
-                "flag": "cs02_02_mid_lost"
+                "flag": "cs02_mid_lost"
               }
             ]
           },
@@ -1125,10 +1145,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs02_02_mid_fought"
+                "cs02_mid_fought"
               ],
               "lose_flags": [
-                "cs02_02_mid_lost"
+                "cs02_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1148,10 +1168,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs02_02_mid_fought"
+                    "not_flag": "cs02_mid_fought"
                   },
                   {
-                    "not_flag": "cs02_02_mid_lost"
+                    "not_flag": "cs02_mid_lost"
                   }
                 ]
               },
@@ -1166,10 +1186,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs02_02_mid_fought"
+                    "not_flag": "cs02_mid_fought"
                   },
                   {
-                    "flag": "cs02_02_mid_lost"
+                    "flag": "cs02_mid_lost"
                   }
                 ]
               },
@@ -1723,15 +1743,29 @@
           "text": "散的我不留。"
         },
         {
-          "id": "cs02_02_ledger_19",
+          "id": "cs0202_ldg1",
+          "speaker": "岁吏",
+          "text": "偏格与脉纸并排，嗣位才不抢笔。"
+        },
+        {
+          "id": "cs0202_ldg2",
+          "speaker": "书记官",
+          "text": "抢脉的手，不进婚约旁笺。"
+        },
+        {
+          "id": "cs0202_ldg3",
+          "speaker": "苇原·灯影",
+          "text": "纸上那跳听清了，偏格才敢留。"
+        },
+        {
+          "id": "cs0202_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。副笺本在柜里。",
-          "stage": {
-            "card": "六　并排",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "偏仍并排。灯不灭，副笺在柜。"
+        },
+        {
+          "id": "cs0202_ldg_end",
+          "speaker": "leader",
+          "text": "脉枕缝边，灰旗堡副笺柜等偏格真名。"
         }
       ],
       "actions": []

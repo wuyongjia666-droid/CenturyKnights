@@ -385,6 +385,26 @@
           "text": "假坐一夜，碑阴就脏。"
         },
         {
+          "id": "cs0802_vhg1",
+          "speaker": "岁吏",
+          "text": "碑阴潮着。潮处的空行，比阳面更清楚。"
+        },
+        {
+          "id": "cs0802_vhg2",
+          "speaker": "书记官",
+          "text": "碑阴不改月份。改的是你敢不敢念潮着的空。"
+        },
+        {
+          "id": "cs0802_vhg3",
+          "speaker": "leader",
+          "text": "碑阴空着。我描空行，不拿阳面的满去盖。"
+        },
+        {
+          "id": "cs0802_vhg4",
+          "speaker": "槐里·青禾",
+          "text": "阴面风冷。冷着，假补墨干得慢。"
+        },
+        {
           "id": "cs0802_vis_mv1",
           "speaker": "旁白",
           "text": "碑阴拓旁，沙漏玻璃映出半张脸。"
@@ -633,7 +653,7 @@
           "speaker": "旁白",
           "text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -641,7 +661,7 @@
           "speaker": "掌柜",
           "text": "拓要自己按。按实，才不像偷的。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -649,7 +669,7 @@
           "speaker": "槐里·青禾",
           "text": "碑凉还在手上。凉着，字更清。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -657,7 +677,7 @@
           "speaker": "leader",
           "text": "锋护过碑。拓，我按得。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -667,10 +687,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs08_02_mid_lost"
+                "flag": "cs08_mid_lost"
               },
               {
-                "not_flag": "cs08_02_mid_fought"
+                "not_flag": "cs08_mid_fought"
               }
             ]
           }
@@ -684,10 +704,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs08_02_mid_fought"
+                "not_flag": "cs08_mid_fought"
               },
               {
-                "not_flag": "cs08_02_mid_lost"
+                "not_flag": "cs08_mid_lost"
               }
             ]
           },
@@ -698,10 +718,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs08_02_mid_fought"
+                "cs08_mid_fought"
               ],
               "lose_flags": [
-                "cs08_02_mid_lost"
+                "cs08_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -718,10 +738,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs08_02_mid_fought"
+                "not_flag": "cs08_mid_fought"
               },
               {
-                "flag": "cs08_02_mid_lost"
+                "flag": "cs08_mid_lost"
               }
             ]
           },
@@ -732,10 +752,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs08_02_mid_fought"
+                "cs08_mid_fought"
               ],
               "lose_flags": [
-                "cs08_02_mid_lost"
+                "cs08_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -755,10 +775,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs08_02_mid_fought"
+                    "not_flag": "cs08_mid_fought"
                   },
                   {
-                    "not_flag": "cs08_02_mid_lost"
+                    "not_flag": "cs08_mid_lost"
                   }
                 ]
               },
@@ -773,10 +793,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs08_02_mid_fought"
+                    "not_flag": "cs08_mid_fought"
                   },
                   {
-                    "flag": "cs08_02_mid_lost"
+                    "flag": "cs08_mid_lost"
                   }
                 ]
               },
@@ -1129,9 +1149,29 @@
           "text": "碑阴并排留。"
         },
         {
-          "id": "cs08b_le_18",
-          "speaker": "旁白",
-          "text": "厅灯灭一盏。碑阴小灯还亮。"
+          "id": "cs0802_ldg1",
+          "speaker": "岁吏",
+          "text": "碑阴拓纸揭稳，碑录复页才敢写。"
+        },
+        {
+          "id": "cs0802_ldg2",
+          "speaker": "书记官",
+          "text": "槐影外抢拓的，不进复页。"
+        },
+        {
+          "id": "cs0802_ldg3",
+          "speaker": "老旗手",
+          "text": "旗第二次低过祠阶——更像拜。"
+        },
+        {
+          "id": "cs0802_ldg4",
+          "speaker": "leader",
+          "text": "拓实并排。厅灯可灭一盏，碑阴小灯不灭。"
+        },
+        {
+          "id": "cs0802_ldg_end",
+          "speaker": "leader",
+          "text": "拓纸潮干处，灰旗堡碑阴柜等复页。"
         }
       ]
     }

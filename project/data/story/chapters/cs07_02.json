@@ -353,6 +353,26 @@
           "text": "带牌去。牌上写宗谱，不写急。"
         },
         {
+          "id": "cs0702_vhg1",
+          "speaker": "老管事",
+          "text": "宗谱副页写着未续。未续不是忘，是还没人敢接。"
+        },
+        {
+          "id": "cs0702_vhg2",
+          "speaker": "听回",
+          "text": "宗谱不改月份。改的是你敢不敢念未续。"
+        },
+        {
+          "id": "cs0702_vhg3",
+          "speaker": "leader",
+          "text": "谱页空着接续栏。我对着空，不拿旧名去接。"
+        },
+        {
+          "id": "cs0702_vhg4",
+          "speaker": "苇原·灯影",
+          "text": "谱灯小。小灯下，假续藏不住。"
+        },
+        {
           "id": "cs0702_vis_mv1",
           "speaker": "旁白",
           "text": "宗谱案角压着沙漏说明书，边角卷了。"
@@ -595,7 +615,7 @@
           "speaker": "旁白",
           "text": "锋再定。仪典第二问落地，催的人连影都没了。",
           "when": {
-            "flag": "cs07_02_mid_fought"
+            "flag": "cs07_mid_fought"
           }
         },
         {
@@ -603,7 +623,7 @@
           "speaker": "掌柜",
           "text": "第二问比第一问短。短，是因为已经试清。",
           "when": {
-            "flag": "cs07_02_mid_fought"
+            "flag": "cs07_mid_fought"
           }
         },
         {
@@ -611,7 +631,7 @@
           "speaker": "苇原·灯影",
           "text": "台上的人自己应了，台下就插不上嘴。",
           "when": {
-            "flag": "cs07_02_mid_fought"
+            "flag": "cs07_mid_fought"
           }
         },
         {
@@ -619,7 +639,7 @@
           "speaker": "leader",
           "text": "锋再清一次。仪典，仍我应。",
           "when": {
-            "flag": "cs07_02_mid_fought"
+            "flag": "cs07_mid_fought"
           }
         },
         {
@@ -629,10 +649,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs07_02_mid_lost"
+                "flag": "cs07_mid_lost"
               },
               {
-                "not_flag": "cs07_02_mid_fought"
+                "not_flag": "cs07_mid_fought"
               }
             ]
           }
@@ -646,10 +666,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs07_02_mid_fought"
+                "not_flag": "cs07_mid_fought"
               },
               {
-                "not_flag": "cs07_02_mid_lost"
+                "not_flag": "cs07_mid_lost"
               }
             ]
           },
@@ -660,10 +680,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs07_02_mid_fought"
+                "cs07_mid_fought"
               ],
               "lose_flags": [
-                "cs07_02_mid_lost"
+                "cs07_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -680,10 +700,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs07_02_mid_fought"
+                "not_flag": "cs07_mid_fought"
               },
               {
-                "flag": "cs07_02_mid_lost"
+                "flag": "cs07_mid_lost"
               }
             ]
           },
@@ -694,10 +714,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs07_02_mid_fought"
+                "cs07_mid_fought"
               ],
               "lose_flags": [
-                "cs07_02_mid_lost"
+                "cs07_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -717,10 +737,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs07_02_mid_fought"
+                    "not_flag": "cs07_mid_fought"
                   },
                   {
-                    "not_flag": "cs07_02_mid_lost"
+                    "not_flag": "cs07_mid_lost"
                   }
                 ]
               },
@@ -735,10 +755,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs07_02_mid_fought"
+                    "not_flag": "cs07_mid_fought"
                   },
                   {
-                    "flag": "cs07_02_mid_lost"
+                    "flag": "cs07_mid_lost"
                   }
                 ]
               },
@@ -1078,9 +1098,29 @@
           "text": "今日不填假。"
         },
         {
-          "id": "cs07b_ld_19",
+          "id": "cs0702_ldg1",
+          "speaker": "岁吏",
+          "text": "两粒月份并排进宗谱，代填一概拒。"
+        },
+        {
+          "id": "cs0702_ldg2",
+          "speaker": "书记官",
+          "text": "第二问短，是因为已经试清。"
+        },
+        {
+          "id": "cs0702_ldg3",
+          "speaker": "掌柜",
+          "text": "催影没了，宗谱才有空位。"
+        },
+        {
+          "id": "cs0702_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。宗谱在柜里。"
+          "text": "复仪并排。灯不灭，宗谱在柜。"
+        },
+        {
+          "id": "cs0702_ldg_end",
+          "speaker": "leader",
+          "text": "第二炷香灰旁，灰旗堡宗谱等自签。"
         }
       ],
       "actions": []

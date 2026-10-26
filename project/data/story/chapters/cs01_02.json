@@ -463,7 +463,7 @@
         {
           "id": "cs01_02_hourglass_1",
           "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对空。",
+          "text": "沙漏边上，回读只问一句：你敢不敢对空。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -617,7 +617,7 @@
         {
           "id": "cs01_02_hourglass_15",
           "speaker": "旁白",
-          "text": "两行终于对上。一对，就不敢假填。",
+          "text": "两行对准了。一对上，假填就站不住。",
           "stage": {
             "card": "三　两行",
             "bg": "hourglass",
@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0102_vhg1",
+          "speaker": "岁吏",
+          "text": "副页压在正页下。正页有字，副页空行，像并排的两盏。"
+        },
+        {
+          "id": "cs0102_vhg2",
+          "speaker": "书记官",
+          "text": "回读不改月份。改的是你敢不敢把空行念出声。"
+        },
+        {
+          "id": "cs0102_vhg3",
+          "speaker": "leader",
+          "text": "副页空着。我对着空行，不拿正页的字去糊。"
+        },
+        {
+          "id": "cs0102_vhg4",
+          "speaker": "苇原·灯影",
+          "text": "两页中间夹着沙。沙响，空行更清楚。"
         },
         {
           "id": "cs0102_vis_mv1",
@@ -1026,7 +1046,7 @@
           "speaker": "旁白",
           "text": "锋再定。桥侧泥印浅了，滑步那拨退到芦里。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1034,7 +1054,7 @@
           "speaker": "老旗手",
           "text": "泥里的脚窝，比刀痕好认。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1042,7 +1062,7 @@
           "speaker": "苇原·灯影",
           "text": "吴钩的影短了。短了，才敢回头。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1050,7 +1070,7 @@
           "speaker": "leader",
           "text": "这一锋补上月的欠。桥，我还过。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1059,10 +1079,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs01_02_mid_lost"
+                "flag": "cs01_mid_lost"
               },
               {
-                "not_flag": "cs01_02_mid_fought"
+                "not_flag": "cs01_mid_fought"
               }
             ]
           },
@@ -1077,10 +1097,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs01_02_mid_fought"
+                "not_flag": "cs01_mid_fought"
               },
               {
-                "not_flag": "cs01_02_mid_lost"
+                "not_flag": "cs01_mid_lost"
               }
             ]
           },
@@ -1091,10 +1111,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs01_02_mid_fought"
+                "cs01_mid_fought"
               ],
               "lose_flags": [
-                "cs01_02_mid_lost"
+                "cs01_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1111,10 +1131,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs01_02_mid_fought"
+                "not_flag": "cs01_mid_fought"
               },
               {
-                "flag": "cs01_02_mid_lost"
+                "flag": "cs01_mid_lost"
               }
             ]
           },
@@ -1125,10 +1145,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs01_02_mid_fought"
+                "cs01_mid_fought"
               ],
               "lose_flags": [
-                "cs01_02_mid_lost"
+                "cs01_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1148,10 +1168,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs01_02_mid_fought"
+                    "not_flag": "cs01_mid_fought"
                   },
                   {
-                    "not_flag": "cs01_02_mid_lost"
+                    "not_flag": "cs01_mid_lost"
                   }
                 ]
               },
@@ -1166,10 +1186,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs01_02_mid_fought"
+                    "not_flag": "cs01_mid_fought"
                   },
                   {
-                    "flag": "cs01_02_mid_lost"
+                    "flag": "cs01_mid_lost"
                   }
                 ]
               },
@@ -1723,15 +1743,29 @@
           "text": "并排留真。"
         },
         {
-          "id": "cs01_02_ledger_19",
+          "id": "cs0102_ldg1",
+          "speaker": "岁吏",
+          "text": "副页空格与泥印并排，补欠才像真的。"
+        },
+        {
+          "id": "cs0102_ldg2",
+          "speaker": "书记官",
+          "text": "滑步那拨的脚窝，只进旁注不进正格。"
+        },
+        {
+          "id": "cs0102_ldg3",
+          "speaker": "槐里·青禾",
+          "text": "薄页难装——装下的，才是补上的欠。"
+        },
+        {
+          "id": "cs0102_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。副页本在柜里。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "空格并排留。灯不灭，副页在柜。"
+        },
+        {
+          "id": "cs0102_ldg_end",
+          "speaker": "leader",
+          "text": "桥泥干处，灰旗堡副页柜等补欠入谱。"
         }
       ],
       "actions": []
