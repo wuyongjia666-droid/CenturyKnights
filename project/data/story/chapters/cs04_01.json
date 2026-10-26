@@ -829,6 +829,42 @@
           }
         },
         {
+          "id": "cs0401_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "门廊牌稳了。稳处，训条旁假步退进影里。"
+        },
+        {
+          "id": "cs0401_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "假步走远了。真步留在门廊，一步一声。"
+        },
+        {
+          "id": "cs0401_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "训条不羞了。羞的是刚才那拨空嗓。"
+        },
+        {
+          "id": "cs0401_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "牌上的灰我拭过。拭过，字才肯亮。"
+        },
+        {
+          "id": "cs0401_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "旗角别扫训牌。牌脏了，步也脏。"
+        },
+        {
+          "id": "cs0401_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "锋跟步走完。训条我背得，廊我过。"
+        },
+        {
           "id": "cs04_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。门廊牌还亮。训条旁那拨，没散。",
