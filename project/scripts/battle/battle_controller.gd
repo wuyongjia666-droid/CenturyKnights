@@ -1008,9 +1008,9 @@ func _deploy() -> void:
 			World.grant_gear_skills(u.char)  # v8.7 signature arms grant battle skills while equipped
 		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
-	_show_lock_tip_once()
-	if _lock_practice_pending():
-		_show_lock_practice_banner()
+	BattleLockTutorial.show_tip_once(self)
+	if BattleLockTutorial.practice_pending(self):
+		BattleLockTutorial.show_practice_banner(self)
 	var _diff = GameState.battle_difficulty_from_map(map_id)
 	_log("敌军战技档：%d（地图 %s）" % [_diff, map_id])
 	_log(BattleObjectives.text("diff_now") % BattleObjectives.text("diff_" + CKEnemyLoadout.mode_of(GameState)))
@@ -1213,6 +1213,7 @@ func _draw_overlay() -> void:
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
+	BattleHitRiskTelegraph.draw(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		if s.age < 0.0: continue
@@ -1626,6 +1627,7 @@ func _click_cell(cell: Vector2i) -> void:
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
 							ForecastPanel.refresh(self)
+							BattleHitRiskTelegraph.refresh(self)
 							BattleRangePreview.keep_selected(self)
 							if DeviceProfile.is_mobile():
 								BattleMobileBar.rebuild(self)
@@ -1939,11 +1941,11 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
 	BattleStory.fire(self, map_id, "first_lock")
-	if not has_meta("lock_beat_fired") and _is_lock_tutorial_map():
+	if not has_meta("lock_beat_fired") and BattleLockTutorial.is_tutorial_map(self):
 		set_meta("lock_beat_fired", true)
 		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。练习完成，可以结束回合。")
 		_spawn_dmg(units[ai].pos if ai >= 0 else units[di].pos, "教学·锁定", Color(1.0, 0.7, 0.4))
-		_clear_lock_practice_banner()
+		BattleLockTutorial.clear_practice_banner(self)
 		BattleLockTutorial.queue_after_story(self)
 
 func _weapon_for(c: CKCharacter) -> String:
@@ -2213,9 +2215,9 @@ func _start_player_turn() -> void:
 func _end_player_turn() -> void:
 	if battle_over:
 		return
-	if _lock_practice_pending():
+	if BattleLockTutorial.practice_pending(self):
 		_log("〔强制练习〕请先攻击一名敌人，体验交战锁定——尚未可结束回合。")
-		_show_lock_practice_banner()
+		BattleLockTutorial.show_practice_banner(self)
 		Sfx.miss()
 		return
 	turn_team = "enemy"
@@ -2239,140 +2241,7 @@ func _end_player_turn() -> void:
 	if not battle_over:
 		_start_player_turn()
 
-func _show_lock_tip_once() -> void:
-	if has_meta("lock_tip_shown"):
-		return
-	set_meta("lock_tip_shown", true)
-	# E-02: tutorial maps wait for first_lock (and story bar) before teaching cards.
-	if _is_lock_tutorial_map():
-		return
-	BattleLockTutorial.attach_dismiss(self, _show_lock_tip_panel(
-		"交战锁定",
-		"跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。" % BattleRules.LEAVE_COST_LOCK,
-		0,
-		8.0
-	))
-
-func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
-	var panel = UIKit.make_panel()
-	panel.position = Vector2(RAIL_X, 462)  # v8.6: rail slot over the log — never on the board
-	panel.custom_minimum_size = Vector2(RAIL_W, 96)
-	panel.add_theme_stylebox_override("panel", UIKit.glass(12, 0.94, true))
-	panel.z_index = 20
-	panel.name = "LockTipPanel"
-	add_child(panel)
-	# v8.5: legacy gold lock_tip_step plates retired (off-vibe, stretched) -> design-system chrome:
-	# frosted panel + authored coral lock glyph + step pips
-	var hrow := HBoxContainer.new()
-	hrow.add_theme_constant_override("separation", 14)
-	panel.add_child(hrow)
-	var glyph := TextureRect.new()
-	glyph.texture = _tex("res://assets/art/fx/lock_dense_3.png")
-	glyph.custom_minimum_size = Vector2(44, 44)
-	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hrow.add_child(glyph)
-	UIFX.breathe(glyph, 0.04, 1.6)
-	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 4)
-	hrow.add_child(vb)
-	var pips := HBoxContainer.new()
-	pips.add_theme_constant_override("separation", 6)
-	for pi in range(3):
-		var pip := ColorRect.new()
-		pip.custom_minimum_size = Vector2(22 if pi == step else 10, 4)
-		pip.color = UIKit.DANGER if pi == step else Color(UIKit.TEXT_DIM, 0.5)
-		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pips.add_child(pip)
-	vb.add_child(pips)
-	var t = UIKit.make_label(title, true)
-	t.add_theme_font_size_override("font_size", 16)
-	t.add_theme_color_override("font_color", UIKit.DANGER)
-	vb.add_child(t)
-	var d = UIKit.make_dim_label(body)
-	d.add_theme_font_size_override("font_size", 12)
-	d.custom_minimum_size = Vector2(RAIL_W - 110, 0)
-	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vb.add_child(d)
-	if auto_sec > 0.0:
-		get_tree().create_timer(auto_sec).timeout.connect(func():
-			if is_instance_valid(panel):
-				panel.queue_free()
-		)
-	return panel
-
-func _is_lock_tutorial_map() -> bool:
-	var md = BattleMaps.get_map(map_id)
-	if bool(md.get("tutorial_militia", false)) or bool(md.get("tutorial", false)) or map_id.begins_with("ch0"):
-		return true
-	# 中盘二次强制锁定演练（如 ch2_night）
-	return bool(md.get("lock_drill", false))
-
-func _lock_practice_pending() -> bool:
-	return _is_lock_tutorial_map() and not has_meta("lock_beat_fired")
-
-func _show_lock_practice_banner() -> void:
-	if has_meta("lock_practice_banner"):
-		return
-	set_meta("lock_practice_banner", true)
-	## v8.6: slim coral pill in the turn bar — the board stays clear
-	var panel = UIKit.make_glass(18, 0.82)
-	var pst: StyleBoxFlat = UIKit.glass(18, 0.82)
-	pst.border_color = Color(UIKit.DANGER, 0.55)
-	pst.content_margin_top = 4
-	pst.content_margin_bottom = 4
-	pst.content_margin_left = 14
-	pst.content_margin_right = 14
-	pst.shadow_size = 0
-	panel.add_theme_stylebox_override("panel", pst)
-	panel.position = Vector2(RAIL_X, 48 if DeviceProfile.is_mobile() else 2)  # desktop: above the unit panel
-	panel.custom_minimum_size = Vector2(RAIL_W, 0)
-	panel.z_index = 18
-	var ct := find_child("ControlsTip", true, false)
-	if ct:
-		ct.visible = false
-	panel.name = "LockPracticeBanner"
-	add_child(panel)
-	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
-	if oh and not DeviceProfile.is_mobile():
-		oh.visible = false  # desktop: banner sits in the same rail slot; restore when it clears
-	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 0)
-	panel.add_child(vb)
-	var title = Locale.t("shell_lock_drill")
-	var tip = Locale.t("shell_lock_drill_tip")
-	if bool(BattleMaps.get_map(map_id).get("lock_drill", false)) and not map_id.begins_with("ch0"):
-		if map_id.begins_with("ch6"):
-			title = Locale.t("shell_lock_final")
-			tip = Locale.t("shell_lock_final_tip")
-		elif map_id.begins_with("ch5") or map_id.begins_with("ch4"):
-			title = Locale.t("shell_lock_late")
-			tip = Locale.t("shell_lock_late_tip")
-		else:
-			title = Locale.t("shell_lock_mid")
-			tip = Locale.t("shell_lock_mid_tip")
-	var t = UIKit.make_label(title)
-	t.add_theme_font_size_override("font_size", 12)
-	t.add_theme_color_override("font_color", UIKit.DANGER)
-	vb.add_child(t)
-	var tl = UIKit.make_dim_label(tip)
-	tl.add_theme_font_size_override("font_size", UIKit.desk_sz(10))
-	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tl.custom_minimum_size = Vector2(RAIL_W - 28, 0)
-	vb.add_child(tl)
-	panel.tooltip_text = tip
-
-func _clear_lock_practice_banner() -> void:
-	var p = get_node_or_null("LockPracticeBanner")
-	if p:
-		p.queue_free()
-	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
-	if oh and not DeviceProfile.is_mobile():
-		oh.visible = true
-	var ct := find_child("ControlsTip", true, false)
-	if ct:
-		ct.visible = true
+## Lock tip / practice banner UI lives in BattleLockTutorial (line-budget extract).
 
 func _unit_theme(u) -> String:
 	return str(UnitModel.parse_enemy_template(str(u.get("template", ""))).get("theme", "bandit"))
