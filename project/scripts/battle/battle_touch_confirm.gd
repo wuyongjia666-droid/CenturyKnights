@@ -149,6 +149,7 @@ static func clear(host, refocus_selection: bool = true) -> void:
 	BattleGhostStrike.after_preview(host)
 	BattleAttackAim.clear(host)
 	BattleAttackCycle.clear(host)
+	BattleSkillHealPreview.clear(host)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.

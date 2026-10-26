@@ -1195,6 +1195,7 @@ func _draw_overlay() -> void:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
+		BattleSkillHealPreview.draw(self, overlay)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1226,6 +1227,7 @@ func _draw_overlay() -> void:
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleGhostStrike.draw(self, overlay)
 	BattleAttackAim.draw(self, overlay)
+	BattleSkillHealPreview.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleLandStrike.draw(self, overlay)
 	BattleTurnBridge.draw_ready_pulse(self, overlay)
@@ -1372,8 +1374,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Y1-A T-P25: in attack mode cycle in-reach foes; else T-P12 formation.
-				if attack_mode:
+				# Heal preview → attack cycle (T-P25) → formation (T-P12).
+				if BattleSkillHealPreview.latched(self):
+					if event.shift_pressed:
+						BattleSkillHealPreview.apply_prev(self)
+					else:
+						BattleSkillHealPreview.apply_next(self)
+				elif attack_mode:
 					if event.shift_pressed:
 						BattleAttackCycle.apply_prev(self)
 					else:
