@@ -1480,8 +1480,9 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"tap":
 			if turn_team != "player" or _cut_playing:
 				return
+			var cell := BattlePick.resolve(self, pos)
 			# Y1-A T-P17: painted range tiles keep the aimed cell; body hits still resolve.
-			var cell := BattleRangePreview.tap_cell(self, pos)
+			cell = BattleRangePreview.tap_cell(self, pos, cell)
 			if cell.x < 0:
 				return
 			_click_cell(cell)

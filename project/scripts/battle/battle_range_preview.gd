@@ -22,6 +22,7 @@ extends RefCounted
 
 
 const HELD_SLOP := 2.0
+const _UNRESOLVED := Vector2i(-99999, -99999)
 
 
 static func attack_from(host, stand: Vector2i) -> Dictionary:
@@ -94,8 +95,9 @@ static func publish(host) -> void:
 ## A painted move or attack tile that is not on a figure uses the exact cell,
 ## so a soft neighbour cannot steal the destination. An empty miss uses the
 ## aimed cell too, so the flash lands on the tile under the finger.
-static func tap_cell(host, screen_pos: Vector2) -> Vector2i:
-	var resolved: Vector2i = BattlePick.resolve(host, screen_pos)
+static func tap_cell(host, screen_pos: Vector2, resolved: Vector2i = _UNRESOLVED) -> Vector2i:
+	if resolved == _UNRESOLVED:
+		resolved = BattlePick.resolve(host, screen_pos)
 	if not _aiming(host):
 		return resolved
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
