@@ -170,6 +170,9 @@ func _ready() -> void:
 	# Y1-A T-P3: while a unit is selected, sticky only on that piece so pans near
 	# other tokens / empty soft-neighbours stay pans (not swallowed as taps).
 	_board_router.sticky_fn = func(origin: Vector2) -> bool:
+		# T-P16: a latched preview backs out with a pan. Sticky slop would swallow it as a tap.
+		if BattleConfirmAffordance.suppress_sticky(self):
+			return false
 		if selected >= 0 and selected < units.size():
 			return BattlePick.near_selected_unit(self, origin, selected)
 		return BattlePick.near_living_unit(self, origin)
@@ -1335,6 +1338,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if battle_over or turn_team != "player" or _cut_playing:
 		return
+	# T-P16: Esc / ui_cancel leaves a move or attack preview without yanking the camera.
+	if BattleConfirmAffordance.is_cancel_key(event) and BattleConfirmAffordance.back_out(self):
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_Q:
@@ -1487,6 +1494,8 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			_hover_at(pos)
 		"tap":
 			if turn_team != "player" or _cut_playing:
+				return
+			if BattleConfirmAffordance.consume_tap(self, pos):
 				return
 			var cell := BattlePick.resolve(self, pos)
 			if cell.x < 0:
@@ -1657,7 +1666,7 @@ func _click_cell(cell: Vector2i) -> void:
 				return
 			# Y1-A T-P1-5: empty illegal / off-preview tap clears the ghost (legal move cells returned above).
 			if ui < 0 and BattleTouchConfirm.enabled() and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
-				BattleTouchConfirm.clear(self)
+				BattleConfirmAffordance.back_out(self)
 				overlay.queue_redraw()
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
