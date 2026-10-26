@@ -167,8 +167,8 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	# Y1-A T-P0-1: presses that start on/near a unit get a stickier slop so micro-wobble stays a tap.
-	# Y1-A T-P3: while a unit is selected, sticky only on that piece so pans near
-	# other tokens / empty soft-neighbours stay pans (not swallowed as taps).
+	# Y1-A T-P3/T-P24: while selected, sticky only on the strict figure (not soft halo)
+	# so adjacent empty move cells pan / tap-preview instead of fat-deselect.
 	_board_router.sticky_fn = func(origin: Vector2) -> bool:
 		if selected >= 0 and selected < units.size():
 			return BattlePick.near_selected_unit(self, origin, selected)
@@ -1488,7 +1488,8 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"tap":
 			if turn_team != "player" or _cut_playing:
 				return
-			var cell := BattlePick.resolve(self, pos)
+			# T-P24: board taps keep empty exact cells (soft must not steal move/deselect).
+			var cell := BattlePick.resolve_board_tap(self, pos)
 			if cell.x < 0:
 				return
 			_click_cell(cell)
