@@ -37,7 +37,7 @@ func _ready() -> void:
 		_focus = roster[0]
 	UIKit.footer_bar(self, [["A", "切换出战"], ["←→", "移动选位"], ["ENTER", "出战"], ["ESC", "返回城堡"]], "DEPLOYMENT // MAX %d · v8.6" % GameState.max_deploy())
 	## 团徽 + leader 族徽|旗徽 strip under the top bar (desktop default; mobile repositions).
-	CKHeraldryChrome.place_muster_crest_strip(self, GameState.get_leader(), Vector2(980, 8), Vector2(40, 48))
+	CKHeraldryField.place_deploy_muster_strip(self, GameState.get_leader(), Vector2(980, 8), Vector2(40, 48))
 	resized.connect(_on_resized)
 	_fit_chrome()
 	_render()
@@ -60,7 +60,7 @@ func apply_mobile_layout() -> void:
 	position = Vector2.ZERO
 	size = vp
 	var strip_w := 40.0 * 2.0 + 8.0
-	CKHeraldryChrome.place_muster_crest_strip(self, GameState.get_leader(), Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
+	CKHeraldryField.place_deploy_muster_strip(self, GameState.get_leader(), Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
 	_fit_chrome()
 	_render()
 
@@ -296,7 +296,7 @@ func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 		pr.modulate = Color(0.7, 0.74, 0.82)
 	plate.add_child(pr)
 	var arms_sz := Vector2(28, 34) if compact else Vector2(36, 44)
-	CKHeraldryChrome.attach_deploy_chrome(b, c, Rect2(plate.position, plate.size), arms_sz)
+	CKHeraldryField.attach_deploy_slot_arms(b, c, Rect2(plate.position, plate.size), arms_sz)
 	var name_y := plate.position.y + plate.size.y + 8.0
 	var nm := UIKit.title_label(c.name, 15, UIKit.TEXT)
 	nm.position = Vector2((r.size.x - nm.get_minimum_size().x) * 0.5, name_y)
@@ -396,10 +396,7 @@ func _render_metrics() -> void:
 	var nm := UIKit.title_label(c.name, 22, UIKit.TEXT)
 	nm.position = Vector2(x, R.position.y + 18)
 	_metrics.add_child(nm)
-	var focus_arms := CKHeraldryChrome.make_person_arms(c, Vector2(40, 48))
-	focus_arms.name = "FocusArms"
-	focus_arms.position = Vector2(R.end.x - 64.0, R.position.y + 14.0)
-	_metrics.add_child(focus_arms)
+	CKHeraldryField.attach_deploy_focus_arms(_metrics, c, Vector2(R.end.x - 64.0, R.position.y + 14.0), Vector2(40, 48))
 	var jb := UIKit.body_label(str(GameState.get_job(c.job_id).get("name", "")), UIKit.ACCENT, 12)
 	jb.autowrap_mode = TextServer.AUTOWRAP_OFF
 	jb.position = Vector2(x + nm.get_minimum_size().x + 10, R.position.y + 28)
@@ -602,10 +599,7 @@ func _phone_card(c: CKCharacter, i: int, card_h: float) -> Button:
 	col.add_child(st)
 	for l in [hd, nm, jb, st]:
 		(l as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var darms := CKHeraldryChrome.make_person_arms(c, Vector2(36, 44))
-	darms.name = "DeployArms"
-	darms.position = Vector2(16.0, maxf(48.0, card_h - 60.0))
-	b.add_child(darms)
+	CKHeraldryField.place_deploy_slot_arms(b, c, Vector2(16.0, maxf(48.0, card_h - 60.0)), Vector2(36, 44))
 	return b
 
 func _phone_vacant(i: int, card_h: float) -> Control:
@@ -637,10 +631,9 @@ func _phone_metrics(r: Rect2) -> void:
 	var on: bool = c.id in GameState.deploy_ids
 	var head := HBoxContainer.new()
 	v.add_child(head)
-	var focus_arms := CKHeraldryChrome.make_person_arms(c, Vector2(36, 44))
-	focus_arms.name = "FocusArms"
-	focus_arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	head.add_child(focus_arms)
+	var focus_arms := CKHeraldryField.attach_deploy_focus_arms(head, c, Vector2.ZERO, Vector2(36, 44))
+	if focus_arms != null:
+		focus_arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var nm := MobilePage.label(c.name, UIKit.TEXT, 28, false)
 	head.add_child(nm)
 	var tag_txt := Locale.t("ux_dep_leader") if c.is_leader else (Locale.t("ux_dep_fielded") if on else Locale.t("ux_dep_idle"))
