@@ -652,6 +652,25 @@ func held_march_dest() -> String:
 	return d
 
 
+## Top-bar / HUD chip: winter bypass remain while seal_detour is held.
+func seal_bypass_chip() -> Dictionary:
+	var held := held_march_dest()
+	if held == "" or str(seal_detour.get("dest", "")) != held:
+		return {"show": false, "held": held}
+	var need := seal_aware_remain_days(held)
+	if need <= 0:
+		return {"show": false, "held": held, "seal_need": 0}
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	return {
+		"show": true,
+		"held": held,
+		"seal_need": need,
+		"cover": cover,
+		"short": cover < need,
+	}
+
+
 ## City one-tap: buy grain for seal-aware remain when cover is short.
 func city_seal_resupply_offer() -> Dictionary:
 	var held := held_march_dest()

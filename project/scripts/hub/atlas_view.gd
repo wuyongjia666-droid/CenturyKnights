@@ -549,6 +549,13 @@ func _refresh_top() -> void:
 		["粮", "%d（%d 日）" % [GameState.food, food_days], UIKit.OK if food_days >= 6 else UIKit.DANGER],
 		["士气", str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER],
 	]
+	var seal_chip: Dictionary = World.seal_bypass_chip()
+	if bool(seal_chip.get("show", false)):
+		chips.append([
+			Locale.t("atlas_chip_seal_bypass"),
+			Locale.t("atlas_chip_seal_days") % int(seal_chip.get("seal_need", 0)),
+			UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER,
+		])
 	var back_t := "返回城堡"
 	if _mob:
 		var parts := PackedStringArray()
