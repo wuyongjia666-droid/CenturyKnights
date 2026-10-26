@@ -51,6 +51,8 @@ static func arm(host, sid: String) -> void:
 	var sk: Dictionary = GameState.get_skill(sid)
 	var typ := str(sk.get("type", "offense"))
 	if typ == "support":
+		if BattleSkillHealPreview.arm(host, sid):
+			return
 		host._cast_support_skill(host.selected, sid)
 		return
 	if typ == "buff":

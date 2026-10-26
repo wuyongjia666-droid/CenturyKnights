@@ -63,6 +63,8 @@ static func rebuild(host) -> void:
 		_rebuild_confirm(host, row, h, land, true)
 	elif int(host.preview_attack_ui) >= 0:
 		_rebuild_confirm(host, row, h, land, false)
+	elif BattleSkillHealPreview.latched(host):
+		_rebuild_heal_confirm(host, row, h, land)
 	else:
 		# Match desktop order + Y1-A T-P12 Next: Next / Attack / Art / Wait / End turn.
 		command(row, Locale.t("formation_next"), h, false, func(): BattleFormationCycle.apply_next(host), false)
@@ -71,6 +73,32 @@ static func rebuild(host) -> void:
 		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected, false)
 		command(row, Locale.t("shell_4faa58f5"), h, true, func(): BattleTouchConfirm.request_end_turn(host), false)
 	place(host)
+
+
+
+static func _rebuild_heal_confirm(host, row: BoxContainer, h: int, land: bool) -> void:
+	var confirm_cb := func(): BattleSkillHealPreview.confirm(host)
+	var cancel_cb := func(): BattleAttackCancelDepth.step(host)
+	var confirm_txt := Locale.t("ux_confirm_heal")
+	var focus := BattleSkillHealPreview.preview_ui(host)
+	var name := "?"
+	if focus >= 0 and focus < host.units.size():
+		name = str(host.units[focus].char.name)
+	var hint := Locale.t("ux_confirm_dest_heal") % name
+	if land:
+		var cancel_btn := command(row, Locale.t("shell_4d0b4688"), h, false, cancel_cb, false)
+		cancel_btn.name = "ConfirmCancel"
+		cancel_btn.custom_minimum_size = Vector2(0, maxi(h, 56))
+		_add_dest_hint(row, hint)
+		var conf := command(row, confirm_txt, h, true, confirm_cb, true)
+		conf.name = "ConfirmPrimary"
+		conf.custom_minimum_size = Vector2(0, maxi(108, int(conf.custom_minimum_size.y)))
+	else:
+		var conf2 := command(row, confirm_txt, h, true, confirm_cb, true)
+		conf2.name = "ConfirmPrimary"
+		_add_dest_hint(row, hint)
+		var cancel2 := command(row, Locale.t("shell_4d0b4688"), h, false, cancel_cb, false)
+		cancel2.name = "ConfirmCancel"
 
 
 static func _rebuild_confirm(host, row: BoxContainer, h: int, land: bool, is_move: bool) -> void:
