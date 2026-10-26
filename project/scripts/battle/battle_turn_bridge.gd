@@ -2,7 +2,7 @@ class_name BattleTurnBridge
 extends RefCounted
 ## Y1-A turn-bridge fat: player-phase return → ready pulse + auto-select first ready.
 ## After unit done / wait → handoff next ready. Steady ready feet + pulse.
-## Ready HUD tap cycles FormationCycle. No telegraph / aim tips.
+## Ready HUD tap cycles FormationCycle. Overlay / HUD only.
 
 const META_PULSE := "m_turn_bridge_pulse_msec"
 const PULSE_MS := 1400

@@ -98,7 +98,7 @@ func _algebra_source() -> String:
 		return "controller missing draw_ready_pulse"
 	if ctrl.find("BattleTurnBridge.after_unit_done") < 0:
 		return "controller missing after_unit_done"
-	for bad in ["telegraph", "Telegraph", "EmptyHost"]:
+	for bad in ["BattleLinkTelegraph", "BattleFoeOpeningTelegraph", "EmptyHost"]:
 		if bridge.find(bad) >= 0:
 			return "bridge dragged %s" % bad
 	return ""
