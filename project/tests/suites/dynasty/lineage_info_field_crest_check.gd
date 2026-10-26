@@ -56,6 +56,12 @@ func _assert_info(page: Node, leader: CKCharacter, where: String) -> void:
 	var expect := CKHeraldry.core_key(GameState.arms_for_character(leader))
 	_ok(core != "" and core == expect, "%s arms_core matches leader" % where)
 	_ok(arms.get_child_count() == 0, "%s not marshalled" % where)
+	var badge := page.find_child("RankBadge", true, false)
+	_ok(badge != null and str(badge.get_meta("field_route", "")) == "lineage_rank_badge", "%s RankBadge field_route" % where)
+	if badge != null:
+		_ok(str(badge.get_meta("rank_id", "")) == str(leader.rank), "%s RankBadge rank_id" % where)
+	var src2 := FileAccess.get_file_as_string(INFO_SRC)
+	_ok(src2.find("CKHeraldryField.attach_lineage_rank_badge") >= 0, "%s info calls Field rank badge" % where)
 	var nm := page.find_child("InfoName", true, false)
 	_ok(nm != null, "%s InfoName stays" % where)
 

@@ -374,7 +374,7 @@ func _render_side() -> void:
 		t.add_theme_font_size_override("font_size", 28)
 	p.add_child(t)
 	## 团徽 + 邦徽 on the side card (desktop + mobile).
-	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(292, 12) if not _mob else Vector2(280, 8), Vector2(36, 44) if not _mob else Vector2(40, 48))
+	CKHeraldryField.place_city_crest_strip(p, city, Vector2(292, 12) if not _mob else Vector2(280, 8), Vector2(36, 44) if not _mob else Vector2(40, 48))
 	var chips := HBoxContainer.new()
 	chips.position = Vector2(18, 222)
 	chips.add_theme_constant_override("separation", 5)
@@ -546,6 +546,24 @@ func _para(text: String, col: Color, size: int, w: float) -> Label:
 	l.custom_minimum_size = Vector2(w, 0)
 	l.size = Vector2(w, 0)
 	return l
+
+
+func _arb_pending_city(plan: Dictionary) -> String:
+	var g := str(plan.get("good", ""))
+	var dname := str(World.node(str(plan.get("sell_city", ""))).get("name", plan.get("sell_city", "")))
+	var base := Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+	var days := int(plan.get("march_days", 0))
+	var food := int(plan.get("march_food", 0))
+	if days <= 0:
+		var m: Dictionary = World.arbitrage_march_preview(str(plan.get("sell_city", "")))
+		days = int(m.get("days", 0))
+		food = int(m.get("food", 0))
+	if days > 0:
+		base += " · " + (Locale.t("atlas_arb_march_days") % [days, food])
+		if bool(plan.get("seal_bypass", false)) or bool(World.arbitrage_march_preview(str(plan.get("sell_city", ""))).get("seal_bypass", false)):
+			base += Locale.t("atlas_arb_bypass")
+	return base
+
 
 func _line(text: String, col: Color, size: int, w: float) -> Label:
 	var l := UIKit.body_label(text, col, size)
@@ -841,8 +859,43 @@ func _tab_overview() -> void:
 			go_mkt.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		go_mkt.pressed.connect(func(): _set_tab("market"))
 		v3.add_child(go_mkt)
-	for t in World.tips.slice(0, 3):
-		v3.add_child(_line("情报：%s" % str(t), UIKit.ACCENT, 11, 380))
+		# City-side one-tap arbitrage (fat deepen: was atlas-only).
+		if city == World.pos:
+			if World.arbitrage.is_empty():
+				var best_row: Dictionary = World.best_produce_trade(city)
+				if not best_row.is_empty() and bool(best_row.get("known", false)):
+					var arb := UIKit.ghost_button(Locale.t("atlas_arb_run"), 200, 28 if not _mob else MobilePage.HIT)
+					arb.name = "ArbitrageRun"
+					if _mob:
+						arb.custom_minimum_size = Vector2(0, MobilePage.HIT)
+					arb.pressed.connect(func():
+						_do(World.begin_arbitrage(str(best_row.get("good", "")), 1, str(best_row.get("sell_city", "")), true))
+						_render_tab()
+					)
+					v3.add_child(arb)
+			else:
+				var plan: Dictionary = World.arbitrage
+				var pend := _line(_arb_pending_city(plan), UIKit.EMBER, 11, 380)
+				pend.name = "ArbitragePending"
+				v3.add_child(pend)
+				if str(plan.get("sell_city", "")) == World.pos:
+					var sellb := UIKit.ghost_button(Locale.t("atlas_arb_sell_now"), 200, 28 if not _mob else MobilePage.HIT)
+					sellb.name = "ArbitrageSell"
+					sellb.pressed.connect(func():
+						_do(World.complete_arbitrage())
+						_render_tab()
+					)
+					v3.add_child(sellb)
+				else:
+					var go_atlas := UIKit.ghost_button(Locale.t("atlas_arb_march"), 200, 28 if not _mob else MobilePage.HIT)
+					go_atlas.name = "ArbitrageMarch"
+					go_atlas.pressed.connect(func():
+						GameState.set_meta("atlas_select", str(plan.get("sell_city", "")))
+						get_tree().change_scene_to_file("res://scenes/hub/atlas_view.tscn")
+					)
+					v3.add_child(go_atlas)
+	for tip in World.tips.slice(0, 3):
+		v3.add_child(_line("情报：%s" % str(tip), UIKit.ACCENT, 11, 380))
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
@@ -958,7 +1011,7 @@ func _tab_smith() -> void:
 	var nat: Dictionary = World.nations.get(World.nation_of(city), {})
 	var p := _panel(Rect2(0, 0, 420, 576))
 	_head(p, Vector2(18, 14), str(nat.get("smith", "铁匠铺")), "SMITHY · TIER %d" % World.smith_tier(city))
-	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
+	CKHeraldryField.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
 	var v := _scroll(p, Rect2(12, 58, 400, 508))
 	if _sel_item == "" or not World.items.has(_sel_item):
 		_sel_item = str(st[0].item.id) if not st.is_empty() else ""
@@ -1029,7 +1082,7 @@ func _show_smith_reveal(it: Dictionary) -> void:
 	var mono := UIKit.mono(Locale.t("smith_reveal_tag"), tag_sz, UIKit.ACCENT)
 	mono.position = Vector2(24, 18)
 	card.add_child(mono)
-	CKHeraldryChrome.place_city_crest_strip(card, city, Vector2(cw - 96, 12), Vector2(36, 44) if not phone else Vector2(40, 48))
+	CKHeraldryField.place_city_crest_strip(card, city, Vector2(cw - 96, 12), Vector2(36, 44) if not phone else Vector2(40, 48))
 	var ic := _icon(it, 110.0 if not phone else 96.0)
 	ic.position = Vector2(24, 56)
 	card.add_child(ic)
@@ -1163,15 +1216,30 @@ func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 	fg.tooltip_text = "材料不足" if not miss.is_empty() else ""
 	fg.pressed.connect(func(): _do(World.forge_item(city, iid)))
 	p.add_child(fg)
+	# Fat deepen: one-tap buy missing mats from local market then forge.
+	var prev_m: Dictionary = World.forge_mats_preview(city, iid)
+	if avail and not miss.is_empty() and bool(prev_m.get("can_buy", false)):
+		var total := int(prev_m.get("total", 0))
+		var bm := UIKit.ghost_button(Locale.t("smith_forge_buy_mats_btn") % total, 380, 36)
+		bm.name = "ForgeBuyMats"
+		bm.position = Vector2(18, 518)
+		bm.disabled = bool(prev_m.get("short_silver", false))
+		bm.tooltip_text = Locale.t("smith_forge_short_silver") % total if bm.disabled else ""
+		bm.pressed.connect(func(): _do(World.forge_item(city, iid, true)))
+		p.add_child(bm)
 	var why := ""
 	if not avail:
 		why = "🔒 " + str(e2.get("reason", ""))
 	elif not miss.is_empty():
-		why = "打造需自备材料（市集可购）；直接购买无需材料。"
+		if bool(prev_m.get("can_buy", false)):
+			why = Locale.t("smith_forge_why_buy_mats") % [int(prev_m.get("mat_silver", 0)), int(prev_m.get("forge_silver", 0))]
+		else:
+			why = "打造需自备材料（市集可购）；直接购买无需材料。"
 	else:
 		why = "材料齐备：打造只付工钱，比直接购买便宜 %d 银。" % maxi(0, price - int(it.get("forge_silver", 0)))
+	var why_y := 560.0 if (avail and not miss.is_empty() and bool(prev_m.get("can_buy", false))) else 522.0
 	var wl := _para(why, UIKit.EMBER if not avail else UIKit.TEXT_DIM, 11, 380)
-	wl.position = Vector2(18, 522)
+	wl.position = Vector2(18, why_y)
 	p.add_child(wl)
 	var own := int(World.armory.get(iid, 0))
 	if own > 0:
@@ -1183,7 +1251,7 @@ func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 func _tab_market() -> void:
 	var p := _panel(Rect2(0, 0, 848, 576))
 	_head(p, Vector2(18, 14), "市集", "MARKET · SUPPLY-DRIVEN PRICES")
-	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
+	CKHeraldryField.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
 	var cap := UIKit.mono("货舱 %d/%d   ·   粮/铁/药材直接入库，不占货舱" % [World.cargo_used(), World.cargo_cap()], 9, UIKit.TEXT_DIM, false)
 	var refresh := UIKit.ghost_button(Locale.t("city_market_refresh_btn"), 108, 28 if not _mob else MobilePage.HIT)
 	refresh.name = "MarketRefresh"

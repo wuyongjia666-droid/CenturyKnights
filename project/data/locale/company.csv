@@ -414,6 +414,9 @@ atlas_arb_pending,跑单中：%s ×%d → %s,Armed: %s ×%d → %s
 atlas_arb_sell_now,出手,Sell now
 atlas_arb_sell_title,跑单到手,Arbitrage landed
 atlas_arb_march,启程出手,March to sell
+atlas_arb_short_food,粮不够跑单（需 %d）,Not enough food for arbitrage march (need %d)
+atlas_arb_march_days,出手行程约 %d 日 · 粮 %d,Sell march ~%d days · food %d
+atlas_arb_bypass,（冬封旁路）,(winter bypass)
 atlas_occupy_en,OCCUPY // GARRISON,OCCUPY // GARRISON
 atlas_occupy_title,占领 · %s,Occupy · %s
 atlas_occupy_body,驻军 %d / %d。增派人手或立屯营，守住刚夺下的中立领地。,Garrison %d / %d. Reinforce or raise a stockade to hold the seat you just took.
@@ -614,3 +617,9 @@ holding_patrol_cd_tip,冷却%d,Cooldown %d
 holding_patrol_boost_tip,巡防中%d,Patrolling %d
 holding_echo_patrol_one,巡防·%s（-%d银/-%d粮）,Patrol · %s (-%d silver / -%d food)
 holding_echo_patrol_all,全堡巡防（-%d银/-%d粮）,Castle patrol (-%d silver / -%d food)
+smith_forge_short_mats,缺材料：%s,Missing mats: %s
+smith_forge_mats_unstocked,市集缺打造材料,Market lacks forge mats
+smith_forge_short_silver,购料+工钱不足（需 %d 银）,Need %d silver for mats+labor
+smith_forge_bought_mats_done,打造完成：「%s」（工钱 %d · 购料 %d 银）,Forged "%s" (labor %d · mats %d silver)
+smith_forge_buy_mats_btn,购料打造 · %d,Buy mats & forge · %d
+smith_forge_why_buy_mats,缺料可市集购入再打造（购料 %d + 工钱 %d）。,Missing mats — buy at market then forge (mats %d + labor %d).
