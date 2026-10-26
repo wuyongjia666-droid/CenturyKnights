@@ -45,7 +45,7 @@ func _place_succession_crests() -> void:
 	var at := Vector2(980, 12) if board != null else Vector2(980, 12)
 	if mob:
 		at = Vector2(900, 8)
-	CKHeraldryChrome.place_succession_crest_strip(host, _heir, at, Vector2(36, 44) if not mob else Vector2(32, 38))
+	CKHeraldryField.place_succession_crest_strip(host, _heir, at, Vector2(36, 44) if not mob else Vector2(32, 38))
 
 func _pick_heir() -> void:
 	_heir = null
