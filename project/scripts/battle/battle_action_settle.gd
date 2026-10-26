@@ -24,20 +24,30 @@ static func readable_inset(stage: Rect2, blockers: Array, edge_band: float) -> R
 
 
 static func _cut_blocker(inset: Rect2, block: Rect2) -> Rect2:
+	## Cut inset so it no longer intersects block. Never inflate past the cut
+	## edge (a 72px floor used to re-bleed into the info column / notch).
 	var inter := inset.intersection(block)
 	if inter.size.x < 1.0 or inter.size.y < 1.0:
 		return inset
 	if inter.size.x <= inter.size.y and block.get_center().x >= inset.get_center().x:
-		var right := inter.position.x
-		return Rect2(inset.position, Vector2(maxf(72.0, right - inset.position.x), inset.size.y))
+		var w: float = inter.position.x - inset.position.x
+		if w < 8.0:
+			return inset
+		return Rect2(inset.position, Vector2(w, inset.size.y))
 	if inter.size.x <= inter.size.y:
-		var left := inter.end.x
-		return Rect2(Vector2(left, inset.position.y), Vector2(maxf(72.0, inset.end.x - left), inset.size.y))
+		var w2: float = inset.end.x - inter.end.x
+		if w2 < 8.0:
+			return inset
+		return Rect2(Vector2(inter.end.x, inset.position.y), Vector2(w2, inset.size.y))
 	if block.get_center().y < inset.get_center().y:
-		var top := inter.end.y
-		return Rect2(Vector2(inset.position.x, top), Vector2(inset.size.x, maxf(72.0, inset.end.y - top)))
-	var bot := inter.position.y
-	return Rect2(inset.position, Vector2(inset.size.x, maxf(72.0, bot - inset.position.y)))
+		var h: float = inset.end.y - inter.end.y
+		if h < 8.0:
+			return inset
+		return Rect2(Vector2(inset.position.x, inter.end.y), Vector2(inset.size.x, h))
+	var h2: float = inter.position.y - inset.position.y
+	if h2 < 8.0:
+		return inset
+	return Rect2(inset.position, Vector2(inset.size.x, h2))
 
 
 ## Minimum pan that keeps `actor` readable. `also` is framed with the actor only
@@ -74,9 +84,18 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 		return
 	var band := float(host.get_meta("m_edge_band", 0.0)) if host.has_meta("m_edge_band") else 0.0
 	var blockers: Array = []
-	if host.has_meta("m_info_block"):
+	var col := host.get_node_or_null("MobileSideCol") as Control
+	if col == null:
+		col = host.find_child("MobileSideCol", true, false) as Control
+	if col == null:
+		col = host.get_node_or_null("SideCol") as Control
+	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
+		var live := Rect2(col.position, col.size)
+		blockers = [live]
+		host.set_meta("m_info_block", live)
+	elif host.has_meta("m_info_block"):
 		var block = host.get_meta("m_info_block")
-		if block is Rect2:
+		if block is Rect2 and (block as Rect2).size.x > 1.0 and (block as Rect2).size.y > 1.0:
 			blockers.append(block)
 	var inset := readable_inset(stage, blockers, band)
 	var origin: Vector2 = host.ORIGIN
@@ -86,7 +105,7 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 	if host.get("_board_zoom") != null:
 		zoom = float(host._board_zoom)
 	var delta := settle_delta(origin, cell_px, actor, also, pan, zoom, inset)
-	host.set_meta("m_action_settle", {"delta": delta, "actor": actor, "inset": inset})
+	host.set_meta("m_action_settle", {"delta": delta, "actor": actor, "inset": inset, "block": blockers[0] if not blockers.is_empty() else Rect2()})
 	if delta.length_squared() < 0.25:
 		BattlePick.cancel_focus_tween(host)
 		return
@@ -97,7 +116,7 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 	var clamped: Vector2 = host._board_pan
 	host._board_pan = saved
 	var applied: Vector2 = clamped - saved
-	host.set_meta("m_action_settle", {"delta": applied, "actor": actor, "inset": inset})
+	host.set_meta("m_action_settle", {"delta": applied, "actor": actor, "inset": inset, "block": blockers[0] if not blockers.is_empty() else Rect2()})
 	if applied.length_squared() < 0.25:
 		BattlePick.cancel_focus_tween(host)
 		return

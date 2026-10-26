@@ -25,7 +25,9 @@ func _run() -> String:
 	await get_tree().process_frame
 	var ys := {}
 	for id in ["hall", "barracks", "market", "forge", "shrine"]:
-		var b := page.find_child("up_%s" % id, true, false) as Button
+		var b := page.find_child("WorksUpgrade_%s" % id, true, false) as Button
+		if b == null:
+			b = page.find_child("up_%s" % id, true, false) as Button
 		if b == null or b.size.y < 48 or b.size.x > 120:
 			return "button %s" % id
 		ys[b.position.x] = true
