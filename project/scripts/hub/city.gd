@@ -1237,10 +1237,34 @@ func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 			why = "打造需自备材料（市集可购）；直接购买无需材料。"
 	else:
 		why = "材料齐备：打造只付工钱，比直接购买便宜 %d 银。" % maxi(0, price - int(it.get("forge_silver", 0)))
-	var why_y := 560.0 if (avail and not miss.is_empty() and bool(prev_m.get("can_buy", false))) else 522.0
+	# Fat deepen: one-tap gate→market→forge act (preview-aware) + month_echo.smith.
+	var gprev: Dictionary = World.gate_forge_preview(city, iid)
+	var gmode := str(gprev.get("mode_hint", ""))
+	var gcost := int(gprev.get("buy_price", 0))
+	var gkey := "atlas_gate_forge_btn"
+	if gmode == "forge_mats":
+		gcost = int(gprev.get("total_forge", 0))
+		gkey = "atlas_gate_forge_btn_mats"
+	elif gmode == "forge":
+		gcost = int(gprev.get("forge_silver", 0))
+		gkey = "atlas_gate_forge_btn_forge"
+	var g_y := 560.0 if (avail and not miss.is_empty() and bool(prev_m.get("can_buy", false))) else 522.0
+	if avail and gmode != "":
+		var gb := UIKit.cta_button(Locale.t(gkey) % gcost, "G", 380, 36)
+		gb.name = "GateForgeBuy"
+		gb.position = Vector2(18, g_y)
+		var g_ok := bool(gprev.get("can_buy", false)) or bool(gprev.get("can_forge", false)) or bool(gprev.get("can_forge_mats", false))
+		gb.disabled = not g_ok
+		gb.tooltip_text = str(gprev.get("reason", "")) if not g_ok else ""
+		var gmode_cap := gmode
+		gb.pressed.connect(func(): _do(World.gate_forge_act(city, iid, gmode_cap)))
+		p.add_child(gb)
+		g_y += 42.0
+	var why_y := g_y
 	var wl := _para(why, UIKit.EMBER if not avail else UIKit.TEXT_DIM, 11, 380)
 	wl.position = Vector2(18, why_y)
 	p.add_child(wl)
+	_smith_echo_strip(p, Vector2(18, mini(why_y + 36.0, 540.0)), 380.0)
 	var own := int(World.armory.get(iid, 0))
 	if own > 0:
 		var ol := UIKit.tag_chip("军械库 ×%d" % own, UIKit.OK)
@@ -1819,6 +1843,30 @@ func _open_atlas_for_quest(q: Dictionary) -> void:
 		if nv != "":
 			GameState.set_meta("atlas_view", nv)
 	_back()
+
+
+
+func _smith_echo_strip(parent: Node, pos: Vector2, width: float) -> void:
+	## Gate→forge loop: show month_echo.smith / produce on smith detail (EchoLine_smith).
+	var rows: Array = []
+	for row in CKEconomyState.month_echo_lines():
+		var k := str(row.get("kind", ""))
+		if k == "smith" or k == "produce":
+			rows.append(row)
+	if rows.is_empty():
+		return
+	var head := UIKit.mono(Locale.t("atlas_smith_echo_head"), 8, UIKit.ACCENT, false)
+	head.position = pos
+	parent.add_child(head)
+	var y := pos.y + 14.0
+	for row in rows:
+		var line := UIKit.body_label(str(row.get("text", "")), UIKit.OK, 11)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		line.autowrap_mode = TextServer.AUTOWRAP_OFF
+		line.position = Vector2(pos.x, y)
+		line.size = Vector2(width, 16)
+		parent.add_child(line)
+		y += 16.0
 
 
 func _do(r: Dictionary) -> void:
