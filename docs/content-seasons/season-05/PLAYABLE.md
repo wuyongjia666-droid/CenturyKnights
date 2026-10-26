@@ -90,6 +90,10 @@
 - 各章 `tavern` 拍入谱选择前加 `_tvp1`–`_tvp6` 季题名著口头，全库去重；收束非旁白。
 - 验收：`content_season_tavern_plate_chain_check` — hub chip → 酒馆针口头 → 挂板选择 → ledger。
 
+## 第二主题拍口头加厚（second-beat）
+
+- 各章第二主题拍加 `_sec1`–`_sec6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_second_beat_chain_check` — hub chip → 二拍针口头 →（非中途战）继续。
 ## 开场主题口头加厚（theme-open）
 
 - 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
