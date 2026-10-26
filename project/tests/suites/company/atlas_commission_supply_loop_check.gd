@@ -33,6 +33,10 @@ func _ready() -> void:
 	_setup()
 	_api_full_loop()
 	_setup()
+	_api_buy_blocks()
+	_setup()
+	_api_seal_aware_supply_march()
+	_setup()
 	await _ui_board_and_market()
 	_setup()
 	await _ui_atlas_pickup_enter()
@@ -124,6 +128,11 @@ func _api_supply_stamp() -> void:
 	_ok(Locale.t("wq_mkt_gather_cost") != "wq_mkt_gather_cost", "locale wq_mkt_gather_cost")
 	_ok(Locale.t("wq_accept_supply_days") != "wq_accept_supply_days", "locale wq_accept_supply_days")
 	_ok(Locale.t("wq_board_supply_march") != "wq_board_supply_march", "locale wq_board_supply_march")
+	_ok(Locale.t("wq_gather_buy_silver") != "wq_gather_buy_silver", "locale wq_gather_buy_silver")
+	_ok(Locale.t("wq_gather_buy_cargo") != "wq_gather_buy_cargo", "locale wq_gather_buy_cargo")
+	_ok(Locale.t("wq_mkt_gather_turnin_food") != "wq_mkt_gather_turnin_food", "locale wq_mkt_gather_turnin_food")
+	_ok(Locale.t("wq_mkt_gather_turnin_bypass") != "wq_mkt_gather_turnin_bypass", "locale wq_mkt_gather_turnin_bypass")
+	_ok(Locale.t("wq_board_supply_bypass") != "wq_board_supply_bypass", "locale wq_board_supply_bypass")
 
 
 func _api_accept_wrong_city() -> void:
@@ -163,6 +172,8 @@ func _api_full_loop() -> void:
 	var march: Dictionary = acc.get("supply_march", {})
 	_ok(str(march.get("supply", "")) == _supply, "accept supply_march.supply %s" % march.get("supply", ""))
 	_ok(int(march.get("days", -1)) >= 0, "accept supply_march.days %s" % march.get("days", ""))
+	if int(march.get("days", 0)) > 0:
+		_ok(int(march.get("food", 0)) > 0, "accept supply_march.food > 0 got %s" % march.get("food", ""))
 	_ok(str(acc.get("msg", "")).find(_supply_name) >= 0 or int(march.get("days", 0)) == 0, "accept msg carries supply days")
 	_ok(World.quest_guide_node(World.quest_by_id(_qid)) == _supply, "guide_node supply")
 
@@ -195,6 +206,9 @@ func _api_full_loop() -> void:
 	_ok(bool(offer0.get("ok", false)), "offer ok after projected top-up: %s" % offer0)
 	_ok(int(offer0.get("cost", 0)) > 0, "offer cost > 0")
 	_ok(int(offer0.get("turnin_days", -1)) >= 0, "turnin_days set")
+	# travel_preview-backed food (route() had no food key — was always 0)
+	if int(offer0.get("turnin_days", 0)) > 0:
+		_ok(int(offer0.get("turnin_food", 0)) > 0, "turnin_food > 0 when days>0 got %s" % offer0.get("turnin_food", ""))
 
 	var silver0 := int(GameState.silver)
 	var buy: Dictionary = World.gather_buy_here()
@@ -202,6 +216,12 @@ func _api_full_loop() -> void:
 	if not bool(buy.get("ok", false)):
 		return
 	_ok(bool(buy.get("ready", false)), "buy reports ready")
+	_ok(str(buy.get("guide_node", "")) == HOME, "buy guide_node → issuer %s" % buy.get("guide_node", ""))
+	_ok(str(buy.get("hint", "")).find(_issuer_name) >= 0, "buy hint names issuer")
+	var tm: Dictionary = buy.get("turnin_march", {})
+	_ok(int(tm.get("days", -1)) >= 0, "buy turnin_march.days")
+	if int(tm.get("days", 0)) > 0:
+		_ok(int(tm.get("food", 0)) > 0, "buy turnin_march.food > 0")
 	_ok(World.have_good(_good) >= _qty, "cargo has good")
 	_ok(int(GameState.silver) < silver0, "silver spent")
 	_ok(World.stock(_supply, _good) >= 0, "stock mutated after buy")
@@ -231,6 +251,106 @@ func _api_full_loop() -> void:
 	_ok(World.have_good(_good) == have0 - _qty, "goods consumed")
 	_ok(int(GameState.silver) > s1, "reward silver")
 	_ok(World.rep_of(HOME) > rep0, "reward rep")
+
+
+func _api_buy_blocks() -> void:
+	var q := _make_gather()
+	_ok(not q.is_empty(), "blocks make")
+	if q.is_empty():
+		return
+	_post(q)
+	_qid = str(q.id)
+	_good = str(q.good)
+	_qty = int(q.qty)
+	_supply = World.gather_supply_city(q)
+	var acc: Dictionary = World.accept_quest(HOME, _qid)
+	_ok(bool(acc.get("ok", false)), "blocks accept")
+	if not bool(acc.get("ok", false)):
+		return
+	_go(_supply)
+	World.visited[_supply] = true
+	if not World.market.has(_supply):
+		World._init_market(_supply)
+	World.market[_supply][_good] = 0
+
+	# Silver short: quote still needed, buy refused with silver locale.
+	var offer_cost: Dictionary = World.gather_buy_offer()
+	_ok(bool(offer_cost.get("needed", false)), "blocks offer needed")
+	var need_silver := int(offer_cost.get("cost", 0))
+	_ok(need_silver > 0, "blocks cost > 0")
+	GameState.silver = maxi(0, need_silver - 1)
+	var offer_s: Dictionary = World.gather_buy_offer()
+	_ok(bool(offer_s.get("silver_short", false)), "silver_short flagged")
+	_ok(not bool(offer_s.get("ok", false)), "offer not ok when silver short")
+	var buy_s: Dictionary = World.gather_buy_here()
+	_ok(not bool(buy_s.get("ok", false)), "buy refuses silver short")
+	_ok(str(buy_s.get("msg", "")).find("银") >= 0 or str(buy_s.get("msg", "")) == Locale.t("wq_gather_buy_silver") % need_silver, "silver msg %s" % buy_s.get("msg", ""))
+	GameState.silver = 5000
+
+	# Cargo short: pack hold with non-store goods until need cannot fit.
+	World.cargo.clear()
+	var filler := "ashsteel"
+	if str(World.goods.get(_good, {}).get("store", "")) != "":
+		# commissioned good itself is store-backed — still pack fillers to max then try buy of cargo-good path
+		pass
+	var cap := World.cargo_cap()
+	World.cargo[filler] = maxi(0, cap - _qty + 1)
+	# Re-quote: if commission good has no store, cargo_short must fire.
+	var store_kind := str(World.goods.get(_good, {}).get("store", ""))
+	var offer_c: Dictionary = World.gather_buy_offer()
+	if store_kind == "":
+		_ok(bool(offer_c.get("cargo_short", false)), "cargo_short flagged for non-store good")
+		_ok(not bool(offer_c.get("ok", false)), "offer not ok when cargo short")
+		var buy_c: Dictionary = World.gather_buy_here()
+		_ok(not bool(buy_c.get("ok", false)), "buy refuses cargo short")
+		_ok(str(buy_c.get("msg", "")) == Locale.t("wq_gather_buy_cargo") or str(buy_c.get("msg", "")).find("货") >= 0, "cargo msg %s" % buy_c.get("msg", ""))
+	else:
+		# Store-backed goods skip cargo gate — still assert offer rebuilds clean after clear.
+		World.cargo.clear()
+		var offer_ok2: Dictionary = World.gather_buy_offer()
+		_ok(bool(offer_ok2.get("ok", false)), "store-good offer ok after cargo clear")
+	World.cargo.clear()
+
+
+func _api_seal_aware_supply_march() -> void:
+	## Winter + recorded detour → board/accept supply_march marks seal_bypass and uses bypass food.
+	var q := _make_gather()
+	_ok(not q.is_empty(), "seal-march make")
+	if q.is_empty():
+		return
+	_post(q)
+	_supply = World.gather_supply_city(q)
+	_ok(_supply != HOME and _supply != "", "seal-march supply away")
+	Calendar.month = 1
+	World.seal_detour = {}
+	_ok(CKRoadSeal.seal_active(), "winter seals active")
+	var cmp: Dictionary = CKRoadSeal.compare(_supply)
+	var detour: Dictionary = cmp.get("detour", {})
+	var path: Array = detour.get("path", [])
+	var have_bypass := bool(cmp.get("sealed", false)) and bool(detour.get("ok", false)) and path.size() >= 3
+	if not have_bypass:
+		# Fallback: raw path still exercises seal_aware wiring (no bypass flag expected).
+		var raw: Dictionary = World.travel_preview(_supply)
+		path = raw.get("path", [])
+		if path.size() < 2:
+			_ok(false, "seal-march no path to supply")
+			return
+		World.note_seal_detour(_supply, path)
+		var march0: Dictionary = World.gather_supply_march_preview(q)
+		_ok(int(march0.get("food", 0)) == World.food_per_day() * int(march0.get("days", 0)), "seal-march food=per_day*days even without detour")
+		World.clear_seal_detour()
+		return
+	World.note_seal_detour(_supply, path)
+	var march: Dictionary = World.gather_supply_march_preview(q)
+	_ok(str(march.get("supply", "")) == _supply, "seal-march supply id")
+	_ok(bool(march.get("seal_bypass", false)), "seal-march seal_bypass")
+	_ok(int(march.get("days", 0)) > 0, "seal-march days>0")
+	_ok(int(march.get("food", 0)) > 0, "seal-march food>0")
+	var aware: Dictionary = World.seal_aware_travel_preview(_supply)
+	_ok(int(march.get("days", -1)) == int(aware.get("days", -2)), "seal-march days match aware")
+	_ok(int(march.get("food", -1)) == int(aware.get("food", -2)), "seal-march food match aware")
+	World.clear_seal_detour()
+
 
 
 func _text(root: Node, name: String) -> String:
@@ -327,6 +447,9 @@ func _ui_board_and_market() -> void:
 	var banner := _text(mkt, "GatherSupplyLine")
 	_ok(banner.find(World.good_name(_good)) >= 0, "banner names good %s" % banner)
 	_ok(banner.find("银") >= 0 or banner.find("silver") >= 0 or banner.find("~") >= 0, "banner shows cost %s" % banner)
+	var offer_ui: Dictionary = World.gather_buy_offer()
+	if int(offer_ui.get("turnin_days", 0)) > 0 and int(offer_ui.get("turnin_food", 0)) > 0:
+		_ok(banner.find("粮") >= 0 or banner.find("food") >= 0 or banner.find(str(int(offer_ui.get("turnin_food", 0)))) >= 0, "banner shows turnin food %s" % banner)
 	var buy_btn := mkt.find_child("GatherBuy", true, false) as Button
 	_ok(buy_btn != null and not buy_btn.disabled, "GatherBuy enabled")
 	if buy_btn and not buy_btn.disabled:

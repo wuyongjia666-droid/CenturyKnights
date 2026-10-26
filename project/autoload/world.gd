@@ -3527,7 +3527,8 @@ func gather_buy_offer() -> Dictionary:
 	var issuer := str(q.get("issuer", ""))
 	var march: Dictionary = {}
 	if issuer != "" and issuer != pos:
-		march = route(pos, issuer)
+		# seal-aware so winter bypass days/food match HUD / halt resume
+		march = seal_aware_travel_preview(issuer)
 	return {
 		"ok": ok,
 		"needed": true,
@@ -3546,6 +3547,7 @@ func gather_buy_offer() -> Dictionary:
 		"issuer": issuer,
 		"turnin_days": int(march.get("days", 0)),
 		"turnin_food": int(march.get("food", 0)),
+		"turnin_seal_bypass": bool(march.get("seal_bypass", false)),
 	}
 
 
@@ -3572,6 +3574,10 @@ func gather_buy_here() -> Dictionary:
 	if not bool(buy.get("ok", false)):
 		return buy
 	var live := quest_by_id(str(offer.get("quest_id", "")))
+	var guide := quest_guide_node(live)
+	var turnin_march: Dictionary = {}
+	if guide != "" and guide != pos:
+		turnin_march = seal_aware_travel_preview(guide)
 	return {
 		"ok": true,
 		"msg": Locale.t("wq_gather_buy_done") % [str(offer.get("good_name", good)), need, int(buy.get("cost", 0))],
@@ -3580,6 +3586,9 @@ func gather_buy_here() -> Dictionary:
 		"good": good,
 		"quest_id": str(offer.get("quest_id", "")),
 		"ready": str(live.get("state", "")) == "ready",
+		"guide_node": guide,
+		"hint": quest_next_hint(live),
+		"turnin_march": turnin_march,
 		"offer": offer,
 	}
 
@@ -3595,14 +3604,27 @@ func gather_supply_march_preview(q: Dictionary) -> Dictionary:
 			"days": 0,
 			"food": 0,
 			"here": supply == pos and supply != "",
+			"seal_bypass": false,
 		}
-	var pv: Dictionary = route(pos, supply)
+	# Prefer seal-aware preview so board/accept days·food match winter bypass HUD.
+	var pv: Dictionary = seal_aware_travel_preview(supply)
+	if not bool(pv.get("ok", false)):
+		var raw: Dictionary = route(pos, supply)
+		return {
+			"supply": supply,
+			"supply_name": str(node(supply).get("name", supply)),
+			"days": int(raw.get("days", 0)),
+			"food": food_per_day() * int(raw.get("days", 0)),
+			"here": false,
+			"seal_bypass": false,
+		}
 	return {
 		"supply": supply,
 		"supply_name": str(node(supply).get("name", supply)),
 		"days": int(pv.get("days", 0)),
 		"food": int(pv.get("food", 0)),
 		"here": false,
+		"seal_bypass": bool(pv.get("seal_bypass", false)),
 	}
 
 

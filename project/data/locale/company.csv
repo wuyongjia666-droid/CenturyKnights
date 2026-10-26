@@ -255,6 +255,9 @@ wq_mkt_gather_banner,委托急需：%s ×%d（还差 %d）——下方「委托�
 wq_mkt_gather_buy,委托购入 ×%d,GatherBuy ×%d
 wq_mkt_gather_cost,约 %d 银,~%d silver
 wq_mkt_gather_turnin_days,交货尚余 %d 日,%d days to turn-in
+wq_mkt_gather_turnin_food,粮 %d,food %d
+wq_mkt_gather_turnin_bypass,冬封旁路,winter bypass
+wq_board_supply_bypass,（冬封旁路）,(winter bypass)
 wq_gather_buy_none,此处无可购入的物产委托,No gather commission to buy here
 wq_gather_buy_blocked,无法购入物产委托,Cannot buy gather goods
 wq_gather_buy_silver,银币不足（需 %d）,Not enough silver (need %d)

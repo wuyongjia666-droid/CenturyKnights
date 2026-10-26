@@ -1259,8 +1259,13 @@ func _tab_market() -> void:
 		if cost_n > 0:
 			banner += " · " + (Locale.t("wq_mkt_gather_cost") % cost_n)
 		var turnin_days := int(offer.get("turnin_days", 0))
+		var turnin_food := int(offer.get("turnin_food", 0))
 		if turnin_days > 0:
 			banner += " · " + (Locale.t("wq_mkt_gather_turnin_days") % turnin_days)
+			if turnin_food > 0:
+				banner += " · " + (Locale.t("wq_mkt_gather_turnin_food") % turnin_food)
+			if bool(offer.get("turnin_seal_bypass", false)):
+				banner += " · " + Locale.t("wq_mkt_gather_turnin_bypass")
 		var gl := UIKit.body_label(banner, UIKit.OK, 12)
 		gl.name = "GatherSupplyLine"
 		gl.position = Vector2(10, 6)
@@ -1480,8 +1485,11 @@ func _tab_board() -> void:
 		if supply != "":
 			kv.add_child(UIKit.kv_row(Locale.t("wq_board_supply"), str(World.node(supply).get("name", supply)), UIKit.ACCENT, 380))
 			var march: Dictionary = World.gather_supply_march_preview(sel)
-			if int(march.get("days", 0)) > 0:
-				var march_lbl := UIKit.kv_row(Locale.t("wq_board_supply_march"), Locale.t("wq_board_supply_days") % [int(march.get("days", 0)), int(march.get("food", 0))], UIKit.OK, 380)
+			if not march.is_empty() and int(march.get("days", 0)) >= 0:
+				var march_txt := Locale.t("wq_board_supply_days") % [int(march.get("days", 0)), int(march.get("food", 0))]
+				if bool(march.get("seal_bypass", false)):
+					march_txt += Locale.t("wq_board_supply_bypass")
+				var march_lbl := UIKit.kv_row(Locale.t("wq_board_supply_march"), march_txt, UIKit.OK, 380)
 				march_lbl.name = "BoardSupplyMarch"
 				kv.add_child(march_lbl)
 	elif str(sel.kind) == "clear":
