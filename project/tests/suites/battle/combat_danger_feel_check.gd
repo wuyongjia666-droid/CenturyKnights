@@ -129,6 +129,8 @@ func _boot(mobile: bool) -> String:
 	get_tree().root.add_child(_battle)
 	get_tree().current_scene = _battle
 	await _settle(8)
+	if not _battle.has_method("_set_danger") or not ("units" in _battle):
+		return "battle controller script failed to attach"
 	if mobile:
 		var insets := {"left": 80.0, "top": 0.0, "right": 0.0, "bottom": 24.0}
 		var fitted: Dictionary = MobileLayout.fit(Vector2(PHONE), insets)
