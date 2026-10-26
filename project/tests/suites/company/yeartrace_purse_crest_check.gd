@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("YEARTRACE PURSE FIELD CREST PASS")
 		print("YEARTRACE PURSE CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -46,14 +47,20 @@ func _assert_page(page: Node, where: String) -> void:
 		_ok(ya != null, "%s YeartraceArms" % where)
 		if ya != null:
 			_ok(str(ya.get_meta("arms_core", "")) != "", "%s YeartraceArms core" % where)
+			_ok(str(ya.get_meta("field_route", "")) == "yeartrace", "%s YeartraceArms field_route" % where)
 	var purse = page.find_child("PursePlate", true, false)
 	_ok(purse != null, "%s PursePlate" % where)
 	if purse != null:
+		_ok(str(purse.get_meta("field_route", "")) == "purse", "%s PursePlate field_route" % where)
 		var pa = purse.find_child("PurseArms", true, false)
 		_ok(pa != null, "%s PurseArms" % where)
 		_ok(int(purse.get_meta("purse_silver", -1)) == 9, "%s purse silver meta" % where)
 		var lab = purse.find_child("PurseSilver", true, false)
 		_ok(lab != null, "%s PurseSilver label" % where)
+	var dos := FileAccess.get_file_as_string("res://scripts/hub/unit_dossier.gd")
+	_ok(dos.find("CKHeraldryField.place_purse_plate") >= 0, "%s dossier calls Field purse" % where)
+	var yt_src := FileAccess.get_file_as_string("res://scripts/hub/sui_yeartrace_ui.gd")
+	_ok(yt_src.find("CKHeraldryField.attach_yeartrace_arms") >= 0, "%s yeartrace calls Field" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")

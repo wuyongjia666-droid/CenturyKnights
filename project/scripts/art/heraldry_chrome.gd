@@ -712,73 +712,14 @@ static func attach_field_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(28
 	row.move_child(arms, 0)
 
 
-## Yeartrace panel header: person YeartraceArms (岁课年迹). House mount uses company arms.
-## Shrink-only — never expand in the dossier FamilyTree scroll (court_ui overlap guard).
+## Yeartrace panel header. Field owns YeartraceArmsHead.
 static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = Vector2(28, 34)) -> void:
-	if panel == null:
-		return
-	var old := panel.get_node_or_null("YeartraceArmsHead")
-	if old:
-		old.name = "_YeartraceArmsHeadDying"
-		old.queue_free()
-	var head := HBoxContainer.new()
-	head.name = "YeartraceArmsHead"
-	head.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	head.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	head.add_theme_constant_override("separation", 8)
-	var arms: TextureRect
-	if c != null:
-		arms = make_person_arms(c, arms_sz)
-	else:
-		arms = make_company_arms(arms_sz)
-	arms.name = "YeartraceArms"
-	arms.tooltip_text = Locale.t("lb_yeartrace_arms")
-	arms.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	## Keep person/company arms_kind; suites key off node name.
-	head.add_child(arms)
-	## Prefer sitting beside the existing mono title if present.
-	var mono_i := -1
-	for i in panel.get_child_count():
-		var ch: Node = panel.get_child(i)
-		if ch is Label and str(ch.text).find("YEARTRACE") >= 0:
-			mono_i = i
-			break
-	if mono_i >= 0:
-		var mono: Node = panel.get_child(mono_i)
-		panel.remove_child(mono)
-		head.add_child(mono)
-		panel.add_child(head)
-		panel.move_child(head, mono_i)
-	else:
-		panel.add_child(head)
-		panel.move_child(head, 0)
+	CKHeraldryField.attach_yeartrace_arms(panel, c, arms_sz)
 
 
-## Dossier 私囊 plate: PurseArms (person) + silver readout host. Caller parents into LifePanel.
+## Dossier 私囊 plate. Field owns PursePlate.
 static func place_purse_plate(parent: Node, c, purse_silver: int = 0, arms_sz: Vector2 = Vector2(28, 34)) -> Control:
-	if parent == null or c == null:
-		return null
-	var old := parent.get_node_or_null("PursePlate")
-	if old:
-		old.name = "_PursePlateDying"
-		old.queue_free()
-	var host := HBoxContainer.new()
-	host.name = "PursePlate"
-	host.add_theme_constant_override("separation", 8)
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "PurseArms"
-	arms.tooltip_text = Locale.t("lb_purse_arms")
-	host.add_child(arms)
-	var lab := UIKit.body_label(Locale.t("lb_dos_purse", [int(purse_silver)]), UIKit.TEXT, 13)
-	lab.name = "PurseSilver"
-	lab.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	host.add_child(lab)
-	host.set_meta("purse_silver", int(purse_silver))
-	host.set_meta("arms_kind", str(arms.get_meta("arms_kind", "")))
-	host.set_meta("arms_core", str(arms.get_meta("arms_core", "")))
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_purse_plate(parent, c, purse_silver, arms_sz)
 
 ## Gazette / court-news nation plate (朝徽). Same art as 邦徽; distinct node name for suites.
 static func make_gazette_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
@@ -796,65 +737,17 @@ static func make_gazette_nation_arms(nid: String, size: Vector2 = Vector2(40, 48
 	tr.set_meta("nation_id", str(nid))
 	return tr
 
-## Court gazette strip: 团徽 + nation 朝徽/邦徽 (GazetteCrestStrip). Empty nation → 团徽 only.
+## Court gazette strip. Field owns GazetteCrestStrip.
 static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("GazetteCrestStrip")
-	if old:
-		old.name = "_GazetteCrestStripDying"
-		old.queue_free()
-	var nid := str(nation_id)
-	if nid == "":
-		nid = World.nation_of(str(World.pos))
-	if nid == "":
-		nid = "ashbanner"
-	var host := Control.new()
-	host.name = "GazetteCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var w := shield.x
-	if nid != "":
-		var nat := make_gazette_nation_arms(nid, shield)
-		nat.position = Vector2(shield.x + 8.0, 0)
-		host.add_child(nat)
-		w = shield.x * 2.0 + 8.0
-	host.size = Vector2(w, shield.y)
-	host.set_meta("nation_id", nid)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_gazette_crest_strip(parent, nation_id, at, shield)
 
-## Pin 朝徽 on a court-news row top bar (HBox). Replaces prior GazetteNationArms under host.
+## Pin 朝徽 on a court-news row. Field owns GazetteNationArms.
 static func attach_news_row_arms(host: Control, nation_id: String, arms_sz: Vector2 = Vector2(28, 34)) -> void:
-	if host == null or str(nation_id) == "":
-		return
-	var old := host.get_node_or_null("GazetteNationArms")
-	if old:
-		old.name = "_GazetteNationArmsDying"
-		old.queue_free()
-	var arms := make_gazette_nation_arms(str(nation_id), arms_sz)
-	host.add_child(arms)
-	host.move_child(arms, 0)
+	CKHeraldryField.attach_news_row_arms(host, nation_id, arms_sz)
 
-## Year-card / chronicle person plate: prepend YearArms into a VBox row box via head HBox.
+## Year-card person plate. Field owns YearArmsHead.
 static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2(32, 38)) -> void:
-	if box == null or c == null:
-		return
-	var old := box.get_node_or_null("YearArmsHead")
-	if old:
-		old.name = "_YearArmsHeadDying"
-		old.queue_free()
-	var head := HBoxContainer.new()
-	head.name = "YearArmsHead"
-	head.add_theme_constant_override("separation", 10)
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "YearArms"
-	head.add_child(arms)
-	box.add_child(head)
-	box.move_child(head, 0)
+	CKHeraldryField.attach_yearcard_row_arms(box, c, arms_sz)
 
 ## Market desk strip. Field owns MarketCrestStrip.
 static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:

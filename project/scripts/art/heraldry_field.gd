@@ -7,7 +7,8 @@ extends RefCounted
 ## heir-trial duel strips, house-card person arms, banner-school train
 ## (pupil focus strip + row person arms), roster crest/row/hire plate,
 ## dialogue / save / battle-order / board / tavern-annex Field plates,
-## and hourglass / castle-view / blood-assay / market Field strips.
+## hourglass / castle-view / blood-assay / market Field strips,
+## and gazette / yeartrace / purse / yearcard Field plates.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -991,3 +992,130 @@ static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 	host.add_child(bn)
 	parent.add_child(host)
 	return host
+
+
+## Yeartrace panel header: person YeartraceArms (岁课年迹). House mount uses company arms.
+## Shrink-only — never expand in the dossier FamilyTree scroll (court_ui overlap guard).
+static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if panel == null:
+		return
+	_retire(panel, "YeartraceArmsHead")
+	var head := HBoxContainer.new()
+	head.name = "YeartraceArmsHead"
+	head.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	head.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	head.add_theme_constant_override("separation", 8)
+	head.set_meta("field_route", "yeartrace")
+	var arms: TextureRect
+	if c != null:
+		arms = CKHeraldryChrome.make_person_arms(c, arms_sz)
+	else:
+		arms = CKHeraldryChrome.make_company_arms(arms_sz)
+	arms.name = "YeartraceArms"
+	arms.tooltip_text = Locale.t("lb_yeartrace_arms")
+	arms.set_meta("field_route", "yeartrace")
+	arms.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(arms)
+	var mono_i := -1
+	for i in panel.get_child_count():
+		var ch: Node = panel.get_child(i)
+		if ch is Label and str(ch.text).find("YEARTRACE") >= 0:
+			mono_i = i
+			break
+	if mono_i >= 0:
+		var mono: Node = panel.get_child(mono_i)
+		panel.remove_child(mono)
+		head.add_child(mono)
+		panel.add_child(head)
+		panel.move_child(head, mono_i)
+	else:
+		panel.add_child(head)
+		panel.move_child(head, 0)
+
+
+## Dossier 私囊 plate: PurseArms (person) + silver readout host.
+static func place_purse_plate(parent: Node, c, purse_silver: int = 0, arms_sz: Vector2 = Vector2(28, 34)) -> Control:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "PursePlate")
+	var host := HBoxContainer.new()
+	host.name = "PursePlate"
+	host.add_theme_constant_override("separation", 8)
+	host.set_meta("field_route", "purse")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "PurseArms"
+	arms.tooltip_text = Locale.t("lb_purse_arms")
+	arms.set_meta("field_route", "purse")
+	host.add_child(arms)
+	var lab := UIKit.body_label(Locale.t("lb_dos_purse", [int(purse_silver)]), UIKit.TEXT, 13)
+	lab.name = "PurseSilver"
+	lab.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	host.add_child(lab)
+	host.set_meta("purse_silver", int(purse_silver))
+	host.set_meta("arms_kind", str(arms.get_meta("arms_kind", "")))
+	host.set_meta("arms_core", str(arms.get_meta("arms_core", "")))
+	parent.add_child(host)
+	return host
+
+
+## Court gazette strip: 团徽 + nation 朝徽/邦徽 (GazetteCrestStrip). Empty nation → 团徽 only.
+static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "GazetteCrestStrip")
+	var nid := str(nation_id)
+	if nid == "":
+		nid = World.nation_of(str(World.pos))
+	if nid == "":
+		nid = "ashbanner"
+	var host := Control.new()
+	host.name = "GazetteCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "gazette_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	if nid != "":
+		var nat := CKHeraldryChrome.make_gazette_nation_arms(nid, shield)
+		nat.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(nat)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+
+## Pin 朝徽 on a court-news row top bar (HBox).
+static func attach_news_row_arms(host: Control, nation_id: String, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if host == null or str(nation_id) == "":
+		return null
+	_retire(host, "GazetteNationArms")
+	var arms := CKHeraldryChrome.make_gazette_nation_arms(str(nation_id), arms_sz)
+	arms.set_meta("field_route", "news_row")
+	host.add_child(arms)
+	if host is Container:
+		host.move_child(arms, 0)
+	return arms
+
+
+## Year-card / chronicle person plate: prepend YearArms into a VBox row box via head HBox.
+static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2(32, 38)) -> TextureRect:
+	if box == null or c == null:
+		return null
+	_retire(box, "YearArmsHead")
+	var head := HBoxContainer.new()
+	head.name = "YearArmsHead"
+	head.add_theme_constant_override("separation", 10)
+	head.set_meta("field_route", "yearcard")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "YearArms"
+	arms.set_meta("field_route", "yearcard")
+	head.add_child(arms)
+	box.add_child(head)
+	if box is Container:
+		box.move_child(head, 0)
+	return arms

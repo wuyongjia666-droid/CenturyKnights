@@ -111,7 +111,7 @@ func _fill() -> void:
 		v.add_child(top)
 		var nid_row := str(ev2.get("nation", ""))
 		if nid_row != "":
-			CKHeraldryChrome.attach_news_row_arms(top, nid_row, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
+			CKHeraldryField.attach_news_row_arms(top, nid_row, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
 		top.add_child(UIKit.tag_chip(CKCourtChrome.KIND_ZH.get(kind2, kind2), col))
 		top.add_child(UIKit.mono(Locale.t("lb_news_when", [int(ev2.get("year", 0)), str(ev2.get("nation_zh", ""))]), 12, UIKit.TEXT_DIM, false))
 		v.add_child(CKPageKit.text(str(ev2.get("text", "")), UIKit.TEXT, 15, 1100))
@@ -154,7 +154,7 @@ func _place_gazette_crests(mobile: bool = false) -> void:
 	if nid == "":
 		nid = "ashbanner"
 	var gat := Vector2(42, 10) if mob else Vector2(42, 8)
-	CKHeraldryChrome.place_gazette_crest_strip(self, nid, gat, Vector2(34, 42) if mob else Vector2(36, 44))
+	CKHeraldryField.place_gazette_crest_strip(self, nid, gat, Vector2(34, 42) if mob else Vector2(36, 44))
 
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)

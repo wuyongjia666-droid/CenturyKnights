@@ -60,7 +60,7 @@ func _row(item: Dictionary) -> void:
 	var r := CKPageKit.row(UIKit.ACCENT, 0)
 	var box: VBoxContainer = r[1]
 	if c != null:
-		CKHeraldryChrome.attach_yearcard_row_arms(box, c, Vector2(30, 36) if DeviceProfile.is_mobile() else Vector2(32, 38))
+		CKHeraldryField.attach_yearcard_row_arms(box, c, Vector2(30, 36) if DeviceProfile.is_mobile() else Vector2(32, 38))
 	box.add_child(UIKit.tag_chip(str(item.get("band", "sui")), UIKit.ACCENT))
 	box.add_child(UIKit.title_label(str(item.get("title", "")), 18))
 	box.add_child(CKPageKit.text(Locale.t("sui_year_who", [who, age]), UIKit.TEXT_DIM, 13, 1000))
