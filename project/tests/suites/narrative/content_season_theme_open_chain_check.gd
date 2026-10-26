@@ -216,18 +216,16 @@ func _theme_leg(row: Dictionary) -> String:
 		return err0
 	var err := await _see(player, needle)
 	if err == "":
-		# advance past plates into next beat
-		var guard := 0
-		while player.current_beat_id() == beat and guard < 80:
-			if not player.tap_advance():
-				break
-			guard += 1
-		if after != "" and player.current_beat_id() != after:
-			# some chapters need finish_dialogue to flip next
-			player.simulate_finish_dialogue()
+		player.simulate_finish_dialogue()
+		await get_tree().process_frame
+		if after == "":
+			pass
+		elif not player.simulate_press_action_containing("继续"):
+			err = "%s continue press labels=%s" % [cid, str(player.action_labels())]
+		else:
 			await get_tree().process_frame
-		if after != "" and player.current_beat_id() != after:
-			err = "%s after theme want %s got %s" % [cid, after, player.current_beat_id()]
+			if player.current_beat_id() != after:
+				err = "%s after theme want %s got %s" % [cid, after, player.current_beat_id()]
 	player.queue_free()
 	await get_tree().process_frame
 	if err == "":
