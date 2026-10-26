@@ -1774,6 +1774,35 @@ static func attach_dossier_crest_banner(parent: Node, c, at: Vector2 = Vector2.Z
 	parent.add_child(tr)
 	return tr
 
+
+## Token mini-arms core key (player only). Field owns board-token heraldry.
+static func token_shield_core(c, team: String = "player") -> String:
+	if str(team) != "player":
+		return ""
+	return CKHeraldry.core_key(CKHeraldryChrome.person_spec(c))
+
+
+## Blit mini 旗徽|族徽 onto a board token image (lower-left). Player team only.
+## Field owns token blit; Chrome keeps a thin shim.
+static func blit_token_shield(img: Image, c, team: String = "player") -> void:
+	if img == null or c == null or str(team) != "player":
+		return
+	var S := mini(img.get_width(), img.get_height())
+	var sw := maxi(10, int(S * 0.34))
+	var sh := maxi(12, int(sw * 1.18))
+	var tex := CKHeraldryChrome.person_shield(c, sw, sh)
+	if tex == null:
+		return
+	var simg: Image = tex.get_image()
+	if simg == null or simg.is_empty():
+		return
+	if simg.is_compressed():
+		simg.decompress()
+	simg.convert(Image.FORMAT_RGBA8)
+	var ox := 2
+	var oy := img.get_height() - sh - 2
+	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))
+
 ## Cached company 团徽 banner cloth — atlas map flags + idle battle portrait.
 ## Callers (Territory, battle info) must not hit Chrome.company_banner directly.
 static func company_banner_texture(w: int = 28, h: int = 38) -> Texture2D:

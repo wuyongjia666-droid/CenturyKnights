@@ -266,9 +266,9 @@ func _run() -> void:
 		return
 
 	# ── Board unit shields ────────────────────────────────────────
-	_ok(CKHeraldryChrome.token_shield_core(leader, "player") == CKHeraldry.core_key(fam_spec), "token shield leader not 族徽")
-	_ok(CKHeraldryChrome.token_shield_core(loner, "player") == CKHeraldry.core_key(ban_spec), "token shield loner not 旗徽")
-	_ok(CKHeraldryChrome.token_shield_core(leader, "enemy") == "", "enemy token must not carry player arms")
+	_ok(CKHeraldryField.token_shield_core(leader, "player") == CKHeraldry.core_key(fam_spec), "token shield leader not 族徽")
+	_ok(CKHeraldryField.token_shield_core(loner, "player") == CKHeraldry.core_key(ban_spec), "token shield loner not 旗徽")
+	_ok(CKHeraldryField.token_shield_core(leader, "enemy") == "", "enemy token must not carry player arms")
 	var lead_tex := CKHeraldryChrome.person_shield(leader, 24, 28)
 	var lone_tex := CKHeraldryChrome.person_shield(loner, 24, 28)
 	_ok(lead_tex != null and lone_tex != null, "person_shield null")
@@ -279,7 +279,7 @@ func _run() -> void:
 	## Blit into a blank board image and confirm pixels changed
 	var blank := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	blank.fill(Color(0, 0, 0, 0))
-	CKHeraldryChrome.blit_token_shield(blank, leader, "player")
+	CKHeraldryField.blit_token_shield(blank, leader, "player")
 	var painted := false
 	for y in 64:
 		for x in 64:
@@ -289,6 +289,20 @@ func _run() -> void:
 		if painted:
 			break
 	_ok(painted, "blit_token_shield left image empty")
+	# Field ownership vows (token shield)
+	var field_src := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
+	_ok(field_src.find("static func token_shield_core") >= 0, "field owns token_shield_core")
+	_ok(field_src.find("static func blit_token_shield") >= 0, "field owns blit_token_shield")
+	var chrome_src := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
+	_ok(chrome_src.find("CKHeraldryField.token_shield_core") >= 0, "chrome token_core shim → Field")
+	_ok(chrome_src.find("CKHeraldryField.blit_token_shield") >= 0, "chrome blit shim → Field")
+	var unit_src := FileAccess.get_file_as_string("res://scripts/art/unit_art.gd")
+	_ok(unit_src.find("CKHeraldryField.token_shield_core") >= 0, "unit_art token_core → Field")
+	_ok(unit_src.find("CKHeraldryField.blit_token_shield") >= 0, "unit_art blit → Field")
+	_ok(unit_src.find("CKHeraldryChrome.token_shield_core") < 0, "unit_art no Chrome token_core")
+	_ok(unit_src.find("CKHeraldryChrome.blit_token_shield") < 0, "unit_art no Chrome blit")
+	# Shim parity
+	_ok(CKHeraldryChrome.token_shield_core(leader, "player") == CKHeraldryField.token_shield_core(leader, "player"), "chrome token shim parity")
 	## board_pawn_texture cache key includes arms core (family != loner)
 	var pawn_l := UnitArt.board_pawn_texture(leader, "player", 64, false)
 	var pawn_n := UnitArt.board_pawn_texture(loner, "player", 64, false)

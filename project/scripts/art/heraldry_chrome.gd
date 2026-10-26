@@ -187,30 +187,13 @@ static func place_castle_banner_strip(parent: Node, at: Vector2, shield: Vector2
 	return CKHeraldryField.place_banner_plate(parent, at, shield, banner)
 
 ## Board / battle token: person (or company) shield core key — suite asserts never mismatch.
+## Token mini-arms core — Field owns; Chrome thin shim.
 static func token_shield_core(c, team: String = "player") -> String:
-	if str(team) != "player":
-		return ""
-	return CKHeraldry.core_key(person_spec(c))
+	return CKHeraldryField.token_shield_core(c, team)
 
-## Blit mini 旗徽|族徽 onto a board token image (lower-left). Player team only.
+## Blit mini token arms — Field owns; Chrome thin shim.
 static func blit_token_shield(img: Image, c, team: String = "player") -> void:
-	if img == null or c == null or str(team) != "player":
-		return
-	var S := mini(img.get_width(), img.get_height())
-	var sw := maxi(10, int(S * 0.34))
-	var sh := maxi(12, int(sw * 1.18))
-	var tex := person_shield(c, sw, sh)
-	if tex == null:
-		return
-	var simg: Image = tex.get_image()
-	if simg == null or simg.is_empty():
-		return
-	if simg.is_compressed():
-		simg.decompress()
-	simg.convert(Image.FORMAT_RGBA8)
-	var ox := 2
-	var oy := img.get_height() - sh - 2
-	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))
+	CKHeraldryField.blit_token_shield(img, c, team)
 
 ## Nation / foe shield (敌徽). Shared plate; city chrome uses make_city_nation_arms for 邦徽.
 static func nation_shield(nid: String, w: int = 40, h: int = 48) -> Texture2D:
