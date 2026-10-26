@@ -41,7 +41,7 @@ func _build() -> void:
 			alive_n += 1
 	var chips := [[Locale.t("gen2_25"), "%d" % alive_n, UIKit.OK], [Locale.t("gen2_26"), Calendar.label(), UIKit.TEXT_DIM]]
 	UIKit.top_bar(self, Locale.t("gen2_24") % GameState.surname, chips, Locale.t("gen2_27"), _back)
-	CKHeraldryChrome.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
+	CKHeraldryField.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
 	_scroll = ScrollContainer.new()
 	_scroll.name = "LineageGridScroll"
 	_scroll.position = GRID.position
@@ -112,7 +112,7 @@ func apply_mobile_layout() -> void:
 	if first:
 		MobilePage.top_bar(self, Locale.t("gen2_24") % GameState.surname, info, [[Locale.t("gen2_27"), _back]])
 	# Mobile parity: refresh 团徽 header via Chrome (same core as desktop genealogy).
-	CKHeraldryChrome.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
+	CKHeraldryField.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
 	# Keep a hard gap so band titles / cells never paint under the kin panel (mobile gate overlap).
 	var iw := minf(470.0, maxf(360.0, w * 0.34))
 	var gap := 28.0

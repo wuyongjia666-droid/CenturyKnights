@@ -66,6 +66,7 @@ func _assert_muster(page: Node, where: String) -> void:
 
 func _assert_train_field(page: Node, where: String) -> void:
 	var strip := page.find_child("TrainFocusStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "train_focus", "train_focus")
 	_ok(strip != null, "%s TrainFocusStrip" % where)
 	if strip != null:
 		var ca := strip.find_child("CastleArms", true, false)

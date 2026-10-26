@@ -15,6 +15,7 @@ func _ready() -> void:
 	await _ui_encounter_crests()
 	await _ui_mobile_travel_crests()
 	if _fails.is_empty():
+		print("ATLAS TRAVEL CAMP ENCOUNTER FIELD CREST PASS")
 		print("ATLAS TRAVEL CAMP ENCOUNTER CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -45,6 +46,10 @@ func _setup() -> void:
 	World.encounter = {}
 	World.active.clear()
 	World.travel_log.clear()
+	var src := FileAccess.get_file_as_string("res://scripts/hub/atlas_view.gd")
+	_ok(src.find("CKHeraldryField.place_travel_crest_strip") >= 0, "atlas calls Field travel")
+	_ok(src.find("CKHeraldryField.place_camp_crest_strip") >= 0, "atlas calls Field camp")
+	_ok(src.find("CKHeraldryField.place_encounter_crest_strip") >= 0, "atlas calls Field encounter")
 
 func _settle(n: int = 6) -> void:
 	for i in n:
@@ -55,6 +60,7 @@ func _assert_travel_strip(host: Node, where: String, expect_nid: String) -> void
 	_ok(strip != null, "%s TravelCrestStrip" % where)
 	if strip == null:
 		return
+	_ok(str(strip.get_meta("field_route", "")) == "travel_strip", "%s field_route" % where)
 	var ca = strip.find_child("CastleArms", true, false)
 	_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
 	if expect_nid != "":

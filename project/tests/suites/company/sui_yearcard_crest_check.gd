@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("SUI YEARCARD FIELD CREST PASS")
 		print("SUI YEARCARD CREST CHROME PASS")
 		get_tree().quit(0)
 	else:
@@ -49,7 +50,12 @@ func _boot() -> void:
 func _assert_page(page: Node, where: String) -> void:
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms" % where)
 	_ok(page.find_child("CastleBannerStrip", true, false) != null, "%s CastleBannerStrip" % where)
-	_ok(page.find_child("YearArms", true, false) != null, "%s YearArms" % where)
+	var ya = page.find_child("YearArms", true, false)
+	_ok(ya != null, "%s YearArms" % where)
+	if ya != null:
+		_ok(str(ya.get_meta("field_route", "")) == "yearcard", "%s YearArms field_route" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/sui_yearcard.gd")
+	_ok(src.find("CKHeraldryField.attach_yearcard_row_arms") >= 0, "%s hub calls Field" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")

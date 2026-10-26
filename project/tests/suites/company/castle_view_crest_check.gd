@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("CASTLE VIEW FIELD CREST PASS")
 		print("CASTLE VIEW CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -40,10 +41,13 @@ func _assert_page(page: Node, where: String) -> void:
 	var strip = page.find_child("CastleViewCrestStrip", true, false)
 	_ok(strip != null, "%s CastleViewCrestStrip" % where)
 	if strip != null:
+		_ok(str(strip.get_meta("field_route", "")) == "castle_view_strip", "%s field_route" % where)
 		var ca = strip.find_child("CastleArms", true, false)
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
 		var bn = strip.find_child("CastleViewBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_castle_view_arms", "%s CastleViewBanner" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/castle_view.gd")
+	_ok(src.find("CKHeraldryField.place_castle_view_crest_strip") >= 0, "%s hub calls Field" % where)
 
 
 func _run_desktop() -> void:
