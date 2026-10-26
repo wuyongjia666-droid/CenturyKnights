@@ -572,11 +572,13 @@ static func place_roster_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 	host.set_meta("field_route", "roster_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "RosterBanner"
 	bn.tooltip_text = Locale.t("lb_roster_arms")
 	bn.set_meta("arms_kind", "lb_roster_arms")
+	bn.set_meta("field_route", "roster_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -627,11 +629,13 @@ static func place_dialogue_crest_strip(parent: Node, at: Vector2, shield: Vector
 	host.set_meta("field_route", "dialogue_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "DialogueBanner"
 	bn.tooltip_text = Locale.t("lb_dialogue_arms")
 	bn.set_meta("arms_kind", "lb_dialogue_arms")
+	bn.set_meta("field_route", "dialogue_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -679,8 +683,10 @@ static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	host.set_meta("field_route", "shell_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.set_meta("field_route", "shell_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -1018,11 +1024,13 @@ static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vecto
 	host.set_meta("field_route", "hourglass_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "HourglassBanner"
 	bn.tooltip_text = Locale.t("lb_hourglass_arms")
 	bn.set_meta("arms_kind", "lb_hourglass_arms")
+	bn.set_meta("field_route", "hourglass_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -1068,11 +1076,13 @@ static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	host.set_meta("field_route", "blood_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "BloodBanner"
 	bn.tooltip_text = Locale.t("lb_blood_arms")
 	bn.set_meta("arms_kind", "lb_blood_arms")
+	bn.set_meta("field_route", "blood_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -1107,11 +1117,13 @@ static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 	host.set_meta("field_route", "market_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "MarketBanner"
 	bn.tooltip_text = Locale.t("lb_market_arms")
 	bn.set_meta("arms_kind", "lb_market_arms")
+	bn.set_meta("field_route", "market_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -1200,10 +1212,12 @@ static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vecto
 	host.set_meta("field_route", "gazette_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	if nid != "":
 		var nat := CKHeraldryChrome.make_gazette_nation_arms(nid, shield)
+		nat.set_meta("field_route", "gazette_nation")
 		nat.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(nat)
 		w = shield.x * 2.0 + 8.0
@@ -1257,11 +1271,13 @@ static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation
 	host.set_meta("field_route", "travel_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	var nid := str(territory_nation)
 	if nid != "":
 		var terr := CKHeraldryChrome.make_territory_arms(nid, shield)
+		terr.set_meta("field_route", "travel_territory")
 		terr.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(terr)
 		w = shield.x * 2.0 + 8.0
@@ -1283,11 +1299,13 @@ static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: 
 	host.set_meta("field_route", "camp_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	var nid := str(territory_nation)
 	if nid != "":
 		var terr := CKHeraldryChrome.make_territory_arms(nid, shield)
+		terr.set_meta("field_route", "camp_territory")
 		terr.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(terr)
 		w = shield.x * 2.0 + 8.0
@@ -1309,11 +1327,13 @@ static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: S
 	host.set_meta("field_route", "encounter_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	var nid := str(foe_nation)
 	if nid != "":
 		var foe := CKHeraldryChrome.make_nation_arms(nid, shield)
+		foe.set_meta("field_route", "encounter_foe")
 		foe.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
@@ -1338,10 +1358,12 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	host.set_meta("field_route", "city_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	if nid != "":
 		var nat := CKHeraldryChrome.make_city_nation_arms(nid, shield)
+		nat.set_meta("field_route", "city_nation")
 		nat.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(nat)
 		w = shield.x * 2.0 + 8.0
@@ -1364,11 +1386,13 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 	host.set_meta("field_route", "aftermath_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	var nid := str(foe_nation)
 	if nid != "":
 		var foe := CKHeraldryChrome.make_nation_arms(nid, shield)
+		foe.set_meta("field_route", "aftermath_foe")
 		foe.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
@@ -1392,11 +1416,13 @@ static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector
 	host.set_meta("field_route", "nation_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var w := shield.x
 	var nid := str(nation_id)
 	if nid != "":
 		var nat := CKHeraldryChrome.make_city_nation_arms(nid, shield)
+		nat.set_meta("field_route", "nation_arms")
 		nat.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(nat)
 		w = shield.x * 2.0 + 8.0
@@ -1421,11 +1447,13 @@ static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vect
 	host.set_meta("field_route", "rite_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
+	co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	var gap := 8.0
 	if heir != null:
 		var la := CKHeraldryChrome.make_person_arms(heir, shield)
 		la.name = "LeaderArms"
+		la.set_meta("field_route", "rite_leader")
 		la.position = Vector2(shield.x + gap, 0)
 		host.add_child(la)
 		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
@@ -1449,11 +1477,13 @@ static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: 
 	host.set_meta("field_route", "muster_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
+	co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	var gap := 8.0
 	if leader != null:
 		var la := CKHeraldryChrome.make_person_arms(leader, shield)
 		la.name = "LeaderArms"
+		la.set_meta("field_route", "muster_leader")
 		la.position = Vector2(shield.x + gap, 0)
 		host.add_child(la)
 		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
@@ -1479,11 +1509,13 @@ static func place_field_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	host.set_meta("field_route", "field_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "FieldBanner"
 	bn.tooltip_text = Locale.t("lb_field_arms")
 	bn.set_meta("arms_kind", "lb_field_arms")
+	bn.set_meta("field_route", "field_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -1547,12 +1579,14 @@ static func place_battle_hud_crest_strips(
 	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var player := CKHeraldryChrome.make_company_arms(sh)
 	player.name = "PlayerArms"
+	player.set_meta("field_route", "battle_hud_player")
 	player.position = lay["player_at"]
 	host.add_child(player)
 	var nid := str(foe_nation)
 	if nid != "":
 		var foe := CKHeraldryChrome.make_nation_arms(nid, sh)
 		foe.name = "EnemyArms"
+		foe.set_meta("field_route", "battle_hud_enemy")
 		foe.position = lay["enemy_at"]
 		host.add_child(foe)
 	host.set_meta("foe_nation", nid)
@@ -1648,11 +1682,13 @@ static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	host.set_meta("field_route", "skill_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "SkillBanner"
 	bn.tooltip_text = Locale.t("lb_skill_arms")
 	bn.set_meta("arms_kind", "lb_skill_arms")
+	bn.set_meta("field_route", "skill_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
