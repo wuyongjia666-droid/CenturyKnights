@@ -173,3 +173,9 @@
 - 各章 `tavern` 拍在 `_ret_mv3` 后、`_tvp1` 前加 `_brd1`–`_brd6` 挂板前息口头，全库去重；收束非旁白。
 - 验收：`content_season_board_approach_chain_check` — hub chip → 板前针口头。
 - 不碰 `_arr` / `_tvp` / `_tvn` / `_tvx` / `_rtn` / `_lop` / `_cls` / `_wex` / `_ink` / `_aud`。
+
+## 板后耳语口头加厚（after-board-hush）
+
+- 各章 `tavern` 拍在 `_tvp6` 后、`_tvn1` 前加 `_aft1`–`_aft6` 板后耳语口头，全库去重；收束非旁白。
+- 验收：`content_season_after_board_hush_chain_check` — hub chip → 板后针口头。
+- 不碰 `_arr`/`_tvp`/`_tvn`/`_tvx`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`。
