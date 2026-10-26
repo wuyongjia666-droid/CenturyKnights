@@ -508,6 +508,8 @@ atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn
 atlas_season_winter,冬,Winter
 atlas_chip_season,季,Season
+atlas_chip_seal_bypass,旁路,Bypass
+atlas_chip_seal_days,%d 日,%d d
 atlas_ration_label,日耗粮,Rations/day
 atlas_ration_value,%d（%s %s）,%d (%s %s)
 atlas_ration_value_weather,%d（%s·%s %s）,%d (%s·%s %s)
