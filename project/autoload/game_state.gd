@@ -1059,6 +1059,9 @@ func holding_level(hid: String) -> int:
 func unlock_holding(hid: String) -> String:
 	return CKEconomyState.unlock_holding(self, hid)
 
+func holding_upgrade_preview(hid: String) -> Dictionary:
+	return CKEconomyState.holding_upgrade_preview(self, hid)
+
 func upgrade_holding(hid: String) -> Dictionary:
 	return CKEconomyState.upgrade_holding(self, hid)
 

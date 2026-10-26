@@ -623,3 +623,13 @@ smith_forge_short_silver,购料+工钱不足（需 %d 银）,Need %d silver for 
 smith_forge_bought_mats_done,打造完成：「%s」（工钱 %d · 购料 %d 银）,Forged "%s" (labor %d · mats %d silver)
 smith_forge_buy_mats_btn,购料打造 · %d,Buy mats & forge · %d
 smith_forge_why_buy_mats,缺料可市集购入再打造（购料 %d + 工钱 %d）。,Missing mats — buy at market then forge (mats %d + labor %d).
+holding_upgrade_locked,尚未拥有此属地,Holding not owned
+holding_upgrade_maxed,属地已满级,Holding already max level
+holding_upgrade_short,需 %d银/%d粮,Need %d silver / %d food
+holding_upgrade_log,属地升级：%s → Lv%d,Holding upgrade: %s → Lv%d
+holding_upgrade_ok,%s 升至 Lv%d,%s raised to Lv%d
+holding_echo_upgrade,升级·%s→Lv%d（-%d银/-%d粮）,Upgrade · %s→Lv%d (-%d silver / -%d food)
+holding_upgrade_btn,升级属地,Upgrade holding
+holding_upgrade_cost_tip,%d银/%d粮 → Lv%d,%d silver / %d food → Lv%d
+holding_upgrade_short_tip,缺料·%s,Short · %s
+holding_upgrade_max_tip,已满级,Already max

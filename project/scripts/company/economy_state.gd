@@ -191,23 +191,48 @@ static func unlock_holding(host, hid: String) -> String:
 	host.mark_dirty()
 	return "属地解锁：%s（月结产出）" % nm
 
-static func upgrade_holding(host, hid: String) -> Dictionary:
+static func holding_upgrade_preview(host, hid: String) -> Dictionary:
+	## Cost / gate readout for holding upgrade (UI + E2E).
 	if not host.holdings.has(hid):
-		return {"ok": false, "msg": "尚未拥有此属地"}
+		return {"ok": false, "hid": hid, "lv": 0, "next": 0, "cost_s": 0, "cost_f": 0, "short": true, "maxed": false, "locked": true}
 	var lv = CKEconomyState.holding_level(host, hid)
 	if lv >= 3:
-		return {"ok": false, "msg": "属地已满级"}
+		return {"ok": true, "hid": hid, "lv": lv, "next": lv, "cost_s": 0, "cost_f": 0, "short": false, "maxed": true, "locked": false}
 	var cost_s = 40 * lv
 	var cost_f = 8 * lv
-	if host.silver < cost_s or host.food < cost_f:
-		return {"ok": false, "msg": "需 %d银/%d粮" % [cost_s, cost_f]}
+	return {
+		"ok": true,
+		"hid": hid,
+		"lv": lv,
+		"next": lv + 1,
+		"cost_s": cost_s,
+		"cost_f": cost_f,
+		"short": host.silver < cost_s or host.food < cost_f,
+		"maxed": false,
+		"locked": false,
+	}
+
+static func upgrade_holding(host, hid: String) -> Dictionary:
+	var prev: Dictionary = CKEconomyState.holding_upgrade_preview(host, hid)
+	if bool(prev.get("locked", false)):
+		return {"ok": false, "msg": Locale.t("holding_upgrade_locked"), "preview": prev}
+	if bool(prev.get("maxed", false)):
+		return {"ok": false, "msg": Locale.t("holding_upgrade_maxed"), "preview": prev}
+	var cost_s = int(prev.get("cost_s", 0))
+	var cost_f = int(prev.get("cost_f", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("holding_upgrade_short", [cost_s, cost_f]), "preview": prev}
+	var nm = str(HOLDING_DEFS[hid].get("name", hid))
+	var next_lv = int(prev.get("next", 0))
 	host.silver -= cost_s
 	host.food -= cost_f
-	host.holdings[hid]["level"] = lv + 1
-	host.log_event("属地升级：%s → Lv%d" % [HOLDING_DEFS[hid].name, lv + 1])
+	host.holdings[hid]["level"] = next_lv
+	host.log_event(Locale.t("holding_upgrade_log", [nm, next_lv]))
+	CKEconomyState.month_echo_note("upgrade", Locale.t("holding_echo_upgrade", [nm, next_lv, cost_s, cost_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	host.mark_dirty()
-	return {"ok": true, "msg": "%s 升至 Lv%d%s" % [HOLDING_DEFS[hid].name, lv + 1, ("；" + " / ".join(amb)) if amb else ""]}
+	var extra = ("；" + " / ".join(amb)) if amb else ""
+	return {"ok": true, "msg": Locale.t("holding_upgrade_ok", [nm, next_lv]) + extra, "preview": prev, "lv": next_lv}
 
 static func assign_steward(host, hid: String, cid: String) -> Dictionary:
 	if not host.holdings.has(hid):
@@ -1115,7 +1140,7 @@ static func month_echo_lines() -> Array:
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
-		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol",
+		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "upgrade",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
