@@ -1,6 +1,6 @@
 extends Node
 ## Hub → 章 → 酒馆离店口头 `_tvx`。
-## S01–S10；插在 `_tvn` 后、`ret_mv` 前。不碰 `_bpl`/`_arr`/`_lop`/`_cls`/`_sec`。
+## S01–S10；插在 `_tvn`（及可选 `_sth`）后、`ret_mv` 前。不碰 `_bpl`/`_arr`/`_lop`/`_cls`/`_sec`/`_sth`。
 ## 禁 EmptyHost / month_echo / 新 season。
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
@@ -125,12 +125,14 @@ func _static_plate_lines(cid: String, beat, needle: String) -> String:
 	var got_needle := false
 	var last_tvn := -1
 	var first_tvx := -1
+	var lids: Array = []
 	var idx := 0
 	for line in beat.get("lines", []):
 		if err != "":
 			break
 		var lid := str(line.get("id", ""))
 		var text := str(line.get("text", ""))
+		lids.append(lid)
 		if lid.find("_tvn") >= 0:
 			last_tvn = idx
 		if text == needle:
@@ -153,8 +155,15 @@ func _static_plate_lines(cid: String, beat, needle: String) -> String:
 		err = "%s plates %d" % [cid, found]
 	elif err == "" and not got_needle:
 		err = "%s needle mismatch" % cid
-	elif err == "" and (last_tvn < 0 or first_tvx != last_tvn + 1):
+	elif err == "" and (last_tvn < 0 or first_tvx < 0 or first_tvx <= last_tvn):
 		err = "%s tvx not after tvn (tvn=%d tvx=%d)" % [cid, last_tvn, first_tvx]
+	elif err == "":
+		# `_sth` 席末静口可夹在 `_tvn` 与 `_tvx` 之间
+		for i in range(last_tvn + 1, first_tvx):
+			var mid := str(lids[i])
+			if mid.find("_sth") < 0:
+				err = "%s gap before tvx not sth (%s)" % [cid, mid]
+				break
 	return err
 
 
