@@ -1233,34 +1233,35 @@ func _tab_market() -> void:
 		y0 = 156.0 if not _mob else float(48 + MobilePage.HIT + 16)
 	var pickups: Array = World.gather_pickups_here() if city == World.pos else []
 	if not pickups.is_empty():
-		var gq: Dictionary = pickups[0]
-		var need_g := str(gq.get("good", ""))
-		var need_q := maxi(0, int(gq.get("qty", 0)) - World.have_good(need_g))
+		var offer: Dictionary = World.gather_buy_offer()
+		var need_g := str(offer.get("good", ""))
+		var need_q := int(offer.get("qty", 0))
+		var cost_n := int(offer.get("cost", 0))
 		var gb := Panel.new()
 		gb.name = "GatherSupplyStrip"
 		var gy := y0
 		gb.position = Vector2(18, gy)
-		gb.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 12))
+		gb.size = Vector2(812, 56 if not _mob else float(MobilePage.HIT + 20))
 		gb.add_theme_stylebox_override("panel", UIKit.flat_box(Color(UIKit.OK.r, UIKit.OK.g, UIKit.OK.b, 0.12), Color(UIKit.OK, 0.4), 8))
 		p.add_child(gb)
-		var gl := UIKit.body_label(Locale.t("wq_mkt_gather_banner") % [World.good_name(need_g), int(gq.get("qty", 0)), need_q], UIKit.OK, 12)
+		var banner := Locale.t("wq_mkt_gather_banner") % [str(offer.get("good_name", need_g)), int(pickups[0].get("qty", need_q)), need_q]
+		if cost_n > 0:
+			banner += " · " + (Locale.t("wq_mkt_gather_cost") % cost_n)
+		var turnin_days := int(offer.get("turnin_days", 0))
+		if turnin_days > 0:
+			banner += " · " + (Locale.t("wq_mkt_gather_turnin_days") % turnin_days)
+		var gl := UIKit.body_label(banner, UIKit.OK, 12)
 		gl.name = "GatherSupplyLine"
 		gl.position = Vector2(10, 6)
-		gl.size = Vector2(560, 32)
+		gl.size = Vector2(560, 44)
 		gl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		gb.add_child(gl)
 		var buy_n := maxi(1, need_q)
 		var gbb := UIKit.cta_button(Locale.t("wq_mkt_gather_buy") % buy_n, "A", 200, 32 if not _mob else MobilePage.HIT)
 		gbb.name = "GatherBuy"
-		gbb.position = Vector2(590, 6 if not _mob else 4)
-		var stock_ok := World.stock(city, need_g) >= buy_n
-		var silver_ok := GameState.silver >= World.quote_buy(city, need_g, buy_n)
-		var store_kind := str(World.goods.get(need_g, {}).get("store", "")) if World.goods.has(need_g) else ""
-		var cargo_ok := store_kind != "" or World.cargo_used() + buy_n <= World.cargo_cap()
-		gbb.disabled = not (stock_ok and silver_ok and cargo_ok) or need_g == ""
-		var gid := need_g
-		var gqty := buy_n
-		gbb.pressed.connect(func(): _do(World.market_buy(city, gid, gqty)))
+		gbb.position = Vector2(590, 10 if not _mob else 4)
+		gbb.disabled = not bool(offer.get("ok", false))
+		gbb.pressed.connect(func(): _do(World.gather_buy_here()))
 		gb.add_child(gbb)
 		y0 = gy + gb.size.y + 10.0
 	var hdr := HBoxContainer.new()

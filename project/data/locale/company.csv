@@ -241,6 +241,7 @@ opening_herb_escort_foe,劫道匪帮,Road bandits
 opening_herb_escort_missing,开局药材护送未就绪,Opening herb escort not ready
 opening_herb_escort_active,已在护送药材,Already escorting the herbs
 wq_accept_ok,接下委托「%s」——期限 %d 日。下一步：%s,Accepted「%s」— %d days left. Next: %s
+wq_accept_supply_days,补给城「%s」约 %d 日 · 粮 %d,Supply city "%s" ~%d days · food %d
 wq_hint_travel,打开舆图，启程前往「%s」（图上有 ◆ 标记）,Open the atlas and travel to 「%s」(◆ on the map)
 wq_hint_fight,打开舆图前往「%s」，抵达后点「进剿目标」,Open the atlas, reach 「%s」, then Engage
 wq_hint_clear,打开舆图，沿「%s」一带的危险路段行军清剿,Open the atlas and clear the danger roads near 「%s」
@@ -250,6 +251,14 @@ wq_hint_gather_buy,打开舆图前往「%s」市集，购入「%s」×%d（图�
 wq_board_supply,采购城,Supply city
 wq_mkt_gather_banner,委托急需：%s ×%d（还差 %d）——下方「委托购入」一键买齐,Commission needs: %s ×%d (%d short) — use GatherBuy below
 wq_mkt_gather_buy,委托购入 ×%d,GatherBuy ×%d
+wq_mkt_gather_cost,约 %d 银,~%d silver
+wq_mkt_gather_turnin_days,交货尚余 %d 日,%d days to turn-in
+wq_gather_buy_none,此处无可购入的物产委托,No gather commission to buy here
+wq_gather_buy_blocked,无法购入物产委托,Cannot buy gather goods
+wq_gather_buy_silver,银币不足（需 %d）,Not enough silver (need %d)
+wq_gather_buy_cargo,货舱已满,Cargo full
+wq_gather_buy_stock,市集存货不足,Market stock short
+wq_gather_buy_done,委托购入 %s ×%d（-%d 银）,Commission buy %s ×%d (−%d silver)
 wq_hint_turnin,打开舆图前往「%s」交付（图上有 ✓ 标记）,Open the atlas and turn in at 「%s」(✓ on the map)
 wq_goto_atlas,去舆图看目标,See objective on atlas
 wq_atlas_focus,委托「%s」目标：%s —— 选中后点「启程前往」,Commission 「%s」 → %s — select it, then Travel

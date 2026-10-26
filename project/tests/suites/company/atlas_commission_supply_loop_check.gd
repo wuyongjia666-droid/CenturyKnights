@@ -120,6 +120,9 @@ func _api_supply_stamp() -> void:
 	_ok(Locale.t("wq_hint_gather_buy") != "wq_hint_gather_buy", "locale wq_hint_gather_buy")
 	_ok(Locale.t("atlas_enter_pickup") != "atlas_enter_pickup", "locale atlas_enter_pickup")
 	_ok(Locale.t("wq_accept_wrong_city") != "wq_accept_wrong_city", "locale wq_accept_wrong_city")
+	_ok(Locale.t("wq_gather_buy_done") != "wq_gather_buy_done", "locale wq_gather_buy_done")
+	_ok(Locale.t("wq_mkt_gather_cost") != "wq_mkt_gather_cost", "locale wq_mkt_gather_cost")
+	_ok(Locale.t("wq_accept_supply_days") != "wq_accept_supply_days", "locale wq_accept_supply_days")
 
 
 func _api_accept_wrong_city() -> void:
@@ -156,6 +159,10 @@ func _api_full_loop() -> void:
 		return
 	_ok(str(acc.get("guide_node", "")) == _supply, "accept guide → supply %s" % acc.get("guide_node", ""))
 	_ok(str(acc.get("hint", "")).find(_supply_name) >= 0, "hint names supply %s" % acc.get("hint", ""))
+	var march: Dictionary = acc.get("supply_march", {})
+	_ok(str(march.get("supply", "")) == _supply, "accept supply_march.supply %s" % march.get("supply", ""))
+	_ok(int(march.get("days", -1)) >= 0, "accept supply_march.days %s" % march.get("days", ""))
+	_ok(str(acc.get("msg", "")).find(_supply_name) >= 0 or int(march.get("days", 0)) == 0, "accept msg carries supply days")
 	_ok(World.quest_guide_node(World.quest_by_id(_qid)) == _supply, "guide_node supply")
 
 	var marks: Dictionary = World.quest_markers()
@@ -173,15 +180,30 @@ func _api_full_loop() -> void:
 		World._init_market(_supply)
 	var picks: Array = World.gather_pickups_here()
 	_ok(picks.size() >= 1, "gather_pickups_here %d" % picks.size())
-	_ok(World.stock(_supply, _good) >= _qty, "stock enough %d need %d" % [World.stock(_supply, _good), _qty])
+
+	# Force stock short so top-up path must fire (produce city only).
+	if not World.market.has(_supply):
+		World._init_market(_supply)
+	World.market[_supply][_good] = 0
+	var offer0: Dictionary = World.gather_buy_offer()
+	_ok(bool(offer0.get("needed", false)), "gather_buy_offer needed")
+	_ok(str(offer0.get("good", "")) == _good, "offer good")
+	_ok(int(offer0.get("qty", 0)) == _qty, "offer qty %s" % offer0.get("qty", ""))
+	_ok(bool(offer0.get("produce_here", false)), "produce_here at supply")
+	_ok(bool(offer0.get("will_top_up", false)), "will_top_up when stock 0")
+	_ok(bool(offer0.get("ok", false)), "offer ok after projected top-up: %s" % offer0)
+	_ok(int(offer0.get("cost", 0)) > 0, "offer cost > 0")
+	_ok(int(offer0.get("turnin_days", -1)) >= 0, "turnin_days set")
 
 	var silver0 := int(GameState.silver)
-	var buy: Dictionary = World.market_buy(_supply, _good, _qty)
-	_ok(bool(buy.get("ok", false)), "market buy: %s" % buy.get("msg", ""))
+	var buy: Dictionary = World.gather_buy_here()
+	_ok(bool(buy.get("ok", false)), "gather_buy_here: %s" % buy.get("msg", ""))
 	if not bool(buy.get("ok", false)):
 		return
+	_ok(bool(buy.get("ready", false)), "buy reports ready")
 	_ok(World.have_good(_good) >= _qty, "cargo has good")
 	_ok(int(GameState.silver) < silver0, "silver spent")
+	_ok(World.stock(_supply, _good) >= 0, "stock mutated after buy")
 	var live := World.quest_by_id(_qid)
 	_ok(str(live.get("state", "")) == "ready", "gather ready after buy state=%s" % live.get("state", ""))
 	_ok(World.gather_pickups_here().is_empty(), "pickups clear when ready")
@@ -281,7 +303,9 @@ func _ui_board_and_market() -> void:
 		await get_tree().process_frame
 	var strip := mkt.find_child("GatherSupplyStrip", true, false)
 	_ok(strip != null, "GatherSupplyStrip on market")
-	_ok(_text(mkt, "GatherSupplyLine").find(World.good_name(_good)) >= 0, "banner names good %s" % _text(mkt, "GatherSupplyLine"))
+	var banner := _text(mkt, "GatherSupplyLine")
+	_ok(banner.find(World.good_name(_good)) >= 0, "banner names good %s" % banner)
+	_ok(banner.find("银") >= 0 or banner.find("silver") >= 0 or banner.find("~") >= 0, "banner shows cost %s" % banner)
 	var buy_btn := mkt.find_child("GatherBuy", true, false) as Button
 	_ok(buy_btn != null and not buy_btn.disabled, "GatherBuy enabled")
 	if buy_btn and not buy_btn.disabled:
