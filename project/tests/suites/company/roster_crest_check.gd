@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: roster RosterCrestStrip + RosterRowArms + HireArms dossier, desk + mobile.
+## Fat heraldry E2E: roster via CKHeraldryField (RosterCrestStrip + RosterRowArms + HireArms), desk + mobile.
 
 const SCN := preload("res://scenes/hub/roster.tscn")
 var _fails: Array = []
@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("ROSTER FIELD CREST PASS")
 		print("ROSTER CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -42,6 +43,7 @@ func _assert_page(page: Node, where: String) -> void:
 	var strip = page.find_child("RosterCrestStrip", true, false)
 	_ok(strip != null, "%s RosterCrestStrip" % where)
 	if strip != null:
+		_ok(str(strip.get_meta("field_route", "")) == "roster_strip", "%s strip field_route" % where)
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s strip CastleArms" % where)
 		var bn = strip.find_child("RosterBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_roster_arms", "%s RosterBanner" % where)
@@ -51,8 +53,12 @@ func _assert_page(page: Node, where: String) -> void:
 	_ok(rows.size() >= 1, "%s RosterRowArms count=%d" % [where, rows.size()])
 	for a in rows:
 		_ok(str(a.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s RosterRowArms kind" % where)
-	## Dossier hire chrome (already wired) still present after select.
-	_ok(page.find_child("HireArms", true, false) != null, "%s HireArms dossier" % where)
+		_ok(str(a.get_meta("field_route", "")) == "roster_row", "%s RosterRowArms field_route" % where)
+	## Hire plate Field arms still present after select.
+	var hire = page.find_child("HireArms", true, false)
+	_ok(hire != null, "%s HireArms dossier" % where)
+	if hire != null:
+		_ok(str(hire.get_meta("field_route", "")) == "hire_plate", "%s HireArms field_route" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")
