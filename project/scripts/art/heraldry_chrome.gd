@@ -439,123 +439,25 @@ static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vect
 	parent.add_child(host)
 	return host
 
-## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip).
+## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip). Field-owned.
 static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("SuccessionCrestStrip")
-	if old:
-		old.name = "_SuccessionCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "SuccessionCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var co := make_company_arms(shield)
-	co.position = Vector2.ZERO
-	host.add_child(co)
-	var gap := 8.0
-	if heir != null:
-		var la := make_person_arms(heir, shield)
-		la.name = "LeaderArms"
-		la.position = Vector2(shield.x + gap, 0)
-		host.add_child(la)
-		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
-	else:
-		host.size = Vector2(shield.x, shield.y)
-	host.set_meta("has_heir", heir != null)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_succession_crest_strip(parent, heir, at, shield)
 
-## Heir-trial duel strip: 团徽 + heir A + heir B 族徽|旗徽 (DuelCrestStrip). Missing side omitted.
+
+## Heir-trial duel strip: 团徽 + A + B. Field-owned.
 static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("DuelCrestStrip")
-	if old:
-		old.name = "_DuelCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "DuelCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var gap := 8.0
-	var x := 0.0
-	var co := make_company_arms(shield)
-	co.position = Vector2(x, 0)
-	host.add_child(co)
-	x += shield.x + gap
-	if left_c != null:
-		var la := make_person_arms(left_c, shield)
-		la.name = "LeftArms"
-		la.position = Vector2(x, 0)
-		host.add_child(la)
-		x += shield.x + gap
-	if right_c != null:
-		var ra := make_person_arms(right_c, shield)
-		ra.name = "RightArms"
-		ra.position = Vector2(x, 0)
-		host.add_child(ra)
-		x += shield.x
-	else:
-		x -= gap
-	host.size = Vector2(maxf(shield.x, x), shield.y)
-	host.set_meta("has_left", left_c != null)
-	host.set_meta("has_right", right_c != null)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_duel_crest_strip(parent, left_c, right_c, at, shield)
 
-## Marriage house-card plate: 族徽|旗徽 as HouseArms (lower-left of portrait plate).
+
+## Marriage house-card plate HouseArms. Field-owned.
 static func attach_house_card_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(32, 38)) -> void:
-	if parent == null or c == null:
-		return
-	var old := parent.get_node_or_null("HouseArms")
-	if old:
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "HouseArms"
-	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
-	parent.add_child(arms)
+	CKHeraldryField.attach_house_card_arms(parent, c, plate, arms_sz)
 
-## Marriage protocol strip: 团徽 + left (suitor) + right (candidate/spouse) 族徽|旗徽.
-## Never marshalls/impales — three separate shields. Re-place renames dying node.
+
+## Marriage protocol strip: 团徽 + suitor + candidate. Field-owned.
 static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("MarriageCrestStrip")
-	if old:
-		old.name = "_MarriageCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "MarriageCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var gap := 8.0
-	var x := 0.0
-	var co := make_company_arms(shield)
-	co.position = Vector2(x, 0)
-	host.add_child(co)
-	x += shield.x + gap
-	if left_c != null:
-		var la := make_person_arms(left_c, shield)
-		la.name = "LeftArms"
-		la.position = Vector2(x, 0)
-		host.add_child(la)
-		x += shield.x + gap
-	if right_c != null:
-		var ra := make_person_arms(right_c, shield)
-		ra.name = "RightArms"
-		ra.position = Vector2(x, 0)
-		host.add_child(ra)
-		x += shield.x
-	else:
-		x -= gap
-	host.size = Vector2(maxf(shield.x, x), shield.y)
-	host.set_meta("has_left", left_c != null)
-	host.set_meta("has_right", right_c != null)
-	parent.add_child(host)
-	return host
-## Commission-board issuer crest: 团徽 when the post is from home (hq), else nation 敌徽-style arms.
+	return CKHeraldryField.place_marriage_crest_strip(parent, left_c, right_c, at, shield)
+
 static func issuer_is_home(issuer_id: String) -> bool:
 	## Company seat posts use 团徽; every other city uses its nation plate.
 	var id := str(issuer_id)
