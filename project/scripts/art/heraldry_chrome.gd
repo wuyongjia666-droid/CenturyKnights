@@ -891,6 +891,12 @@ static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> void:
 	CKHeraldryField.attach_skill_person_arms(host, c, arms_sz)
 
+## Lineage-info dossier plate person arms (LineageInfoArms).
+static func attach_lineage_info_arms(parent: Control, c, arms_sz: Vector2 = Vector2(48, 58)) -> TextureRect:
+	return CKHeraldryField.attach_lineage_info_arms(parent, c, arms_sz)
+
+
+
 
 ## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip).
 static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
