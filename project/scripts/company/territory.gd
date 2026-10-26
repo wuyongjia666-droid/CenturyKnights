@@ -78,12 +78,14 @@ static func state(id: String) -> Dictionary:
 		"unrest": int(d.get("unrest", 0)), "stockade": bool(d.get("stockade", false)), "contract": bool(d.get("contract", false)),
 		"threat": d.get("threat", {}) if typeof(d.get("threat", {})) == TYPE_DICTIONARY else {},
 		"cache_food": int(d.get("cache_food", 0)),
+		"contest": d.get("contest", {}) if typeof(d.get("contest", {})) == TYPE_DICTIONARY else {},
 	}
 
 static func _put(id: String, s: Dictionary) -> void:
 	var empty_threat := (s.threat as Dictionary).is_empty()
 	var empty_cache := int(s.get("cache_food", 0)) <= 0
-	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and empty_threat and empty_cache and not bool(s.get("stockade", false)):
+	var cont: Dictionary = s.get("contest", {}) if typeof(s.get("contest", {})) == TYPE_DICTIONARY else {}
+	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and empty_threat and empty_cache and cont.is_empty() and not bool(s.get("stockade", false)):
 		_st().sites.erase(id)
 	else:
 		_st().sites[id] = s
@@ -119,6 +121,7 @@ static func from_save(raw) -> Dictionary:
 			var r: Dictionary = rows[id]
 			var th = r.get("threat", {})
 			var stockade := bool(r.get("stockade", false))
+			var ct = r.get("contest", {})
 			out.sites[sid] = {
 				"owner": str(r.get("owner", NEUTRAL)),
 				"garrison": clampi(int(r.get("garrison", 0)), 0, int(rule("garrison_max", 3)) + (1 if stockade else 0)),
@@ -126,6 +129,7 @@ static func from_save(raw) -> Dictionary:
 				"unrest": maxi(0, int(r.get("unrest", 0))),
 				"threat": th if typeof(th) == TYPE_DICTIONARY else {},
 				"cache_food": maxi(0, int(r.get("cache_food", 0))),
+				"contest": ct if typeof(ct) == TYPE_DICTIONARY else {},
 			}
 	out.stockade_credit = maxi(0, int(raw.get("stockade_credit", 0)))
 	var nw = raw.get("news", [])
@@ -190,6 +194,7 @@ static func capture(id: String, how: String) -> Dictionary:
 	var st := state(id)
 	st.owner = OWN
 	st.threat = {}
+	st.contest = {}
 	st.garrison = maxi(1, int(st.garrison)) if how == "chain" or how == "reclaim" else 0
 	if how == "assault":
 		st.unrest = int(rule("unrest_months", 2))
@@ -216,6 +221,7 @@ static func lose(id: String, to: String) -> Dictionary:
 	st.contract = false
 	st.unrest = 0
 	st.threat = {}
+	st.contest = {}
 	_put(id, st)
 	_log(Locale.t("terr_13") % [site(id).name, who])
 	# Improve-plan #1: contest report card + auto「反夺」commission on the anchor board.
@@ -556,10 +562,296 @@ static func open_cache(id: String) -> Dictionary:
 		"msg": Locale.t("atlas_cache_open_ok") % [str(site(id).get("name", id)), qty]}
 
 
+## Under siege: haul the granary out before the raid. Prefer another owned stockade; else company food.
+## Road spoilage: lose ~1 food per 2 travel-days (min 0). Clears cache on the threatened site.
+static func evacuate_cache(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if not bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+	if (st.threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_convoy_need_threat")}
+	var qty := maxi(0, int(st.get("cache_food", 0)))
+	if qty <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id))}
+	var from_name := str(site(id).get("name", id))
+	var from_anchor := str(site(id).get("anchor", ""))
+	# Destination: nearest other owned stockade (ignore empty-cache preference — any stockade).
+	var dest_id := ""
+	var dest_anchor := ""
+	var dest_name := ""
+	var days := 0
+	var best := 999999
+	for oid in owned_ids():
+		if oid == id:
+			continue
+		var ost := state(oid)
+		if not bool(ost.stockade):
+			continue
+		var oanch := str(site(oid).get("anchor", ""))
+		if oanch == "" or not World.nodes.has(oanch):
+			continue
+		var dist := 3
+		if from_anchor != "" and from_anchor == str(World.pos):
+			var pv: Dictionary = World.travel_preview(oanch)
+			if bool(pv.get("ok", false)):
+				dist = int(pv.get("days", 3))
+		elif from_anchor != "" and oanch != from_anchor:
+			dist = 4
+		else:
+			dist = 1
+		if dist < best:
+			best = dist
+			dest_id = oid
+			dest_anchor = oanch
+			dest_name = str(site(oid).get("name", oid))
+			days = dist
+	var spoilage := mini(qty - 1, int(days / 2)) if qty > 1 else 0
+	var delivered := qty - spoilage
+	st.cache_food = 0
+	_put(id, st)
+	var via := "company"
+	if dest_id != "":
+		var dst := state(dest_id)
+		dst.cache_food = int(dst.get("cache_food", 0)) + delivered
+		_put(dest_id, dst)
+		via = "stockade"
+	else:
+		GameState.food += delivered
+	var msg := ""
+	if via == "stockade":
+		msg = Locale.t("atlas_convoy_ok_stockade") % [from_name, delivered, dest_name, spoilage]
+	else:
+		msg = Locale.t("atlas_convoy_ok_company") % [from_name, delivered, spoilage]
+	_log(msg)
+	World.mark_siege_convoy({
+		"from_id": id,
+		"from_name": from_name,
+		"qty": qty,
+		"delivered": delivered,
+		"spoilage": spoilage,
+		"dest_id": dest_id,
+		"dest_name": dest_name,
+		"dest_anchor": dest_anchor,
+		"via": via,
+		"days": days,
+	})
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "qty": qty, "delivered": delivered, "spoilage": spoilage,
+		"dest_id": dest_id, "via": via, "msg": msg}
+
+
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
+## Chance a neutral site draws multi-faction tug-of-war this month.
+static func neutral_contest_chance(id: String) -> float:
+	var s := site(id)
+	if s.is_empty() or owned(id) or owner(id) != NEUTRAL:
+		return 0.0
+	var st := state(id)
+	if not (st.contest as Dictionary).is_empty() or not (st.threat as Dictionary).is_empty():
+		return 0.0
+	var p := rule("neutral_contest_base", 0.04) + rule("contest_per_danger", 0.02) * int(s.danger)
+	if not _rival_in(str(s.nation)).is_empty():
+		p += rule("contest_rival_near", 0.04)
+	return clampf(p, 0.0, rule("neutral_contest_cap", 0.18))
+
+
+## Start a multi-faction race on a still-neutral site (rivals ± bandits).
+static func start_neutral_contest(id: String, force_factions: Array = []) -> Dictionary:
+	var s := site(id)
+	if s.is_empty() or is_home(id):
+		return {}
+	if owner(id) != NEUTRAL:
+		return {}
+	var st := state(id)
+	if not (st.contest as Dictionary).is_empty():
+		return st.contest
+	var factions: Array = []
+	if not force_factions.is_empty():
+		for f in force_factions:
+			if typeof(f) == TYPE_DICTIONARY:
+				factions.append(f.duplicate(true))
+	else:
+		var rv := _rival_in(str(s.nation))
+		if not rv.is_empty():
+			factions.append({
+				"id": "rival:%s" % str(rv.id),
+				"name": str(rv.name),
+				"pressure": 2 + int(s.danger),
+			})
+		# Second pressure: another rival company if any, else local bandits.
+		var other: Dictionary = {}
+		for r2 in World.rivals:
+			if str(r2.get("id", "")) == str(rv.get("id", "")):
+				continue
+			other = r2
+			break
+		if not other.is_empty():
+			factions.append({
+				"id": "rival:%s" % str(other.id),
+				"name": str(other.name),
+				"pressure": 1 + int(s.danger),
+			})
+		else:
+			factions.append({
+				"id": "bandit",
+				"name": Locale.t("atlas_contest_bandit") % World.nations.get(str(s.nation), {}).get("name", ""),
+				"pressure": 1 + int(s.danger),
+			})
+	if factions.is_empty():
+		factions.append({
+			"id": "bandit",
+			"name": Locale.t("atlas_contest_bandit") % World.nations.get(str(s.nation), {}).get("name", ""),
+			"pressure": 1,
+		})
+	st.contest = {
+		"factions": factions,
+		"months": 0,
+		"day": World.days_total,
+		"id": id,
+		"name": str(s.name),
+		"anchor": str(s.anchor),
+		"anchor_name": str(World.node(str(s.anchor)).get("name", s.anchor)),
+		"nation": str(s.nation),
+	}
+	_put(id, st)
+	_log(Locale.t("atlas_contest_log") % [str(s.name), _faction_names(factions)])
+	World.world_changed.emit()
+	_emit_neutral_contest(id)
+	return st.contest
+
+
+static func _faction_names(factions: Array) -> String:
+	var bits: Array = []
+	for f in factions:
+		bits.append(str(f.get("name", "")))
+	return " / ".join(bits)
+
+
+static func _emit_neutral_contest(id: String) -> void:
+	var st := state(id)
+	var c: Dictionary = st.contest
+	if c.is_empty():
+		return
+	var payload := {
+		"id": id,
+		"name": str(c.get("name", site(id).get("name", id))),
+		"anchor": str(c.get("anchor", site(id).get("anchor", ""))),
+		"anchor_name": str(c.get("anchor_name", "")),
+		"nation": str(c.get("nation", site(id).get("nation", ""))),
+		"factions": (c.get("factions", []) as Array).duplicate(true),
+		"months": int(c.get("months", 0)),
+		"phase": "imminent" if int(c.get("months", 0)) >= 1 else "declared",
+	}
+	World.mark_neutral_contest(payload)
+
+
+## Advance / resolve open neutral contests. Returns list of resolved rows.
+static func tick_neutral_contests(force_resolve: bool = false) -> Array:
+	var resolved: Array = []
+	for id in site_ids():
+		if owner(id) != NEUTRAL:
+			continue
+		var st := state(id)
+		var c: Dictionary = st.contest
+		if c.is_empty():
+			continue
+		if force_resolve or int(c.get("months", 0)) >= 1:
+			var winner: Dictionary = _contest_winner(c.get("factions", []))
+			var wid := str(winner.get("id", "bandit"))
+			var wname := str(winner.get("name", ""))
+			st.contest = {}
+			if wid.begins_with("rival:"):
+				st.owner = wid
+				st.garrison = 1
+			else:
+				# Bandits scatter the hold — site stays free but unrest spikes.
+				st.owner = NEUTRAL
+				st.garrison = 0
+				st.unrest = maxi(int(st.unrest), 1)
+			_put(id, st)
+			_log(Locale.t("atlas_contest_resolved") % [site(id).name, wname])
+			resolved.append({"id": id, "name": str(site(id).name), "winner": wid, "winner_name": wname})
+			World.world_changed.emit()
+		else:
+			c["months"] = 1
+			st.contest = c
+			_put(id, st)
+			_emit_neutral_contest(id)
+	return resolved
+
+
+static func _contest_winner(factions) -> Dictionary:
+	var best: Dictionary = {}
+	var best_p := -1
+	if typeof(factions) != TYPE_ARRAY:
+		return {"id": "bandit", "name": "?", "pressure": 0}
+	for f in factions:
+		if typeof(f) != TYPE_DICTIONARY:
+			continue
+		var pr := int(f.get("pressure", 0))
+		if pr > best_p:
+			best_p = pr
+			best = f
+	if best.is_empty():
+		return {"id": "bandit", "name": "?", "pressure": 0}
+	return best
+
+
+
+static func clear_contest(id: String) -> void:
+	var st := state(id)
+	st.contest = {}
+	_put(id, st)
+
+
+static func contested_ids() -> Array:
+	var out: Array = []
+	for id in site_ids():
+		if owner(id) == NEUTRAL and not (state(id).contest as Dictionary).is_empty():
+			out.append(id)
+	return out
+
+
+## Player cuts into a neutral race: assault if on the anchor, else signal travel.
+static func intervene_contest(id: String) -> Dictionary:
+	var s := site(id)
+	if s.is_empty():
+		return {"ok": false, "msg": Locale.t("terr_01")}
+	var st := state(id)
+	if (st.contest as Dictionary).is_empty() and owner(id) == NEUTRAL:
+		# race already resolved / cleared — still allow assault if free
+		pass
+	elif (st.contest as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_contest_gone")}
+	var anchor := str(s.anchor)
+	if World.pos != anchor:
+		return {"ok": false, "need_travel": true, "anchor": anchor,
+			"msg": Locale.t("terr_05") % World.node(anchor).get("name", "")}
+	clear_contest(id)
+	World.dismiss_neutral_contest()
+	return assault(id)
+
+
+## Stand aside; contest keeps ticking on next months.
+static func watch_contest(id: String) -> Dictionary:
+	var st := state(id)
+	if (st.contest as Dictionary).is_empty():
+		World.dismiss_neutral_contest()
+		return {"ok": true, "msg": Locale.t("atlas_contest_gone")}
+	World.dismiss_neutral_contest()
+	return {"ok": true, "msg": Locale.t("atlas_contest_watch_ok") % str(site(id).name)}
+
+
+
 static func apply_month(force_roll: float = -1.0) -> String:
+	var resolved_contests: Array = tick_neutral_contests(false)
 	var ids := owned_ids()
 	if ids.is_empty():
+		# Still tick/start neutral races even with zero holdings.
+		_roll_neutral_contests(force_roll)
 		last_month_report = {}
 		return ""
 	var silver := 0
@@ -644,6 +936,7 @@ static func apply_month(force_roll: float = -1.0) -> String:
 		var rid := str(row.get("id", ""))
 		if rid != "" and _has_reclaim(rid):
 			reclaim_ids.append(rid)
+	_roll_neutral_contests(force_roll)
 	last_month_report = {
 		"silver": silver,
 		"food": food_gain,
@@ -653,10 +946,24 @@ static func apply_month(force_roll: float = -1.0) -> String:
 		"lost": lost,
 		"held": held,
 		"threats": threats,
+		"contests": resolved_contests,
+		"contest_open": contested_ids(),
 		"line": line,
 		"reclaims": reclaim_ids,
 	}
 	return line
+
+
+static func _roll_neutral_contests(force_roll: float) -> void:
+	## force_roll >= 0 is used by tests for owned-site contests; skip random neutral races then.
+	if force_roll >= 0.0:
+		return
+	for id in site_ids():
+		if owner(id) != NEUTRAL:
+			continue
+		var roll := rng.randf()
+		if roll < neutral_contest_chance(id):
+			start_neutral_contest(id)
 
 static func _deliver_good(g: String, q: int) -> int:
 	var gd: Dictionary = World.goods.get(g, {})
@@ -897,7 +1204,9 @@ static func map_markers(nation: String) -> Array:
 		var s := site(id)
 		var st := state(id)
 		out.append({"id": id, "name": s.name, "kind": s.kind, "pos": s.pos, "anchor": s.anchor, "owner": st.owner,
-			"threat": not (st.threat as Dictionary).is_empty(), "garrison": st.garrison})
+			"threat": not (st.threat as Dictionary).is_empty(),
+			"contest": not (st.contest as Dictionary).is_empty(),
+			"garrison": st.garrison})
 	return out
 
 static func summary(id: String) -> String:
@@ -916,6 +1225,8 @@ static func summary(id: String) -> String:
 	var t := "%s · %s · %s" % [s.name, kind_zh(str(s.kind)), own] + "\n" + Locale.t("terr_42") % [prod, upkeep(id)]
 	if int(st.unrest) > 0:
 		t += Locale.t("terr_43") % int(st.unrest)
+	if not (st.contest as Dictionary).is_empty():
+		t += "\n！" + Locale.t("atlas_contest_summary") % _faction_names(st.contest.get("factions", []))
 	if not (st.threat as Dictionary).is_empty():
 		t += "\n！" + Locale.t("terr_44") % st.threat.get("name", "")
 		if bool(st.threat.get("scouted", false)):
