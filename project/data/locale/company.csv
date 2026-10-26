@@ -612,3 +612,5 @@ holding_patrol_cost,%d银/%d粮,%d silver / %d food
 holding_patrol_short,缺料·%s,Short · %s
 holding_patrol_cd_tip,冷却%d,Cooldown %d
 holding_patrol_boost_tip,巡防中%d,Patrolling %d
+holding_echo_patrol_one,巡防·%s（-%d银/-%d粮）,Patrol · %s (-%d silver / -%d food)
+holding_echo_patrol_all,全堡巡防（-%d银/-%d粮）,Castle patrol (-%d silver / -%d food)

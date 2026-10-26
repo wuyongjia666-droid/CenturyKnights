@@ -281,7 +281,7 @@ static func patrol_holding(host, hid: String) -> Dictionary:
 	host.morale = mini(100, host.morale + 1)
 	host.log_event("巡防路线·%s：-%d银/-%d粮，抗劫 2 月" % [nm, cost_s, cost_f])
 	host.add_lineage_event("巡防路线抵达%s——田埂灯火一夜未熄" % nm)
-	CKEconomyState.month_echo_note("patrol", "巡防·%s（-%d银/-%d粮）" % [nm, cost_s, cost_f])
+	CKEconomyState.month_echo_note("patrol", Locale.t("holding_echo_patrol_one", [nm, cost_s, cost_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	host.mark_dirty()
 	var extra = ("；" + " / ".join(amb)) if amb else ""
@@ -308,7 +308,7 @@ static func patrol_holdings(host) -> Dictionary:
 	host.morale = mini(100, host.morale + 2)
 	host.log_event("四野巡防：花费 %d银/%d粮，各属地抗劫强化 2 月" % [cost_s, cost_f])
 	host.add_lineage_event("主动巡防：旗丁走田埂，劫影暂避")
-	CKEconomyState.month_echo_note("patrol", "全堡巡防（-%d银/-%d粮）" % [cost_s, cost_f])
+	CKEconomyState.month_echo_note("patrol", Locale.t("holding_echo_patrol_all", [cost_s, cost_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	host.mark_dirty()
 	var extra = ("；" + " / ".join(amb)) if amb else ""
