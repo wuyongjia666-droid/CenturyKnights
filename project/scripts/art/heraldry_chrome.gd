@@ -163,15 +163,7 @@ static func attach_node_chrome(host: Control, c, node: Vector2) -> void:
 
 ## Hire / tavern / roster portrait plate: 旗徽|族徽 on lower-left of the plate rect.
 static func attach_hire_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
-	if parent == null or c == null:
-		return
-	var old := parent.get_node_or_null("HireArms")
-	if old:
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "HireArms"
-	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
-	parent.add_child(arms)
+	CKHeraldryField.attach_hire_plate_arms(parent, c, plate, arms_sz)
 
 static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	var old := parent.get_node_or_null("CastleArms")
@@ -1151,42 +1143,10 @@ static func attach_dialogue_speaker_arms(portrait_host: Control, c, arms_sz: Vec
 
 ## Mercenary roster page strip: 团徽 + 名册旗布 (RosterCrestStrip).
 static func place_roster_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("RosterCrestStrip")
-	if old:
-		old.name = "_RosterCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "RosterCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "RosterBanner"
-	bn.tooltip_text = Locale.t("lb_roster_arms")
-	bn.set_meta("arms_kind", "lb_roster_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_roster_crest_strip(parent, at, shield, banner)
 
 
 ## Roster list-row person arms (RosterRowArms) pinned on the numbered row button.
 static func attach_roster_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> void:
-	if row == null or c == null:
-		return
-	var old := row.get_node_or_null("RosterRowArms")
-	if old:
-		old.name = "_RosterRowArmsDying"
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "RosterRowArms"
-	arms.tooltip_text = Locale.t("lb_roster_arms")
-	## Keep person arms_kind; pin left of CLASS column (row ~364 wide).
-	arms.position = Vector2(286.0, 16.0)
-	row.add_child(arms)
+	CKHeraldryField.attach_roster_row_arms(row, c, arms_sz)
 
