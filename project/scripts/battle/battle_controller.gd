@@ -1351,6 +1351,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 					BattleFormationCycle.apply_prev(self)
 				else:
 					BattleFormationCycle.apply_next(self)
+			KEY_ESCAPE:
+				# Y1-A T-P28: layered cancel (preview → mode → select).
+				BattleAttackCancelDepth.step(self)
 			KEY_ENTER, KEY_KP_ENTER:
 				if _btn_end and not _btn_end.disabled: _end_player_turn()
 			_:
@@ -1498,7 +1501,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"long_press":
 			_on_long_press_cell(_resolve_intel_cell(pos))
 		"cancel":
-			_cancel_selection()
+			BattleAttackCancelDepth.step(self)
 		"pan":
 			# Y1-A T-P1-2 / T-P3: drag starting on the selected figure (strict) moves the ghost; else pan.
 			# T-P4: stop smooth focus so the gesture owns `_board_pan` (unit-drag must not pan).
