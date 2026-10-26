@@ -2047,6 +2047,7 @@ func equip(cid: String, iid: String) -> Dictionary:
 		var g: Dictionary = gear.get(cid, {})
 		g[slot] = iid
 		gear[cid] = g
+	sync_gear_skills(c)
 	c.recalc_hp()
 	GameState.mark_dirty()
 	world_changed.emit()
@@ -2067,6 +2068,7 @@ func unequip(cid: String, slot: String) -> void:
 		var g: Dictionary = gear.get(cid, {})
 		g.erase(slot)
 		gear[cid] = g
+	sync_gear_skills(c)
 	c.recalc_hp()
 	world_changed.emit()
 
@@ -2089,6 +2091,35 @@ func gear_bonus(c, stat: String) -> int:
 
 func is_world_item(iid: String) -> bool:
 	return items.has(iid)
+
+func _gear_skill_ids() -> Dictionary:
+	## item-id skill keys (signature arms); used to strip stale skills on unequip.
+	var out: Dictionary = {}
+	for it in items.values():
+		var sk := str(it.get("skill", ""))
+		if sk != "":
+			out[sk] = true
+	return out
+
+func sync_gear_skills(c) -> void:
+	## Keep character.skills aligned with currently equipped world gear.
+	## Battle still re-grants; this closes the hub unequip leak (skill stayed after unequip).
+	if c == null:
+		return
+	var catalog := _gear_skill_ids()
+	var have: Dictionary = {}
+	for iid in [str(c.weapon_id), str(gear.get(str(c.id), {}).get("armor", "")), str(gear.get(str(c.id), {}).get("charm", ""))]:
+		var sk := str(items.get(iid, {}).get("skill", ""))
+		if sk != "":
+			have[sk] = true
+	var kept: Array = []
+	for sk in c.skills:
+		var s := str(sk)
+		if catalog.has(s) and not have.has(s):
+			continue
+		kept.append(s)
+	c.skills = kept
+	grant_gear_skills(c)
 
 func grant_gear_skills(c) -> void:
 	if c == null:
