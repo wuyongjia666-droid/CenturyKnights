@@ -1000,13 +1000,14 @@ static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector
 	return arms
 
 
-## Lineage-info dossier plate: named person arms (LineageInfoArms).
+## Lineage-info dossier plate: person arms (PersonArms). field_route marks Field ownership.
 static func attach_lineage_info_arms(parent: Control, c, arms_sz: Vector2 = Vector2(48, 58)) -> TextureRect:
 	if parent == null or c == null:
 		return null
+	_retire(parent, "PersonArms")
 	_retire(parent, "LineageInfoArms")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
-	arms.name = "LineageInfoArms"
+	arms.name = "PersonArms"
 	arms.set_meta("field_route", "lineage_info")
 	parent.add_child(arms)
 	return arms
