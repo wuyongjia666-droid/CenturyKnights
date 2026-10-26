@@ -40,7 +40,6 @@
 - **所有权不变**：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
 - 验收：`content_season_playable_s05_check` 行数闸 ≥70；另跑 visit_authored / battle_authored / hub_entry。
 
-
 ## 第二可玩章（本刀）
 
 | 项 | 值 |
@@ -96,10 +95,14 @@
 - 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
 - 验收：`content_season_theme_open_chain_check` — hub chip → 首拍针口头 → 下一拍。
 
-
 ## 章末收束口头（close-oral）
 
 - 各章 `ledger` 拍末 `_cls1`–`_cls8`：战后回家、把这一季的东西放进柜、季尾灯影。全库去重；末句不是旁白。
 - 跨章复读的入谱套话改成该季自己的句子。不新开内容季，不写 EmptyHost，不加 month_echo。
 - 不碰开场 `_thm`、二拍 `_sec`、访月 `_vhg`/`_msr`、战拍 `_bpl`、酒馆 `_tvp`、入谱回程 `_ldg`。
 - 验收：`content_season_close_oral_chain_check` — hub 芯片 → 章末收束口头 → 回到灰旗堡。
+## 访月整装口头加厚（muster-plate）
+
+- 各章 visit 拍（hourglass/audit/birth）在 `_vhg` 后加 `_msr1`–`_msr6` 季题整装口头，全库去重；收束非旁白。
+- 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
+- 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。

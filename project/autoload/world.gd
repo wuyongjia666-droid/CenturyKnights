@@ -1704,10 +1704,12 @@ func hire(city: String, idx: int) -> Dictionary:
 	if idx < 0 or idx >= lst.size():
 		return {"ok": false, "msg": "无此人"}
 	var c: CKCharacter = lst[idx]
+	var hid := str(c.id)
 	var r := GameState.recruit(c, hire_cost(c))
 	if r.ok:
 		recruits[city].list.remove_at(idx)
 		add_city_rep(city, 1)
+		r["id"] = hid
 		world_changed.emit()
 	return r
 
