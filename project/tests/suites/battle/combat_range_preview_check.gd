@@ -396,10 +396,23 @@ func _notch_clip_contract() -> String:
 		return "fitted root double-counted the notch (fitted %s raw %s pos %s)" % [fitted, raw, _battle.position]
 	var saved_pos: Vector2 = _battle.position
 	var saved_origin: Vector2 = _battle._ui_origin()
+	# Re-pin notch env: CI sometimes loses the sim between awaits.
+	OS.set_environment("CK_SAFE_INSETS", NOTCH)
+	OS.set_environment("CK_FORCE_MOBILE", "1")
 	_battle.set_meta("mobile_origin", Vector2.ZERO)
 	_battle.position = Vector2.ZERO
+	# Keep the suite honest: pin + refresh before measuring. Production clip also
+	# force-updates / falls back when headless global origin stays stale.
+	_battle.force_update_transform()
 	await get_tree().process_frame
+	await get_tree().process_frame
+	_battle.force_update_transform()
 	var bare := BattleRangePreview.playable_inset(_battle)
+	if bare.position.x < raw.position.x + 40.0:
+		# One retry after another layout tick — headless transform can lag one frame.
+		await get_tree().process_frame
+		_battle.force_update_transform()
+		bare = BattleRangePreview.playable_inset(_battle)
 	_battle.set_meta("mobile_origin", saved_origin)
 	_battle.position = saved_pos
 	await get_tree().process_frame
