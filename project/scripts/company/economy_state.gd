@@ -191,43 +191,110 @@ static func unlock_holding(host, hid: String) -> String:
 	host.mark_dirty()
 	return "属地解锁：%s（月结产出）" % nm
 
-static func upgrade_holding(host, hid: String) -> Dictionary:
+static func holding_upgrade_preview(host, hid: String) -> Dictionary:
+	## Cost / gate readout for holding upgrade (UI + E2E).
 	if not host.holdings.has(hid):
-		return {"ok": false, "msg": "尚未拥有此属地"}
+		return {"ok": false, "hid": hid, "lv": 0, "next": 0, "cost_s": 0, "cost_f": 0, "short": true, "maxed": false, "locked": true}
 	var lv = CKEconomyState.holding_level(host, hid)
 	if lv >= 3:
-		return {"ok": false, "msg": "属地已满级"}
+		return {"ok": true, "hid": hid, "lv": lv, "next": lv, "cost_s": 0, "cost_f": 0, "short": false, "maxed": true, "locked": false}
 	var cost_s = 40 * lv
 	var cost_f = 8 * lv
-	if host.silver < cost_s or host.food < cost_f:
-		return {"ok": false, "msg": "需 %d银/%d粮" % [cost_s, cost_f]}
+	return {
+		"ok": true,
+		"hid": hid,
+		"lv": lv,
+		"next": lv + 1,
+		"cost_s": cost_s,
+		"cost_f": cost_f,
+		"short": host.silver < cost_s or host.food < cost_f,
+		"maxed": false,
+		"locked": false,
+	}
+
+static func upgrade_holding(host, hid: String) -> Dictionary:
+	var prev: Dictionary = CKEconomyState.holding_upgrade_preview(host, hid)
+	if bool(prev.get("locked", false)):
+		return {"ok": false, "msg": Locale.t("holding_upgrade_locked"), "preview": prev}
+	if bool(prev.get("maxed", false)):
+		return {"ok": false, "msg": Locale.t("holding_upgrade_maxed"), "preview": prev}
+	var cost_s = int(prev.get("cost_s", 0))
+	var cost_f = int(prev.get("cost_f", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("holding_upgrade_short", [cost_s, cost_f]), "preview": prev}
+	var nm = str(HOLDING_DEFS[hid].get("name", hid))
+	var next_lv = int(prev.get("next", 0))
 	host.silver -= cost_s
 	host.food -= cost_f
-	host.holdings[hid]["level"] = lv + 1
-	host.log_event("属地升级：%s → Lv%d" % [HOLDING_DEFS[hid].name, lv + 1])
+	host.holdings[hid]["level"] = next_lv
+	host.log_event(Locale.t("holding_upgrade_log", [nm, next_lv]))
+	CKEconomyState.month_echo_note("upgrade", Locale.t("holding_echo_upgrade", [nm, next_lv, cost_s, cost_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	host.mark_dirty()
-	return {"ok": true, "msg": "%s 升至 Lv%d%s" % [HOLDING_DEFS[hid].name, lv + 1, ("；" + " / ".join(amb)) if amb else ""]}
+	var extra = ("；" + " / ".join(amb)) if amb else ""
+	return {"ok": true, "msg": Locale.t("holding_upgrade_ok", [nm, next_lv]) + extra, "preview": prev, "lv": next_lv}
 
-static func assign_steward(host, hid: String, cid: String) -> Dictionary:
+static func holding_steward_preview(host, hid: String, cid: String = "") -> Dictionary:
+	## Gate readout for assign/clear (UI + E2E). Avoids #473 surface.
 	if not host.holdings.has(hid):
-		return {"ok": false, "msg": "属地未开垦"}
+		return {"ok": false, "reason": "locked", "has_steward": false, "cid": ""}
+	var cur := str(host.holdings[hid].get("steward_id", ""))
+	var out := {
+		"ok": true,
+		"hid": hid,
+		"has_steward": cur != "",
+		"cid": cur,
+		"reason": "",
+	}
+	if cid == "":
+		return out
 	var c: CKCharacter = host.characters.get(cid)
 	if c == null or not c.alive or not c.in_roster:
-		return {"ok": false, "msg": "须选花名册成员"}
+		out["ok"] = false
+		out["reason"] = "roster"
+		return out
+	# already steward here
+	if cur == cid:
+		out["ok"] = false
+		out["reason"] = "same"
+		return out
+	return out
+
+
+static func assign_steward(host, hid: String, cid: String) -> Dictionary:
+	var prev: Dictionary = CKEconomyState.holding_steward_preview(host, hid, cid)
+	if not host.holdings.has(hid):
+		return {"ok": false, "msg": "属地未开垦", "preview": prev}
+	var c: CKCharacter = host.characters.get(cid)
+	if c == null or not c.alive or not c.in_roster:
+		return {"ok": false, "msg": "须选花名册成员", "preview": prev}
+	if str(prev.get("reason", "")) == "same":
+		return {"ok": false, "msg": Locale.t("holding_steward_same"), "preview": prev}
 	# 一人一属地
 	for other in host.holdings.keys():
 		if str(host.holdings[other].get("steward_id", "")) == cid:
 			host.holdings[other]["steward_id"] = ""
 	host.holdings[hid]["steward_id"] = cid
-	host.log_event("%s 出任 %s 庄头" % [c.name, HOLDING_DEFS[hid].name])
+	var nm := str(HOLDING_DEFS[hid].name)
+	host.log_event("%s 出任 %s 庄头" % [c.name, nm])
+	CKEconomyState.month_echo_note("steward", Locale.t("holding_echo_steward_on", [c.name, nm]))
 	host.mark_dirty()
-	return {"ok": true, "msg": "%s 就任 %s 庄头（月结+成，且本月抗劫）" % [c.name, HOLDING_DEFS[hid].name]}
+	return {"ok": true, "msg": "%s 就任 %s 庄头（月结+成，且本月抗劫）" % [c.name, nm], "preview": prev}
 
-static func clear_steward(host, hid: String) -> void:
-	if host.holdings.has(hid):
-		host.holdings[hid]["steward_id"] = ""
-		host.mark_dirty()
+
+static func clear_steward(host, hid: String) -> Dictionary:
+	if not host.holdings.has(hid):
+		return {"ok": false, "msg": Locale.t("holding_steward_locked")}
+	var cur := str(host.holdings[hid].get("steward_id", ""))
+	if cur == "":
+		return {"ok": false, "msg": Locale.t("holding_steward_none")}
+	var c: CKCharacter = host.characters.get(cur)
+	var cname := str(c.name) if c != null else cur
+	var nm := str(HOLDING_DEFS[hid].name)
+	host.holdings[hid]["steward_id"] = ""
+	CKEconomyState.month_echo_note("steward", Locale.t("holding_echo_steward_off", [cname, nm]))
+	host.mark_dirty()
+	return {"ok": true, "msg": Locale.t("holding_steward_cleared", [cname, nm]), "cid": cur}
 
 static func holding_patrol_boost(host, hid: String) -> int:
 	if not host.holdings.has(hid):
@@ -239,18 +306,39 @@ static func holding_patrol_cd(host, hid: String) -> int:
 		return 0
 	return int(host.holdings[hid].get("patrol_cd", 0))
 
+static func holding_patrol_preview(host, hid: String) -> Dictionary:
+	## Cost / gate readout for single-holding patrol (UI + E2E).
+	if not host.holdings.has(hid):
+		return {"ok": false, "cost_s": 0, "cost_f": 0, "short": true, "cd": 0}
+	var lv = CKEconomyState.holding_level(host, hid)
+	var cost_s = 18 + lv * 6
+	var cost_f = 3 + lv
+	var cd = CKEconomyState.holding_patrol_cd(host, hid)
+	var boost = CKEconomyState.holding_patrol_boost(host, hid)
+	return {
+		"ok": true,
+		"hid": hid,
+		"cost_s": cost_s,
+		"cost_f": cost_f,
+		"cd": cd,
+		"boost": boost,
+		"short": host.silver < cost_s or host.food < cost_f,
+		"blocked": cd > 0 or boost > 0,
+	}
+
 static func patrol_holding(host, hid: String) -> Dictionary:
 	## 单属地巡防路线：花费较少，仅强化该地抗劫，并返回 vignette 标记
 	if not host.holdings.has(hid):
 		return {"ok": false, "msg": "属地未开垦"}
 	var def = HOLDING_DEFS.get(hid, {})
 	var nm = str(def.get("name", hid))
-	if CKEconomyState.holding_patrol_cd(host, hid) > 0:
-		return {"ok": false, "msg": "%s 巡防冷却中（%d 月）" % [nm, CKEconomyState.holding_patrol_cd(host, hid)]}
-	var cost_s = 18 + CKEconomyState.holding_level(host, hid) * 6
-	var cost_f = 3 + CKEconomyState.holding_level(host, hid)
-	if host.silver < cost_s or host.food < cost_f:
-		return {"ok": false, "msg": "需 %d 银 / %d 粮" % [cost_s, cost_f]}
+	var prev: Dictionary = CKEconomyState.holding_patrol_preview(host, hid)
+	if int(prev.get("cd", 0)) > 0:
+		return {"ok": false, "msg": "%s 巡防冷却中（%d 月）" % [nm, int(prev.get("cd", 0))], "preview": prev}
+	var cost_s = int(prev.get("cost_s", 0))
+	var cost_f = int(prev.get("cost_f", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": "需 %d 银 / %d 粮" % [cost_s, cost_f], "preview": prev}
 	host.silver -= cost_s
 	host.food -= cost_f
 	host.holdings[hid]["patrol_boost"] = maxi(CKEconomyState.holding_patrol_boost(host, hid), 2)
@@ -260,10 +348,11 @@ static func patrol_holding(host, hid: String) -> Dictionary:
 	host.morale = mini(100, host.morale + 1)
 	host.log_event("巡防路线·%s：-%d银/-%d粮，抗劫 2 月" % [nm, cost_s, cost_f])
 	host.add_lineage_event("巡防路线抵达%s——田埂灯火一夜未熄" % nm)
+	CKEconomyState.month_echo_note("patrol", Locale.t("holding_echo_patrol_one", [nm, cost_s, cost_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	host.mark_dirty()
 	var extra = ("；" + " / ".join(amb)) if amb else ""
-	return {"ok": true, "msg": "%s 巡防完成%s" % [nm, extra], "hid": hid, "vignette": true}
+	return {"ok": true, "msg": "%s 巡防完成%s" % [nm, extra], "hid": hid, "vignette": true, "preview": prev, "cost_s": cost_s, "cost_f": cost_f}
 
 static func patrol_holdings(host) -> Dictionary:
 	## 全堡巡防：所有已开垦属地各走一圈（贵），全局抗劫
@@ -286,10 +375,11 @@ static func patrol_holdings(host) -> Dictionary:
 	host.morale = mini(100, host.morale + 2)
 	host.log_event("四野巡防：花费 %d银/%d粮，各属地抗劫强化 2 月" % [cost_s, cost_f])
 	host.add_lineage_event("主动巡防：旗丁走田埂，劫影暂避")
+	CKEconomyState.month_echo_note("patrol", Locale.t("holding_echo_patrol_all", [cost_s, cost_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	host.mark_dirty()
 	var extra = ("；" + " / ".join(amb)) if amb else ""
-	return {"ok": true, "msg": "全堡巡防完成：抗劫 2 月，安静%d%s" % [host.estate_quiet_months, extra], "vignette": true, "hid": ""}
+	return {"ok": true, "msg": "全堡巡防完成：抗劫 2 月，安静%d%s" % [host.estate_quiet_months, extra], "vignette": true, "hid": "", "cost_s": cost_s, "cost_f": cost_f}
 
 static func tick_patrol_month(host) -> void:
 	if host.patrol_cooldown > 0:
@@ -1092,7 +1182,7 @@ static func month_echo_lines() -> Array:
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
-		"death", "succession", "adult", "dues", "rival", "job_seal",
+		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
