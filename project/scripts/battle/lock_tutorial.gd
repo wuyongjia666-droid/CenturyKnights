@@ -4,12 +4,16 @@ extends RefCounted
 ## Players can dismiss with ×; remembered for the rest of this battle.
 
 
+static func _alive(host: Node) -> bool:
+	return host != null and is_instance_valid(host)
+
+
 static func _dismissed(host: Node) -> bool:
-	return host != null and host.has_meta("lock_tut_dismissed")
+	return _alive(host) and host.has_meta("lock_tut_dismissed")
 
 
 static func dismiss(host: Node, panel: Control = null) -> void:
-	if host != null:
+	if _alive(host):
 		host.set_meta("lock_tut_dismissed", true)
 	var target: Control = panel
 	if target == null and host != null:
@@ -44,16 +48,22 @@ static func attach_dismiss(host: Node, panel: Control) -> void:
 
 
 static func queue_after_story(host: Node) -> void:
-	if _dismissed(host):
+	if not _alive(host) or _dismissed(host):
 		return
 	if BattleStory.is_showing(host):
-		host.get_tree().create_timer(0.2).timeout.connect(func(): queue_after_story(host))
+		var tree := host.get_tree()
+		if tree == null:
+			return
+		tree.create_timer(0.2).timeout.connect(func():
+			if is_instance_valid(host):
+				queue_after_story(host)
+		)
 		return
 	run_sequence(host)
 
 
 static func run_sequence(host: Node) -> void:
-	if _dismissed(host):
+	if not _alive(host) or _dismissed(host):
 		return
 	var steps: Array = [
 		{"t": Locale.t("shell_lock_1t"), "b": Locale.t("shell_lock_1b")},
@@ -66,6 +76,8 @@ static func run_sequence(host: Node) -> void:
 
 
 static func show_step(host: Node) -> void:
+	if not _alive(host):
+		return
 	if _dismissed(host):
 		var leftover = host.get_node_or_null("LockTipPanel")
 		if leftover:
