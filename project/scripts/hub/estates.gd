@@ -65,6 +65,7 @@ func _ready() -> void:
 	field.pressed.connect(open_field_book)
 	row.add_child(field)
 	var patrol := UIKit.cta_button("全堡巡防", "X", 150, 36)
+	patrol.name = "HoldingPatrolAll"
 	patrol.pressed.connect(_do_patrol)
 	row.add_child(patrol)
 	if first_note != "":
@@ -175,6 +176,7 @@ func _focus_tile(fk: String, current: bool, hid: String) -> Button:
 	## v8.6 segmented focus control (粮作/钱作/戍卫): current = frost fill; five states via theme
 	var flab = {"grain": "粮作", "cash": "钱作", "fortify": "戍卫"}[fk]
 	var b: Button = UIKit.make_accent_button(flab, 58) if current else UIKit.make_button(flab, 58)
+	b.name = "HoldingFocus_%s_%s" % [hid, fk]
 	b.custom_minimum_size = Vector2(58, 30)
 	b.add_theme_font_size_override("font_size", 12)
 	UIKit.compact(b, 30)
@@ -364,7 +366,17 @@ func _rebuild() -> void:
 				bs.pressed.connect(func(): _open_picker(bid))
 				sr.add_child(bs)
 			var pb := UIKit.ghost_button("巡此路线", 93, 26)
-			pb.disabled = GameState.holding_patrol_cd(bid) > 0 or GameState.holding_patrol_boost(bid) > 0
+			pb.name = "HoldingPatrol_%s" % bid
+			var prev: Dictionary = GameState.holding_patrol_preview(bid)
+			pb.disabled = bool(prev.get("blocked", false)) or bool(prev.get("short", false))
+			var tip = Locale.t("holding_patrol_cost", [int(prev.get("cost_s", 0)), int(prev.get("cost_f", 0))])
+			if bool(prev.get("short", false)):
+				tip = Locale.t("holding_patrol_short", [tip])
+			elif int(prev.get("cd", 0)) > 0:
+				tip = Locale.t("holding_patrol_cd_tip", [int(prev.get("cd", 0))])
+			elif int(prev.get("boost", 0)) > 0:
+				tip = Locale.t("holding_patrol_boost_tip", [int(prev.get("boost", 0))])
+			pb.tooltip_text = tip
 			pb.pressed.connect(func(): _do_patrol_one(bid))
 			sr.add_child(pb)
 
@@ -817,7 +829,9 @@ func _m_build() -> void:
 	var field := MobilePage.button(Locale.t("ux_estates_field"), true, open_field_book)
 	field.name = "FieldBookBtn"
 	rv.add_child(field)
-	rv.add_child(MobilePage.button(Locale.t("mw_69668f1a"), false, _do_patrol))
+	var mpa := MobilePage.button(Locale.t("mw_69668f1a"), false, _do_patrol)
+	mpa.name = "HoldingPatrolAll"
+	rv.add_child(mpa)
 	rv.add_child(MobilePage.button(Locale.t("mw_e3e092a7"), false, func(): CKNav.go("res://scenes/hub/works.tscn")))
 
 func _m_holding(hid: String) -> Control:
@@ -893,7 +907,9 @@ func _m_holding(hid: String) -> Control:
 	else:
 		ar.add_child(MobilePage.button(Locale.t("mw_23073274"), false, func(): _open_picker(bid)))
 	var pb := MobilePage.button(Locale.t("mw_4f279682"), false, func(): _do_patrol_one(bid))
-	pb.disabled = GameState.holding_patrol_cd(bid) > 0 or GameState.holding_patrol_boost(bid) > 0
+	pb.name = "HoldingPatrol_%s" % bid
+	var prev: Dictionary = GameState.holding_patrol_preview(bid)
+	pb.disabled = bool(prev.get("blocked", false)) or bool(prev.get("short", false))
 	ar.add_child(pb)
 	return card
 

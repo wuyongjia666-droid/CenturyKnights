@@ -608,3 +608,7 @@ atlas_resume_go_named,续行至 %s,Resume to %s
 atlas_resume_fail,还不能续行,Cannot resume yet
 atlas_camp_halt,粮草告急，在此停军,Rations low — halt here
 atlas_camp_halted,已在 %s 停军，补给后续行。,Halted at %s. Resupply then resume.
+holding_patrol_cost,%d银/%d粮,%d silver / %d food
+holding_patrol_short,缺料·%s,Short · %s
+holding_patrol_cd_tip,冷却%d,Cooldown %d
+holding_patrol_boost_tip,巡防中%d,Patrolling %d
