@@ -44,6 +44,20 @@ func _run() -> String:
 
 
 func _api_preview_gates() -> String:
+	var err := _gate_start_rejects()
+	if err != "":
+		return err
+	err = _gate_busy_and_escort()
+	if err != "":
+		return err
+	GameState.caravan = {}
+	GameState.house_mods.erase("caravan_active")
+	GameState.house_mods.erase("month_echo")
+	print("api preview gates ok")
+	return ""
+
+
+func _gate_start_rejects() -> String:
 	GameState.silver = COST - 1
 	GameState.caravan = {}
 	GameState.house_mods.erase("caravan_active")
@@ -59,7 +73,10 @@ func _api_preview_gates() -> String:
 	var bad_kind: Dictionary = GameState.start_caravan("silk")
 	if bool(bad_kind.get("ok", false)):
 		return "bad kind should reject"
+	return ""
 
+
+func _gate_busy_and_escort() -> String:
 	GameState.silver = 80000
 	var ok: Dictionary = GameState.start_caravan(KIND)
 	if not bool(ok.get("ok", false)):
@@ -70,15 +87,11 @@ func _api_preview_gates() -> String:
 	var bad_busy: Dictionary = GameState.start_caravan("iron")
 	if bool(bad_busy.get("ok", false)):
 		return "busy should reject"
-
-	var p_esc_none: Dictionary = GameState.caravan_escort_preview()
-	# still have caravan — clear and recheck none
 	GameState.caravan = {}
 	GameState.house_mods.erase("caravan_active")
-	p_esc_none = GameState.caravan_escort_preview()
+	var p_esc_none: Dictionary = GameState.caravan_escort_preview()
 	if str(p_esc_none.get("reason", "")) != "none" or bool(p_esc_none.get("escortable", true)):
 		return "expected escort none: %s" % str(p_esc_none)
-
 	GameState.start_caravan(KIND)
 	GameState.silver = ESCORT - 1
 	var p_esc_short: Dictionary = GameState.caravan_escort_preview()
@@ -97,10 +110,6 @@ func _api_preview_gates() -> String:
 	var twice: Dictionary = GameState.escort_caravan()
 	if bool(twice.get("ok", false)):
 		return "double escort should reject"
-	GameState.caravan = {}
-	GameState.house_mods.erase("caravan_active")
-	GameState.house_mods.erase("month_echo")
-	print("api preview gates ok")
 	return ""
 
 
