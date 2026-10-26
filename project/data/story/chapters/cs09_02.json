@@ -603,7 +603,7 @@
           "speaker": "旁白",
           "text": "锋再定。血巾二次验干，卖泼的连声都没了。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -611,7 +611,7 @@
           "speaker": "掌柜",
           "text": "二次验比一次验短。短，是因为已经清。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -619,7 +619,7 @@
           "speaker": "槐里·青禾",
           "text": "巾角旧星旁又干一星。两星，才像足验。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -627,7 +627,7 @@
           "speaker": "leader",
           "text": "锋再问一次。血，仍我的。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -637,10 +637,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs09_02_mid_lost"
+                "flag": "cs09_mid_lost"
               },
               {
-                "not_flag": "cs09_02_mid_fought"
+                "not_flag": "cs09_mid_fought"
               }
             ]
           }
@@ -654,10 +654,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs09_02_mid_fought"
+                "not_flag": "cs09_mid_fought"
               },
               {
-                "not_flag": "cs09_02_mid_lost"
+                "not_flag": "cs09_mid_lost"
               }
             ]
           },
@@ -668,10 +668,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs09_02_mid_fought"
+                "cs09_mid_fought"
               ],
               "lose_flags": [
-                "cs09_02_mid_lost"
+                "cs09_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -688,10 +688,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs09_02_mid_fought"
+                "not_flag": "cs09_mid_fought"
               },
               {
-                "flag": "cs09_02_mid_lost"
+                "flag": "cs09_mid_lost"
               }
             ]
           },
@@ -702,10 +702,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs09_02_mid_fought"
+                "cs09_mid_fought"
               ],
               "lose_flags": [
-                "cs09_02_mid_lost"
+                "cs09_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -725,10 +725,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs09_02_mid_fought"
+                    "not_flag": "cs09_mid_fought"
                   },
                   {
-                    "not_flag": "cs09_02_mid_lost"
+                    "not_flag": "cs09_mid_lost"
                   }
                 ]
               },
@@ -743,10 +743,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs09_02_mid_fought"
+                    "not_flag": "cs09_mid_fought"
                   },
                   {
-                    "flag": "cs09_02_mid_lost"
+                    "flag": "cs09_mid_lost"
                   }
                 ]
               },
@@ -1099,9 +1099,29 @@
           "text": "新泼的不认。"
         },
         {
-          "id": "cs09b_le_18",
-          "speaker": "旁白",
-          "text": "厅灯灭一盏。验册小灯还亮。"
+          "id": "cs0902_ldg1",
+          "speaker": "岁吏",
+          "text": "两星干并排，复验合册才敢。"
+        },
+        {
+          "id": "cs0902_ldg2",
+          "speaker": "书记官",
+          "text": "卖泼的声，湿着也不进。"
+        },
+        {
+          "id": "cs0902_ldg3",
+          "speaker": "槐里·青禾",
+          "text": "巾角旧星旁新星，足验。"
+        },
+        {
+          "id": "cs0902_ldg4",
+          "speaker": "leader",
+          "text": "复验并排。厅灯可灭一盏，验册小灯不灭。"
+        },
+        {
+          "id": "cs0902_ldg_end",
+          "speaker": "leader",
+          "text": "第二道巾印旁，灰旗堡验册柜等合页。"
         }
       ]
     }

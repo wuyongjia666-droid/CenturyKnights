@@ -565,7 +565,7 @@
           "speaker": "旁白",
           "text": "锋再定。校场第二圈合上，墙牌旁笑的人哑了。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -573,7 +573,7 @@
           "speaker": "掌柜",
           "text": "第二圈比第一圈沉。沉的，才像真练。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -581,7 +581,7 @@
           "speaker": "苇原·灯影",
           "text": "汗第二次下来，笑就买不动了。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -589,7 +589,7 @@
           "speaker": "leader",
           "text": "锋再走一圈。牌，还挂着。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -599,10 +599,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs06_02_mid_lost"
+                "flag": "cs06_mid_lost"
               },
               {
-                "not_flag": "cs06_02_mid_fought"
+                "not_flag": "cs06_mid_fought"
               }
             ]
           }
@@ -616,10 +616,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs06_02_mid_fought"
+                "not_flag": "cs06_mid_fought"
               },
               {
-                "not_flag": "cs06_02_mid_lost"
+                "not_flag": "cs06_mid_lost"
               }
             ]
           },
@@ -630,10 +630,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs06_02_mid_fought"
+                "cs06_mid_fought"
               ],
               "lose_flags": [
-                "cs06_02_mid_lost"
+                "cs06_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -650,10 +650,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs06_02_mid_fought"
+                "not_flag": "cs06_mid_fought"
               },
               {
-                "flag": "cs06_02_mid_lost"
+                "flag": "cs06_mid_lost"
               }
             ]
           },
@@ -664,10 +664,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs06_02_mid_fought"
+                "cs06_mid_fought"
               ],
               "lose_flags": [
-                "cs06_02_mid_lost"
+                "cs06_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -687,10 +687,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs06_02_mid_fought"
+                    "not_flag": "cs06_mid_fought"
                   },
                   {
-                    "not_flag": "cs06_02_mid_lost"
+                    "not_flag": "cs06_mid_lost"
                   }
                 ]
               },
@@ -705,10 +705,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs06_02_mid_fought"
+                    "not_flag": "cs06_mid_fought"
                   },
                   {
-                    "flag": "cs06_02_mid_lost"
+                    "flag": "cs06_mid_lost"
                   }
                 ]
               },
@@ -1048,9 +1048,29 @@
           "text": "我按边注走。"
         },
         {
-          "id": "cs06b_ld_19",
+          "id": "cs0602_ldg1",
+          "speaker": "岁吏",
+          "text": "第二圈靴印抬进胜册，笑不进格。"
+        },
+        {
+          "id": "cs0602_ldg2",
+          "speaker": "书记官",
+          "text": "复练问声落地，才落笔。"
+        },
+        {
+          "id": "cs0602_ldg3",
+          "speaker": "苇原·灯影",
+          "text": "汗厚了，胜册才沉。"
+        },
+        {
+          "id": "cs0602_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。胜册在柜里。"
+          "text": "复练并排。灯不灭，胜册在柜。"
+        },
+        {
+          "id": "cs0602_ldg_end",
+          "speaker": "leader",
+          "text": "第二道靴印旁，灰旗堡胜册等圈数。"
         }
       ],
       "actions": []

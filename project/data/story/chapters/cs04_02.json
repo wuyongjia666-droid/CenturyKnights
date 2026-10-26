@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。契纸角压住，抢契那拨退到廊外。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "掌柜",
           "text": "契要压。压住，才不像飞的。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "墨干了。干了，字才是自己的。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过契。字，我签得。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1029,10 +1029,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs04_02_mid_lost"
+                "flag": "cs04_mid_lost"
               },
               {
-                "not_flag": "cs04_02_mid_fought"
+                "not_flag": "cs04_mid_fought"
               }
             ]
           },
@@ -1047,10 +1047,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs04_02_mid_fought"
+                "not_flag": "cs04_mid_fought"
               },
               {
-                "not_flag": "cs04_02_mid_lost"
+                "not_flag": "cs04_mid_lost"
               }
             ]
           },
@@ -1061,10 +1061,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs04_02_mid_fought"
+                "cs04_mid_fought"
               ],
               "lose_flags": [
-                "cs04_02_mid_lost"
+                "cs04_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1081,10 +1081,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs04_02_mid_fought"
+                "not_flag": "cs04_mid_fought"
               },
               {
-                "flag": "cs04_02_mid_lost"
+                "flag": "cs04_mid_lost"
               }
             ]
           },
@@ -1095,10 +1095,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs04_02_mid_fought"
+                "cs04_mid_fought"
               ],
               "lose_flags": [
-                "cs04_02_mid_lost"
+                "cs04_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -1118,10 +1118,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs04_02_mid_fought"
+                    "not_flag": "cs04_mid_fought"
                   },
                   {
-                    "not_flag": "cs04_02_mid_lost"
+                    "not_flag": "cs04_mid_lost"
                   }
                 ]
               },
@@ -1136,10 +1136,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs04_02_mid_fought"
+                    "not_flag": "cs04_mid_fought"
                   },
                   {
-                    "flag": "cs04_02_mid_lost"
+                    "flag": "cs04_mid_lost"
                   }
                 ]
               },
@@ -1693,15 +1693,29 @@
           "text": "我走实步。"
         },
         {
-          "id": "cs04_02_ledger_19",
+          "id": "cs0402_ldg1",
+          "speaker": "岁吏",
+          "text": "契缝与训阴并排，墨干才算自己的字。"
+        },
+        {
+          "id": "cs0402_ldg2",
+          "speaker": "书记官",
+          "text": "抢契的风，掀不进录。"
+        },
+        {
+          "id": "cs0402_ldg3",
+          "speaker": "老旗手",
+          "text": "旗在契案立过——字有根。"
+        },
+        {
+          "id": "cs0402_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。训阴本在柜里。",
-          "stage": {
-            "card": "六　入册",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "契压住。灯不灭，训阴在柜。"
+        },
+        {
+          "id": "cs0402_ldg_end",
+          "speaker": "leader",
+          "text": "契角压平处，灰旗堡训阴柜等签字。"
         }
       ],
       "actions": []
