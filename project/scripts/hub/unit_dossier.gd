@@ -189,8 +189,15 @@ func _mobile_reflow_life(mid: Control) -> void:
 			cn.size = Vector2(maxf(160.0, mid.size.x - 32.0), maxf(cn.get_minimum_size().y, mid.size.y - cn.position.y - 12.0))
 
 func _resolve() -> CKCharacter:
+	## Nav focus wins only when this page is the routed scene. A dossier built
+	## beside the current page (roster meta, heraldry probes) keeps dossier_id;
+	## leftover params from the page underneath must not replace that person.
 	var want := ""
-	if GameState.has_meta("dossier_id"):
+	var nav_focus := str(CKNav.params().get("focus", ""))
+	var routed := get_tree() != null and get_tree().current_scene == self and nav_focus != ""
+	if routed:
+		want = nav_focus
+	elif GameState.has_meta("dossier_id"):
 		want = str(GameState.get_meta("dossier_id"))
 	if want != "" and GameState.characters.has(want):
 		return GameState.characters[want]
@@ -308,6 +315,7 @@ func _build() -> void:
 	var crest := CKPageKit.button(CKHeraldryChrome.dossier_crest_label(c), false, 188)
 	crest.name = "CrestPreview"
 	crest.set_meta("arms_kind", CKHeraldryChrome.arms_kind_key(c))
+	crest.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(c)))
 	crest.position = Vector2(16, 448)
 	crest.pressed.connect(_show_crest)
 	right.add_child(crest)
@@ -434,6 +442,16 @@ func _tree(parent: Node, focus: CKCharacter, sheet: Dictionary) -> void:
 		host.add_child(acts)
 		parent.add_child(host)
 		return
+	var open_lin := CKPageKit.button(Locale.t("gen2_34"), true, 360)
+	open_lin.name = "OpenLineageDetail"
+	var focus_id := str(focus.id)
+	open_lin.pressed.connect(func():
+		Sfx.click()
+		GameState.set_meta("lineage_focus", focus_id)
+		GameState.set_meta("dossier_id", focus_id)
+		CKNav.go("res://scenes/hub/lineage_tree.tscn", {"focus": focus_id}))
+	parent.add_child(open_lin)
+	UIFX.wire_button(open_lin)
 	var focus_states := {}
 	for e in sheet.get("shown", []):
 		focus_states[str(e.get("state", ""))] = str(e.get("zh", ""))
@@ -472,12 +490,17 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 		if focus_states.has(str(e.get("state", ""))):
 			share = str(e.get("zh", ""))
 			break
+	var mobile := DeviceProfile.is_mobile()
+	var fs := 22 if mobile else 12
+	var lh := 30.0 if mobile else 18.0
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(120, 64)
+	b.name = "KinChip_%s" % p.id
+	b.custom_minimum_size = Vector2(176, 132 if mobile else 108)
 	b.focus_mode = Control.FOCUS_ALL
-	b.text = "%s\n%s · %s" % [p.name, CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(p.age), ""), CKCourt.ladder_zh(CKCourt.current_title(p), str(p.gender))]
-	if share != "" and p != focus:
-		b.text += "\n同征 " + share
+	b.clip_text = true
+	var kind := CKHeraldryChrome.arms_kind_key(p)
+	b.set_meta("arms_kind", kind)
+	b.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(p)))
 	var on := p == focus
 	var bd := UIKit.OK if share != "" else (UIKit.ACCENT if on else Color(1, 1, 1, 0.16))
 	UIKit._apply_states(b, {
@@ -487,15 +510,51 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 		"focus": UIKit._focus_ring(UIKit.FOCUS_RING, 10),
 		"disabled": UIKit.flat_box(UIKit.DISABLED_BG, UIKit.DISABLED_BORDER, 8, 1),
 	})
-	b.add_theme_font_size_override("font_size", 12)
-	b.add_theme_color_override("font_color", UIKit.TEXT)
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.position = Vector2(6, 6)
+	row.add_theme_constant_override("separation", 6)
+	b.add_child(row)
+	row.add_child(CKLineageInfo.portrait_rect(p, Vector2(44, 52)))
+	var col := VBoxContainer.new()
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_theme_constant_override("separation", 2)
+	row.add_child(col)
+	col.add_child(_chip_line(p.name, UIKit.TEXT, fs, lh))
+	var stage := str(CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(p.age), ""))
+	var title := CKCourt.ladder_zh(CKCourt.current_title(p), str(p.gender))
+	col.add_child(_chip_line("%s · %s" % [stage, title], UIKit.TEXT_DIM, fs, lh))
+	if share != "" and p != focus:
+		col.add_child(_chip_line("同征 " + share, UIKit.OK, fs, lh))
+	var marks := HBoxContainer.new()
+	marks.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	marks.add_theme_constant_override("separation", 4)
+	col.add_child(marks)
+	var arms := CKHeraldryChrome.make_person_arms(p, Vector2(28, 34))
+	arms.name = "ChipArms"
+	marks.add_child(arms)
+	var badge := CKHeraldryChrome.make_rank_badge(str(p.rank), 22)
+	badge.name = "ChipBadge"
+	badge.set_meta("rank_id", str(p.rank))
+	marks.add_child(badge)
 	var captured := p
 	b.pressed.connect(func():
 		Sfx.click()
 		UIFX.press_feedback(b)
-		GameState.set_meta("dossier_id", captured.id)
-		CKNav.go("res://scenes/hub/unit_dossier.tscn"))
+		var back := "res://scenes/hub/roster.tscn"
+		if GameState.has_meta("dossier_back"):
+			back = str(GameState.get_meta("dossier_back"))
+		CKLineageInfo.open_dossier(captured, back))
 	return b
+
+func _chip_line(text: String, col: Color, fs: int, lh: float) -> Label:
+	var lab := UIKit.body_label(text, col, fs)
+	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+	lab.clip_text = true
+	lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lab.custom_minimum_size = Vector2(96, lh)
+	lab.size = Vector2(96, lh)
+	return lab
 
 
 ## Life panel (audit #16): class, age, HP, six stats and whether they can deploy. Always shown,

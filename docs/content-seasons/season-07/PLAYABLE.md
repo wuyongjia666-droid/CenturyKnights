@@ -71,7 +71,7 @@
 
 - 访/战/酒馆回程里跨章复读的套话改成该拍自己的句子；入谱拍不动。
 - 前三拍无条件收束仍不是旁白。CTA、`锋收回来`、`mid_lost` 门闸不变。
-- `_02` 胜后口语的 `when` 改挂本章 `csNN_02_mid_fought`，试锋得手才念得出。
+- `_02` 胜后口语的 `when` 与战旗同挂季级 `csNN_mid_fought`（与 hub_chain / battle_authored 对齐），试锋得手才念得出。
 - 真 E2E：`content_season_mid_oral_chain_check`（hub→章→战/访→回，二十章；断链或中章复读即失败）。
 
 ## 中途战 / 据点 / 回程加厚（hub-chain）
@@ -82,3 +82,20 @@
 - 真 E2E：`content_season_hub_chain_check`（hub→章→战/访→回抽样）；`battle_retry` LIVE 扩至 S01–S10 `_01`；playable walk_to_choice→220。
 
 - mid_fought 胜后口语 + 据点 visit/酒馆回程加厚（全十季 _01/_02）；`hub_chain` LIVE 扩至 cs01–cs10 _01。
+
+- ledger 回程名著加厚（入谱前口语 uniquify）；hub_chain 含 _02 抽样；ledger_payoff 扩走。
+
+## 沙漏 visit 口头加厚（visit-oral）
+
+- 各章 visit 拍（hourglass/audit/birth）加厚季题名著口头（`_vhg*`），全库去重。
+- 验收：`content_season_visit_oral_chain_check` — hub chip → 针口头 → 去看月份 → 同拍回 → 继续。
+
+## 酒馆挂板口头加厚（tavern-plate）
+
+- 各章 `tavern` 拍入谱选择前加 `_tvp1`–`_tvp6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_tavern_plate_chain_check` — hub chip → 酒馆针口头 → 挂板选择 → ledger。
+
+## 开场主题口头加厚（theme-open）
+
+- 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_theme_open_chain_check` — hub chip → 首拍针口头 → 下一拍。

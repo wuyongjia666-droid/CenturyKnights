@@ -51,6 +51,7 @@ func _ready() -> void:
 	CKPageKit.lock(_heal_btn, "" if not hurt.is_empty() else Locale.t("lb_shrine_heal_none"))
 	_heal_btn.pressed.connect(_heal)
 	heal.add_child(_heal_btn)
+	_place_heal_strip(hurt)
 	_blood_card = CKPageKit.card(self, Rect2(42 + (_cw + 16) * 1, CKPageKit.TOP + 8, _cw, _ch), "BloodCard")
 	var blood := _blood_card
 	CKPageKit.card_head(blood, Locale.t("lb_shrine_blood"), "BLOOD TEST")
@@ -88,6 +89,19 @@ func _ready() -> void:
 
 
 
+func _place_heal_strip(hurt: Array = []) -> void:
+	## Field strip on HealCard: 团徽 + first hurt 族徽|旗徽. Empty → 团徽 only.
+	if _heal_card == null:
+		return
+	if hurt.is_empty():
+		hurt = _hurt()
+	var focus = hurt[0] if not hurt.is_empty() else null
+	var shield := Vector2(32, 40) if not _mob else Vector2(28, 34)
+	var pair_w := shield.x * (2.0 if focus != null else 1.0) + (8.0 if focus != null else 0.0)
+	CKHeraldryField.place_shrine_heal_strip(
+		_heal_card, focus, Vector2(maxf(8.0, _cw - pair_w - 24.0), 10.0), shield)
+
+
 func _place_shrine_crests() -> void:
 	## 团徽 header + banner strip + NationCrestStrip (home/current nation 邦徽).
 	var mob := DeviceProfile.is_mobile()
@@ -118,6 +132,7 @@ func apply_mobile_layout() -> void:
 		c.position = Vector2(x0 + (_cw + gap) * float(i), top)
 		c.size = Vector2(_cw, _ch)
 		_resize_service_card(c)
+	_place_heal_strip()
 	if _fest_card:
 		var full := _cw * 3.0 + gap * 2.0
 		var fy := top + _ch + 14.0
@@ -217,3 +232,4 @@ func _heal() -> void:
 	if names:
 		names.text = _hurt_text(_hurt())
 	CKPageKit.lock(_heal_btn, "" if not _hurt().is_empty() else Locale.t("lb_shrine_heal_done"))
+	_place_heal_strip()

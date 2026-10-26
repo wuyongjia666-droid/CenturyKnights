@@ -28,11 +28,19 @@ func _ready() -> void:
 
 
 func _place_forge_crests() -> void:
-	## Forge chrome: 团徽 header + castle banner strip on the page root.
+	## Forge chrome: 团徽 header + banner strip + Field focus (团徽+选中铁匠 族徽|旗徽).
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
 	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+	var shield := Vector2(36, 44) if not mob else Vector2(32, 38)
+	var strip_w := shield.x if _sel == null else shield.x * 2.0 + 8.0
+	var at := Vector2(980, 10) if not mob else Vector2(maxf(8.0, size.x - strip_w - 200.0), 6.0)
+	var bar := find_child("MobileTopBar", true, false)
+	if mob and bar != null:
+		CKHeraldryField.place_forge_focus_strip(bar, _sel, Vector2(8, 6), shield)
+	else:
+		CKHeraldryField.place_forge_focus_strip(self, _sel, at, shield)
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
@@ -128,6 +136,7 @@ func _render_left() -> void:
 func _slot(c: CKCharacter) -> Button:
 	var on := _sel == c
 	var b := Button.new()
+	b.name = "ForgeKnight_" + str(c.id)
 	var row_h := 58.0
 	if DeviceProfile.is_mobile():
 		row_h = maxf(row_h, DeviceProfile.hit_px())
@@ -149,6 +158,7 @@ func _slot(c: CKCharacter) -> Button:
 	pr.size = Vector2(40, 40)
 	pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(pr)
+	CKHeraldryField.attach_forge_slot_arms(b, c, Vector2(24, 30))
 	var h := HBoxContainer.new()
 	h.position = Vector2(60, 8)
 	h.add_theme_constant_override("separation", 8)
@@ -415,6 +425,7 @@ func _m_render_all() -> void:
 		var b := MobilePage.button(Locale.t("mw_5cda7737") % [c.name, _weapon_name(c.weapon_id), c.derived_atk()], on, func():
 			_sel = c
 			_m_render_all())
+		b.name = "ForgeKnight_" + str(c.id)
 		b.custom_minimum_size = Vector2(0, 100)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		var pr := UIKit.make_portrait_rect(c, 72)
@@ -422,6 +433,7 @@ func _m_render_all() -> void:
 		pr.size = Vector2(72, 72)
 		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(pr)
+		CKHeraldryField.attach_forge_slot_arms(b, c, Vector2(28, 34))
 		for st in ["normal", "hover", "pressed", "focus", "disabled"]:
 			var sb := b.get_theme_stylebox(st)
 			if sb:

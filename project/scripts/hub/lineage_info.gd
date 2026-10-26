@@ -93,6 +93,202 @@ static func parents_of(chars: Dictionary, c) -> Array:
 			out.append(p)
 	return out
 
+const DOSSIER_SCENE := "res://scenes/hub/unit_dossier.tscn"
+
+## Bands the avatar wall can draw: elders, parents, peers, children, later kin, then roster who never joined the house.
+static func wall_bands(chars: Dictionary, leader) -> Array:
+	var fam: Array = family_of(chars, leader)
+	var fam_ids := {}
+	for c in fam:
+		fam_ids[str(c.id)] = true
+	var buckets := {"elder": [], "parents": [], "peers": [], "children": [], "later": []}
+	for c in fam:
+		var band := _band_for(chars, leader, c)
+		if not buckets.has(band):
+			band = "peers"
+		(buckets[band] as Array).append(c)
+	var out: Array = []
+	for spec in _band_order():
+		var people: Array = buckets[str(spec[0])]
+		if people.is_empty():
+			continue
+		_sort_band(people)
+		out.append({"id": str(spec[0]), "title": Locale.t(str(spec[1])), "people": people})
+	var banner: Array = []
+	for ch in chars.values():
+		if fam_ids.has(str(ch.id)) or not ch.in_roster:
+			continue
+		banner.append(ch)
+	if not banner.is_empty():
+		_sort_band(banner)
+		out.append({"id": "banner", "title": Locale.t("gen2_band_banner"), "people": banner})
+	return out
+
+static func relation_label(chars: Dictionary, leader, c) -> String:
+	if not _listed_in_family(chars, leader, c):
+		return Locale.t("gen2_rel_banner")
+	return Locale.t(relation_key(chars, leader, c))
+
+static func relation_key(chars: Dictionary, leader, c) -> String:
+	if c == null:
+		return "gen2_rel_kin"
+	if leader == null or c == leader or c.is_leader:
+		return "gen2_33"
+	if _is_spouse(leader, c):
+		return "gen2_rel_spouse"
+	var band := _band_for(chars, leader, c)
+	if band == "parents":
+		return "gen2_rel_parent"
+	if band == "elder":
+		return "gen2_rel_elder"
+	if band == "later":
+		return "gen2_rel_later"
+	if band == "children" and _direct_child(leader, c):
+		return "gen2_rel_child"
+	if band == "peers":
+		return "gen2_rel_peer"
+	return "gen2_rel_kin"
+
+## Personal family page. back_path is the CKNav fallback; the stack still pops to the page that opened it.
+static func open_dossier(c, back_path: String) -> bool:
+	if c == null:
+		return false
+	GameState.set_meta("dossier_id", str(c.id))
+	GameState.set_meta("dossier_back", back_path)
+	GameState.set_meta("lineage_focus", str(c.id))
+	return CKNav.go(DOSSIER_SCENE, {"focus": str(c.id)})
+
+static func _band_order() -> Array:
+	return [
+		["elder", "gen2_band_elder"],
+		["parents", "gen2_band_parents"],
+		["peers", "gen2_band_peers"],
+		["children", "gen2_band_children"],
+		["later", "gen2_band_later"],
+	]
+
+static func _sort_band(people: Array) -> void:
+	people.sort_custom(func(a, b):
+		if a.is_leader != b.is_leader:
+			return a.is_leader
+		if a.age != b.age:
+			return a.age > b.age
+		return str(a.id) < str(b.id))
+
+static func _listed_in_family(chars: Dictionary, leader, c) -> bool:
+	if c == null:
+		return false
+	for member in family_of(chars, leader):
+		if member == c:
+			return true
+	return false
+
+static func _band_for(chars: Dictionary, leader, c) -> String:
+	var band := "peers"
+	if leader != null and c != null and c != leader and not _is_spouse(leader, c):
+		if _direct_parent(leader, c):
+			band = "parents"
+		elif _direct_child(leader, c):
+			band = "children"
+		elif _is_ancestor(chars, leader, c, 0):
+			band = "elder"
+		elif _shares_parent(leader, c):
+			band = "peers"
+		elif _child_spouse(chars, leader, c):
+			band = "children"
+		elif _is_descendant(chars, leader, c, 0):
+			band = "later"
+		else:
+			var delta := _gen_delta(chars, leader, c)
+			if delta <= -2:
+				band = "elder"
+			elif delta == -1:
+				band = "parents"
+			elif delta >= 2:
+				band = "later"
+			elif delta == 1:
+				band = "children"
+	return band
+
+static func _is_spouse(a, b) -> bool:
+	if a == null or b == null:
+		return false
+	return str(a.spouse_id) == str(b.id) or str(b.spouse_id) == str(a.id)
+
+static func _id_in(ids, who) -> bool:
+	var needle := str(who)
+	if needle == "":
+		return false
+	if typeof(ids) != TYPE_ARRAY:
+		return false
+	for item in ids:
+		if str(item) == needle:
+			return true
+	return false
+
+static func _direct_parent(leader, c) -> bool:
+	return _id_in(leader.parent_ids, c.id) or _id_in(c.children_ids, leader.id)
+
+static func _direct_child(leader, c) -> bool:
+	return _id_in(c.parent_ids, leader.id) or _id_in(leader.children_ids, c.id)
+
+static func _shares_parent(a, b) -> bool:
+	if a == null or b == null:
+		return false
+	for pid in a.parent_ids:
+		if _id_in(b.parent_ids, pid):
+			return true
+	return false
+
+static func _child_spouse(chars: Dictionary, leader, c) -> bool:
+	for kid in _kids(chars, leader):
+		if _is_spouse(kid, c):
+			return true
+	return false
+
+static func _kids(chars: Dictionary, person) -> Array:
+	var out: Array = []
+	var seen := {}
+	if person == null:
+		return out
+	for cid in person.children_ids:
+		var kid = chars.get(str(cid))
+		if kid != null and not seen.has(str(kid.id)):
+			seen[str(kid.id)] = true
+			out.append(kid)
+	for ch in chars.values():
+		if _id_in(ch.parent_ids, person.id) and not seen.has(str(ch.id)):
+			seen[str(ch.id)] = true
+			out.append(ch)
+	return out
+
+static func _is_ancestor(chars: Dictionary, person, target, depth: int) -> bool:
+	if person == null or target == null or depth > 6:
+		return false
+	for pid in person.parent_ids:
+		if str(pid) == "":
+			continue
+		if str(pid) == str(target.id):
+			return true
+		var parent = chars.get(str(pid))
+		if parent != null and _is_ancestor(chars, parent, target, depth + 1):
+			return true
+	return false
+
+static func _is_descendant(chars: Dictionary, person, target, depth: int) -> bool:
+	if person == null or target == null or depth > 6:
+		return false
+	for kid in _kids(chars, person):
+		if kid == target:
+			return true
+		if _is_descendant(chars, kid, target, depth + 1):
+			return true
+	return false
+
+static func _gen_delta(chars: Dictionary, leader, c) -> int:
+	var memo := {}
+	return gen_of(chars, c, memo) - gen_of(chars, leader, memo)
+
 static func stage_text(c) -> String:
 	return str(CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(c.age), ""))
 
@@ -122,7 +318,7 @@ static func portrait_rect(c, sz: Vector2) -> Control:
 	return box
 
 ## Builds the panel into `host` (cleared first). `action_text` "" hides the action button.
-static func render(host: Control, c, action_text: String, action_cb: Callable) -> Panel:
+static func render(host: Control, c, action_text: String, action_cb: Callable, extra_text: String = "", extra_cb: Callable = Callable()) -> Panel:
 	for n in host.get_children():
 		host.remove_child(n)
 		n.queue_free()
@@ -212,17 +408,12 @@ static func render(host: Control, c, action_text: String, action_cb: Callable) -
 	bl.autowrap_mode = TextServer.AUTOWRAP_OFF
 	bl.position = Vector2(20, yt_y + 114.0)
 	p.add_child(bl)
-	if action_text != "":
-		var btn := UIKit.cta_button(action_text, "" if DeviceProfile.is_mobile() else "A", 354, 52)
-		btn.name = "InfoAction"
-		btn.position = Vector2(20, 530)
-		btn.pressed.connect(action_cb)
-		p.add_child(btn)
+	_place_actions(p, action_text, action_cb, extra_text, extra_cb, false)
 	return p
 
 
 ## Phone landscape: same content in containers, 22px text, 76px action.
-static func render_mobile(host: Control, c, action_text: String, action_cb: Callable, rect: Rect2) -> Control:
+static func render_mobile(host: Control, c, action_text: String, action_cb: Callable, rect: Rect2, extra_text: String = "", extra_cb: Callable = Callable()) -> Control:
 	for n in host.get_children():
 		host.remove_child(n)
 		n.queue_free()
@@ -290,8 +481,44 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	GameState.set_meta("yeartrace_back", "res://scenes/hub/lineage_view.tscn")
 	YeartraceUi.mount_for(v, c, 420.0, 4)
 	MobilePage.spacer(v)
-	if action_text != "":
-		var btn := MobilePage.button(action_text, true, func(): action_cb.call())
-		btn.name = "InfoAction"
-		v.add_child(btn)
+	_place_actions(v, action_text, action_cb, extra_text, extra_cb, true)
 	return v
+
+## Detail (InfoAction) and the personal dossier (InfoDossier) share one row so neither covers the year-trace.
+static func _place_actions(parent: Control, action_text: String, action_cb: Callable, extra_text: String, extra_cb: Callable, mobile: bool) -> void:
+	if action_text == "" and extra_text == "":
+		return
+	var row := HBoxContainer.new()
+	row.name = "InfoActions"
+	row.add_theme_constant_override("separation", 8)
+	if mobile:
+		parent.add_child(row)
+		if action_text != "":
+			var primary := MobilePage.button(action_text, true, func(): action_cb.call())
+			primary.name = "InfoAction"
+			row.add_child(primary)
+		if extra_text != "":
+			var secondary := MobilePage.button(extra_text, false, func(): extra_cb.call())
+			secondary.name = "InfoDossier"
+			row.add_child(secondary)
+		return
+	row.position = Vector2(20, 530)
+	row.size = Vector2(354, 52)
+	parent.add_child(row)
+	var slots := (1 if action_text != "" else 0) + (1 if extra_text != "" else 0)
+	var width := int((354 - 8 * maxi(0, slots - 1)) / maxi(1, slots))
+	if action_text != "":
+		var hint := "" if extra_text != "" else "A"
+		var primary_btn := UIKit.cta_button(action_text, hint, width, 52)
+		primary_btn.name = "InfoAction"
+		primary_btn.clip_text = false
+		if action_cb.is_valid():
+			primary_btn.pressed.connect(action_cb)
+		row.add_child(primary_btn)
+	if extra_text != "":
+		var secondary_btn := UIKit.ghost_button(extra_text, width, 52)
+		secondary_btn.name = "InfoDossier"
+		secondary_btn.clip_text = false
+		if extra_cb.is_valid():
+			secondary_btn.pressed.connect(extra_cb)
+		row.add_child(secondary_btn)

@@ -44,7 +44,9 @@
   "contract_silver": 6,
   "contract_food": 6,
   "bribe_cost": 50,
-  "scout_cost": 20
+  "scout_cost": 20,
+  "neutral_contest_base": 0.04,
+  "neutral_contest_cap": 0.18
  },
  "sites": [
   {
