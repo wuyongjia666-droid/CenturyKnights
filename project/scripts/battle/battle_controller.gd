@@ -255,6 +255,7 @@ func _process(delta: float) -> void:
 		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
 		or BattlePhaseFeel.end_alpha(self) > 0.0
 		or BattleEngageCutscene.bridge_alpha(self) > 0.0
+		or BattleTurnBridge.pulse_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
 	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
@@ -674,6 +675,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	selected = -1
 	Sfx.confirm()
 	_log("%s 释放「%s」，治疗 %d 人" % [u.char.name, sk.get("name", ""), healed])
+	BattleTurnBridge.after_unit_done(self)
 	map_draw.queue_redraw()
 	_refresh_info()
 	_check_end()
@@ -736,6 +738,10 @@ func _enter_attack_mode() -> void:
 		_log("当前选中单位无法攻击")
 		return
 	attack_mode = true
+	# Frame nearest in-reach foe (T-P23). Do NOT latch preview_attack_ui here —
+	# that would make the first foe tap confirm under touch_confirm (T-P1-5).
+	# Tab / Shift+Tab still cycle via BattleAttackCycle (T-P25).
+	BattleAttackAim.after_enter(self)
 	move_cells.clear()
 	overlay.queue_redraw()
 	_refresh_info()
@@ -1189,6 +1195,7 @@ func _draw_overlay() -> void:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
+		BattleSkillHealPreview.draw(self, overlay)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1218,8 +1225,12 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
+	BattleGhostStrike.draw(self, overlay)
+	BattleAttackAim.draw(self, overlay)
+	BattleSkillHealPreview.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleLandStrike.draw(self, overlay)
+	BattleTurnBridge.draw_ready_pulse(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	BattleLinkTelegraph.draw(self, overlay)
@@ -1363,8 +1374,18 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Y1-A T-P12: Tab / Shift+Tab cycle ready player units.
-				if event.shift_pressed:
+				# Heal preview → attack cycle (T-P25) → formation (T-P12).
+				if BattleSkillHealPreview.latched(self):
+					if event.shift_pressed:
+						BattleSkillHealPreview.apply_prev(self)
+					else:
+						BattleSkillHealPreview.apply_next(self)
+				elif attack_mode:
+					if event.shift_pressed:
+						BattleAttackCycle.apply_prev(self)
+					else:
+						BattleAttackCycle.apply_next(self)
+				elif event.shift_pressed:
 					BattleFormationCycle.apply_prev(self)
 				else:
 					BattleFormationCycle.apply_next(self)
@@ -1449,20 +1470,13 @@ func _set_danger(on: bool, focus: int) -> void:
 	danger_focus = focus
 	if _btn_danger:
 		_btn_danger.set_pressed_no_signal(on)
+	BattleDangerFeel.after_set(self)
 	if overlay:
 		overlay.queue_redraw()
 
 func _draw_danger() -> void:
-	if not danger_on or overlay == null:
-		return
-	var cells := DangerZone.collect(self)
-	var hatch := bool(GameState.settings.get("colorblind", false))
-	for pos in cells.keys():
-		var r := Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-		overlay.draw_rect(r, Color(UIKit.DANGER, 0.28))
-		if hatch:
-			overlay.draw_line(r.position, r.position + r.size, Color(UIKit.DANGER, 0.9), 1.5)
-			overlay.draw_line(r.position + Vector2(0, r.size.y), r.position + Vector2(r.size.x, 0), Color(UIKit.DANGER, 0.9), 1.5)
+	# Y1-A T-P19: layered stands/strike + focus settle live in BattleDangerFeel.
+	BattleDangerFeel.draw(self, overlay)
 
 func _resolve_intel_cell(pos: Vector2) -> Vector2i:
 	# Y1-A T-P1-5: intel long-press uses the same soft/contour resolve as taps.
@@ -1602,6 +1616,7 @@ func _select_player(ui: int) -> void:
 	active_skill_id = ""
 	moved_this_select = false
 	preview_move_cell = Vector2i(-1, -1)
+	BattleGhostStrike.after_preview(self)
 	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
 	BattleRangePreview.publish(self)
@@ -1645,6 +1660,7 @@ func _click_cell(cell: Vector2i) -> void:
 								return
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
+							BattleGhostStrike.after_preview(self)
 							ForecastPanel.refresh(self)
 							BattleLinkTelegraph.refresh(self)
 							BattleFoeOpeningTelegraph.refresh(self)
@@ -1673,6 +1689,7 @@ func _click_cell(cell: Vector2i) -> void:
 						BattleTouchConfirm.confirm_move(self)
 						return
 					preview_move_cell = cell
+					BattleGhostStrike.after_preview(self)
 					preview_attack_ui = -1
 					BattleRangePreview.keep_selected(self)
 					if DeviceProfile.is_mobile():
@@ -1831,6 +1848,8 @@ func _do_attack(ai: int, di: int) -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	if not canto and str(atk.team) == "player":
+		BattleTurnBridge.after_unit_done(self)
 	_refresh_info()
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
@@ -2191,6 +2210,7 @@ func _wait_selected() -> void:
 	attack_mode = false
 	moved_this_select = false
 	_log("%s 待命" % u.char.name)
+	BattleTurnBridge.after_unit_done(self)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_refresh_info()
@@ -2230,6 +2250,7 @@ func _start_player_turn() -> void:
 	moved_this_select = false
 	_theme_banter("turn")
 	BattleStory.on_player_turn(self, map_id)
+	BattleTurnBridge.note_player_return(self)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()

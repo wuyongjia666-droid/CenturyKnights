@@ -119,3 +119,9 @@
 - 各章首拍拍首加 `_opn1`–`_opn6` 入门整装口头（`_thm` 前），全库去重；收束非旁白。
 - 验收：`content_season_open_door_chain_check` — hub chip → 入门针口头。
 - 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_vop`/`_cls`/`_sec`/`_tvp`。
+
+## 访月入厅口头加厚（visit-open）
+
+- 各章 visit 拍（audit/birth/hourglass）拍首加 `_vop1`–`_vop6` 入厅整装口头（`_vhg`/`_msr` 前），全库去重；收束非旁白。
+- 验收：`content_season_visit_open_chain_check` — hub chip → 入厅针口头。
+- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_opn`/`_cls`/`_sec`/`_tvp`。
