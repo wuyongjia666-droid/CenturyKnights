@@ -39,7 +39,7 @@ func _ready() -> void:
 func _place_succession_crests() -> void:
 	## 团徽 + heir on InheritBoard; company header on the shell.
 	var mob := DeviceProfile.is_mobile()
-	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), Vector2(44, 52) if not mob else Vector2(40, 48))
+	CKHeraldryField.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), Vector2(44, 52) if not mob else Vector2(40, 48))
 	var board := get_node_or_null("InheritBoard") as Control
 	var host: Node = board if board != null else self
 	var at := Vector2(980, 12) if board != null else Vector2(980, 12)

@@ -15,7 +15,7 @@ static func mount_for(parent: Node, focus: CKCharacter, width: float = 360.0, ca
 	if focus == null:
 		panel.add_child(UIKit.body_label("—", UIKit.TEXT_FAINT, 12))
 		return panel
-	CKHeraldryChrome.attach_yeartrace_arms(panel, focus, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
+	CKHeraldryField.attach_yeartrace_arms(panel, focus, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
 	var rows: Array = CKSuiKe.yeartrace_for(focus.id)
 	_fill_rows(panel, rows, width, maxi(1, cap), false)
 	return panel
@@ -27,7 +27,7 @@ static func mount_house(parent: Node, width: float = 400.0, cap: int = CAP_HOUSE
 	panel.add_theme_constant_override("separation", 4)
 	parent.add_child(panel)
 	panel.add_child(UIKit.mono("SUI · YEARTRACE", 9, UIKit.ACCENT, false))
-	CKHeraldryChrome.attach_yeartrace_arms(panel, null, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
+	CKHeraldryField.attach_yeartrace_arms(panel, null, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
 	var head := UIKit.body_label(Locale.t("sui_yeartrace_house"), UIKit.TEXT_DIM, 12)
 	head.name = "YeartraceHouseHead"
 	head.autowrap_mode = TextServer.AUTOWRAP_OFF
