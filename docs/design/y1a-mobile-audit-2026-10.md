@@ -297,3 +297,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5s. T-P43 交战锁定瞄准预告
 
 瞄准时攻/守任一方 `temp_combat_lock > 0`：锁定身框品红菱「缠」+ 双方跟焦。`combat_lock_aim_telegraph_check` 真战斗 E2E。
+
+## 5t. T-P44 伤兵瞄准预告
+
+瞄准时敌方 `hp*2 <= max_hp`：敌身框赤红「伤」+ 脚底弧 + 双方跟焦。`combat_wounded_aim_telegraph_check` 真战斗 E2E。
