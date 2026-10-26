@@ -1,0 +1,10 @@
+[remap]
+
+importer="keep"
+uid="uid://ckroadseal1loc"
+
+[deps]
+
+source_file="res://data/locale/road_seal.csv"
+
+[params]

@@ -178,6 +178,9 @@ func _ready() -> void:
 		if selected >= 0:
 			return InputRouter.LONG_MS_SELECTED
 		return InputRouter.LONG_MS
+	# Y1-A T-P15: notch-lip presses on a body get a wider tap slop.
+	_board_router.edge_fn = func(origin: Vector2) -> bool:
+		return BattleEdgePick.press_in_band(self, origin)
 	_init_map()
 	Sfx.play_ambience(AtlasArt.biome_for_map(map_id))
 	_deploy()
@@ -1005,9 +1008,9 @@ func _deploy() -> void:
 			World.grant_gear_skills(u.char)  # v8.7 signature arms grant battle skills while equipped
 		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
-	_show_lock_tip_once()
-	if _lock_practice_pending():
-		_show_lock_practice_banner()
+	BattleLockTutorial.show_tip_once(self)
+	if BattleLockTutorial.practice_pending(self):
+		BattleLockTutorial.show_practice_banner(self)
 	var _diff = GameState.battle_difficulty_from_map(map_id)
 	_log("敌军战技档：%d（地图 %s）" % [_diff, map_id])
 	_log(BattleObjectives.text("diff_now") % BattleObjectives.text("diff_" + CKEnemyLoadout.mode_of(GameState)))
@@ -1177,6 +1180,7 @@ func _draw_overlay() -> void:
 					overlay.draw_texture_rect(_tex(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
+		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
@@ -1208,6 +1212,9 @@ func _draw_overlay() -> void:
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
+	BattleRangePreview.draw_illegal(self, overlay)
+	BattleLinkTelegraph.draw(self, overlay)
+	BattleFoeOpeningTelegraph.draw(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		if s.age < 0.0: continue
@@ -1340,6 +1347,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				if _btn_skill and not _btn_skill.disabled: _cycle_skill()
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
+			KEY_TAB:
+				# Y1-A T-P12: Tab / Shift+Tab cycle ready player units.
+				if event.shift_pressed:
+					BattleFormationCycle.apply_prev(self)
+				else:
+					BattleFormationCycle.apply_next(self)
 			KEY_ENTER, KEY_KP_ENTER:
 				if _btn_end and not _btn_end.disabled: _end_player_turn()
 			_:
@@ -1361,6 +1374,7 @@ func apply_mobile_layout() -> void:
 	_place_mobile_bar()
 	if terrain.size() > 0:
 		_layout_board()
+	BattleEdgePick.note_layout(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
 	CKHeraldryChrome.sync_battle_hud_crests(self)
@@ -1479,6 +1493,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			if turn_team != "player" or _cut_playing:
 				return
 			var cell := BattlePick.resolve(self, pos)
+			cell = BattleRangePreview.tap_cell(self, pos, cell)
 			if cell.x < 0:
 				return
 			_click_cell(cell)
@@ -1571,6 +1586,7 @@ func _select_player(ui: int) -> void:
 	preview_move_cell = Vector2i(-1, -1)
 	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
+	BattleRangePreview.publish(self)
 	_refresh_info()
 	_update_skill_hint()
 	BattlePick.focus_selected(self)
@@ -1612,6 +1628,9 @@ func _click_cell(cell: Vector2i) -> void:
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
 							ForecastPanel.refresh(self)
+							BattleLinkTelegraph.refresh(self)
+							BattleFoeOpeningTelegraph.refresh(self)
+							BattleRangePreview.keep_selected(self)
 							if DeviceProfile.is_mobile():
 								BattleMobileBar.rebuild(self)
 							overlay.queue_redraw()
@@ -1637,6 +1656,7 @@ func _click_cell(cell: Vector2i) -> void:
 						return
 					preview_move_cell = cell
 					preview_attack_ui = -1
+					BattleRangePreview.keep_selected(self)
 					if DeviceProfile.is_mobile():
 						BattleMobileBar.rebuild(self)
 					overlay.queue_redraw()
@@ -1645,6 +1665,8 @@ func _click_cell(cell: Vector2i) -> void:
 					return
 				BattleTouchConfirm.commit_move(self, cell)
 				return
+			if ui < 0 and not attack_mode and not move_cells.has(cell) and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
+				BattleRangePreview.flash_destination(self, cell, "move")
 			# Y1-A T-P1-5: empty illegal / off-preview tap clears the ghost (legal move cells returned above).
 			if ui < 0 and BattleTouchConfirm.enabled() and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
 				BattleTouchConfirm.clear(self)
@@ -1654,6 +1676,9 @@ func _click_cell(cell: Vector2i) -> void:
 				_select_player(ui)
 				return
 			if ui < 0 and BattleTouchConfirm.reject_invalid_tap(self, cell):
+				BattleRangePreview.keep_selected(self)
+				return
+			if ui < 0 and BattleRangePreview.reject_empty(self, cell):
 				return
 			# T-P2: re-tap selected / empty board deselects (phones have no right-click).
 			if BattleTouchConfirm.try_deselect(self, ui):
@@ -1918,11 +1943,11 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
 	BattleStory.fire(self, map_id, "first_lock")
-	if not has_meta("lock_beat_fired") and _is_lock_tutorial_map():
+	if not has_meta("lock_beat_fired") and BattleLockTutorial.is_tutorial_map(self):
 		set_meta("lock_beat_fired", true)
 		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。练习完成，可以结束回合。")
 		_spawn_dmg(units[ai].pos if ai >= 0 else units[di].pos, "教学·锁定", Color(1.0, 0.7, 0.4))
-		_clear_lock_practice_banner()
+		BattleLockTutorial.clear_practice_banner(self)
 		BattleLockTutorial.queue_after_story(self)
 
 func _weapon_for(c: CKCharacter) -> String:
@@ -2192,9 +2217,9 @@ func _start_player_turn() -> void:
 func _end_player_turn() -> void:
 	if battle_over:
 		return
-	if _lock_practice_pending():
+	if BattleLockTutorial.practice_pending(self):
 		_log("〔强制练习〕请先攻击一名敌人，体验交战锁定——尚未可结束回合。")
-		_show_lock_practice_banner()
+		BattleLockTutorial.show_practice_banner(self)
 		Sfx.miss()
 		return
 	turn_team = "enemy"
@@ -2218,140 +2243,7 @@ func _end_player_turn() -> void:
 	if not battle_over:
 		_start_player_turn()
 
-func _show_lock_tip_once() -> void:
-	if has_meta("lock_tip_shown"):
-		return
-	set_meta("lock_tip_shown", true)
-	# E-02: tutorial maps wait for first_lock (and story bar) before teaching cards.
-	if _is_lock_tutorial_map():
-		return
-	BattleLockTutorial.attach_dismiss(self, _show_lock_tip_panel(
-		"交战锁定",
-		"跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。" % BattleRules.LEAVE_COST_LOCK,
-		0,
-		8.0
-	))
-
-func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
-	var panel = UIKit.make_panel()
-	panel.position = Vector2(RAIL_X, 462)  # v8.6: rail slot over the log — never on the board
-	panel.custom_minimum_size = Vector2(RAIL_W, 96)
-	panel.add_theme_stylebox_override("panel", UIKit.glass(12, 0.94, true))
-	panel.z_index = 20
-	panel.name = "LockTipPanel"
-	add_child(panel)
-	# v8.5: legacy gold lock_tip_step plates retired (off-vibe, stretched) -> design-system chrome:
-	# frosted panel + authored coral lock glyph + step pips
-	var hrow := HBoxContainer.new()
-	hrow.add_theme_constant_override("separation", 14)
-	panel.add_child(hrow)
-	var glyph := TextureRect.new()
-	glyph.texture = _tex("res://assets/art/fx/lock_dense_3.png")
-	glyph.custom_minimum_size = Vector2(44, 44)
-	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hrow.add_child(glyph)
-	UIFX.breathe(glyph, 0.04, 1.6)
-	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 4)
-	hrow.add_child(vb)
-	var pips := HBoxContainer.new()
-	pips.add_theme_constant_override("separation", 6)
-	for pi in range(3):
-		var pip := ColorRect.new()
-		pip.custom_minimum_size = Vector2(22 if pi == step else 10, 4)
-		pip.color = UIKit.DANGER if pi == step else Color(UIKit.TEXT_DIM, 0.5)
-		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pips.add_child(pip)
-	vb.add_child(pips)
-	var t = UIKit.make_label(title, true)
-	t.add_theme_font_size_override("font_size", 16)
-	t.add_theme_color_override("font_color", UIKit.DANGER)
-	vb.add_child(t)
-	var d = UIKit.make_dim_label(body)
-	d.add_theme_font_size_override("font_size", 12)
-	d.custom_minimum_size = Vector2(RAIL_W - 110, 0)
-	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vb.add_child(d)
-	if auto_sec > 0.0:
-		get_tree().create_timer(auto_sec).timeout.connect(func():
-			if is_instance_valid(panel):
-				panel.queue_free()
-		)
-	return panel
-
-func _is_lock_tutorial_map() -> bool:
-	var md = BattleMaps.get_map(map_id)
-	if bool(md.get("tutorial_militia", false)) or bool(md.get("tutorial", false)) or map_id.begins_with("ch0"):
-		return true
-	# 中盘二次强制锁定演练（如 ch2_night）
-	return bool(md.get("lock_drill", false))
-
-func _lock_practice_pending() -> bool:
-	return _is_lock_tutorial_map() and not has_meta("lock_beat_fired")
-
-func _show_lock_practice_banner() -> void:
-	if has_meta("lock_practice_banner"):
-		return
-	set_meta("lock_practice_banner", true)
-	## v8.6: slim coral pill in the turn bar — the board stays clear
-	var panel = UIKit.make_glass(18, 0.82)
-	var pst: StyleBoxFlat = UIKit.glass(18, 0.82)
-	pst.border_color = Color(UIKit.DANGER, 0.55)
-	pst.content_margin_top = 4
-	pst.content_margin_bottom = 4
-	pst.content_margin_left = 14
-	pst.content_margin_right = 14
-	pst.shadow_size = 0
-	panel.add_theme_stylebox_override("panel", pst)
-	panel.position = Vector2(RAIL_X, 48 if DeviceProfile.is_mobile() else 2)  # desktop: above the unit panel
-	panel.custom_minimum_size = Vector2(RAIL_W, 0)
-	panel.z_index = 18
-	var ct := find_child("ControlsTip", true, false)
-	if ct:
-		ct.visible = false
-	panel.name = "LockPracticeBanner"
-	add_child(panel)
-	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
-	if oh and not DeviceProfile.is_mobile():
-		oh.visible = false  # desktop: banner sits in the same rail slot; restore when it clears
-	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 0)
-	panel.add_child(vb)
-	var title = Locale.t("shell_lock_drill")
-	var tip = Locale.t("shell_lock_drill_tip")
-	if bool(BattleMaps.get_map(map_id).get("lock_drill", false)) and not map_id.begins_with("ch0"):
-		if map_id.begins_with("ch6"):
-			title = Locale.t("shell_lock_final")
-			tip = Locale.t("shell_lock_final_tip")
-		elif map_id.begins_with("ch5") or map_id.begins_with("ch4"):
-			title = Locale.t("shell_lock_late")
-			tip = Locale.t("shell_lock_late_tip")
-		else:
-			title = Locale.t("shell_lock_mid")
-			tip = Locale.t("shell_lock_mid_tip")
-	var t = UIKit.make_label(title)
-	t.add_theme_font_size_override("font_size", 12)
-	t.add_theme_color_override("font_color", UIKit.DANGER)
-	vb.add_child(t)
-	var tl = UIKit.make_dim_label(tip)
-	tl.add_theme_font_size_override("font_size", UIKit.desk_sz(10))
-	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tl.custom_minimum_size = Vector2(RAIL_W - 28, 0)
-	vb.add_child(tl)
-	panel.tooltip_text = tip
-
-func _clear_lock_practice_banner() -> void:
-	var p = get_node_or_null("LockPracticeBanner")
-	if p:
-		p.queue_free()
-	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
-	if oh and not DeviceProfile.is_mobile():
-		oh.visible = true
-	var ct := find_child("ControlsTip", true, false)
-	if ct:
-		ct.visible = true
+## Lock tip / practice banner UI lives in BattleLockTutorial (line-budget extract).
 
 func _unit_theme(u) -> String:
 	return str(UnitModel.parse_enemy_template(str(u.get("template", ""))).get("theme", "bandit"))

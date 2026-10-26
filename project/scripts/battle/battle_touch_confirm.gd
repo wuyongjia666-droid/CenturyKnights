@@ -148,6 +148,8 @@ static func clear(host, refocus_selection: bool = true) -> void:
 			BattlePick.focus_selected(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
+	BattleLinkTelegraph.clear(host)
+	BattleFoeOpeningTelegraph.clear(host)
 	ForecastPanel.refresh(host)
 
 
@@ -162,6 +164,8 @@ static func confirm_move(host) -> void:
 	commit_move(host, cell)
 	BattlePick.focus_cell(host, cell)
 	BattleCombatFrame.follow_cells(host, [cell], 0.0)
+	# T-P15: keep the mover's figure out of the notch lip and the info column.
+	BattleActionSettle.apply(host, cell, [])
 
 
 static func confirm_attack(host) -> void:
@@ -174,18 +178,29 @@ static func confirm_attack(host) -> void:
 		impact = host.units[ui].pos
 		note_confirm_strike(host, impact)
 	# Do not refocus the attacker — that tween fought the defender frame.
+	var actor := Vector2i(-1, -1)
+	var actor_i := int(host.selected)
+	if actor_i >= 0 and actor_i < host.units.size():
+		actor = host.units[actor_i].pos
 	clear(host, false)
 	if host.selected < 0 or ui < 0 or ui >= host.units.size():
 		return
 	# T-P6: confirm→hit settle path — stamp confirm; resolve refreshes hit/miss/kill juice.
 	host.set_meta("m_attack_confirm_msec", Time.get_ticks_msec())
 	host._do_attack(host.selected, ui)
+	if actor_i >= 0 and actor_i < host.units.size():
+		actor = host.units[actor_i].pos
 	var landed := impact
 	if ui < host.units.size() and host.units[ui].char.hp > 0:
 		landed = host.units[ui].pos
 		BattlePick.focus_cell(host, landed)
 	if landed.x >= 0:
 		BattleCombatFrame.follow_cells(host, [landed], 0.0)
+	# T-P15: the actor stays readable even when the pair does not fit.
+	var also: Array = []
+	if landed.x >= 0 and landed != actor:
+		also.append(landed)
+	BattleActionSettle.apply(host, actor, also)
 
 
 static func overflow_menu(host) -> void:
@@ -359,6 +374,8 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			if host.overlay:
 				host.overlay.queue_redraw()
 			ForecastPanel.refresh(host)
+			BattleLinkTelegraph.refresh(host)
+			BattleFoeOpeningTelegraph.refresh(host)
 			# T-P4: do not soft-follow mid unit-drag (mobile_safe_area: unit drag must not pan).
 			# Camera settles on confirm_attack / focus_selected instead.
 		else:
