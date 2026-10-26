@@ -2359,7 +2359,10 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 	if stock.is_empty():
 		stock = World.stockade_cache_option()
 	var has_cache := not stock.is_empty() and int(stock.get("cache", 0)) > 0
+	var seal_tip_on := bool(halt.get("seal_bypass", false))
 	var h := 420.0 if has_cache else 360.0
+	if seal_tip_on:
+		h += 24.0
 	var panel := _modal_panel(h)
 	panel.name = "SupplyHaltModal"
 	var el := UIKit.mono(Locale.t("atlas_supply_halt_en"), 9, UIKit.DANGER)
@@ -2379,6 +2382,15 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 	body.custom_minimum_size = Vector2(452, 0)
 	panel.add_child(body)
 	var y := 164.0
+	if bool(halt.get("seal_bypass", false)):
+		var seal_tip := UIKit.body_label(Locale.t("atlas_supply_halt_seal") % int(halt.get("seal_need", 0)), UIKit.EMBER, 12)
+		seal_tip.name = "SupplyHaltSeal"
+		seal_tip.position = Vector2(24, 148)
+		seal_tip.size = Vector2(452, 18)
+		seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		seal_tip.clip_text = true
+		panel.add_child(seal_tip)
+		y = 176.0
 	var forage := UIKit.cta_button(Locale.t("atlas_supply_forage"), "A", 452, 42)
 	forage.name = "SupplyForage"
 	forage.position = Vector2(24, y)

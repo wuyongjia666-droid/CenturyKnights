@@ -3029,13 +3029,22 @@ func _mark_supply_halt(starved_days: int) -> void:
 	if not last_supply_halt.is_empty():
 		return
 	var stock_opt: Dictionary = stockade_cache_option()
+	var held := held_march_dest()
+	var seal_need := 0
+	var seal_bypass := false
+	if held != "" and str(seal_detour.get("dest", "")) == held:
+		seal_need = seal_aware_remain_days(held)
+		seal_bypass = seal_need > 0
 	last_supply_halt = {
 		"pos": pos,
 		"dest": str(travel.get("dest", "")),
+		"held": held,
 		"morale": GameState.morale,
 		"starved_days": starved_days,
 		"food": GameState.food,
 		"stockade": stock_opt.duplicate(true) if not stock_opt.is_empty() else {},
+		"seal_bypass": seal_bypass,
+		"seal_need": seal_need,
 	}
 	_tlog(Locale.t("atlas_supply_halt_log") % [node(pos).get("name", pos), starved_days])
 
