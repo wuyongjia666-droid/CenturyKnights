@@ -71,6 +71,7 @@ static func arm(host, sid: String) -> void:
 		host.move_cells.clear()
 		host._log(Locale.t("ux_skill_ready") % [str(sk.get("name", "")), str(sk.get("desc", ""))])
 	update_hint(host)
+	BattleArtHitTelegraph.refresh(host)
 	host.overlay.queue_redraw()
 	host._refresh_info()
 	if DeviceProfile.is_mobile():
