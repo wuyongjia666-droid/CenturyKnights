@@ -91,6 +91,7 @@ var last_siege_sister: Dictionary = {}  # sister stockade garrison relief
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
 var march_hold: Dictionary = {}  # halted march dest; survives city enter/exit
+var seal_detour: Dictionary = {}  # winter detour {dest, path}; survives food-halt so resume stays off sealed edges
 var march_resume: Dictionary = {}  # readable chip while a halted march is moving again
 var city_gate: Dictionary = {}  # last gate crossing: in / out, city, rations
 var market: Dictionary = {}     # city -> {good: stock}
@@ -263,7 +264,7 @@ func to_save() -> Dictionary:
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
 		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "arbitrage": arbitrage, "chain_progress": chain_progress,
 		"territory": CKTerritory.to_save(),
-		"march_hold": march_hold, "march_resume": march_resume, "city_gate": city_gate,
+		"march_hold": march_hold, "march_resume": march_resume, "seal_detour": seal_detour, "city_gate": city_gate,
 	}
 
 func from_save(d: Dictionary) -> void:
@@ -310,9 +311,12 @@ func from_save(d: Dictionary) -> void:
 	last_neutral_contest = {}
 	march_hold = _saved_dict(d.get("march_hold", {}))
 	march_resume = _saved_dict(d.get("march_resume", {}))
+	seal_detour = _saved_dict(d.get("seal_detour", {}))
 	city_gate = _saved_dict(d.get("city_gate", {}))
 	if not nodes.has(str(march_hold.get("dest", ""))):
 		march_hold = {}
+	if str(seal_detour.get("dest", "")) != "" and not nodes.has(str(seal_detour.get("dest", ""))):
+		seal_detour = {}
 	if str(city_gate.get("city", "")) != "" and not nodes.has(str(city_gate.get("city", ""))):
 		city_gate = {}
 	market = {}
@@ -537,6 +541,103 @@ func hold_march(dest: String) -> Dictionary:
 	}
 	world_changed.emit()
 	return march_hold.duplicate(true)
+
+
+## Remember a winter-seal detour so food-halt / city exit resume stays on the bypass.
+func note_seal_detour(dest: String, path: Array) -> void:
+	if dest == "" or not nodes.has(dest) or path.size() < 2:
+		return
+	var clean: Array = []
+	for n in path:
+		var id := str(n)
+		if nodes.has(id):
+			clean.append(id)
+	if clean.size() < 2 or str(clean[-1]) != dest:
+		return
+	seal_detour = {"dest": dest, "path": clean}
+	world_changed.emit()
+
+
+func clear_seal_detour() -> void:
+	if seal_detour.is_empty():
+		return
+	seal_detour = {}
+	world_changed.emit()
+
+
+## Remaining hops of a recorded seal detour from the party's current node.
+func seal_detour_remaining() -> Array:
+	var dest := str(seal_detour.get("dest", ""))
+	var path: Array = seal_detour.get("path", [])
+	if dest == "" or path.size() < 2:
+		return []
+	if pos == dest:
+		return []
+	var idx := -1
+	for i in path.size():
+		if str(path[i]) == pos:
+			idx = i
+			break
+	if idx < 0:
+		return []
+	var rem: Array = []
+	for i in range(idx, path.size()):
+		rem.append(str(path[i]))
+	return rem if rem.size() >= 2 else []
+
+
+func _preview_along(path: Array) -> Dictionary:
+	if path.size() < 2:
+		return {"ok": false, "msg": "无路可达"}
+	for n in path:
+		if not nodes.has(str(n)):
+			return {"ok": false, "msg": "无路可达"}
+	var legs: Array = []
+	var days := 0
+	var tolls := 0
+	var fare := 0
+	var danger := 0
+	var borders: Array = []
+	var leg_readouts: Array = []
+	for i in range(path.size() - 1):
+		var from_id := str(path[i])
+		var to_leg := str(path[i + 1])
+		var leg := road_between(from_id, to_leg)
+		if leg.is_empty():
+			return {"ok": false, "msg": "无路可达"}
+		legs.append(leg)
+		days += int(leg.get("days", 1))
+		var dng := int(leg.get("danger", 1))
+		danger = maxi(danger, dng)
+		var cost := 0
+		var kind := str(leg.get("kind", "road"))
+		if kind == "border":
+			var into := nation_of(to_leg)
+			cost = toll_for(into)
+			tolls += cost
+			borders.append(str(nations.get(into, {}).get("name", into)))
+		elif kind == "sea":
+			cost = int(leg.get("fare", 30))
+			fare += cost
+		leg_readouts.append({
+			"from": from_id,
+			"to": to_leg,
+			"from_name": str(node(from_id).get("name", from_id)),
+			"to_name": str(node(to_leg).get("name", to_leg)),
+			"days": int(leg.get("days", 1)),
+			"danger": dng,
+			"kind": kind,
+			"kind_zh": road_kind_zh(kind),
+			"cost": cost,
+			"hot": dng >= 3,
+		})
+	var food := food_per_day() * days
+	return {
+		"ok": true, "path": path.duplicate(), "legs": legs, "leg_readouts": leg_readouts,
+		"days": days, "food": food, "tolls": tolls, "fare": fare, "danger": danger,
+		"borders": borders, "short_food": GameState.food < food, "hot_legs": _count_hot_legs(leg_readouts),
+	}
+
 
 
 func march_hold_text() -> String:
@@ -1220,6 +1321,13 @@ func begin_travel(to_id: String) -> Dictionary:
 	if to_id == pos:
 		return {"ok": false, "msg": "已在此地"}
 	var pv := travel_preview(to_id)
+	# Prefer a recorded winter-seal detour so halt/resume does not snap onto a sealed shortest road.
+	if str(seal_detour.get("dest", "")) == to_id:
+		var via := seal_detour_remaining()
+		if via.size() >= 2:
+			var along := _preview_along(via)
+			if bool(along.get("ok", false)):
+				pv = along
 	if not pv.ok:
 		return pv
 	if GameState.silver < int(pv.fare):
@@ -1298,6 +1406,8 @@ func _arrive_leg(b: String) -> Dictionary:
 	if not travel.is_empty() and (b == str(travel.dest) or int(travel.leg) >= travel.route.size() - 1):
 		travel = {}
 		march_resume = {}
+		if b == str(seal_detour.get("dest", "")):
+			seal_detour = {}
 		info["arrived"] = true
 	if not info.get("encounter", {}).is_empty():
 		travel = {}

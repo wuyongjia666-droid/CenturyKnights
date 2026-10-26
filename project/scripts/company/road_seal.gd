@@ -224,18 +224,20 @@ static func march_detour(to_id: String) -> Dictionary:
 		return {"ok": false, "msg": Locale.t("seal_detour_none")}
 	var food0 := GameState.food
 	var day0 := World.days_total
+	World.note_seal_detour(to_id, path)
 	World._tlog(Locale.t("seal_log_detour") % str(plan.get("dest_name", to_id)))
 	for i in range(1, path.size()):
 		var nxt := str(path[i])
 		var hop: Dictionary = World.route(World.pos, nxt)
 		var hp: Array = hop.get("path", [])
 		if hp.size() != 2 or str(hp[1]) != nxt:
-			return {"ok": false, "msg": Locale.t("seal_hop_fail") % nxt, "pos": World.pos}
+			return {"ok": false, "halted": true, "msg": Locale.t("seal_hop_fail") % nxt, "pos": World.pos, "dest": to_id, "remaining": World.seal_detour_remaining()}
 		if is_sealed(World.pos, nxt):
 			return {"ok": false, "msg": Locale.t("seal_hop_sealed") % nxt, "pos": World.pos}
 		World.travel_to(nxt)
 		if World.pos != nxt or World.is_traveling():
-			return {"ok": false, "msg": Locale.t("seal_hop_fail") % nxt, "pos": World.pos}
+			# Keep seal_detour so halt→resume stays on the bypass.
+			return {"ok": false, "halted": true, "msg": Locale.t("seal_hop_fail") % nxt, "pos": World.pos, "dest": to_id, "remaining": World.seal_detour_remaining()}
 	return {
 		"ok": World.pos == to_id,
 		"days": World.days_total - day0,
@@ -244,3 +246,41 @@ static func march_detour(to_id: String) -> Dictionary:
 		"path": path,
 		"plan_days": int(detour.get("days", 0)),
 	}
+
+
+## Continue a recorded seal detour after food-halt / city exit. Uses World.seal_detour.
+static func resume_detour() -> Dictionary:
+	var dest := str(World.seal_detour.get("dest", ""))
+	if dest == "" or dest == World.pos:
+		return {"ok": false, "msg": "无绕路可续"}
+	var rem: Array = World.seal_detour_remaining()
+	if rem.size() < 2:
+		return {"ok": false, "msg": "绕路已断"}
+	var before_food := GameState.food
+	var before_day := World.days_total
+	var spent := 0
+	for i in range(rem.size() - 1):
+		var nxt := str(rem[i + 1])
+		if is_sealed(World.pos, nxt):
+			World.clear_seal_detour()
+			return {"ok": false, "msg": "续行撞上封路", "pos": World.pos, "days": spent}
+		var st: Dictionary = World.travel_to(nxt)
+		if not bool(st.get("ok", true)) and not bool(st.get("arrived", false)):
+			if str(st.get("msg", "")) != "":
+				return {"ok": false, "msg": str(st.get("msg", "")), "pos": World.pos, "days": spent}
+		if World.pos != nxt:
+			# Mid-path halt — seal_detour stays so the next resume continues.
+			spent = World.days_total - before_day
+			return {
+				"ok": false, "halted": true, "msg": "中途停驻", "pos": World.pos, "dest": dest,
+				"days": spent, "food_after": GameState.food, "remaining": World.seal_detour_remaining(),
+			}
+		spent = World.days_total - before_day
+	if World.pos != dest:
+		return {"ok": false, "msg": "未抵达", "pos": World.pos, "days": spent}
+	return {
+		"ok": true, "pos": World.pos, "dest": dest, "days": spent,
+		"food_after": GameState.food, "food_spent": before_food - GameState.food,
+		"resumed": true,
+	}
+
