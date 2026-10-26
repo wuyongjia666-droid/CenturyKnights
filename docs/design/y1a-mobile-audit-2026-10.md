@@ -290,3 +290,6 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5q. T-P41 敌未刃预告
 
 瞄准时 `extras.foe_opening`：敌身框青绿「未刃」+ 双方跟焦。`combat_foe_opening_telegraph_check` 真战斗 E2E。顺带把 lock tip/practice 抽进 `BattleLockTutorial` 压线门禁。
+## 5r. T-P42 战技命中偏置预告
+
+瞄准且已武装 offense 战技、`hit_mod != 0`：敌身框琥珀「加准」/ 紫「偏斜」+ 双方跟焦。`combat_art_hit_telegraph_check` 真战斗 E2E。顺带把 support/buff 施放抽进 `BattleSkillCast` 压线门禁。
