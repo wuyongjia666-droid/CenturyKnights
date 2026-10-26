@@ -288,15 +288,20 @@ static func _clip_notch(host, inset: Rect2) -> Rect2:
 	var item := host as CanvasItem
 	if not item.is_inside_tree():
 		return inset
+	var vp := item.get_viewport().get_visible_rect().size
 	var win := Vector2(DisplayServer.window_get_size())
-	# Headless has no window size. The viewport is the space CK_SAFE_INSETS is
-	# expressed in once the suite has sized the root. A real window wins on device.
-	if win.x < 2.0 or win.y < 2.0:
-		win = item.get_viewport().get_visible_rect().size
+	# CK_SAFE_INSETS is authored in the sized-root (viewport) space. Suites and
+	# shots set the root size; parallel CI headless often reports a non-zero but
+	# wrong DisplayServer window, which scales the notch into empty intersection
+	# and silently skips the clip. Prefer viewport whenever the sim env is set.
+	# On device CK_SAFE_INSETS is empty — real window + get_display_safe_area win.
+	if OS.get_environment("CK_SAFE_INSETS") != "" and vp.x >= 2.0 and vp.y >= 2.0:
+		win = vp
+	elif win.x < 2.0 or win.y < 2.0:
+		win = vp
 	if win.x < 2.0 or win.y < 2.0:
 		return inset
 	var safe := DeviceProfile.safe_area(win)
-	var vp := item.get_viewport().get_visible_rect().size
 	var sx := vp.x / win.x
 	var sy := vp.y / win.y
 	var safe_vp := Rect2(safe.position.x * sx, safe.position.y * sy, safe.size.x * sx, safe.size.y * sy)

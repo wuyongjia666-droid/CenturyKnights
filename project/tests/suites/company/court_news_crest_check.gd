@@ -65,8 +65,12 @@ func _assert_page(page: Node, where: String) -> void:
 	var gaz := page.find_child("GazetteCrestStrip", true, false)
 	_ok(gaz != null, "%s GazetteCrestStrip" % where)
 	if gaz != null:
+		_ok(str(gaz.get_meta("field_route", "")) == "gazette_strip", "%s strip field_route" % where)
 		_ok(gaz.find_child("GazetteNationArms", true, false) != null, "%s strip GazetteNationArms" % where)
 		_ok(str(gaz.get_meta("nation_id", "")) != "", "%s strip nation_id" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/court_news.gd")
+	_ok(src.find("CKHeraldryField.place_gazette_crest_strip") >= 0, "%s hub calls Field strip" % where)
+	_ok(src.find("CKHeraldryField.attach_news_row_arms") >= 0, "%s hub calls Field row" % where)
 	## Seeded news row also carries GazetteNationArms under the list.
 	var list := page.find_child("NewsRows", true, false)
 	if list != null:

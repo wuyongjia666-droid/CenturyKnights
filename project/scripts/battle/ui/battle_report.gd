@@ -27,7 +27,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	var eb := UIKit.mono("POST-ACTION REPORT // %s // CENTURY KNIGHTS" % ("STAGE CLEARED" if win else "MISSION FAILED"), 9, col, false)
 	eb.position = Vector2(42, 22)
 	root.add_child(eb)
-	CKHeraldryField.place_report_crest_strip(root, Vector2(700, 12), CKHeraldryChrome.battle_foe_nation_for(host), Vector2(36, 44))
+	CKHeraldryField.place_report_crest_strip(root, Vector2(700, 12), CKHeraldryField.battle_foe_nation_for(host), Vector2(36, 44))
 	var rec := UIKit.tag_chip("ROUND %02d" % maxi(1, host._round_no), col)
 	rec.position = Vector2(1238 - rec.get_minimum_size().x, 18)
 	root.add_child(rec)

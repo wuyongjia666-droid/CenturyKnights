@@ -60,7 +60,7 @@ func _row(item: Dictionary) -> void:
 	var r := CKPageKit.row(UIKit.ACCENT, 0)
 	var box: VBoxContainer = r[1]
 	if c != null:
-		CKHeraldryChrome.attach_yearcard_row_arms(box, c, Vector2(30, 36) if DeviceProfile.is_mobile() else Vector2(32, 38))
+		CKHeraldryField.attach_yearcard_row_arms(box, c, Vector2(30, 36) if DeviceProfile.is_mobile() else Vector2(32, 38))
 	box.add_child(UIKit.tag_chip(str(item.get("band", "sui")), UIKit.ACCENT))
 	box.add_child(UIKit.title_label(str(item.get("title", "")), 18))
 	box.add_child(CKPageKit.text(Locale.t("sui_year_who", [who, age]), UIKit.TEXT_DIM, 13, 1000))
@@ -105,8 +105,8 @@ func _place_yearcard_crests(mobile: bool = false) -> void:
 	var at_y := 6.0 if mob else 8.0
 	var arms_x := (w - 64.0) if mob else 1180.0
 	var strip_x := (w - 140.0) if mob else 1100.0
-	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
-	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+	CKHeraldryField.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryField.place_banner_plate(self, Vector2(strip_x, at_y), hdr, ban)
 
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)
