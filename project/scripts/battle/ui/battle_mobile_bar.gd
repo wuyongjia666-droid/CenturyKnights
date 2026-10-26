@@ -79,7 +79,7 @@ static func _rebuild_confirm(host, row: BoxContainer, h: int, land: bool, is_mov
 		confirm_cb = func(): BattleTouchConfirm.confirm_move(host)
 	else:
 		confirm_cb = func(): BattleTouchConfirm.confirm_attack(host)
-	var cancel_cb := func(): BattleTouchConfirm.clear(host)
+	var cancel_cb := func(): BattleAttackCancelDepth.step(host)
 	var confirm_txt := Locale.t("ux_confirm_move") if is_move else Locale.t("ux_confirm_attack")
 	var hint := _dest_hint(host, is_move)
 	if land:
