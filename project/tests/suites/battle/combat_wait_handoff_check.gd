@@ -178,7 +178,21 @@ func _e2e_wait_handoff() -> String:
 	await _settle(3)
 	var before: Vector2 = _battle._board_pan
 	_battle._wait_selected()
-	await _settle(10)
+	# FOCUS_SMOOTH_SEC is 0.22s; 10 frames at high headless Hz often ends before tween.
+	var stage: Rect2 = BattlePick._stage_rect(_battle)
+	var origin: Vector2 = _battle.ORIGIN
+	var zoom := float(_battle._board_zoom)
+	var cell_px: float = float(_battle.CELL) * zoom
+	var inset := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
+	var frames := 0
+	while frames < 36:
+		var handed := int(_battle.selected)
+		if handed >= 0 and handed != _a:
+			var sp: Vector2i = _battle.units[handed].pos
+			if BattleCombatFrame.figure_inside(origin, cell_px, sp, _battle._board_pan, zoom, inset, 12.0):
+				break
+		await get_tree().process_frame
+		frames += 1
 	if int(_battle.selected) != _b:
 		# next after _a should be _b if indices ordered; if not, accept any other ready
 		if int(_battle.selected) == _a or int(_battle.selected) < 0:
@@ -201,11 +215,11 @@ func _e2e_wait_handoff() -> String:
 		return "still focused on waited unit"
 	# On mobile/desktop CombatFrame.follow_selected may nudge; require any pan change
 	# when the new unit was off to the side.
-	var stage: Rect2 = BattlePick._stage_rect(_battle)
-	var origin: Vector2 = _battle.ORIGIN
-	var zoom := float(_battle._board_zoom)
-	var cell_px: float = float(_battle.CELL) * zoom
-	var inset := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
+	stage = BattlePick._stage_rect(_battle)
+	origin = _battle.ORIGIN
+	zoom = float(_battle._board_zoom)
+	cell_px = float(_battle.CELL) * zoom
+	inset = BattleCombatFrame.play_inset(stage, 0.0, 0.0)
 	if not BattleCombatFrame.figure_inside(origin, cell_px, sel_pos, after, zoom, inset, 12.0):
 		return "handed unit figure still outside play inset (before %s after %s sel=%s)" % [before, after, sel_pos]
 	# Second wait → hand to remaining or clear if none
