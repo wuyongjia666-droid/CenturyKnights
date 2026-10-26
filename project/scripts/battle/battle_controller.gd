@@ -665,6 +665,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
 		_spawn_dmg(u.pos, "圣域", Color(0.7, 0.85, 1.0))
 	_consume_skill(u.char, sid)
+	var from_i: int = ui
 	u.done = true
 	selected = -1
 	Sfx.confirm()
@@ -672,6 +673,8 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	map_draw.queue_redraw()
 	_refresh_info()
 	_check_end()
+	if not battle_over:
+		BattleWaitHandoff.after_unit_done(self, from_i)
 
 func _cast_buff_skill(ui: int, sid: String) -> void:
 	_push_lamp()
@@ -1803,6 +1806,8 @@ func _do_attack(ai: int, di: int) -> void:
 	overlay.queue_redraw()
 	_queue_cutscene(ai, di, _hp0a, _hp0d)
 	_check_end()
+	if not canto and not battle_over:
+		BattleWaitHandoff.after_unit_done(self, ai)
 
 func _cutscenes_enabled() -> bool:
 	return BattleEngageCutscene.should_play(
@@ -2149,6 +2154,7 @@ func _wait_selected() -> void:
 	if u.team != "player" or u.done:
 		return
 	_push_lamp()
+	var from_i: int = selected
 	u.done = true
 	selected = -1
 	move_cells.clear()
@@ -2158,6 +2164,7 @@ func _wait_selected() -> void:
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_refresh_info()
+	BattleWaitHandoff.after_unit_done(self, from_i)
 
 func _start_player_turn() -> void:
 	_arm_lamps()
