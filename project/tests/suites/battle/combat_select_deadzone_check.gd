@@ -264,15 +264,31 @@ func _e2e_sticky_pan_empty() -> String:
 		return "sticky setup select failed"
 	# Expire select-lock so a misclassified tap would deselect.
 	_battle.set_meta("m_select_burst_msec", Time.get_ticks_msec() - 1000)
-	# Select focus-pan can park `_board_pan` on a clamp edge; +x drift then looks
-	# like sticky swallow. Park mid-stage with headroom, then recompute halo.
+	# Select focus-pan / fit-to-stage can pin `_board_pan` (map fits landscape stage
+	# at zoom=1 → clamp has zero +x headroom, so a real pan looks like sticky swallow).
+	# Zoom past fit, park mid clamp-range, then recompute halo.
 	BattlePick.cancel_focus_tween(_battle)
 	BattleTouchConfirm.end_gesture(_battle)
+	_battle._board_zoom = 1.75
 	_battle._board_pan = Vector2.ZERO
-	_battle._board_zoom = 1.0
+	_battle._clamp_board_pan()
+	var stage: Rect2 = _battle.get_meta("m_board_area")
+	var z: float = float(_battle._board_zoom)
+	var board: Vector2 = Vector2(float(_battle.MAP_W), float(_battle.MAP_H)) * float(_battle.CELL) * z
+	var o: Vector2 = _battle.ORIGIN * z
+	var keep := BattlePick.PAN_KEEP_PX
+	var lo := Vector2(stage.position.x + keep - o.x - board.x, stage.position.y + keep - o.y - board.y)
+	var hi := Vector2(stage.end.x - keep - o.x, stage.end.y - keep - o.y)
+	_battle._board_pan = (lo + hi) * 0.5
 	_battle._clamp_board_pan()
 	_battle._apply_board_xform()
 	await _settle(2)
+	# Prove +x headroom exists — otherwise the assert below is a clamp false-positive.
+	var probe: Vector2 = BattlePick.clamp_pan(
+		_battle._board_pan + Vector2(80.0, 0.0), _battle._board_zoom,
+		_battle.ORIGIN, Vector2(_battle.MAP_W, _battle.MAP_H) * float(_battle.CELL), stage)
+	if absf(probe.x - _battle._board_pan.x) < 1.0:
+		return "pan fixture lacks +x headroom (stage=%s zoom=%.2f pan=%s)" % [stage, z, _battle._board_pan]
 	var halo := _screen(_cell_local(Vector2i(4, 3), Vector2(0.18, 0.5)))
 	if BattlePick.near_selected_unit(_battle, halo, _player_i):
 		return "live soft halo still sticky"
