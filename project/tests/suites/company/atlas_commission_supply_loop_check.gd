@@ -239,17 +239,18 @@ func _ui_board_and_market() -> void:
 
 	GameState.set_meta("city_id", HOME)
 	GameState.set_meta("city_tab", "board")
-	var city: Control = CITY_SCN.instantiate()
+	var city = CITY_SCN.instantiate()
 	city.position = Vector2.ZERO
 	city.size = Vector2(1280, 720)
 	get_tree().root.add_child(city)
 	for _i in 8:
 		await get_tree().process_frame
+	_ok(str(city.get_script()) != "", "city script loaded")
 	if city.has_method("_set_tab"):
-		city._set_tab("board")
-	city._sel_quest = _qid
+		city.call("_set_tab", "board")
+	city.set("_sel_quest", _qid)
 	if city.has_method("_render_tab"):
-		city._render_tab()
+		city.call("_render_tab")
 	for _j in 4:
 		await get_tree().process_frame
 	var body_bits := ""
@@ -266,7 +267,7 @@ func _ui_board_and_market() -> void:
 		World._init_market(_supply)
 	GameState.set_meta("city_id", _supply)
 	GameState.set_meta("city_tab", "market")
-	var mkt: Control = CITY_SCN.instantiate()
+	var mkt = CITY_SCN.instantiate()
 	mkt.position = Vector2.ZERO
 	mkt.size = Vector2(1280, 720)
 	get_tree().root.add_child(mkt)
@@ -305,7 +306,7 @@ func _ui_atlas_pickup_enter() -> void:
 	World.visited[_supply] = true
 	GameState.set_meta("atlas_select", _supply)
 	GameState.set_meta("atlas_view", World.nation_of(_supply))
-	var page: Control = ATLAS_SCN.instantiate()
+	var page = ATLAS_SCN.instantiate()
 	page.position = Vector2.ZERO
 	page.size = Vector2(1280, 720)
 	get_tree().root.add_child(page)
