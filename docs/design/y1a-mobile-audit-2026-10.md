@@ -285,3 +285,8 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5q. T-P40 连携预告
 
 瞄准时 `link_names` 非空：攻方身框双珠连线 +「连携 伙伴名」+ 双方跟焦。`combat_link_telegraph_check` 真战斗 E2E。
+---
+
+## 5q. T-P41 敌未刃预告
+
+瞄准时 `extras.foe_opening`：敌身框青绿「未刃」+ 双方跟焦。`combat_foe_opening_telegraph_check` 真战斗 E2E。顺带把 lock tip/practice 抽进 `BattleLockTutorial` 压线门禁。
