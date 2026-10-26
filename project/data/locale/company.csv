@@ -25,11 +25,16 @@ festival_spring_blurb,联姻的帖子在这个月换一轮,Marriage letters refr
 festival_tourney,比武,Muster of arms
 festival_tourney_blurb,旗下较技，奖的是声望。竞技场规则战还没接上,Reputation only until the arena rules land
 festival_tourney_purse,比武散场，灰烬邦记下了旗,The muster is noted
+forge_craft_done,打造完成：灰刃 +2 攻,Forged: Ash blade +2 ATK
+forge_craft_done_fine,打造完成：灰刃·精 +3 攻,Forged: Fine ash blade +3 ATK
+forge_craft_equipped,%s 装备%s%s,%s equipped %s%s
 forge_modify,改造装备,Modify gear
 forge_plus_fail,改造 +%d 没成，材料已经入炉,Plus %d failed and the materials are spent
 forge_plus_max,已经加到三成,Already at plus 3
 forge_plus_ok,改造成了 +%d,Forged to plus %d
 forge_plus_short,铁或银不够,Short on iron or silver
+forge_weapon,灰刃,Ash blade
+forge_weapon_fine,灰刃·精,Fine ash blade
 heirloom_none,手里没有传家宝,No heirloom
 heirloom_not_vaulted,宝库里没有这件,Not in the treasury
 heirloom_store,收入宝库,Store heirloom
@@ -473,6 +478,11 @@ atlas_siege_loot_body_lost,%s 攻陷「%s」：粮仓被洗劫 %d（仓空）。
 atlas_siege_loot_ok,已知晓,Understood
 atlas_siege_loot_hold_log,「%s」守住了据点，粮仓仍失 %d。,"%s" held — cache still lost %d.
 atlas_siege_loot_lost_log,「%s」失守，粮仓被劫 %d。,"%s" fell — cache looted %d.
+atlas_convoy_need_threat,无围城威胁，不必撤仓。,No siege threat — no need to evacuate.
+atlas_convoy_ok_stockade,「%s」粮仓撤运 %d 至「%s」（途损 %d）。,"%s" evacuated %d food to "%s" (spoilage %d).
+atlas_convoy_ok_company,「%s」粮仓撤入行囊 %d（途损 %d）。,"%s" evacuated %d food into the company (spoilage %d).
+atlas_siege_evacuate,撤仓护粮,Evacuate cache
+atlas_siege_evacuate_done,粮仓已撤：%s,Cache evacuated: %s
 atlas_season_spring,春,Spring
 atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn

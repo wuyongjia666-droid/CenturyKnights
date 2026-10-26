@@ -556,6 +556,87 @@ static func open_cache(id: String) -> Dictionary:
 		"msg": Locale.t("atlas_cache_open_ok") % [str(site(id).get("name", id)), qty]}
 
 
+## Under siege: haul the granary out before the raid. Prefer another owned stockade; else company food.
+## Road spoilage: lose ~1 food per 2 travel-days (min 0). Clears cache on the threatened site.
+static func evacuate_cache(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if not bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+	if (st.threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_convoy_need_threat")}
+	var qty := maxi(0, int(st.get("cache_food", 0)))
+	if qty <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id))}
+	var from_name := str(site(id).get("name", id))
+	var from_anchor := str(site(id).get("anchor", ""))
+	# Destination: nearest other owned stockade (ignore empty-cache preference — any stockade).
+	var dest_id := ""
+	var dest_anchor := ""
+	var dest_name := ""
+	var days := 0
+	var best := 999999
+	for oid in owned_ids():
+		if oid == id:
+			continue
+		var ost := state(oid)
+		if not bool(ost.stockade):
+			continue
+		var oanch := str(site(oid).get("anchor", ""))
+		if oanch == "" or not World.nodes.has(oanch):
+			continue
+		var dist := 3
+		if from_anchor != "" and from_anchor == str(World.pos):
+			var pv: Dictionary = World.travel_preview(oanch)
+			if bool(pv.get("ok", false)):
+				dist = int(pv.get("days", 3))
+		elif from_anchor != "" and oanch != from_anchor:
+			dist = 4
+		else:
+			dist = 1
+		if dist < best:
+			best = dist
+			dest_id = oid
+			dest_anchor = oanch
+			dest_name = str(site(oid).get("name", oid))
+			days = dist
+	var spoilage := mini(qty - 1, int(days / 2)) if qty > 1 else 0
+	var delivered := qty - spoilage
+	st.cache_food = 0
+	_put(id, st)
+	var via := "company"
+	if dest_id != "":
+		var dst := state(dest_id)
+		dst.cache_food = int(dst.get("cache_food", 0)) + delivered
+		_put(dest_id, dst)
+		via = "stockade"
+	else:
+		GameState.food += delivered
+	var msg := ""
+	if via == "stockade":
+		msg = Locale.t("atlas_convoy_ok_stockade") % [from_name, delivered, dest_name, spoilage]
+	else:
+		msg = Locale.t("atlas_convoy_ok_company") % [from_name, delivered, spoilage]
+	_log(msg)
+	World.mark_siege_convoy({
+		"from_id": id,
+		"from_name": from_name,
+		"qty": qty,
+		"delivered": delivered,
+		"spoilage": spoilage,
+		"dest_id": dest_id,
+		"dest_name": dest_name,
+		"dest_anchor": dest_anchor,
+		"via": via,
+		"days": days,
+	})
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "qty": qty, "delivered": delivered, "spoilage": spoilage,
+		"dest_id": dest_id, "via": via, "msg": msg}
+
+
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
 static func apply_month(force_roll: float = -1.0) -> String:
 	var ids := owned_ids()
