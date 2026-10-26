@@ -1339,9 +1339,7 @@ func _tab_board() -> void:
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(badge)
 		# Issuer crest (团徽 for hq, nation plate otherwise) — right edge of the offer row.
-		var crest := CKHeraldryChrome.make_issuer_arms(str(q.get("issuer", city)), Vector2(28, 34))
-		crest.position = Vector2(388.0 - 28.0 - 8.0, 6.0)
-		b.add_child(crest)
+		CKHeraldryField.pin_board_row_arms(b, str(q.get("issuer", city)), Vector2(388.0 - 28.0 - 8.0, 6.0), Vector2(28, 34))
 		var qid := str(q.id)
 		b.pressed.connect(func(): _sel_quest = qid; _render_tab())
 		v.add_child(b)
@@ -1386,7 +1384,7 @@ func _tab_board() -> void:
 	var e := UIKit.mono("%s // %s" % ["ACTIVE" if is_active else "OFFER", str(sel.kind).to_upper()], 9, UIKit.EMBER if bool(sel.get("sig", false)) else UIKit.ACCENT)
 	e.position = Vector2(18, 16)
 	d.add_child(e)
-	CKHeraldryChrome.place_board_crest(d, str(sel.get("issuer", city)), Vector2(352, 14), Vector2(44, 52))
+	CKHeraldryField.place_board_crest(d, str(sel.get("issuer", city)), Vector2(352, 14), Vector2(44, 52))
 	var t := _para(str(sel.title), UIKit.TEXT, 19, 320)
 	t.position = Vector2(18, 32)
 	d.add_child(t)
@@ -2006,6 +2004,7 @@ func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, o
 		if mobile:
 			why.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		v.add_child(why)
+	_fill_specialty(v, mobile)
 	var rows: Array = CKJobSeals.rows_for_city(city)
 	if rows.is_empty():
 		var empty := UIKit.body_label(Locale.t("js_76942d49"), UIKit.TEXT_DIM, fs_dim)
@@ -2062,3 +2061,68 @@ func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, o
 			if mobile:
 				none.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			v.add_child(none)
+
+
+func _fill_specialty(v: VBoxContainer, mobile: bool) -> void:
+	var fs := MobilePage.FONT if mobile else 15
+	var fs_dim := MobilePage.FONT if mobile else 13
+	var hit := int(MobilePage.HIT) if mobile else 48
+	var card: Dictionary = CKCitySpecialty.card(city)
+	var head := UIKit.body_label(str(card.get("head", "")), UIKit.ACCENT, fs)
+	head.name = "SpecialtyHead"
+	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if mobile:
+		head.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(head)
+	var body := UIKit.body_label(str(card.get("body", "")), UIKit.TEXT, fs_dim)
+	body.name = "SpecialtyBody"
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if mobile:
+		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(body)
+	var cost := str(card.get("cost", ""))
+	if cost != "":
+		var cl := UIKit.body_label(cost, UIKit.TEXT, fs_dim)
+		cl.name = "SpecialtyCost"
+		cl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			cl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(cl)
+	var pay := str(card.get("pay", ""))
+	if pay != "":
+		var pl := UIKit.body_label(pay, UIKit.OK, fs_dim)
+		pl.name = "SpecialtyPay"
+		pl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			pl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(pl)
+	var hold := str(card.get("hold", ""))
+	if hold != "":
+		var hl := UIKit.body_label(hold, UIKit.TEXT_DIM, fs_dim)
+		hl.name = "SpecialtyHold"
+		hl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			hl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(hl)
+	var go: Button
+	if mobile:
+		go = MobilePage.button(str(card.get("action", "")), true, _specialty_act)
+	else:
+		go = UIKit.ghost_button(str(card.get("action", "")), 220, hit)
+		go.pressed.connect(_specialty_act)
+	go.name = "SpecialtyDo"
+	go.disabled = not bool(card.get("enabled", false))
+	v.add_child(go)
+	var why_txt := str(card.get("why", ""))
+	if why_txt != "":
+		var wl := UIKit.body_label(why_txt, UIKit.TEXT_DIM, fs_dim)
+		wl.name = "SpecialtyWhy"
+		wl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			wl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(wl)
+
+
+func _specialty_act() -> void:
+	var r := CKCitySpecialty.act(city)
+	open_affairs(str(r.get("msg", "")), bool(r.get("ok", false)))

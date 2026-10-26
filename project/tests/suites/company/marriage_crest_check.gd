@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: marriage protocol strip (团徽 + suitor + spouse) + HouseArms on both house cards, desktop + mobile.
+## Fat heraldry E2E: Field marriage protocol strip (团徽 + suitor + spouse) + HouseArms, desktop + mobile.
 
 const MARRIAGE_SCN := preload("res://scenes/hub/marriage.tscn")
 var _fails: Array = []
@@ -10,11 +10,11 @@ func _ready() -> void:
 	await _run_mobile()
 	await _run_helpers()
 	if _fails.is_empty():
-		print("MARRIAGE CREST CHROME PASS")
+		print("MARRIAGE CREST PASS")
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL marriage crest chrome: ", f)
+			print("FAIL marriage crest: ", f)
 		get_tree().quit(1)
 
 func _ok(cond: bool, msg: String) -> void:
@@ -48,8 +48,8 @@ func _assert_strip(page: Node, where: String) -> void:
 	var la := strip.find_child("LeftArms", true, false)
 	var ra := strip.find_child("RightArms", true, false)
 	_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
-	_ok(la != null, "%s LeftArms (suitor)" % where)
-	_ok(ra != null, "%s RightArms (candidate)" % where)
+	_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeftArms (suitor)" % where)
+	_ok(ra != null and str(ra.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s RightArms (candidate)" % where)
 	if la != null and ca != null:
 		_ok(str(la.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s suitor!=团徽" % where)
 	if ra != null and la != null:
@@ -61,8 +61,9 @@ func _assert_house_arms(page: Node, where: String, expect: int) -> void:
 	_collect_named(page, "HouseArms", arms)
 	_ok(arms.size() >= expect, "%s HouseArms count>=%d got %d" % [where, expect, arms.size()])
 	for a in arms:
-		_ok(str(a.get_meta("arms_kind", "")).begins_with("gen2_") or str(a.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s HouseArms kind" % where)
+		_ok(str(a.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s HouseArms kind" % where)
 		_ok(str(a.get_meta("arms_core", "")) != "", "%s HouseArms core" % where)
+		_ok(a.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s HouseArms mouse" % where)
 
 func _collect_named(n: Node, nm: String, out: Array) -> void:
 	if str(n.name) == nm:
@@ -114,15 +115,15 @@ func _run_helpers() -> void:
 	var cand = GameState.marriage_candidates[0] if not GameState.marriage_candidates.is_empty() else null
 	var host := Control.new()
 	add_child(host)
-	var strip := CKHeraldryChrome.place_marriage_crest_strip(host, lead, cand, Vector2(10, 10), Vector2(36, 44))
+	var strip := CKHeraldryField.place_marriage_crest_strip(host, lead, cand, Vector2(10, 10), Vector2(36, 44))
 	_ok(strip != null and strip.name == "MarriageCrestStrip", "helper place strip")
 	_ok(strip.find_child("CastleArms", true, false) != null, "helper CastleArms")
 	_ok(strip.find_child("LeftArms", true, false) != null, "helper LeftArms")
 	if cand != null:
 		_ok(strip.find_child("RightArms", true, false) != null, "helper RightArms")
-	CKHeraldryChrome.attach_house_card_chrome(host, lead, Rect2(0, 0, 120, 128), Vector2(32, 38))
+	CKHeraldryField.attach_house_card_arms(host, lead, Rect2(0, 0, 120, 128), Vector2(32, 38))
 	_ok(host.get_node_or_null("HouseArms") != null, "helper HouseArms")
 	# Re-place renames dying strip (no name clash).
-	var strip2 := CKHeraldryChrome.place_marriage_crest_strip(host, lead, cand, Vector2(20, 20), Vector2(28, 34))
+	var strip2 := CKHeraldryField.place_marriage_crest_strip(host, lead, cand, Vector2(20, 20), Vector2(28, 34))
 	_ok(strip2 != null and host.get_node_or_null("MarriageCrestStrip") == strip2, "helper re-place")
 	host.queue_free()

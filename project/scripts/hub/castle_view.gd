@@ -59,6 +59,20 @@ func _place_castle_view_crests() -> void:
 	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
 	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
 	CKHeraldryChrome.place_castle_view_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+	_place_panorama_lineage()
+
+
+func _place_panorama_lineage() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var shield := Vector2(22, 28) if mob else Vector2(26, 32)
+	var people := CKHeraldryField.household_for_overview(6 if mob else 8)
+	var gap := 6.0
+	var need := float(people.size() + 1) * shield.x + float(maxi(0, people.size())) * gap
+	var crest_x := 1120.0 if not mob else maxf(20.0, MobilePage.width(self) - 120.0)
+	var x := crest_x - need - 16.0
+	x = maxf(200.0 if mob else 420.0, x)
+	var y := 8.0 if mob else 12.0
+	CKHeraldryField.place_panorama_lineage_strip(self, people, Vector2(x, y), shield)
 
 func _back() -> void:
 	CKNav.up()

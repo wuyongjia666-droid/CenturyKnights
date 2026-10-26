@@ -266,7 +266,7 @@ func _cell(c: CKCharacter) -> Button:
 		tc.position = Vector2(4, 4)
 		tc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(tc)
-	CKHeraldryChrome.attach_cell_chrome(b, c, CELL if not _mob else CELL_M, 6.0 if not _mob else 8.0)
+	CKHeraldryField.attach_wall_tile_arms(b, c, CELL if not _mob else CELL_M, 6.0 if not _mob else 8.0)
 	var badge := b.get_node_or_null("CellBadge")
 	if badge != null:
 		badge.set_meta("rank_id", str(c.rank))

@@ -154,49 +154,16 @@ static func make_rank_badge(rank: String, size: int = 28) -> TextureRect:
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return tr
 
-## Corner chrome on genealogy avatar-wall / tree nodes: mini 族徽|旗徽 + 爵位徽记.
+## Corner chrome on genealogy avatar-wall / tree nodes. Field owns the shield and the live rank badge.
 static func attach_cell_chrome(host: Control, c, cell: Vector2, portrait_top: float = 6.0) -> void:
-	if c == null or host == null:
-		return
-	var arms_sz := Vector2(28, 34)
-	var badge_sz := 22
-	if cell.x >= 150.0:
-		arms_sz = Vector2(36, 44)
-		badge_sz = 28
-	## Arms sit on the portrait's lower-left; rank badge on the upper-right (clears 家主 chip).
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "CellArms"
-	var por_h := 88.0 if cell.x < 150.0 else 132.0
-	arms.position = Vector2(6.0, portrait_top + por_h - arms_sz.y - 2.0)
-	host.add_child(arms)
-	var badge := make_rank_badge(str(c.rank), badge_sz)
-	badge.name = "CellBadge"
-	badge.position = Vector2(cell.x - float(badge_sz) - 4.0, portrait_top + 2.0)
-	host.add_child(badge)
+	CKHeraldryField.attach_wall_tile_arms(host, c, cell, portrait_top)
 
 static func attach_node_chrome(host: Control, c, node: Vector2) -> void:
-	if c == null or host == null:
-		return
-	var arms := make_person_arms(c, Vector2(30, 36))
-	arms.name = "NodeArms"
-	arms.position = Vector2(4, 4)
-	host.add_child(arms)
-	var badge := make_rank_badge(str(c.rank), 22)
-	badge.name = "NodeBadge"
-	badge.position = Vector2(node.x - 26.0, 4)
-	host.add_child(badge)
+	CKHeraldryField.attach_tree_node_arms(host, c, node)
 
 ## Hire / tavern / roster portrait plate: 旗徽|族徽 on lower-left of the plate rect.
 static func attach_hire_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
-	if parent == null or c == null:
-		return
-	var old := parent.get_node_or_null("HireArms")
-	if old:
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "HireArms"
-	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
-	parent.add_child(arms)
+	CKHeraldryField.attach_hire_plate_arms(parent, c, plate, arms_sz)
 
 static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	var old := parent.get_node_or_null("CastleArms")
@@ -211,87 +178,16 @@ static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vect
 ## Title / settings / save / pause shell crest strip: 团徽 + 旗徽 cloth.
 ## Host name ShellCrestStrip — distinct from CastleBannerStrip so shell suites do not collide with hub asserts.
 static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("ShellCrestStrip")
-	if old:
-		old.name = "_ShellCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "ShellCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_shell_crest_strip(parent, at, shield, banner)
 
-## Save-slot / load-card row arms: prepend 团徽 so every slot row carries company chrome.
-## Empty slots still get the plate (disabled load button already signals emptiness).
+
+## Save-slot / load-card row arms. Field owns the plate; crest_hex stays the slot crest.
 static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), crest_hex: String = "") -> TextureRect:
-	## Slot preview 团徽. When crest_hex is set (from save meta), render that crest so
-	## each slot shows the company that was saved — not live GameState.
-	if row == null:
-		return null
-	var old := row.get_node_or_null("SlotArms")
-	if old:
-		old.name = "_SlotArmsDying"
-		old.queue_free()
-	var tr: TextureRect
-	var hx := crest_hex.strip_edges()
-	if hx != "":
-		tr = TextureRect.new()
-		tr.texture = UnitArt.shield_arms(CKHeraldry.from_crest(hx), int(size.x), int(size.y))
-		tr.custom_minimum_size = size
-		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		tr.set_meta("arms_kind", "lb_slot_arms")
-		tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldry.from_crest(hx)))
-		tr.tooltip_text = Locale.t("lb_slot_arms")
-	else:
-		tr = make_company_arms(size)
-		tr.set_meta("arms_kind", "lb_slot_arms")
-		tr.tooltip_text = Locale.t("lb_slot_arms")
-	tr.name = "SlotArms"
-	# Prefer HBox prepend when the row lays out horizontally.
-	if row is HBoxContainer:
-		row.add_child(tr)
-		row.move_child(tr, 0)
-	elif row is PanelContainer:
-		var inner = row.get_child(0) if row.get_child_count() > 0 else null
-		if inner is HBoxContainer:
-			inner.add_child(tr)
-			inner.move_child(tr, 0)
-		else:
-			row.add_child(tr)
-	else:
-		row.add_child(tr)
-	return tr
+	return CKHeraldryField.attach_save_row_arms(row, size, crest_hex)
 
 ## Castle hub banner strip: 团徽 shield + cloth banner side by side under the top bar.
 static func place_castle_banner_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:
-	var old := parent.get_node_or_null("CastleBannerStrip")
-	if old:
-		old.queue_free()
-	var host := Control.new()
-	host.name = "CastleBannerStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_banner_plate(parent, at, shield, banner)
 
 ## Board / battle token: person (or company) shield core key — suite asserts never mismatch.
 static func token_shield_core(c, team: String = "player") -> String:
@@ -464,123 +360,25 @@ static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vect
 	parent.add_child(host)
 	return host
 
-## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip).
+## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip). Field-owned.
 static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("SuccessionCrestStrip")
-	if old:
-		old.name = "_SuccessionCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "SuccessionCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var co := make_company_arms(shield)
-	co.position = Vector2.ZERO
-	host.add_child(co)
-	var gap := 8.0
-	if heir != null:
-		var la := make_person_arms(heir, shield)
-		la.name = "LeaderArms"
-		la.position = Vector2(shield.x + gap, 0)
-		host.add_child(la)
-		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
-	else:
-		host.size = Vector2(shield.x, shield.y)
-	host.set_meta("has_heir", heir != null)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_succession_crest_strip(parent, heir, at, shield)
 
-## Heir-trial duel strip: 团徽 + heir A + heir B 族徽|旗徽 (DuelCrestStrip). Missing side omitted.
+
+## Heir-trial duel strip: 团徽 + A + B. Field-owned.
 static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("DuelCrestStrip")
-	if old:
-		old.name = "_DuelCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "DuelCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var gap := 8.0
-	var x := 0.0
-	var co := make_company_arms(shield)
-	co.position = Vector2(x, 0)
-	host.add_child(co)
-	x += shield.x + gap
-	if left_c != null:
-		var la := make_person_arms(left_c, shield)
-		la.name = "LeftArms"
-		la.position = Vector2(x, 0)
-		host.add_child(la)
-		x += shield.x + gap
-	if right_c != null:
-		var ra := make_person_arms(right_c, shield)
-		ra.name = "RightArms"
-		ra.position = Vector2(x, 0)
-		host.add_child(ra)
-		x += shield.x
-	else:
-		x -= gap
-	host.size = Vector2(maxf(shield.x, x), shield.y)
-	host.set_meta("has_left", left_c != null)
-	host.set_meta("has_right", right_c != null)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_duel_crest_strip(parent, left_c, right_c, at, shield)
 
-## Marriage house-card plate: 族徽|旗徽 as HouseArms (lower-left of portrait plate).
+
+## Marriage house-card plate HouseArms. Field-owned.
 static func attach_house_card_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(32, 38)) -> void:
-	if parent == null or c == null:
-		return
-	var old := parent.get_node_or_null("HouseArms")
-	if old:
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "HouseArms"
-	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
-	parent.add_child(arms)
+	CKHeraldryField.attach_house_card_arms(parent, c, plate, arms_sz)
 
-## Marriage protocol strip: 团徽 + left (suitor) + right (candidate/spouse) 族徽|旗徽.
-## Never marshalls/impales — three separate shields. Re-place renames dying node.
+
+## Marriage protocol strip: 团徽 + suitor + candidate. Field-owned.
 static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("MarriageCrestStrip")
-	if old:
-		old.name = "_MarriageCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "MarriageCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var gap := 8.0
-	var x := 0.0
-	var co := make_company_arms(shield)
-	co.position = Vector2(x, 0)
-	host.add_child(co)
-	x += shield.x + gap
-	if left_c != null:
-		var la := make_person_arms(left_c, shield)
-		la.name = "LeftArms"
-		la.position = Vector2(x, 0)
-		host.add_child(la)
-		x += shield.x + gap
-	if right_c != null:
-		var ra := make_person_arms(right_c, shield)
-		ra.name = "RightArms"
-		ra.position = Vector2(x, 0)
-		host.add_child(ra)
-		x += shield.x
-	else:
-		x -= gap
-	host.size = Vector2(maxf(shield.x, x), shield.y)
-	host.set_meta("has_left", left_c != null)
-	host.set_meta("has_right", right_c != null)
-	parent.add_child(host)
-	return host
-## Commission-board issuer crest: 团徽 when the post is from home (hq), else nation 敌徽-style arms.
+	return CKHeraldryField.place_marriage_crest_strip(parent, left_c, right_c, at, shield)
+
 static func issuer_is_home(issuer_id: String) -> bool:
 	## Company seat posts use 团徽; every other city uses its nation plate.
 	var id := str(issuer_id)
@@ -659,15 +457,7 @@ static func make_issuer_arms(issuer_id: String, size: Vector2 = Vector2(40, 48))
 
 ## Pin issuer crest on a commission-board detail / offer host (replaces prior BoardCrest).
 static func place_board_crest(parent: Node, issuer_id: String, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("BoardCrest")
-	if old:
-		old.queue_free()
-	var tr := make_issuer_arms(issuer_id, size)
-	tr.position = at
-	parent.add_child(tr)
-	return tr
+	return CKHeraldryField.place_board_crest(parent, issuer_id, at, size)
 
 ## Resolve foe nation for an in-battle HUD: meta → World.encounter → map.nation/foe_nation.
 static func battle_foe_nation_for(host) -> String:
@@ -777,6 +567,10 @@ static func sync_battle_hud_crests(host) -> void:
 	place_battle_hud_crest_strips(
 		host, battle_foe_nation_for(host), vp, insets, mobile, land
 	)
+	if host.is_inside_tree():
+		CKHeraldryField.sync_battle_order_crests.call_deferred(host)
+	else:
+		CKHeraldryField.sync_battle_order_crests(host)
 
 ## Territory / domain shield (领地徽). Same plate as city nation arms; distinct node name for atlas travel/camp.
 static func make_territory_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
@@ -1221,95 +1015,22 @@ static func attach_blood_queue_arms(row: Control, c, arms_sz: Vector2 = Vector2(
 	row.add_child(arms)
 	row.move_child(arms, 0)
 
-## Dialogue / chapter plate: 团徽 + 对话旗布 (DialogueCrestStrip) beside the story stage.
+## Dialogue / chapter plate. Field owns DialogueCrestStrip.
 static func place_dialogue_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("DialogueCrestStrip")
-	if old:
-		old.name = "_DialogueCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "DialogueCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "DialogueBanner"
-	bn.tooltip_text = Locale.t("lb_dialogue_arms")
-	bn.set_meta("arms_kind", "lb_dialogue_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_dialogue_crest_strip(parent, at, shield, banner)
 
 
-## Pin speaker 族徽/旗徽 under the dialogue portrait (DialogueSpeakerArms).
+## Speaker plate under the portrait. Field owns DialogueSpeakerArms.
 static func attach_dialogue_speaker_arms(portrait_host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> void:
-	if portrait_host == null:
-		return
-	var old := portrait_host.get_node_or_null("DialogueSpeakerArms")
-	if old:
-		old.name = "_DialogueSpeakerArmsDying"
-		old.queue_free()
-	if c == null:
-		return
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "DialogueSpeakerArms"
-	arms.tooltip_text = Locale.t("lb_dialogue_arms")
-	## Keep person arms_kind (gen2_06/35); suites key off node name.
-	# Sit at bottom-right of the portrait plate.
-	var pw := portrait_host.custom_minimum_size.x
-	var ph := portrait_host.custom_minimum_size.y
-	if pw < 8.0:
-		pw = portrait_host.size.x
-	if ph < 8.0:
-		ph = portrait_host.size.y
-	arms.position = Vector2(maxf(0.0, pw - arms_sz.x - 2.0), maxf(0.0, ph - arms_sz.y - 2.0))
-	portrait_host.add_child(arms)
+	CKHeraldryField.attach_dialogue_speaker_arms(portrait_host, c, arms_sz)
 
 
 ## Mercenary roster page strip: 团徽 + 名册旗布 (RosterCrestStrip).
 static func place_roster_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("RosterCrestStrip")
-	if old:
-		old.name = "_RosterCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "RosterCrestStrip"
-	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var bn := make_company_banner(banner)
-	bn.name = "RosterBanner"
-	bn.tooltip_text = Locale.t("lb_roster_arms")
-	bn.set_meta("arms_kind", "lb_roster_arms")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_roster_crest_strip(parent, at, shield, banner)
 
 
 ## Roster list-row person arms (RosterRowArms) pinned on the numbered row button.
 static func attach_roster_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> void:
-	if row == null or c == null:
-		return
-	var old := row.get_node_or_null("RosterRowArms")
-	if old:
-		old.name = "_RosterRowArmsDying"
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "RosterRowArms"
-	arms.tooltip_text = Locale.t("lb_roster_arms")
-	## Keep person arms_kind; pin left of CLASS column (row ~364 wide).
-	arms.position = Vector2(286.0, 16.0)
-	row.add_child(arms)
+	CKHeraldryField.attach_roster_row_arms(row, c, arms_sz)
 
