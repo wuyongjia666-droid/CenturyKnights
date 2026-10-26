@@ -26,8 +26,11 @@
 > | T-P8 战棋 HUD 双方纹章条 | **DONE（#500）**：`CKHeraldryChrome.place_battle_hud_crest_strips` PlayerArms←团徽 / EnemyArms→敌徽；inset 布局；不抢 InputRouter；`combat_hud_crest_check` E2E |
 > | T-P9 胜负结算横幅 + 双方纹章脉冲 | **DONE（#501）**：`BattlePhaseFeel.note_battle_end` / `draw_end_banner`；胜方亮/败方暗 crest pulse；不抢触控；`combat_end_feel_check` E2E |
 > | T-P10 伤兵/旗灯双账战斗内可读 | **DONE（#515）**：`BattleDualLedger` 伤兵计数+旗灯 charges/max；ObjectiveHud 下只读条；不抢触控；`combat_dual_ledger_check` E2E |
-> | T-P11 选中手感 v2（身框命中 + 非法可感 + 横屏信息栏） | **DONE（本 PR）**：`body_over_occupant` 胸口过脚底吸回下方单位（桌面仍精确格）；脚底盘/中段环/身框同一几何；非法落点/超距闪拒并钉回选中卡；射程内手机点敌进确认；`combat_select_feel_v2_check` 真战斗 E2E |
-> | T-P13 战中攻击预览 + 选中跟焦 | **DONE（本 PR）**：桌面选中不再无镜头；攻击预览把双方身框推进可玩区并躲开预报条；确认不再把镜头拽回攻击者；瞄准带/括号/命中芯片 + 确认冲击环；拖单位仍不平移；`combat_attack_camera_check` 真战斗 E2E（横屏 + 桌面） |
+> | T-P11 选中手感 v2（身框命中 + 非法可感 + 横屏信息栏） | **DONE（#516）**：`body_over_occupant` 胸口过脚底吸回下方单位（桌面仍精确格）；脚底盘/中段环/身框同一几何；非法落点/超距闪拒并钉回选中卡；射程内手机点敌进确认；`combat_select_feel_v2_check` 真战斗 E2E |
+> | T-P12 编队切换（下一位/上一位） | **DONE（本 PR）**：`BattleFormationCycle` ready wrap；Tab/Shift+Tab；手机栏「下一位」；`_select_player` 清预览+跟焦；`combat_formation_cycle_check` E2E |
+> | T-P14 双账可读深化（待动数 + 伤兵脚底标） | **DONE（本 PR）**：`count_ready`/`injured_cells`；Ready 条；伤兵脚底 disc；`combat_dual_ledger_ready_check` + 多场景可读 E2E |
+> | T-P13 战中攻击预览 + 选中跟焦 | **DONE（#528）**：桌面选中不再无镜头；攻击预览把双方身框推进可玩区并躲开预报条；确认不再把镜头拽回攻击者；瞄准带/括号/命中芯片 + 确认冲击环；拖单位仍不平移；`combat_attack_camera_check` 真战斗 E2E（横屏 + 桌面） |
+> | T-P15 刘海身框 + 行动后落定 + 横屏信息栏 | **DONE（#543）**：刘海唇缘的冠上/身侧残片吸回身框，唇缘拇指滑动不再被当成平移；移动/攻击后优先把行动者身框留在可读区（装不下双方时不把行动者推出信息栏或刘海）；横屏信息栏不压棋盘、正文不裁切、空白处不抢点；`combat_notch_settle_check` 真战斗 E2E |
 > | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE（#350）**：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
@@ -103,8 +106,10 @@
 | T-P8 | **P1 · DONE（#500）** | 战棋 HUD 无双方纹章 / 敌徽缺失 / 条抢触控 | `place_battle_hud_crest_strips` + layout/sync；PlayerArms+EnemyArms；MOUSE_FILTER_IGNORE；`combat_hud_crest_check` | `heraldry_chrome` / `battle_controller` |
 | T-P9 | **P1 · DONE（#501）** | 胜负无阶段横幅 / 纹章条不随胜负变 / 结算瞬间可读性弱 | `note_battle_end`+`draw_end_banner`；`apply_end_crest_pulse`；`combat_end_feel_check` | `battle_phase_feel` / `battle_controller` |
 | T-P10 | **P1 · DONE（#515）** | 伤兵账与旗灯账战斗内不可并读 / 仅 RewindBar 灯芯按钮 | `BattleDualLedger.attach/refresh`；伤兵计数+旗灯 pair；`combat_dual_ledger_check` | `battle_dual_ledger` / `battle_controller` / `battle_snapshot` |
-| T-P11 | **P1 · 本 PR** | 上方格有人时点胸口选中上面那个 / 非法点敌只换信息卡 / 横屏栏与选中脱节 | `body_over_occupant` 同列过脚底；`BattleSelectChrome` 脚底/中段/身框；`note_reject` 叉闪+面板回选中；手机射程内直接预览攻击；桌面精确格与检视保留；确认栈仍 Cancel→hint→Confirm | `battle_pick` / `battle_select_chrome` / `battle_touch_confirm` / `battle_info_panel` / `combat_select_feel_v2_check` |
-| T-P13 | **P1 · 本 PR** | 桌面选中不跟焦 / 攻击预览不框双方 / 确认镜头自相矛盾 / 预报盖住交战 / 瞄准线太细 | `focus_cell` 桌面仍仅 `force`（敌方回合，不改 phase lead）；`BattleCombatFrame` 最小平移把身框送进可玩区；预报让出顶带并改到对侧；确认不 `refocus` 攻击者；`ck_unit_drag` 挡住拖拽跟焦；冲击环+丝带+芯片 | `battle_combat_frame` / `battle_pick` / `battle_touch_confirm` / `forecast_panel` / `combat_attack_camera_check` |
+| T-P11 | **P1 · DONE（#516）** | 上方格有人时点胸口选中上面那个 / 非法点敌只换信息卡 / 横屏栏与选中脱节 | `body_over_occupant` 同列过脚底；`BattleSelectChrome` 脚底/中段/身框；`note_reject` 叉闪+面板回选中；手机射程内直接预览攻击；桌面精确格与检视保留；确认栈仍 Cancel→hint→Confirm | `battle_pick` / `battle_select_chrome` / `battle_touch_confirm` / `battle_info_panel` / `combat_select_feel_v2_check` |
+| T-P12 | **P1 · 本 PR** | 无下一位编队切换 / Tab 无绑定 / 手机栏无切人 | `BattleFormationCycle.ready/next/prev/apply_*`；KEY_TAB；mobile Next；`combat_formation_cycle_check` | `battle_formation_cycle` / `battle_controller` / `battle_mobile_bar` |
+| T-P14 | **P1 · 本 PR** | 双账无待动数 / 伤兵只在数字不在地图 | `count_ready`+Ready 标签；`injured_cells`+脚底 disc；多场景可读 E2E | `battle_dual_ledger` / `battle_controller` |
+| T-P13 | **P1 · DONE（#528）** | 桌面选中不跟焦 / 攻击预览不框双方 / 确认镜头自相矛盾 / 预报盖住交战 / 瞄准线太细 | `focus_cell` 桌面仍仅 `force`（敌方回合，不改 phase lead）；`BattleCombatFrame` 最小平移把身框送进可玩区；预报让出顶带并改到对侧；确认不 `refocus` 攻击者；`ck_unit_drag` 挡住拖拽跟焦；冲击环+丝带+芯片 | `battle_combat_frame` / `battle_pick` / `battle_touch_confirm` / `forecast_panel` / `combat_attack_camera_check` |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」（视觉偏置已落地）
@@ -268,3 +273,24 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 2. ~~安全区 / `get_global_transform` 对拍~~ → **DONE** #334（真机只需确认设备返回的安全区）  
 3. ~~对话板手机布局（机制 C）~~ → **本 PR**  
 4. 枢纽 apply_mobile 代码侧扫尾 + T-P1 + 立绘 medium 回落均已合；**待用户自玩签收**：按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季（playforge 不代装）
+
+---
+
+## 5. T-P17 移动/攻击范围预览
+
+**DONE（本 PR）**。高亮格按格子画，点选却走 `BattlePick.resolve`，软半径把蓝格吸到邻单位，闪拒也落在被吸走的格子上。攻击红格只画在当前站位已进入武器射程的敌人上，空射程和移动幽灵周围没有圈。预览锁住后，范围外的空点直接清幽灵，不经过 `note_reject`；桌面没开 touch-confirm 时非法移动完全不闪。预览跟焦追目的地，双方装不下时居中，选中身框滑出可玩区，横屏还会进刘海。
+
+现涂色格（移动格或攻击圈）在不压到活人身框时用瞄准格；攻击圈跟当前站位或移动幽灵，与蓝格重叠时只加红内描边。非法落点先闪再清幽灵，桌面同样闪，选中不丢。镜头用最小平移保住选中身框，目的地只有在选中仍然落在可玩区内时才一起框。`mobile_origin` 已经把根推进安全矩形时不再扣第二次；根还在原点、舞台伸进唇缘时才裁。单位拖拽不平移。`focus_cell` 的桌面 `force` 门闩不动。
+
+`combat_range_preview_check`：选中 → 范围 → 非法闪拒 → 合法移动确认，横屏刘海 + 桌面。
+
+## 5q. T-P40 连携预告
+
+瞄准时 `link_names` 非空：攻方身框双珠连线 +「连携 伙伴名」+ 双方跟焦。`combat_link_telegraph_check` 真战斗 E2E。
+---
+
+## 5q. T-P41 敌未刃预告
+
+瞄准时 `extras.foe_opening`：敌身框青绿「未刃」+ 双方跟焦。`combat_foe_opening_telegraph_check` 真战斗 E2E。顺带把 lock tip/practice 抽进 `BattleLockTutorial` 压线门禁。
+
+> | 选中/手感/确认取消/镜头肥刀 | **DONE（本 PR）**：合入 T-P16 确认命中+落镜、T-P24 选中死区、T-P21 待命交接、T-P22 落子窥视、T-P28 分层取消；`combat_select_feel_confirm_camera_check` 双图真 E2E；禁瞄准预告碎刀复活 |

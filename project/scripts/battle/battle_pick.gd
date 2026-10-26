@@ -22,6 +22,9 @@ extends RefCounted
 ## Y1-A T-P11: mobile chest/head of the unit below sticks past the occupant's feet.
 ## That strip is not the occupant's body — body_over_occupant returns the south unit.
 ## Desktop keeps the exact cell so mouse clicks do not move.
+## Y1-A T-P24: board-tap resolve keeps empty exact cells (move/deselect) when soft/contour
+## would only snap back onto the armed selected unit; sticky near_selected uses strict
+## figure hit (not soft halo) so adjacent empty pans; portrait/info column must not steal.
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -277,18 +280,16 @@ static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int) -
 		return false
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
 	var local: Vector2 = _board_local(host, screen_pos)
-	return strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos
+	if strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos:
+		return true
+	# T-P15: pressing the notch-lip sliver of the selected figure is still a unit drag.
+	return BattleEdgePick.from_host(host, screen_pos, local) == su.pos
 
 
-## Soft/contour near the selected unit only — sticky slop while a piece is armed.
-## When selected, presses near other units keep normal pan slop (T-P3).
+## T-P3 + T-P24: sticky slop only on the selected figure (strict exact/bias/contour/edge).
+## Soft-empty beside the armed piece must stay a pan, not a fat sticky tap/deselect.
 static func near_selected_unit(host, screen_pos: Vector2, selected_idx: int) -> bool:
-	if selected_idx < 0 or selected_idx >= host.units.size():
-		return false
-	var cell: Vector2i = resolve(host, screen_pos)
-	if cell.x < 0:
-		return false
-	return cell == host.units[selected_idx].pos
+	return strict_hits_selected(host, screen_pos, selected_idx)
 
 
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
@@ -314,6 +315,39 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var contour: Vector2i = contour_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, prefer)
 	if contour.x >= 0:
 		return contour
+	# T-P15: notch-lip crown / torso sliver. Interior taps stay on the contour.
+	var edge: Vector2i = BattleEdgePick.from_host(host, screen_pos, local)
+	if edge.x >= 0:
+		return edge
+	return exact
+
+
+## Y1-A T-P24: board action taps (select / move preview / deselect). Soft+contour may
+## still pick *other* living units from an empty exact cell, but must not yank that
+## empty cell back onto the currently armed selected piece — that stole the near half
+## of every adjacent move cell (SOFT_R=0.90 vs centre distance 1.0) and turned the
+## soft halo into a deselect trap. Face bias / strict figure / notch-lip still keep
+## the selected unit. Desktop and unarmed boards fall through to resolve().
+static func resolve_board_tap(host, screen_pos: Vector2) -> Vector2i:
+	var raw: Vector2i = resolve(host, screen_pos)
+	if not DeviceProfile.is_mobile():
+		return raw
+	if host.selected < 0 or host.selected >= host.units.size():
+		return raw
+	var su = host.units[host.selected]
+	if su.char.hp <= 0:
+		return raw
+	var exact: Vector2i = host._pointer_to_cell(screen_pos)
+	if exact.x < 0:
+		return raw
+	# Occupied exact cell: body_over / inspect path already correct.
+	if host._unit_at(exact) >= 0:
+		return raw
+	if raw != su.pos:
+		return raw
+	# Empty exact resolved onto selected — keep it unless the finger is truly on the figure.
+	if strict_hits_selected(host, screen_pos, host.selected):
+		return raw
 	return exact
 
 

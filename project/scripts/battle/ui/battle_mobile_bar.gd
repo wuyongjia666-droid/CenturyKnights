@@ -64,7 +64,8 @@ static func rebuild(host) -> void:
 	elif int(host.preview_attack_ui) >= 0:
 		_rebuild_confirm(host, row, h, land, false)
 	else:
-		# Match desktop order: Attack / Art / Wait / End turn.
+		# Match desktop order + Y1-A T-P12 Next: Next / Attack / Art / Wait / End turn.
+		command(row, Locale.t("formation_next"), h, false, func(): BattleFormationCycle.apply_next(host), false)
 		command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode, false)
 		command(row, Locale.t("shell_41ec1a25"), h, false, host._cycle_skill, false)
 		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected, false)
@@ -78,7 +79,7 @@ static func _rebuild_confirm(host, row: BoxContainer, h: int, land: bool, is_mov
 		confirm_cb = func(): BattleTouchConfirm.confirm_move(host)
 	else:
 		confirm_cb = func(): BattleTouchConfirm.confirm_attack(host)
-	var cancel_cb := func(): BattleTouchConfirm.clear(host)
+	var cancel_cb := func(): BattleAttackCancelDepth.step(host)
 	var confirm_txt := Locale.t("ux_confirm_move") if is_move else Locale.t("ux_confirm_attack")
 	var hint := _dest_hint(host, is_move)
 	if land:
@@ -163,8 +164,10 @@ static func place(host) -> void:
 		var bar_h: float = (vp.y - y0 - bottom) if confirming else (vp.y * 0.78 - top - bottom)
 		host._mobile_bar.position = Vector2(vp.x - right - w - 4.0, y0)
 		host._mobile_bar.size = Vector2(w, maxf(180.0, bar_h))
+		BattleConfirmAffordance.grow_bar_hits(host)
 		return
 	# Portrait: confirm uses a taller bottom strip so the accent key is thumb-sized.
 	var bar_h2: float = h * 1.45 if _confirming(host) else h
 	host._mobile_bar.position = Vector2(left, vp.y - bottom - bar_h2)
 	host._mobile_bar.size = Vector2(maxf(240.0, vp.x - left - right), bar_h2)
+	BattleConfirmAffordance.grow_bar_hits(host)

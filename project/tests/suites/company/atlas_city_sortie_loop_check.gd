@@ -150,7 +150,7 @@ func _ui_city_sortie_march_turnin() -> void:
 		city.call("_set_tab", "market")
 	for _m in 4:
 		await get_tree().process_frame
-	var mb: Button = city.find_child("Mkt_%s_买1" % PRODUCE, true, false) as Button
+	var mb: Button = city.find_child("Mkt_%s_buy1" % PRODUCE, true, false) as Button
 	_ok(mb != null and not mb.disabled, "regional produce buy button")
 	var had := World.have_good(PRODUCE)
 	if mb and not mb.disabled:
