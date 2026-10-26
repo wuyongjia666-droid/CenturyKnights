@@ -643,6 +643,48 @@ static func evacuate_cache(id: String) -> Dictionary:
 		"dest_id": dest_id, "via": via, "msg": msg}
 
 
+## Under siege: spend stockade cache food to raise +1 garrison (no silver).
+## Cost = rule("muster_cache_cost", 4). Needs hanging threat, stockade, room under garrison_max.
+static func muster_cache_cost(_id: String = "") -> int:
+	return maxi(1, int(rule("muster_cache_cost", 4)))
+
+
+static func muster_from_cache(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if not bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+	if (st.threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_muster_need_threat")}
+	var cost := muster_cache_cost(id)
+	var cache := maxi(0, int(st.get("cache_food", 0)))
+	if cache < cost:
+		return {"ok": false, "msg": Locale.t("atlas_muster_need_food") % [cost, cache]}
+	var gmax := garrison_max(id)
+	var gar := int(st.garrison)
+	if gar >= gmax:
+		return {"ok": false, "msg": Locale.t("atlas_muster_full") % gmax}
+	st.cache_food = cache - cost
+	st.garrison = gar + 1
+	_put(id, st)
+	var site_name := str(site(id).get("name", id))
+	var msg := Locale.t("atlas_muster_ok") % [site_name, cost, int(st.garrison)]
+	_log(msg)
+	World.mark_siege_muster({
+		"id": id,
+		"name": site_name,
+		"spent": cost,
+		"garrison": int(st.garrison),
+		"cache_left": int(st.cache_food),
+		"hold_pct": int(round(hold_chance(id) * 100.0)),
+	})
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "spent": cost, "garrison": int(st.garrison),
+		"cache_left": int(st.cache_food), "msg": msg}
+
+
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
 ## Chance a neutral site draws multi-faction tug-of-war this month.
 static func neutral_contest_chance(id: String) -> float:

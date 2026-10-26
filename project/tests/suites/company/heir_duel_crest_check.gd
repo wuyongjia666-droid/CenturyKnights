@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: heir-trial DuelCrestStrip (团徽+A+B) + company header, desktop + mobile.
+## Fat heraldry E2E: Field heir-trial DuelCrestStrip (团徽+A+B) + company header, desktop + mobile.
 ## Does not alter EmptyHost empty-state copy — only asserts crest chrome.
 
 const SCN := preload("res://scenes/hub/heir_rivalry.tscn")
@@ -11,11 +11,11 @@ func _ready() -> void:
 	await _run_mobile()
 	await _run_helpers()
 	if _fails.is_empty():
-		print("DUEL CREST CHROME PASS")
+		print("DUEL CREST PASS")
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL duel crest chrome: ", f)
+			print("FAIL duel crest: ", f)
 		get_tree().quit(1)
 
 func _ok(cond: bool, msg: String) -> void:
@@ -53,9 +53,16 @@ func _assert_page(page: Node, where: String) -> void:
 	var strip := page.find_child("DuelCrestStrip", true, false)
 	_ok(strip != null, "%s DuelCrestStrip" % where)
 	if strip != null:
-		_ok(strip.find_child("CastleArms", true, false) != null, "%s 团徽" % where)
-		_ok(strip.find_child("LeftArms", true, false) != null, "%s LeftArms" % where)
-		_ok(strip.find_child("RightArms", true, false) != null, "%s RightArms" % where)
+		var ca := strip.find_child("CastleArms", true, false)
+		var la := strip.find_child("LeftArms", true, false)
+		var ra := strip.find_child("RightArms", true, false)
+		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
+		_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeftArms" % where)
+		_ok(ra != null and str(ra.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s RightArms" % where)
+		if ca != null and la != null:
+			_ok(str(ca.get_meta("arms_core", "")) != str(la.get_meta("arms_core", "")), "%s 团徽!=A" % where)
+		if ca != null and ra != null:
+			_ok(str(ca.get_meta("arms_core", "")) != str(ra.get_meta("arms_core", "")), "%s 团徽!=B" % where)
 		_ok(bool(strip.get_meta("has_left", false)) and bool(strip.get_meta("has_right", false)), "%s metas" % where)
 	_ok(page.find_child("CastleArms", true, false) != null, "%s company header" % where)
 
@@ -87,7 +94,7 @@ func _run_helpers() -> void:
 	var b = GameState.characters["duel_kid_1"]
 	var host := Control.new()
 	add_child(host)
-	var strip := CKHeraldryChrome.place_duel_crest_strip(host, a, b, Vector2(10, 10), Vector2(36, 44))
+	var strip := CKHeraldryField.place_duel_crest_strip(host, a, b, Vector2(10, 10), Vector2(36, 44))
 	_ok(strip != null and strip.name == "DuelCrestStrip", "helper DuelCrestStrip")
 	_ok(strip.find_child("LeftArms", true, false) != null and strip.find_child("RightArms", true, false) != null, "helper both arms")
 	host.queue_free()
