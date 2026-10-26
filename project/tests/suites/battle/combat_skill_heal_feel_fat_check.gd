@@ -194,18 +194,21 @@ func _seed_support(c: CKCharacter) -> void:
 func _scene_a_arm_cancel_confirm() -> String:
 	_battle._select_player(_caster_i)
 	await _settle(3)
+	var err := _scene_a_arm_and_cancel()
+	if err != "":
+		return err
+	return await _scene_a_confirm()
+
+
+func _scene_a_arm_and_cancel() -> String:
 	var uses0 := int(_battle.units[_caster_i].char.skill_uses.get(SID, 0))
 	if uses0 < 1:
 		return "scene A: no uses after seed"
-	# Arm must latch preview, not auto-cast.
 	BattleSkillsUi.arm(_battle, SID)
-	await _settle(4)
 	if not BattleSkillHealPreview.latched(_battle):
 		return "scene A: arm did not latch heal preview"
-	if not bool(_battle.skill_mode):
-		return "scene A: skill_mode off after arm"
-	if str(_battle.active_skill_id) != SID:
-		return "scene A: active_skill_id miss"
+	if not bool(_battle.skill_mode) or str(_battle.active_skill_id) != SID:
+		return "scene A: skill_mode/id miss after arm"
 	if int(_battle.units[_caster_i].char.skill_uses.get(SID, 0)) != uses0:
 		return "scene A: arm consumed uses early"
 	var idxs: Array[int] = BattleSkillHealPreview.healable_indices(_battle)
@@ -213,9 +216,8 @@ func _scene_a_arm_cancel_confirm() -> String:
 		return "scene A: healable miss caster/ally got %s" % idxs
 	if BattleSkillHealPreview.preview_ui(_battle) != _ally_i:
 		return "scene A: focus should prefer wounded ally"
-	if not _battle.has_meta("m_combat_frame") and not _battle.has_meta(BattleSkillHealPreview.META):
-		return "scene A: missing frame/meta after arm"
-	# Cancel keeps uses.
+	if not _battle.has_meta(BattleSkillHealPreview.META):
+		return "scene A: missing heal meta after arm"
 	var kind := BattleAttackCancelDepth.step(_battle)
 	if kind != "preview":
 		return "scene A: cancel want preview got %s" % kind
@@ -223,20 +225,21 @@ func _scene_a_arm_cancel_confirm() -> String:
 		return "scene A: cancel left latch"
 	if int(_battle.units[_caster_i].char.skill_uses.get(SID, 0)) != uses0:
 		return "scene A: cancel burned uses"
-	# Re-arm + confirm casts and consumes.
+	return ""
+
+
+func _scene_a_confirm() -> String:
+	var uses0 := int(_battle.units[_caster_i].char.skill_uses.get(SID, 0))
 	BattleSkillsUi.arm(_battle, SID)
-	await _settle(3)
 	if not BattleSkillHealPreview.latched(_battle):
 		return "scene A: re-arm miss"
 	var hp_before := int(_battle.units[_ally_i].char.hp)
 	if not BattleSkillHealPreview.confirm(_battle):
 		return "scene A: confirm failed"
-	await _settle(4)
 	if BattleSkillHealPreview.latched(_battle):
 		return "scene A: confirm left latch"
 	if int(_battle.units[_caster_i].char.skill_uses.get(SID, 0)) != uses0 - 1:
 		return "scene A: confirm did not consume use"
-	# Ally should have been healed (or at least cast path ran — hp may clamp).
 	if int(_battle.units[_ally_i].char.hp) < hp_before:
 		return "scene A: confirm lowered ally hp"
 	return ""
@@ -246,47 +249,46 @@ func _scene_b_tab_cycle_frame() -> String:
 	_battle._select_player(_caster_i)
 	await _settle(3)
 	_park_offscreen(_battle.units[_ally_i].pos, 140.0)
+	var err := _scene_b_cycle()
+	if err != "":
+		return err
+	return await _scene_b_bar_confirm()
+
+
+func _scene_b_cycle() -> String:
 	BattleSkillsUi.arm(_battle, SID)
-	await _settle(4)
 	if not BattleSkillHealPreview.latched(_battle):
 		return "scene B: arm miss"
 	var before: Vector2 = _battle._board_pan
-	# First Tab (or apply_next) cycles focus; enter must not skip confirm.
 	var idxs: Array[int] = BattleSkillHealPreview.healable_indices(_battle)
 	if idxs.size() < 2:
 		return "scene B: need ≥2 healable got %s" % idxs
 	var first: int = BattleSkillHealPreview.apply_next(_battle)
-	await _settle(4)
-	if first < 0:
-		return "scene B: apply_next failed"
-	if int(BattleSkillHealPreview.preview_ui(_battle)) != first:
-		return "scene B: focus not seeded"
+	if first < 0 or int(BattleSkillHealPreview.preview_ui(_battle)) != first:
+		return "scene B: apply_next did not seed focus"
 	var second: int = BattleSkillHealPreview.apply_next(_battle)
 	if second == first and idxs.size() >= 2:
 		return "scene B: next did not advance"
 	var back: int = BattleSkillHealPreview.apply_prev(_battle)
 	if back != first:
 		return "scene B: prev want %s got %s" % [first, back]
-	# Camera should have pulled toward the parked ally at some point.
-	await _settle(4)
 	var after: Vector2 = _battle._board_pan
 	if after == before and not _battle.has_meta("m_combat_frame"):
 		return "scene B: no camera frame after cycle"
-	# Mobile bar exposes heal confirm while latched.
+	return ""
+
+
+func _scene_b_bar_confirm() -> String:
 	BattleMobileBar.rebuild(_battle)
-	await _settle(2)
 	var bar = _battle.get("_mobile_bar")
 	if bar == null:
 		return "scene B: mobile bar missing"
-	var primary := _find_named(bar, "ConfirmPrimary")
-	if primary == null:
+	if _find_named(bar, "ConfirmPrimary") == null:
 		return "scene B: heal ConfirmPrimary missing"
-	# Confirm via affordance path.
 	if not BattleConfirmAffordance.preview_latched(_battle):
 		return "scene B: affordance not latched"
 	var uses0 := int(_battle.units[_caster_i].char.skill_uses.get(SID, 0))
 	BattleSkillHealPreview.confirm(_battle)
-	await _settle(3)
 	if BattleSkillHealPreview.latched(_battle):
 		return "scene B: confirm left latch"
 	if int(_battle.units[_caster_i].char.skill_uses.get(SID, 0)) != uses0 - 1:
