@@ -287,7 +287,11 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 
 ## 5r. 回合回场桥 + 双账待动可点
 
-**DONE（本 PR）**。玩家回合开始：`BattleTurnBridge.note_player_return` 拉起待动脚底脉冲、自动选中第一名待动、双账 Ready 条可点循环 `FormationCycle`（仅 Ready STOP，面板 IGNORE，不抢棋盘）。`combat_turn_bridge_ledger_check` 双图真 E2E。禁瞄准预告碎刀。
+**DONE（#608）**。玩家回合开始：`BattleTurnBridge.note_player_return` 拉起待动脚底脉冲、自动选中第一名待动、双账 Ready 条可点循环 `FormationCycle`（仅 Ready STOP，面板 IGNORE，不抢棋盘）。`combat_turn_bridge_ledger_check` 双图真 E2E。禁瞄准预告碎刀。
+
+## 5s. 姿态可读肥刀 — 已动账 + 已移芯片
+
+**DONE（本 PR）**。双账加「已动 N」；地图灰脚标标出本回合已动完单位；选中且 `moved_this_select` 时身侧「已移可攻」芯片。`combat_stance_readable_check` 双图真 E2E。禁瞄准预告碎刀。
 
 ## 5. T-P17 移动/攻击范围预览
 
