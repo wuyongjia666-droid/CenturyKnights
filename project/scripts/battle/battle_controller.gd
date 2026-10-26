@@ -1210,6 +1210,7 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
+	BattleGhostStrike.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
@@ -1579,6 +1580,7 @@ func _select_player(ui: int) -> void:
 	active_skill_id = ""
 	moved_this_select = false
 	preview_move_cell = Vector2i(-1, -1)
+	BattleGhostStrike.after_preview(self)
 	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
 	_refresh_info()
@@ -1621,6 +1623,7 @@ func _click_cell(cell: Vector2i) -> void:
 								return
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
+							BattleGhostStrike.after_preview(self)
 							ForecastPanel.refresh(self)
 							if DeviceProfile.is_mobile():
 								BattleMobileBar.rebuild(self)
@@ -1646,6 +1649,7 @@ func _click_cell(cell: Vector2i) -> void:
 						BattleTouchConfirm.confirm_move(self)
 						return
 					preview_move_cell = cell
+					BattleGhostStrike.after_preview(self)
 					preview_attack_ui = -1
 					if DeviceProfile.is_mobile():
 						BattleMobileBar.rebuild(self)
