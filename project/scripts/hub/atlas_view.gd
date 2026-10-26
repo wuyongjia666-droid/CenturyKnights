@@ -2600,7 +2600,10 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	var stockade := bool(alert.get("stockade", false))
 	if stockade and cache_n > 0:
 		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
-	var h := 490.0 if stockade and cache_n > 0 else 420.0
+	var can_muster := stockade and cache_n >= CKTerritory.muster_cache_cost(site_id) and garrison < CKTerritory.garrison_max(site_id)
+	var h := 534.0 if stockade and cache_n > 0 else 420.0
+	if can_muster and stockade and cache_n > 0:
+		h = 578.0
 	var panel := _modal_panel(h)
 	panel.name = "SiegeAlertModal"
 	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
@@ -2682,6 +2685,37 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		else:
 			pass)
 	panel.add_child(scout)
+	if can_muster:
+		y += 44.0
+		var muster := UIKit.ghost_button(Locale.t("atlas_siege_muster") % CKTerritory.muster_cache_cost(site_id), 452, 36)
+		muster.name = "SiegeMuster"
+		muster.position = Vector2(24, y)
+		muster.pressed.connect(func():
+			var r5: Dictionary = CKTerritory.muster_from_cache(site_id)
+			_show_toast(str(r5.get("msg", "")), UIKit.OK if bool(r5.get("ok", false)) else UIKit.DANGER)
+			if bool(r5.get("ok", false)):
+				alert["cache"] = int(r5.get("cache_left", 0))
+				alert["garrison"] = int(r5.get("garrison", garrison))
+				cache_n = int(alert["cache"])
+				garrison = int(alert["garrison"])
+				muster.disabled = true
+				var bl3: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+				if bl3 != null:
+					var pl3 := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+					if stockade and cache_n > 0:
+						pl3 = pl3 + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+					var hp3 := int(alert.get("hold_pct", -1))
+					var il3 := Locale.t("atlas_siege_intel") % hp3 if bool(alert.get("scouted", false)) and hp3 >= 0 else Locale.t("atlas_siege_intel_unknown")
+					bl3.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, garrison, pl3, il3]
+				# disable further muster if out of food or at cap
+				if cache_n < CKTerritory.muster_cache_cost(site_id) or garrison >= CKTerritory.garrison_max(site_id):
+					muster.disabled = true
+				var evac_btn = panel.get_node_or_null("SiegeEvacuate")
+				if evac_btn != null and cache_n <= 0:
+					evac_btn.disabled = true
+			_refresh_top()
+			_build_nodes())
+		panel.add_child(muster)
 	if stockade and cache_n > 0:
 		y += 44.0
 		var evac := UIKit.ghost_button(Locale.t("atlas_siege_evacuate"), 452, 36)
