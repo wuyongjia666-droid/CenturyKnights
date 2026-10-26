@@ -1,6 +1,6 @@
 extends Node
 ## Hub → 内容季章 → 中途战/据点 visit → 回章：抽样真链路 E2E（禁 EmptyHost）。
-## S01–S10 _01 全链路：hub chip→章→中途战 loss→win / 据点 visit→回章（交替换序）。静态度交 hub_entry /
+## S01–S10 _01 全链路 + _02 抽样（cs01/05/08/10_02）：hub→章→战/访→回。静态度交 hub_entry /
 ## battle_retry / visit_authored。
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
@@ -88,6 +88,38 @@ const CHAINS := [
 	},
 	{
 		"cid": "cs10_01",
+		"order": "visit_then_battle",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs01_02",
+		"order": "battle_then_visit",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs05_02",
+		"order": "visit_then_battle",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs08_02",
+		"order": "battle_then_visit",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs10_02",
 		"order": "visit_then_battle",
 		"mid": "bridge",
 		"after_mid": "tavern",
