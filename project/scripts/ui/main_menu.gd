@@ -155,7 +155,7 @@ func _place_shell_crests() -> void:
 	var hdr := Vector2(48, 56) if not mob else Vector2(40, 48)
 	var ban := Vector2(30, 40) if not mob else Vector2(24, 32)
 	var at := Vector2(1180, 18) if not mob else Vector2(1180, 8)
-	CKHeraldryChrome.place_shell_crest_strip(self, at, hdr, ban)
+	CKHeraldryField.place_shell_crest_strip(self, at, hdr, ban)
 	CKHeraldryField.place_company_header(self, Vector2(at.x - 56.0, at.y), hdr)
 
 func _on_new() -> void:
