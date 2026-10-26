@@ -371,6 +371,8 @@ class _TapHost:
 	extends RefCounted
 	var units: Array = []
 	var selected := 0
+	var _board_pan := Vector2.ZERO
+	var _board_zoom := 1.0
 	var _board_origin := Vector2(40, 40)
 	var _board_cell := 64
 	var _map_w := 16
@@ -391,3 +393,16 @@ class _TapHost:
 	func setup_armed(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10}, "pos": pos, "team": "player", "done": false}]
 		selected = 0
+
+	func _screen_to_local(p: Vector2) -> Vector2:
+		return p
+
+	func _pointer_to_cell(screen_pos: Vector2) -> Vector2i:
+		var local := BattlePick.local_after_pan_zoom(_screen_to_local(screen_pos), _board_pan, _board_zoom)
+		return BattlePick.cell_at_local(_board_origin, float(_board_cell), local, _map_w, _map_h)
+
+	func _unit_at(pos: Vector2i) -> int:
+		for i in units.size():
+			if units[i].char.hp > 0 and units[i].pos == pos:
+				return i
+		return -1
