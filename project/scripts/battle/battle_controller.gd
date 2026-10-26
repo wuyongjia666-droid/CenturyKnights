@@ -1211,6 +1211,7 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
+	BattleCounterTelegraph.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	# slash + hit_spark 分层（game-feel）
@@ -1624,6 +1625,7 @@ func _click_cell(cell: Vector2i) -> void:
 								BattleTouchConfirm.confirm_attack(self)
 								return
 							preview_attack_ui = ui
+							BattleCounterTelegraph.refresh(self)
 							preview_move_cell = Vector2i(-1, -1)
 							ForecastPanel.refresh(self)
 							BattleRangePreview.keep_selected(self)
