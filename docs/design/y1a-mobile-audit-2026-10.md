@@ -301,3 +301,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5t. T-P44 伤兵瞄准预告
 
 瞄准时敌方 `hp*2 <= max_hp`：敌身框赤红「伤」+ 脚底弧 + 双方跟焦。`combat_wounded_aim_telegraph_check` 真战斗 E2E。
+
+## 5u. T-P45 斩杀瞄准预告
+
+瞄准时 `BattleRules.expected_damage >= foe.hp`：敌身框血金「斩」+ 交叉斩痕 + 双方跟焦。`combat_lethal_aim_telegraph_check` 真战斗 E2E。
