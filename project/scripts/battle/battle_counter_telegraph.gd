@@ -108,4 +108,4 @@ static func draw(host, overlay) -> void:
 	overlay.draw_rect(def_body, Color(tone, FILL_A * 0.85 * pulse))
 	# Tiny "反击" marker above defender mid (mono font).
 	var label_pos: Vector2 = def_marks.mid + Vector2(-14.0, -float(def_marks.mid_r) - 10.0)
-	overlay.draw_string(UIKit.font("mono"), label_pos, "反击", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(tone, 0.98 * pulse))
+	overlay.draw_string(UIKit.font("mono"), label_pos, Locale.t("shell_counter_mark"), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(tone, 0.98 * pulse))
