@@ -829,6 +829,42 @@
           }
         },
         {
+          "id": "cs0401_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "门廊牌稳了。稳处，训条旁假步退进影里。"
+        },
+        {
+          "id": "cs0401_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "假步走远了。真步留在门廊，一步一声。"
+        },
+        {
+          "id": "cs0401_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "训条不羞了。羞的是刚才那拨空嗓。"
+        },
+        {
+          "id": "cs0401_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "牌上的灰我拭过。拭过，字才肯亮。"
+        },
+        {
+          "id": "cs0401_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "旗角别扫训牌。牌脏了，步也脏。"
+        },
+        {
+          "id": "cs0401_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "锋跟步走完。训条我背得，廊我过。"
+        },
+        {
           "id": "cs04_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。门廊牌还亮。训条旁那拨，没散。",
@@ -1119,6 +1155,37 @@
           "speaker": "石垒·晚担",
           "text": "错的刮掉。对的挂上。"
         },
+        {
+          "id": "cs0401_brd1",
+          "speaker": "旁白",
+          "text": "家训那页在胸前发硬。硬着到板前，脚步反而轻。"
+        },
+        {
+          "id": "cs0401_brd2",
+          "speaker": "掌柜",
+          "text": "训条不占酒格。酒格脏，训条会生气。"
+        },
+        {
+          "id": "cs0401_brd3",
+          "speaker": "槐里·青禾",
+          "text": "门廊牌影停在窗外。窗外影，贴不上板。"
+        },
+        {
+          "id": "cs0401_brd4",
+          "speaker": "旁白",
+          "text": "掌柜把抹布折好。折好，等于把闲话也折走。"
+        },
+        {
+          "id": "cs0401_brd5",
+          "speaker": "岁吏",
+          "text": "训条与脚步并排。并排了，沙漏只走真步。"
+        },
+        {
+          "id": "cs0401_brd6",
+          "speaker": "leader",
+          "text": "训在胸。我近板，把真步按进格。"
+        },
+
         {
           "id": "cs0401_tvp1",
           "speaker": "旁白",

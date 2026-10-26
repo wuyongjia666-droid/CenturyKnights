@@ -829,6 +829,42 @@
           }
         },
         {
+          "id": "cs0701_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "仪典问声沉进石阶。阶冷，催声就热不起来。"
+        },
+        {
+          "id": "cs0701_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "阶下影里空了。空了，台上才像仪典。"
+        },
+        {
+          "id": "cs0701_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "口气我收回半寸。半寸，刚好够上台。"
+        },
+        {
+          "id": "cs0701_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "袖口的礼我理平。平了，上台不绊。"
+        },
+        {
+          "id": "cs0701_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "旗不过代嘴。嘴是你的，旗只站着。"
+        },
+        {
+          "id": "cs0701_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "锋不问代嘴。仪典我自己应。"
+        },
+        {
           "id": "cs07_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。仪典问声还在。墙牌旁那拨，没散。",
@@ -1119,6 +1155,37 @@
           "speaker": "书记官",
           "text": "谱回堡钉。"
         },
+        {
+          "id": "cs0701_brd1",
+          "speaker": "旁白",
+          "text": "香灰弹在门槛外。板前只有纸香，没有香灰。"
+        },
+        {
+          "id": "cs0701_brd2",
+          "speaker": "掌柜",
+          "text": "仪典旁注怕代嘴。代嘴的字，钉子会烫手。"
+        },
+        {
+          "id": "cs0701_brd3",
+          "speaker": "岁吏",
+          "text": "月份那粒要并进旁注。主文不动，动了就不像礼。"
+        },
+        {
+          "id": "cs0701_brd4",
+          "speaker": "旁白",
+          "text": "挂绳上还留着昨夜的香油。油亮，字要避开那一寸。"
+        },
+        {
+          "id": "cs0701_brd5",
+          "speaker": "书记官",
+          "text": "仪典路已选。选过的路，不许再被代填。"
+        },
+        {
+          "id": "cs0701_brd6",
+          "speaker": "leader",
+          "text": "香灰在外。我近板，把真路按进旁注。"
+        },
+
         {
           "id": "cs0701_tvp1",
           "speaker": "旁白",
