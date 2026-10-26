@@ -588,10 +588,10 @@ func seal_detour_remaining() -> Array:
 
 func _preview_along(path: Array) -> Dictionary:
 	if path.size() < 2:
-		return {"ok": false, "msg": "无路可达"}
+		return {"ok": false, "msg": Locale.t("atlas_no_route")}
 	for n in path:
 		if not nodes.has(str(n)):
-			return {"ok": false, "msg": "无路可达"}
+			return {"ok": false, "msg": Locale.t("atlas_no_route")}
 	var legs: Array = []
 	var days := 0
 	var tolls := 0
@@ -604,7 +604,7 @@ func _preview_along(path: Array) -> Dictionary:
 		var to_leg := str(path[i + 1])
 		var leg := road_between(from_id, to_leg)
 		if leg.is_empty():
-			return {"ok": false, "msg": "无路可达"}
+			return {"ok": false, "msg": Locale.t("atlas_no_route")}
 		legs.append(leg)
 		days += int(leg.get("days", 1))
 		var dng := int(leg.get("danger", 1))
@@ -903,7 +903,7 @@ func route(from_id: String, to_id: String) -> Dictionary:
 func travel_preview(to_id: String) -> Dictionary:
 	var r := route(pos, to_id)
 	if r.is_empty():
-		return {"ok": false, "msg": "无路可达"}
+		return {"ok": false, "msg": Locale.t("atlas_no_route")}
 	var tolls := 0
 	var fare := 0
 	var danger := 0

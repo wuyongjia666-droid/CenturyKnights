@@ -252,10 +252,10 @@ static func march_detour(to_id: String) -> Dictionary:
 static func resume_detour() -> Dictionary:
 	var dest := str(World.seal_detour.get("dest", ""))
 	if dest == "" or dest == World.pos:
-		return {"ok": false, "msg": "无绕路可续"}
+		return {"ok": false, "msg": Locale.t("seal_resume_none")}
 	var rem: Array = World.seal_detour_remaining()
 	if rem.size() < 2:
-		return {"ok": false, "msg": "绕路已断"}
+		return {"ok": false, "msg": Locale.t("seal_resume_broken")}
 	var before_food := GameState.food
 	var before_day := World.days_total
 	var spent := 0
@@ -263,7 +263,7 @@ static func resume_detour() -> Dictionary:
 		var nxt := str(rem[i + 1])
 		if is_sealed(World.pos, nxt):
 			World.clear_seal_detour()
-			return {"ok": false, "msg": "续行撞上封路", "pos": World.pos, "days": spent}
+			return {"ok": false, "msg": Locale.t("seal_resume_sealed"), "pos": World.pos, "days": spent}
 		var st: Dictionary = World.travel_to(nxt)
 		if not bool(st.get("ok", true)) and not bool(st.get("arrived", false)):
 			if str(st.get("msg", "")) != "":
@@ -272,12 +272,12 @@ static func resume_detour() -> Dictionary:
 			# Mid-path halt — seal_detour stays so the next resume continues.
 			spent = World.days_total - before_day
 			return {
-				"ok": false, "halted": true, "msg": "中途停驻", "pos": World.pos, "dest": dest,
+				"ok": false, "halted": true, "msg": Locale.t("seal_resume_halted"), "pos": World.pos, "dest": dest,
 				"days": spent, "food_after": GameState.food, "remaining": World.seal_detour_remaining(),
 			}
 		spent = World.days_total - before_day
 	if World.pos != dest:
-		return {"ok": false, "msg": "未抵达", "pos": World.pos, "days": spent}
+		return {"ok": false, "msg": Locale.t("seal_resume_miss"), "pos": World.pos, "days": spent}
 	return {
 		"ok": true, "pos": World.pos, "dest": dest, "days": spent,
 		"food_after": GameState.food, "food_spent": before_food - GameState.food,
