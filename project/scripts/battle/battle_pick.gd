@@ -15,6 +15,8 @@ extends RefCounted
 ## Y1-A T-P3: strict unit-drag origin (exact/bias/contour, not soft-empty) + selected-only sticky.
 ## Y1-A T-P4: smooth camera focus + margin follow for unit/preview; attack juice lives
 ## in BattleTouchConfirm (keeps battle_controller under the 3000-line gate).
+## Y1-A T-P13: select / attack-pair framing lives in BattleCombatFrame. focus_cell
+## stays desktop-inert unless force, so player phase lead does not pan.
 ## Y1-A T-P5: war-chess select feel — team-prefer soft+contour resolve in scrums;
 ## select-burst chrome; deselect lock; invalid-target reject pulse (via TouchConfirm).
 ## Y1-A T-P11: mobile chest/head of the unit below sticks past the occupant's feet.
@@ -487,4 +489,10 @@ static func focus_selected(host) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
 		return
 	note_select_burst(host)
-	focus_cell(host, host.units[host.selected].pos)
+	# Mobile still attempts a centre. T-P13 cancels that yank when the figure
+	# (head included) is already inside the play inset, and replaces it with the
+	# minimum nudge when it is not. Desktop focus_cell is a no-op without force
+	# so phase lead stays put; select follow goes through BattleCombatFrame.
+	if DeviceProfile.is_mobile():
+		focus_cell(host, host.units[host.selected].pos)
+	BattleCombatFrame.follow_selected(host)

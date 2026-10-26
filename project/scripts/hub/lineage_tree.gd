@@ -234,17 +234,25 @@ func select(c: CKCharacter) -> void:
 
 func _render_info() -> void:
 	var can_refocus := _selected != null and str(_selected.id) != focus_id
+	var action := Locale.t("gen2_23") if can_refocus else ""
+	var action_cb := func():
+		Sfx.click()
+		refocus(str(_selected.id))
+	var extra := ""
+	var extra_cb := Callable()
+	if _selected != null:
+		var sid := str(_selected.id)
+		extra = Locale.t("gen2_29")
+		extra_cb = func():
+			Sfx.click()
+			CKLineageInfo.open_dossier(GameState.characters.get(sid), "res://scenes/hub/lineage_tree.tscn")
 	if DeviceProfile.is_mobile():
 		var vw := maxf(get_viewport().get_visible_rect().size.x, 1280.0)
 		var x0 := VIEW.end.x + 16.0
 		var rect := Rect2(x0, VIEW.position.y + 24.0, maxf(380.0, vw - x0 - 24.0), VIEW.size.y - 24.0)
-		CKLineageInfo.render_mobile(_info, _selected, Locale.t("gen2_23") if can_refocus else "", func():
-			Sfx.click()
-			refocus(str(_selected.id)), rect)
+		CKLineageInfo.render_mobile(_info, _selected, action, action_cb, rect, extra, extra_cb)
 		return
-	CKLineageInfo.render(_info, _selected, Locale.t("gen2_23") if can_refocus else "", func():
-		Sfx.click()
-		refocus(str(_selected.id)))
+	CKLineageInfo.render(_info, _selected, action, action_cb, extra, extra_cb)
 
 # ── pan / zoom ─────────────────────────────────────────
 func pan(delta: Vector2) -> void:

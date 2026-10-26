@@ -1721,6 +1721,10 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_neutral_contest():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1773,6 +1777,8 @@ func _after_arrival() -> void:
 		return
 	if _check_siege_loot():
 		return
+	if _check_neutral_contest():
+		return
 	if _check_march_muster():
 		return
 	if _check_losses():
@@ -1800,6 +1806,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_loot():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_neutral_contest():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_march_muster():
 		return
@@ -2515,6 +2523,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 			return
 		if _check_siege_loot():
 			return
+		if _check_neutral_contest():
+			return
 		if _check_march_muster():
 			return
 		if World.is_traveling():
@@ -2754,12 +2764,123 @@ func _show_siege_loot_modal(loot: Dictionary) -> void:
 		_clear_modal()
 		_refresh_top()
 		_build_nodes()
+		if _check_neutral_contest():
+			return
 		if _check_march_muster():
 			return
 		if World.is_traveling():
 			call_deferred("_resume_travel_after_siege"))
 	panel.add_child(ok)
 	ok.call_deferred("grab_focus")
+
+
+## Neutral multi-faction tug → ContestTugModal (seize / watch / later).
+func _check_neutral_contest() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_neutral_contest.is_empty():
+		return false
+	var alert: Dictionary = World.take_neutral_contest()
+	if alert.is_empty():
+		return false
+	_show_contest_tug_modal(alert)
+	return true
+
+
+func _show_contest_tug_modal(alert: Dictionary) -> void:
+	var site_id := str(alert.get("id", ""))
+	var site_name := str(alert.get("name", site_id))
+	var anchor := str(alert.get("anchor", ""))
+	var anchor_name := str(alert.get("anchor_name", World.node(anchor).get("name", anchor)))
+	var phase := str(alert.get("phase", "declared"))
+	var factions: Array = alert.get("factions", []) if typeof(alert.get("factions", [])) == TYPE_ARRAY else []
+	var names: Array = []
+	for f in factions:
+		if typeof(f) == TYPE_DICTIONARY:
+			names.append("%s(%d)" % [str(f.get("name", "")), int(f.get("pressure", 0))])
+	var faction_line := " / ".join(names) if not names.is_empty() else "—"
+	var phase_line := Locale.t("atlas_contest_phase_imminent") if phase == "imminent" else Locale.t("atlas_contest_phase_declared")
+	var at_anchor := World.pos == anchor and anchor != ""
+	var h := 380.0
+	var panel := _modal_panel(h)
+	panel.name = "ContestTugModal"
+	var el := UIKit.mono(Locale.t("atlas_contest_en"), 9, UIKit.EMBER)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_contest_title"), 20, UIKit.EMBER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_contest_body") % [site_name, anchor_name, faction_line, phase_line],
+		UIKit.TEXT, 13)
+	body.name = "ContestTugBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 110)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var y := 196.0
+	var seize_label := Locale.t("atlas_contest_seize_now") if at_anchor else Locale.t("atlas_contest_seize")
+	var seize := UIKit.cta_button(seize_label, "A", 452, 42)
+	seize.name = "ContestSeize"
+	seize.position = Vector2(24, y)
+	seize.pressed.connect(func():
+		if site_id == "":
+			_clear_modal()
+			return
+		if World.pos == anchor:
+			var r: Dictionary = CKTerritory.intervene_contest(site_id)
+			_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+			_clear_modal()
+			_refresh_top()
+			_build_nodes()
+			if bool(r.get("ok", false)) and not World.encounter.is_empty():
+				_show_encounter_modal(World.encounter)
+			return
+		var st: Dictionary = World.begin_travel(anchor)
+		if bool(st.get("ok", false)):
+			# keep payload so arrival can re-open seize-now
+			World.last_neutral_contest = alert.duplicate(true)
+			_show_toast(Locale.t("atlas_contest_seize_go") % anchor_name, UIKit.ACCENT)
+			_clear_modal()
+			_refresh_top()
+			call_deferred("_run_travel")
+		else:
+			_show_toast(str(st.get("msg", "")), UIKit.DANGER)
+			World.last_neutral_contest = alert.duplicate(true)
+			_clear_modal()
+			_show_contest_tug_modal(alert))
+	panel.add_child(seize)
+	y += 50.0
+	var watch := UIKit.ghost_button(Locale.t("atlas_contest_watch"), 452, 36)
+	watch.name = "ContestWatch"
+	watch.position = Vector2(24, y)
+	watch.pressed.connect(func():
+		var r2: Dictionary = CKTerritory.watch_contest(site_id)
+		_show_toast(str(r2.get("msg", "")), UIKit.EMBER)
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_contest"))
+	panel.add_child(watch)
+	var later := UIKit.ghost_button(Locale.t("atlas_contest_later"), 140, 36)
+	later.name = "ContestLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_neutral_contest = alert.duplicate(true)
+		_clear_modal()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_contest"))
+	panel.add_child(later)
+	seize.call_deferred("grab_focus")
+
+
+func _resume_travel_after_contest() -> void:
+	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
+		_run_travel()
+
+
 
 
 ## Road merc hire → MarchMusterModal (编制 / 日耗粮 refresh).
