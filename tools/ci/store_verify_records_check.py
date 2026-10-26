@@ -9,24 +9,33 @@ ROOT = Path(__file__).resolve().parents[2]
 
 RECORDS = {
     "docs/store/privacy-verification-record.md": {
-        "min_bytes": 1600,
-        "phrases": ["不收集", "不出售", "验证记录", "崩溃"],
+        "min_bytes": 1800,
+        "phrases": ["不收集", "不出售", "验证记录", "崩溃", "SDK", "静态"],
     },
     "docs/store/age-rating-verification-record.md": {
-        "min_bytes": 1400,
-        "phrases": ["12+", "内购", "暴力", "验证记录"],
+        "min_bytes": 1600,
+        "phrases": ["12+", "内购", "暴力", "验证记录", "不提交"],
     },
     "docs/store/export-paths-verification-record.md": {
-        "min_bytes": 1600,
-        "phrases": ["build_android.sh", "build_windows.sh", "release.yml", "验证记录"],
+        "min_bytes": 2200,
+        "phrases": [
+            "build_android.sh",
+            "build_windows.sh",
+            "release.yml",
+            "验证记录",
+            "STORE PACKAGING DRY PASS",
+            "EXPORT SIZE PASS",
+            "EXPORT CAP_STATUS",
+            "medium_only",
+        ],
     },
     "docs/store/data-safety-verification-record.md": {
-        "min_bytes": 1600,
-        "phrases": ["不收集", "数据安全", "不出售", "验证记录"],
+        "min_bytes": 1800,
+        "phrases": ["不收集", "数据安全", "不出售", "验证记录", "扫描"],
     },
     "docs/store/support-contact-verification-record.md": {
-        "min_bytes": 1600,
-        "phrases": ["支持", "联系", "不付费", "验证记录"],
+        "min_bytes": 1800,
+        "phrases": ["支持", "联系", "不付费", "验证记录", "隐私政策 URL"],
     },
 }
 

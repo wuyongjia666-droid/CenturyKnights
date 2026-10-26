@@ -30,7 +30,7 @@ python3 tools/ci/store_verify_records_check.py
 python3 tools/ci/export_size_report.py
 ```
 
-CI：`store_prep_check` 由 `scripts/run_ci.sh` / lint 路径外的显式步骤可调用；PR 改 `docs/store/**` 或 `tools/ci/store_prep_check.py` 时应本地先跑绿。
+CI：`scripts/run_ci.sh lint` 一阶跑 `export_size_report`、`store_prep_check`、`store_packaging_dry_check`、`store_verify_records_check`。PR 改 `docs/store/**` 或 `tools/ci/store_*.py` / `export_size_report.py` 时应本地先跑绿。Android CAP OVER 时预算仍可通过；闭合 CAP 见 `docs/art/export-cap-400.md`（用户拍板 H/I）。
 
 ## 分工边界
 
