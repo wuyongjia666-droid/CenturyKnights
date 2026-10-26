@@ -39,13 +39,17 @@ func _assert_shell(host: Node, where: String) -> void:
 	var strip = host.find_child("ShellCrestStrip", true, false)
 	_ok(strip != null, "%s ShellCrestStrip" % where)
 	if strip != null:
+		_ok(str(strip.get_meta("field_route", "")) == "shell_strip", "%s strip field_route" % where)
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s strip CastleArms" % where)
 		_ok(strip.find_child("CastleBanner", true, false) != null, "%s strip CastleBanner" % where)
 	_ok(host.find_child("CastleArms", true, false) != null, "%s CastleArms header" % where)
 	var row = host.find_child("SlotRow_manual_0", true, false)
 	_ok(row != null, "%s SlotRow" % where)
 	if row != null:
-		_ok(row.find_child("SlotArms", true, false) != null, "%s SlotArms" % where)
+		var slot = row.find_child("SlotArms", true, false)
+		_ok(slot != null, "%s SlotArms" % where)
+		if slot != null:
+			_ok(str(slot.get_meta("field_route", "")) == "save_row", "%s SlotArms field_route" % where)
 
 
 func _run_desktop() -> void:
@@ -95,8 +99,12 @@ func _run_meta_crest() -> void:
 		var arms = row.find_child("SlotArms", true, false)
 		_ok(arms != null, "meta SlotArms")
 		if arms != null:
+			_ok(str(arms.get_meta("field_route", "")) == "save_row", "meta SlotArms field_route")
 			_ok(str(arms.get_meta("arms_kind", "")) == "lb_slot_arms", "meta SlotArms kind")
 			var want := CKHeraldry.core_key(CKHeraldry.from_crest(crest_a))
 			_ok(str(arms.get_meta("arms_core", "")) == want, "meta SlotArms core from slot crest")
+	var src := FileAccess.get_file_as_string("res://scripts/core/save_slots.gd")
+	_ok(src.find("CKHeraldryField.attach_save_row_arms") >= 0, "save_slots row calls Field")
+	_ok(src.find("CKHeraldryField.place_shell_crest_strip") >= 0, "save_slots shell calls Field")
 	page.queue_free()
 	await _settle(2)

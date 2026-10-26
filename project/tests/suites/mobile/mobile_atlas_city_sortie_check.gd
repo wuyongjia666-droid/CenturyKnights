@@ -81,7 +81,7 @@ func _city_loop() -> String:
 			city.call("_set_tab", "market")
 		for _m in 4:
 			await get_tree().process_frame
-		var mb: Button = city.find_child("Mkt_%s_买1" % PRODUCE, true, false) as Button
+		var mb: Button = city.find_child("Mkt_%s_buy1" % PRODUCE, true, false) as Button
 		if mb == null or mb.disabled:
 			err = "produce buy missing"
 		else:

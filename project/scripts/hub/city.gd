@@ -35,6 +35,7 @@ func _ready() -> void:
 	city = str(GameState.get_meta("city_id", World.pos)) if GameState.has_meta("city_id") else World.pos
 	if not World.nodes.has(city) or city != World.pos:
 		city = World.pos
+	World.note_city_gate("in")
 	UIKit.void_bg(self)
 	_add_backdrop()
 	_top = Control.new()
@@ -84,7 +85,7 @@ func _ready() -> void:
 		_toast.z_index = 20
 		_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
 	else:
-		UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", "返回舆图"]], "SETTLEMENT · FROST_TACTICAL v8.7")
+		UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", Locale.t("atlas_gate_leave")]], "SETTLEMENT · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
@@ -325,7 +326,7 @@ func _refresh_top() -> void:
 		["货舱", "%d/%d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT],
 		["历", World.date_label(), UIKit.TEXT_DIM],
 	]
-	var back_t := "返回舆图"
+	var back_t := Locale.t("atlas_gate_leave")
 	if _mob:
 		var parts := PackedStringArray()
 		for ch in chips:
@@ -404,7 +405,7 @@ func _render_side() -> void:
 	kv.add_child(UIKit.kv_row("求购（贵）", _goods_list(n.get("demand", [])), UIKit.EMBER, 348))
 	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 12)
 	lore.position = Vector2(18, 392)
-	lore.size = Vector2(348, 90)
+	lore.size = Vector2(348, 68)
 	lore.custom_minimum_size = Vector2(348, 0)
 	p.add_child(lore)
 	var hl := UIKit.hairline(Color(1, 1, 1, 0.07))
@@ -422,9 +423,27 @@ func _render_side() -> void:
 		if World.can_turn_in(q, city):
 			ready += 1
 	party.add_child(UIKit.kv_row("可在此交付", "%d" % ready, UIKit.OK if ready > 0 else UIKit.TEXT_DIM, 348))
-	var back := UIKit.cta_button("返回舆图", "ESC", 348, 40)
+	var gate := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if bool(World.city_gate.get("warn", false)) else UIKit.ACCENT, 12)
+	gate.name = "CityGateBanner"
+	gate.position = Vector2(18, 462)
+	gate.size = Vector2(348, 28)
+	gate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	gate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(gate)
+	var seal_offer: Dictionary = World.city_seal_resupply_offer()
+	var back_y := 566.0
+	if bool(seal_offer.get("needed", false)):
+		var days := int(seal_offer.get("days", 7))
+		var seal_btn := UIKit.cta_button(Locale.t("atlas_city_seal_resupply_btn") % days, "R", 348, 36)
+		seal_btn.name = "CitySealResupply"
+		seal_btn.position = Vector2(18, 498)
+		seal_btn.disabled = not bool(seal_offer.get("ok", false))
+		seal_btn.pressed.connect(_on_city_seal_resupply)
+		p.add_child(seal_btn)
+		back_y = 548.0
+	var back := UIKit.cta_button(Locale.t("atlas_gate_leave"), "ESC", 348, 40)
 	back.name = "BackToAtlas"
-	back.position = Vector2(18, 566)
+	back.position = Vector2(18, back_y)
 	back.pressed.connect(_back)
 	p.add_child(back)
 
@@ -1166,8 +1185,26 @@ func _tab_market() -> void:
 	_head(p, Vector2(18, 14), "市集", "MARKET · SUPPLY-DRIVEN PRICES")
 	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
 	var cap := UIKit.mono("货舱 %d/%d   ·   粮/铁/药材直接入库，不占货舱" % [World.cargo_used(), World.cargo_cap()], 9, UIKit.TEXT_DIM, false)
-	cap.position = Vector2(420, 20)
-	p.add_child(cap)
+	var refresh := UIKit.ghost_button(Locale.t("city_market_refresh_btn"), 108, 28 if not _mob else MobilePage.HIT)
+	refresh.name = "MarketRefresh"
+	refresh.pressed.connect(func(): _do(World.refresh_market(city)))
+	if _mob:
+		refresh.custom_minimum_size = Vector2(108, MobilePage.HIT)
+		var top_row := HBoxContainer.new()
+		top_row.name = "MarketTopRow"
+		top_row.position = Vector2(18, 40)
+		top_row.size = Vector2(maxf(320.0, _m_body_w - 36.0), MobilePage.HIT)
+		top_row.add_theme_constant_override("separation", 8)
+		cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		top_row.add_child(cap)
+		top_row.add_child(refresh)
+		p.add_child(top_row)
+	else:
+		cap.position = Vector2(420, 20)
+		p.add_child(cap)
+		refresh.position = Vector2(728, 14)
+		p.add_child(refresh)
 	var y0 := 56.0
 	var loops: Array = World.produce_trade_loop(city)
 	var known_loops: Array = []
@@ -1256,20 +1293,26 @@ func _tab_market() -> void:
 		row.add_child(_line(bt, bcol, 12, 230 * k))
 		var acts := HBoxContainer.new()
 		acts.add_theme_constant_override("separation", 4)
-		for a in [["买1", 1, true], ["买5", 5, true], ["卖1", 1, false], ["卖全", -1, false]]:
-			var qty := int(a[1])
-			var is_buy := bool(a[2])
+		for a in [["买1", "buy1", 1, true], ["买5", "buy5", 5, true], ["卖1", "sell1", 1, false], ["卖全", "sell_all", -1, false]]:
+			var qty := int(a[2])
+			var is_buy := bool(a[3])
 			var q2 := qty if qty > 0 else have
+			var good_id := gs
+			var trade_qty := q2
 			var b := UIKit.ghost_button(str(a[0]), 52, 28)
-			b.name = "Mkt_%s_%s" % [gs, str(a[0])]
+			b.name = "Mkt_%s_%s" % [gs, str(a[1])]
 			if is_buy:
-				b.disabled = World.stock(city, gs) < q2 or GameState.silver < World.quote_buy(city, gs, q2) or (str(World.goods[gs].get("store", "")) == "" and World.cargo_used() + q2 > World.cargo_cap())
-				b.tooltip_text = "共 %d 银" % World.quote_buy(city, gs, q2)
-				b.pressed.connect(func(): _do(World.market_buy(city, gs, q2)))
+				var stock_ok := World.stock(city, good_id) >= trade_qty
+				var silver_ok := GameState.silver >= World.quote_buy(city, good_id, trade_qty)
+				var store_kind := str(World.goods[good_id].get("store", ""))
+				var cargo_ok := store_kind != "" or World.cargo_used() + trade_qty <= World.cargo_cap()
+				b.disabled = not (stock_ok and silver_ok and cargo_ok)
+				b.tooltip_text = "共 %d 银" % World.quote_buy(city, good_id, trade_qty)
+				b.pressed.connect(func(): _do(World.market_buy(city, good_id, trade_qty)))
 			else:
-				b.disabled = have <= 0 or q2 <= 0
-				b.tooltip_text = "共 %d 银" % World.quote_sell(city, gs, maxi(1, q2))
-				b.pressed.connect(func(): _do(World.market_sell(city, gs, q2)))
+				b.disabled = have <= 0 or trade_qty <= 0
+				b.tooltip_text = "共 %d 银" % World.quote_sell(city, good_id, maxi(1, trade_qty))
+				b.pressed.connect(func(): _do(World.market_sell(city, good_id, trade_qty)))
 			acts.add_child(b)
 		if _mob and _m_body_w >= 1200.0:
 			# wide phone: trade buttons stay on the price row, pushed to the right
@@ -1339,9 +1382,7 @@ func _tab_board() -> void:
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(badge)
 		# Issuer crest (团徽 for hq, nation plate otherwise) — right edge of the offer row.
-		var crest := CKHeraldryChrome.make_issuer_arms(str(q.get("issuer", city)), Vector2(28, 34))
-		crest.position = Vector2(388.0 - 28.0 - 8.0, 6.0)
-		b.add_child(crest)
+		CKHeraldryField.pin_board_row_arms(b, str(q.get("issuer", city)), Vector2(388.0 - 28.0 - 8.0, 6.0), Vector2(28, 34))
 		var qid := str(q.id)
 		b.pressed.connect(func(): _sel_quest = qid; _render_tab())
 		v.add_child(b)
@@ -1386,7 +1427,7 @@ func _tab_board() -> void:
 	var e := UIKit.mono("%s // %s" % ["ACTIVE" if is_active else "OFFER", str(sel.kind).to_upper()], 9, UIKit.EMBER if bool(sel.get("sig", false)) else UIKit.ACCENT)
 	e.position = Vector2(18, 16)
 	d.add_child(e)
-	CKHeraldryChrome.place_board_crest(d, str(sel.get("issuer", city)), Vector2(352, 14), Vector2(44, 52))
+	CKHeraldryField.place_board_crest(d, str(sel.get("issuer", city)), Vector2(352, 14), Vector2(44, 52))
 	var t := _para(str(sel.title), UIKit.TEXT, 19, 320)
 	t.position = Vector2(18, 32)
 	d.add_child(t)
@@ -1690,7 +1731,17 @@ func _toast_msg(text: String, col: Color) -> void:
 	tw.tween_property(_toast, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(func(): _toast.visible = false)
 
+
+func _on_city_seal_resupply() -> void:
+	var r: Dictionary = World.city_seal_resupply()
+	if bool(r.get("ok", false)):
+		_toast_msg(str(r.get("msg", "")), UIKit.OK)
+		_refresh_all()
+	else:
+		_toast_msg(str(r.get("msg", Locale.t("atlas_resupply_fail_stock"))), UIKit.DANGER)
+
 func _back() -> void:
+	World.note_city_gate("out")
 	UIFX.page_exit(self)
 	CKNav.up(ATLAS)
 
@@ -1719,35 +1770,66 @@ func selftest() -> Dictionary:
 		if _body.get_child_count() == 0:
 			return {"ok": false, "msg": "tab %s empty" % t[0]}
 	msgs.append("tabs ok")
-	# smith: buy the first available item through the detail button
+	# smith: buy an item the leader can equip (atlas e2e may already hold a stronger
+	# signature sword; first-available stock is often a job-gated bow).
 	_set_tab("smith")
 	await get_tree().process_frame
 	var reveal := find_child("SmithRevealSkip", true, false) as Button
 	if reveal:
 		reveal.pressed.emit()
 		await get_tree().process_frame
-	var buy := _body.find_child("BuyItem", true, false) as Button
-	if buy == null:
-		return {"ok": false, "msg": "no BuyItem"}
+	var leader: CKCharacter = GameState.get_leader()
+	if leader == null:
+		return {"ok": false, "msg": "no leader"}
+	_sel_item = ""
+	for e in World.smith_stock(city):
+		if not bool(e.available):
+			continue
+		var cand: Dictionary = e.item
+		if World.can_equip(leader, cand) != "":
+			continue
+		_sel_item = str(cand.id)
+		# prefer a weapon so the atk assertion is meaningful
+		if str(cand.get("slot", "")) == "weapon":
+			break
+	if _sel_item == "":
+		return {"ok": false, "msg": "no smith stock the leader can equip"}
 	var arm0 := _armory_count()
 	GameState.silver += 2000
 	_render_tab()
 	await get_tree().process_frame
-	buy = _body.find_child("BuyItem", true, false) as Button
-	if buy.disabled:
-		for e in World.smith_stock(city):
-			if bool(e.available):
-				_sel_item = str(e.item.id)
-				break
-		_render_tab()
-		await get_tree().process_frame
-		buy = _body.find_child("BuyItem", true, false) as Button
+	var buy := _body.find_child("BuyItem", true, false) as Button
+	if buy == null or buy.disabled:
+		return {"ok": false, "msg": "no BuyItem"}
 	buy.pressed.emit()
 	await get_tree().process_frame
 	if _armory_count() != arm0 + 1:
 		return {"ok": false, "msg": "smith buy via UI failed"}
 	msgs.append("smith buy")
-	# tavern: hire face 0, then equip the just-bought arm onto them
+	# armory: equip the just-bought piece (unequip slot first so atk can't drop)
+	var bought_id := str(_sel_item)
+	if bought_id == "" or int(World.armory.get(bought_id, 0)) <= 0:
+		return {"ok": false, "msg": "bought item missing from armory"}
+	var slot := str(World.item(bought_id).get("slot", "weapon"))
+	World.unequip(leader.id, slot)
+	_set_tab("armory")
+	await get_tree().process_frame
+	_sel_char = leader.id
+	_render_tab()
+	await get_tree().process_frame
+	var atk0 := leader.derived_atk()
+	var eq := _body.find_child("Equip_" + bought_id, true, false) as Button
+	if eq == null or eq.disabled:
+		return {"ok": false, "msg": "Equip_%s missing/disabled" % bought_id}
+	eq.pressed.emit()
+	await get_tree().process_frame
+	if World.equipped(leader, slot) != bought_id:
+		return {"ok": false, "msg": "equip via UI failed"}
+	if slot == "weapon" and leader.derived_atk() <= atk0:
+		return {"ok": false, "msg": "equip did not raise atk"}
+	msgs.append("smith equip")
+	# tavern: hire face 0, then equip a weapon still in the armory.
+	# Smith equip consumed the bought copy; unequip put the previous piece back.
 	_set_tab("tavern")
 	await get_tree().process_frame
 	var hire_btn := _body.find_child("Hire0", true, false) as Button
@@ -1781,15 +1863,22 @@ func selftest() -> Dictionary:
 	var hired: CKCharacter = GameState.characters.get(hired_id)
 	var eq_id := ""
 	for k in World.armory.keys():
-		if World.can_equip(hired, World.item(str(k))) == "":
+		var itk: Dictionary = World.item(str(k))
+		if str(itk.get("slot", "")) != "weapon":
+			continue
+		if World.can_equip(hired, itk) == "":
 			eq_id = str(k)
 			break
 	if eq_id == "":
 		# force job so regional sword fits
 		hired.job_id = "squire"
 		for k2 in World.armory.keys():
-			eq_id = str(k2)
-			break
+			var itk2: Dictionary = World.item(str(k2))
+			if str(itk2.get("slot", "")) != "weapon":
+				continue
+			if World.can_equip(hired, itk2) == "":
+				eq_id = str(k2)
+				break
 		_render_tab()
 		await get_tree().process_frame
 	var eqh := _body.find_child("Equip_" + eq_id, true, false) as Button
@@ -1803,19 +1892,44 @@ func selftest() -> Dictionary:
 	if hired.derived_atk() < atk_h0:
 		return {"ok": false, "msg": "hire equip did not hold atk"}
 	msgs.append("hire equip")
-	# market: buy 1 of the first produced good
+	# market: buy 1 of the first produced good, sell 1 back, refresh when stock drained
 	_set_tab("market")
 	await get_tree().process_frame
 	var g := str(World.node(city).get("produce", ["grain"])[0])
-	var mb := _body.find_child("Mkt_%s_买1" % g, true, false) as Button
+	var mb := _body.find_child("Mkt_%s_buy1" % g, true, false) as Button
 	if mb == null or mb.disabled:
 		return {"ok": false, "msg": "market buy button missing/disabled for " + g}
 	var h0 := World.have_good(g)
+	var silver0 := GameState.silver
 	mb.pressed.emit()
 	await get_tree().process_frame
 	if World.have_good(g) != h0 + 1:
 		return {"ok": false, "msg": "market buy via UI failed"}
+	if GameState.silver >= silver0:
+		return {"ok": false, "msg": "market buy did not spend silver"}
 	msgs.append("market buy")
+	var sell_btn := _body.find_child("Mkt_%s_sell1" % g, true, false) as Button
+	if sell_btn == null or sell_btn.disabled:
+		return {"ok": false, "msg": "market sell button missing/disabled for " + g}
+	var h1 := World.have_good(g)
+	sell_btn.pressed.emit()
+	await get_tree().process_frame
+	if World.have_good(g) != h1 - 1:
+		return {"ok": false, "msg": "market sell via UI failed"}
+	msgs.append("market sell")
+	# drain one unit of stock then refresh
+	World.market[city][g] = 0
+	_render_tab()
+	await get_tree().process_frame
+	var ref := _body.find_child("MarketRefresh", true, false) as Button
+	if ref == null:
+		return {"ok": false, "msg": "MarketRefresh missing"}
+	var st0 := World.stock(city, g)
+	ref.pressed.emit()
+	await get_tree().process_frame
+	if World.stock(city, g) <= st0:
+		return {"ok": false, "msg": "market refresh did not restock"}
+	msgs.append("market refresh")
 	# board: accept first unlocked offer via the detail button
 	_set_tab("board")
 	for q in World.board(city):
@@ -1838,7 +1952,6 @@ func selftest() -> Dictionary:
 
 
 
-# ── 杂货铺（v9.2 §4.2）：本国日用品只在本国卖，陆桥卖两侧过路货 ──────────
 func _tab_sundry() -> void:
 	var p := _panel(Rect2(0, 0, 848, 576))
 	_head(p, Vector2(18, 14), Locale.t("sundry_title"), "SUNDRIES · LOCAL GOODS")
@@ -1866,6 +1979,7 @@ func _tab_sundry() -> void:
 		buy.pressed.connect(func(): _sundry_result(CKSundries.buy(city, iid)))
 		row.add_child(buy)
 		var use := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		use.name = "SundryUse_" + iid
 		var can: Dictionary = CKSundries.usable(iid)
 		use.disabled = not bool(can.get("ok", false))
 		use.tooltip_text = str(can.get("msg", ""))
@@ -1891,11 +2005,14 @@ func _tab_sundry() -> void:
 		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		r2.add_child(nm)
 		var ub := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		ub.name = "SundryUse_" + k2
 		var can2: Dictionary = CKSundries.usable(k2)
 		ub.disabled = not bool(can2.get("ok", false))
+		ub.tooltip_text = str(can2.get("msg", ""))
 		ub.pressed.connect(func(): _sundry_result(CKSundries.use(k2, "", city)))
 		r2.add_child(ub)
 		var sb := UIKit.ghost_button(Locale.t("sundry_sell"), 120, 48)
+		sb.name = "SundrySell_" + k2
 		sb.pressed.connect(func(): _sundry_result(CKSundries.sell_half(city, k2)))
 		r2.add_child(sb)
 		v.add_child(r2)
