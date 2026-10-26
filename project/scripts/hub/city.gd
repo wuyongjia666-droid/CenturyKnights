@@ -547,6 +547,24 @@ func _para(text: String, col: Color, size: int, w: float) -> Label:
 	l.size = Vector2(w, 0)
 	return l
 
+
+func _arb_pending_city(plan: Dictionary) -> String:
+	var g := str(plan.get("good", ""))
+	var dname := str(World.node(str(plan.get("sell_city", ""))).get("name", plan.get("sell_city", "")))
+	var base := Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+	var days := int(plan.get("march_days", 0))
+	var food := int(plan.get("march_food", 0))
+	if days <= 0:
+		var m: Dictionary = World.arbitrage_march_preview(str(plan.get("sell_city", "")))
+		days = int(m.get("days", 0))
+		food = int(m.get("food", 0))
+	if days > 0:
+		base += " · " + (Locale.t("atlas_arb_march_days") % [days, food])
+		if bool(plan.get("seal_bypass", false)) or bool(World.arbitrage_march_preview(str(plan.get("sell_city", ""))).get("seal_bypass", false)):
+			base += Locale.t("atlas_arb_bypass")
+	return base
+
+
 func _line(text: String, col: Color, size: int, w: float) -> Label:
 	var l := UIKit.body_label(text, col, size)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -841,8 +859,43 @@ func _tab_overview() -> void:
 			go_mkt.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		go_mkt.pressed.connect(func(): _set_tab("market"))
 		v3.add_child(go_mkt)
-	for t in World.tips.slice(0, 3):
-		v3.add_child(_line("情报：%s" % str(t), UIKit.ACCENT, 11, 380))
+		# City-side one-tap arbitrage (fat deepen: was atlas-only).
+		if city == World.pos:
+			if World.arbitrage.is_empty():
+				var best_row: Dictionary = World.best_produce_trade(city)
+				if not best_row.is_empty() and bool(best_row.get("known", false)):
+					var arb := UIKit.ghost_button(Locale.t("atlas_arb_run"), 200, 28 if not _mob else MobilePage.HIT)
+					arb.name = "ArbitrageRun"
+					if _mob:
+						arb.custom_minimum_size = Vector2(0, MobilePage.HIT)
+					arb.pressed.connect(func():
+						_do(World.begin_arbitrage(str(best_row.get("good", "")), 1, str(best_row.get("sell_city", "")), true))
+						_render_tab()
+					)
+					v3.add_child(arb)
+			else:
+				var plan: Dictionary = World.arbitrage
+				var pend := _line(_arb_pending_city(plan), UIKit.EMBER, 11, 380)
+				pend.name = "ArbitragePending"
+				v3.add_child(pend)
+				if str(plan.get("sell_city", "")) == World.pos:
+					var sellb := UIKit.ghost_button(Locale.t("atlas_arb_sell_now"), 200, 28 if not _mob else MobilePage.HIT)
+					sellb.name = "ArbitrageSell"
+					sellb.pressed.connect(func():
+						_do(World.complete_arbitrage())
+						_render_tab()
+					)
+					v3.add_child(sellb)
+				else:
+					var go_atlas := UIKit.ghost_button(Locale.t("atlas_arb_march"), 200, 28 if not _mob else MobilePage.HIT)
+					go_atlas.name = "ArbitrageMarch"
+					go_atlas.pressed.connect(func():
+						GameState.set_meta("atlas_select", str(plan.get("sell_city", "")))
+						get_tree().change_scene_to_file("res://scenes/hub/atlas_view.tscn")
+					)
+					v3.add_child(go_atlas)
+	for tip in World.tips.slice(0, 3):
+		v3.add_child(_line("情报：%s" % str(tip), UIKit.ACCENT, 11, 380))
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
