@@ -1713,3 +1713,38 @@ static func attach_codex_rail_arms(parent: Node, nation_id: String, at: Vector2 
 	parent.add_child(arms)
 	return arms
 
+
+## Atlas territory owned-site flag: company banner (SiteBanner).
+static func attach_site_company_banner(parent: Node, at: Vector2 = Vector2.ZERO, banner_sz: Vector2 = Vector2(26, 36)) -> TextureRect:
+	if parent == null:
+		return null
+	_retire(parent, "SiteBanner")
+	var tr := CKHeraldryChrome.make_company_banner(banner_sz)
+	tr.name = "SiteBanner"
+	tr.position = at
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.set_meta("field_route", "site_banner")
+	tr.set_meta("arms_kind", "gen2_36")
+	parent.add_child(tr)
+	return tr
+
+
+## Unit-dossier full-size crest overlay texture (CrestTexture).
+static func attach_dossier_crest_banner(parent: Node, c, at: Vector2 = Vector2.ZERO, banner_sz: Vector2 = Vector2(320, 440)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "CrestTexture")
+	var tr := TextureRect.new()
+	tr.name = "CrestTexture"
+	tr.texture = CKHeraldryChrome.person_banner(c, int(banner_sz.x), int(banner_sz.y))
+	tr.position = at
+	tr.size = banner_sz
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.set_meta("field_route", "dossier_crest")
+	tr.set_meta("arms_kind", CKHeraldryChrome.arms_kind_key(c))
+	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(c)))
+	parent.add_child(tr)
+	return tr
+

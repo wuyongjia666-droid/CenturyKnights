@@ -695,17 +695,7 @@ func _show_crest() -> void:
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(dim)
-	var tr := TextureRect.new()
-	tr.name = "CrestTexture"
-	tr.texture = CKHeraldryChrome.person_banner(_focus, 320, 440)
-	tr.set_meta("arms_kind", CKHeraldryChrome.arms_kind_key(_focus))
-	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(_focus)))
-	tr.position = Vector2(480, 96)
-	tr.size = Vector2(320, 440)
-	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.add_child(tr)
+	var tr := CKHeraldryField.attach_dossier_crest_banner(layer, _focus, Vector2(480, 96), Vector2(320, 440))
 	var cap := UIKit.body_label(CKHeraldryChrome.arms_kind_label(_focus), UIKit.TEXT, 16)
 	cap.name = "CrestCaption"
 	cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

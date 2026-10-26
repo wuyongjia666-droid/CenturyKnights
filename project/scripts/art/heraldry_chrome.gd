@@ -328,6 +328,14 @@ static func attach_lineage_rank_badge(parent: Node, rank: String, at: Vector2 = 
 static func attach_codex_rail_arms(parent: Node, nation_id: String, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(22, 26)) -> TextureRect:
 	return CKHeraldryField.attach_codex_rail_arms(parent, nation_id, at, arms_sz)
 
+static func attach_site_company_banner(parent: Node, at: Vector2 = Vector2.ZERO, banner_sz: Vector2 = Vector2(26, 36)) -> TextureRect:
+	return CKHeraldryField.attach_site_company_banner(parent, at, banner_sz)
+
+
+static func attach_dossier_crest_banner(parent: Node, c, at: Vector2 = Vector2.ZERO, banner_sz: Vector2 = Vector2(320, 440)) -> TextureRect:
+	return CKHeraldryField.attach_dossier_crest_banner(parent, c, at, banner_sz)
+
+
 
 static func issuer_spec(issuer_id: String) -> Dictionary:
 	if issuer_is_home(issuer_id):
