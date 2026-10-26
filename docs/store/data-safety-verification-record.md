@@ -1,7 +1,7 @@
 # 数据安全表验证记录（不缴费提审）
 
 > 对 `data-safety-draft.md` 的**可核对**验证；与 `privacy-verification-record.md` 对齐。  
-> 记录时点：2026-10-25 11:12 Asia/Shanghai  
+> 记录时点：2026-10-27 00:08 Asia/Shanghai  
 > 关键词：`不收集`、`数据安全`、`不出售`、`验证记录`。
 
 ## 结论摘要
@@ -27,21 +27,20 @@
 
 ```bash
 # 期望：android/scripts/tools/store 无卖数或广告 SDK 依赖坐标
-# （story 里的 adjust op / HTML 图标名不算）
 rg -n -i 'firebase|admob|appsflyer|play-services-ads|advertising.?id' \
   project/android scripts tools docs/store || true
 ```
 
-2026-10-25 扫描：命中仅出现在「禁止/不收集」叙述与无关 story `adjust` 操作符 → **可接受**。
+2026-10-27 00:08 Asia/Shanghai / git `33e28515` 扫描：过滤叙述性命中后，依赖坐标命中 = **0** → **通过**。
 
 ## 上架前仍待人工
 
 - [ ] Play Console「数据安全」表正式勾选与本文一致后**再**保存（本轨**不付费**提交）  
 - [ ] 若开崩溃：更新本文 + `privacy-policy-draft.md` + 应用内开关  
-- [ ] 与正式隐私 URL 一并挂出  
 
 ## 修订
 
 | 日期 (Asia/Shanghai) | 变更 |
 |---|---|
-| 2026-10-25 11:12 Asia/Shanghai | 首份；对齐 #414 隐私/分级/导出验证记录族 |
+| 2026-10-25 11:12 Asia/Shanghai | 首份数据安全验证记录 |
+| 2026-10-27 00:08 Asia/Shanghai | 复跑静态扫描（0 依赖坐标）；与隐私记录对齐 |

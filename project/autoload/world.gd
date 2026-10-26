@@ -1790,8 +1790,11 @@ func market_buy(city: String, g: String, qty: int = 1) -> Dictionary:
 	GameState.mark_dirty()
 	world_changed.emit()
 	var buy_msg := "购入 %s ×%d（-%d 银）" % [good_name(g), qty, cost]
-	if g in node(city).get("produce", []) and str(goods.get(g, {}).get("store", "")) == "":
+	var is_produce: bool = (g in node(city).get("produce", [])) and str(goods.get(g, {}).get("store", "")) == ""
+	if is_produce:
 		buy_msg = Locale.t("atlas_trade_first_buy") % [good_name(g), qty, cost]
+		_ensure_gate_in()
+		CKEconomyState.month_echo_note("produce", Locale.t("atlas_produce_echo_buy") % [str(node(city).get("name", city)), good_name(g), qty, cost])
 	return {"ok": true, "msg": buy_msg, "cost": cost, "unit": cost / maxi(1, qty), "produce": g in node(city).get("produce", [])}
 
 ## price walks with supply: every unit bought raises the next unit's price
@@ -1971,6 +1974,8 @@ func buy_item(city: String, iid: String) -> Dictionary:
 	armory[iid] = int(armory.get(iid, 0)) + 1
 	add_city_rep(city, 1)
 	GameState.log_event("在%s购入「%s」" % [node(city).get("name", ""), items[iid].name])
+	_stamp_gate_shop(city, iid, "buy", cost, 0)
+	CKEconomyState.month_echo_note("smith", Locale.t("atlas_smith_echo_buy") % [str(node(city).get("name", city)), str(items[iid].name), cost])
 	GameState.mark_dirty()
 	world_changed.emit()
 	return {"ok": true, "msg": "购入「%s」（-%d 银）" % [items[iid].name, cost]}
@@ -2043,12 +2048,124 @@ func forge_item(city: String, iid: String, buy_mats: bool = false) -> Dictionary
 	armory[iid] = int(armory.get(iid, 0)) + 1
 	add_city_rep(city, 2)
 	GameState.log_event("%s铁匠为灰旗打造「%s」" % [node(city).get("name", ""), it.name])
+	_stamp_gate_shop(city, iid, "forge_mats" if mat_spent > 0 else "forge", cost + mat_spent, mat_spent)
+	var echo_key := "atlas_smith_echo_forge_mats" if mat_spent > 0 else "atlas_smith_echo_forge"
+	if mat_spent > 0:
+		CKEconomyState.month_echo_note("smith", Locale.t(echo_key) % [str(node(city).get("name", city)), str(it.name), cost, mat_spent])
+	else:
+		CKEconomyState.month_echo_note("smith", Locale.t(echo_key) % [str(node(city).get("name", city)), str(it.name), cost])
 	GameState.mark_dirty()
 	world_changed.emit()
 	var msg := "打造完成：「%s」（工钱 %d 银 + 材料）" % [it.name, cost]
 	if mat_spent > 0:
 		msg = Locale.t("smith_forge_bought_mats_done") % [it.name, cost, mat_spent]
 	return {"ok": true, "msg": msg, "forge_silver": cost, "mat_silver": mat_spent}
+
+## Gate→market→forge preview: at-city + stock gate + buy/forge/mats costs for E2E.
+func gate_forge_preview(city: String, iid: String) -> Dictionary:
+	var out := {
+		"ok": false,
+		"city": city,
+		"iid": iid,
+		"at_city": city == pos and city != "",
+		"gate_dir": str(city_gate.get("dir", "")),
+		"available": false,
+		"reason": "",
+		"buy_price": 0,
+		"forge_silver": 0,
+		"mat_silver": 0,
+		"total_forge": 0,
+		"short_buy": false,
+		"short_forge": false,
+		"can_buy": false,
+		"can_forge": false,
+		"can_forge_mats": false,
+		"mode_hint": "",
+	}
+	if city == "" or not nodes.has(city):
+		out["reason"] = Locale.t("atlas_gate_forge_bad_city")
+		return out
+	if city != pos:
+		out["reason"] = Locale.t("atlas_gate_forge_need_here") % str(node(city).get("name", city))
+		return out
+	var e := _stock_entry(city, iid)
+	if e.is_empty():
+		out["reason"] = Locale.t("atlas_gate_forge_no_stock")
+		return out
+	out["available"] = bool(e.get("available", false))
+	out["reason"] = str(e.get("reason", ""))
+	out["buy_price"] = smith_price(city, iid)
+	var it: Dictionary = items.get(iid, {})
+	out["forge_silver"] = int(it.get("forge_silver", 0))
+	var mats: Dictionary = forge_mats_preview(city, iid)
+	out["mat_silver"] = int(mats.get("mat_silver", 0))
+	out["total_forge"] = int(mats.get("total", out["forge_silver"]))
+	out["miss"] = mats.get("miss", {})
+	out["short_buy"] = GameState.silver < int(out["buy_price"])
+	var miss_empty: bool = (mats.get("miss", {}) as Dictionary).is_empty()
+	out["short_forge"] = (not miss_empty and bool(mats.get("short_silver", false))) or (miss_empty and GameState.silver < int(out["forge_silver"]))
+	out["can_buy"] = bool(out["available"]) and not bool(out["short_buy"])
+	out["can_forge"] = bool(out["available"]) and miss_empty and GameState.silver >= int(out["forge_silver"])
+	out["can_forge_mats"] = bool(out["available"]) and not miss_empty and bool(mats.get("can_buy", false)) and not bool(mats.get("short_silver", false))
+	if bool(out["can_buy"]):
+		out["mode_hint"] = "buy"
+	elif bool(out["can_forge_mats"]):
+		out["mode_hint"] = "forge_mats"
+	elif bool(out["can_forge"]):
+		out["mode_hint"] = "forge"
+	out["ok"] = true
+	return out
+
+
+## Act: ensure gate-in, then buy / forge / forge_mats. Rejects reuse preview reasons.
+func gate_forge_act(city: String, iid: String, mode: String = "") -> Dictionary:
+	var prev: Dictionary = gate_forge_preview(city, iid)
+	if not bool(prev.get("ok", false)):
+		return {"ok": false, "msg": str(prev.get("reason", "")), "preview": prev}
+	if not bool(prev.get("available", false)):
+		return {"ok": false, "msg": str(prev.get("reason", Locale.t("atlas_gate_forge_locked"))), "preview": prev}
+	var use := str(mode)
+	if use == "":
+		use = str(prev.get("mode_hint", "buy"))
+	if use == "buy" and not bool(prev.get("can_buy", false)):
+		return {"ok": false, "msg": Locale.t("atlas_gate_forge_short_buy") % int(prev.get("buy_price", 0)), "preview": prev}
+	if use == "forge" and not bool(prev.get("can_forge", false)):
+		return {"ok": false, "msg": Locale.t("atlas_gate_forge_need_mats"), "preview": prev}
+	if use == "forge_mats" and not bool(prev.get("can_forge_mats", false)):
+		if bool(prev.get("short_forge", false)):
+			return {"ok": false, "msg": Locale.t("smith_forge_short_silver") % int(prev.get("total_forge", 0)), "preview": prev}
+		return {"ok": false, "msg": Locale.t("smith_forge_mats_unstocked"), "preview": prev}
+	_ensure_gate_in()
+	var r: Dictionary = {}
+	if use == "buy":
+		r = buy_item(city, iid)
+	elif use == "forge_mats":
+		r = forge_item(city, iid, true)
+	elif use == "forge":
+		r = forge_item(city, iid, false)
+	else:
+		return {"ok": false, "msg": Locale.t("atlas_gate_forge_bad_mode"), "preview": prev}
+	r["preview"] = prev
+	r["mode"] = use
+	r["gate"] = city_gate.duplicate(true)
+	return r
+
+
+func _ensure_gate_in() -> void:
+	if str(city_gate.get("dir", "")) != "in" or str(city_gate.get("city", "")) != pos:
+		note_city_gate("in")
+
+
+func _stamp_gate_shop(city: String, iid: String, mode: String, spent: int, mat_silver: int = 0) -> void:
+	_ensure_gate_in()
+	city_gate["shopped"] = true
+	city_gate["last_item"] = iid
+	city_gate["last_item_name"] = str(items.get(iid, {}).get("name", iid))
+	city_gate["last_mode"] = mode
+	city_gate["last_spent"] = spent
+	city_gate["last_mat_silver"] = mat_silver
+	city_gate["last_produce"] = false
+
 
 func item(iid: String) -> Dictionary:
 	return items.get(iid, {})
