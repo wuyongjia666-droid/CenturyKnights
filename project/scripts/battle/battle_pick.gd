@@ -277,7 +277,10 @@ static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int) -
 		return false
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
 	var local: Vector2 = _board_local(host, screen_pos)
-	return strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos
+	if strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos:
+		return true
+	# T-P15: pressing the notch-lip sliver of the selected figure is still a unit drag.
+	return BattleEdgePick.from_host(host, screen_pos, local) == su.pos
 
 
 ## Soft/contour near the selected unit only — sticky slop while a piece is armed.
@@ -314,6 +317,10 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var contour: Vector2i = contour_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, prefer)
 	if contour.x >= 0:
 		return contour
+	# T-P15: notch-lip crown / torso sliver. Interior taps stay on the contour.
+	var edge: Vector2i = BattleEdgePick.from_host(host, screen_pos, local)
+	if edge.x >= 0:
+		return edge
 	return exact
 
 
