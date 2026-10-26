@@ -26,7 +26,7 @@ static func _retire(parent: Node, node_name: String) -> void:
 		old.queue_free()
 
 
-static func _host(parent: Node, node_name: String, at: Vector2, size: Vector2) -> Control:
+static func _host(parent: Node, node_name: String, at: Vector2, size: Vector2, field_route: String = "") -> Control:
 	_retire(parent, node_name)
 	var host := Control.new()
 	host.name = node_name
@@ -34,6 +34,8 @@ static func _host(parent: Node, node_name: String, at: Vector2, size: Vector2) -
 	host.size = size
 	host.custom_minimum_size = size
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if field_route != "":
+		host.set_meta("field_route", field_route)
 	parent.add_child(host)
 	if parent is Container:
 		parent.move_child(host, 0)
@@ -56,7 +58,7 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 	var w := shield.x
 	if candidate != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "TavernCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "TavernCrestStrip", at, Vector2(w, shield.y), "tavern_strip")
 	var focus: TextureRect = null
 	if candidate != null:
 		focus = CKHeraldryChrome.make_person_arms(candidate, shield)
@@ -73,7 +75,7 @@ static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shie
 	var w := shield.x
 	if reserve_c != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "ReserveCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "ReserveCrestStrip", at, Vector2(w, shield.y), "reserve_strip")
 	var extra: TextureRect = null
 	if reserve_c != null:
 		extra = CKHeraldryChrome.make_person_arms(reserve_c, shield)
@@ -136,7 +138,7 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 		return null
 	var nid := str(foe_nation)
 	var w := shield.x if nid == "" else shield.x * 2.0 + 8.0
-	var host := _host(parent, "ReportCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "ReportCrestStrip", at, Vector2(w, shield.y), "report_strip")
 	var extra: TextureRect = null
 	if nid != "":
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
@@ -186,7 +188,7 @@ static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Ve
 	var w := shield.x
 	if smith != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "ForgeFocusStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "ForgeFocusStrip", at, Vector2(w, shield.y), "forge_focus")
 	var focus: TextureRect = null
 	if smith != null:
 		focus = CKHeraldryChrome.make_person_arms(smith, shield)
@@ -216,7 +218,7 @@ static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shiel
 	var w := shield.x
 	if focus_hurt != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "ShrineHealStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "ShrineHealStrip", at, Vector2(w, shield.y), "shrine_heal")
 	var focus: TextureRect = null
 	if focus_hurt != null:
 		focus = CKHeraldryChrome.make_person_arms(focus_hurt, shield)
@@ -236,7 +238,7 @@ static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2
 	var w := shield.x
 	if nid != "":
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "AffairCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "AffairCrestStrip", at, Vector2(w, shield.y), "affairs_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
 	host.add_child(co)
@@ -315,6 +317,7 @@ static func place_panorama_lineage_strip(parent: Node, people: Array, at: Vector
 	if parent == null:
 		return null
 	var host := _lineage_host(parent, "PanoramaLineageStrip", people, at, shield, 6.0)
+	host.set_meta("field_route", "panorama_lineage")
 	var i := 0
 	for c in people:
 		if c == null:
@@ -330,6 +333,7 @@ static func place_home_lineage_row(parent: Node, people: Array, at: Vector2, shi
 	if parent == null:
 		return null
 	var host := _lineage_host(parent, "HomeLineageRow", people, at, shield, 4.0)
+	host.set_meta("field_route", "home_lineage")
 	var i := 0
 	for c in people:
 		if c == null:
@@ -409,7 +413,7 @@ static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector
 		w += gap + shield.x
 	if right_c != null:
 		w += gap + shield.x
-	var host := _host(parent, "MarriageCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "MarriageCrestStrip", at, Vector2(w, shield.y), "marriage_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2(x, 0)
 	host.add_child(co)
@@ -450,7 +454,7 @@ static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield
 	var w := shield.x
 	if heir != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "SuccessionCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "SuccessionCrestStrip", at, Vector2(w, shield.y), "succession_strip")
 	var focus: TextureRect = null
 	if heir != null:
 		focus = CKHeraldryChrome.make_person_arms(heir, shield)
@@ -471,7 +475,7 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 		w += gap + shield.x
 	if right_c != null:
 		w += gap + shield.x
-	var host := _host(parent, "DuelCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "DuelCrestStrip", at, Vector2(w, shield.y), "duel_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2(x, 0)
 	host.add_child(co)
@@ -499,7 +503,7 @@ static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Ve
 	var w := shield.x
 	if pupil != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "TrainFocusStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "TrainFocusStrip", at, Vector2(w, shield.y), "train_focus")
 	var focus: TextureRect = null
 	if pupil != null:
 		focus = CKHeraldryChrome.make_person_arms(pupil, shield)
@@ -907,7 +911,7 @@ static func place_deploy_muster_strip(parent: Node, leader, at: Vector2, shield:
 	var w := shield.x
 	if leader != null:
 		w = shield.x * 2.0 + 8.0
-	var host := _host(parent, "MusterCrestStrip", at, Vector2(w, shield.y))
+	var host := _host(parent, "MusterCrestStrip", at, Vector2(w, shield.y), "deploy_muster")
 	var extra: TextureRect = null
 	if leader != null:
 		extra = CKHeraldryChrome.make_person_arms(leader, shield)
