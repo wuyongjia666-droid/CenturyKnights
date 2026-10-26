@@ -2405,6 +2405,30 @@ func _fill_specialty(v: VBoxContainer, mobile: bool) -> void:
 		if mobile:
 			wl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		v.add_child(wl)
+	_specialty_echo_strip(v, mobile)
+
+
+## Specialty take/deliver → month_echo.produce on the affairs sheet (EchoLine_produce).
+func _specialty_echo_strip(parent: Node, mobile: bool) -> void:
+	var rows: Array = []
+	for row in CKEconomyState.month_echo_lines():
+		if str(row.get("kind", "")) == "produce":
+			rows.append(row)
+	if rows.is_empty():
+		return
+	var fs := MobilePage.FONT if mobile else 12
+	var head := UIKit.mono(Locale.t("atlas_specialty_echo_head"), 9 if not mobile else 11, UIKit.ACCENT, false)
+	head.name = "SpecialtyEchoHead"
+	if mobile:
+		head.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(head)
+	for row in rows:
+		var line := UIKit.body_label(str(row.get("text", "")), UIKit.OK, fs)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		parent.add_child(line)
 
 
 func _specialty_act() -> void:

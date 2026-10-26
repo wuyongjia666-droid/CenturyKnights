@@ -187,3 +187,9 @@
 - 各章 `tavern` 拍在 `_tvn4` 后、`_tvx1` 前加 `_sth1`–`_sth6` 席末静口口头，全库去重；收束非旁白。
 - 验收：`content_season_seat_hush_chain_check` — hub chip → 席末针口头。
 - 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`。
+
+## 厅角停步口头加厚（hall-pause）
+
+- 各章第二主题拍在 `_sec6` 后、离开该拍前加 `_hlp1`–`_hlp6` 厅角停步口头，全库去重；收束非旁白。
+- 验收：`content_season_hall_pause_chain_check` — hub chip → 厅角针口头。
+- 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_bpl`/`_msr`/`_vop`。
