@@ -91,4 +91,4 @@ static func draw(host, overlay) -> void:
 	var body: Rect2 = marks.body
 	overlay.draw_rect(body, Color(tone, FILL_A * pulse))
 	var label_pos: Vector2 = marks.mid + Vector2(-14.0, -float(marks.mid_r) - 12.0)
-	overlay.draw_string(UIKit.font("mono"), label_pos, "追击", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(tone, 0.98 * pulse))
+	overlay.draw_string(UIKit.font("mono"), label_pos, Locale.t("shell_followup_mark"), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(tone, 0.98 * pulse))
