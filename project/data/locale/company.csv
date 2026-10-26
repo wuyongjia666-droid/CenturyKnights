@@ -318,6 +318,7 @@ atlas_chip_hot_v,%d 段,%d
 atlas_leg_line,%s › %s · %d日 · 险%s · %s%s,"%s › %s · %d d · risk %s · %s%s"
 atlas_leg_more,另有 %d 段…,+%d more legs…
 atlas_warn_food,粮草不足以走完全程——断粮会每日损失士气。,Not enough food for the whole march — starvation drains morale daily.
+atlas_warn_seal_bypass,冬封旁路预览 · 日数与粮耗按绕行计。,Winter bypass preview · days and food use the detour.
 atlas_warn_border,过境：%s,Crossing: %s
 atlas_warn_hot,途中有 %d 段高危路——伏击更密。,%d high-risk leg(s) ahead — ambushes more likely.
 atlas_hud_go,启程,March
