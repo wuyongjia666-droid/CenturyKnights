@@ -641,84 +641,10 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 	_update_skill_hint()
 
 func _cast_support_skill(ui: int, sid: String) -> void:
-	_push_lamp()
-	Sfx.skill()
-	if Sfx.has_method("heal"):
-		Sfx.heal()
-	var sk = GameState.get_skill(sid)
-	var u = units[ui]
-	var healed = 0
-	for j in units.size():
-		var o = units[j]
-		if o.team != "player" or o.char.hp <= 0:
-			continue
-		if _manhattan(u.pos, o.pos) <= 1:
-			var amt = rng.randi_range(int(sk.get("heal_min", 8)), int(sk.get("heal_max", 12)))
-			amt = int(BattleRules.apply_class_heal(u.char, o.char, amt).get("healed", amt))
-			healed += 1
-			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
-			_spawn_slash(o.pos, "heal")
-	if sk.get("party_def_buff"):
-		var add = int(sk.get("party_def_buff"))
-		for ou in units:
-			if ou.team == "player" and ou.char.hp > 0:
-				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
-		_spawn_dmg(u.pos, "圣域", Color(0.7, 0.85, 1.0))
-	_consume_skill(u.char, sid)
-	u.done = true
-	selected = -1
-	Sfx.confirm()
-	_log("%s 释放「%s」，治疗 %d 人" % [u.char.name, sk.get("name", ""), healed])
-	map_draw.queue_redraw()
-	_refresh_info()
-	_check_end()
+	BattleSkillCast.support(self, ui, sid)
 
 func _cast_buff_skill(ui: int, sid: String) -> void:
-	_push_lamp()
-	var sk = GameState.get_skill(sid)
-	var u = units[ui]
-	if sk.get("def_buff"):
-		u.char.temp_def_buff = int(sk.get("def_buff"))
-	if sk.get("next_hit_bonus"):
-		u.char.temp_hit_bonus = int(sk.get("next_hit_bonus"))
-	if sk.get("next_crit_bonus"):
-		u.char.temp_crit_bonus = int(sk.get("next_crit_bonus"))
-	if sk.get("zoc_aura"):
-		u.char.temp_zoc_aura = int(sk.get("zoc_aura"))
-	if sk.get("ignore_zoc"):
-		u.char.temp_ignore_zoc = true
-	if sk.get("leave_free"):
-		u.char.temp_leave_free = true
-	if sk.get("clear_combat_lock"):
-		u.char.temp_combat_lock = 0
-		_spawn_dmg(u.pos, "拆锁", Color(0.5, 0.85, 1.0))
-		_spawn_slash(u.pos, "spark")
-	if sk.get("terrain_ward"):
-		u.char.temp_terrain_ward = true
-		_spawn_dmg(u.pos, "地利", Color(0.55, 0.9, 0.55))
-		_spawn_slash(u.pos, "shield")
-	if sk.get("leave_free") or sk.get("clear_combat_lock") or sk.get("ignore_zoc"):
-		# 立刻刷新移动：可支付脱离 / 拆锁后重算
-		if ui == selected:
-			move_cells = _compute_move_cells(ui)
-			attack_mode = false
-	if sk.get("party_def_buff"):
-		var add = int(sk.get("party_def_buff"))
-		for ou in units:
-			if ou.team == "player" and ou.char.hp > 0:
-				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
-	if sk.get("self_def_penalty"):
-		u.char.temp_def_buff = maxi(-99, u.char.temp_def_buff - int(sk.get("self_def_penalty")))
-	_consume_skill(u.char, sid)
-	var note = ""
-	if sk.get("zoc_aura"):
-		note = "（控带强化）"
-	_log("%s 释放「%s」%s" % [u.char.name, sk.get("name", ""), note])
-	Sfx.confirm()
-	Sfx.skill()
-	_refresh_info()
-	map_draw.queue_redraw()
-	overlay.queue_redraw()
+	BattleSkillCast.buff(self, ui, sid)
 
 func _enter_attack_mode() -> void:
 	if selected < 0 or selected >= units.size():
@@ -1267,6 +1193,19 @@ func _draw_overlay() -> void:
 	BattlePhaseFeel.draw_end_banner(self, overlay)
 	# T-P7: FE engage bridge (atk↔def) — overlay only, no input steal
 	BattleEngageCutscene.draw_engage_bridge(self, overlay)
+	BattleArtHitTelegraph.draw(self, overlay)
+	BattleLockAimTelegraph.draw(self, overlay)
+	BattleWoundedAimTelegraph.draw(self, overlay)
+	BattleLethalAimTelegraph.draw(self, overlay)
+	BattleFlankAimTelegraph.draw(self, overlay)
+	BattleCounterAimTelegraph.draw(self, overlay)
+	BattleFollowupAimTelegraph.draw(self, overlay)
+	BattleSureHitAimTelegraph.draw(self, overlay)
+	BattleCritAimTelegraph.draw(self, overlay)
+	BattleHitRiskAimTelegraph.draw(self, overlay)
+	BattleTerrainDefAimTelegraph.draw(self, overlay)
+	BattleHeightAimTelegraph.draw(self, overlay)
+	BattleWeatherAimTelegraph.draw(self, overlay)
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
@@ -1627,6 +1566,19 @@ func _click_cell(cell: Vector2i) -> void:
 								return
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
+							BattleArtHitTelegraph.refresh(self)
+							BattleLockAimTelegraph.refresh(self)
+							BattleWoundedAimTelegraph.refresh(self)
+							BattleLethalAimTelegraph.refresh(self)
+							BattleFlankAimTelegraph.refresh(self)
+							BattleCounterAimTelegraph.refresh(self)
+							BattleFollowupAimTelegraph.refresh(self)
+							BattleSureHitAimTelegraph.refresh(self)
+							BattleCritAimTelegraph.refresh(self)
+							BattleHitRiskAimTelegraph.refresh(self)
+							BattleTerrainDefAimTelegraph.refresh(self)
+							BattleHeightAimTelegraph.refresh(self)
+							BattleWeatherAimTelegraph.refresh(self)
 							ForecastPanel.refresh(self)
 							BattleLinkTelegraph.refresh(self)
 							BattleFoeOpeningTelegraph.refresh(self)
