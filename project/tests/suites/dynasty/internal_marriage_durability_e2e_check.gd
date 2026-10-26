@@ -151,95 +151,80 @@ func _ui_comrade_tab_wed() -> String:
 	page.size = Vector2(1280, 720)
 	for _i in 10:
 		await get_tree().process_frame
+	var err := ""
 	if page.has_method("_set_suitor"):
 		page.call("_set_suitor", a)
-	if page.has_method("_set_source_mode"):
-		page.call("_set_source_mode", "comrade")
+	if not page.has_method("_set_source_mode"):
+		err = "UI missing _set_source_mode"
 	else:
-		page.queue_free()
-		return "UI missing _set_source_mode"
+		page.call("_set_source_mode", "comrade")
 	for _j in 6:
 		await get_tree().process_frame
-	var bar: Node = page.find_child("SourceModeBar", true, false)
-	if bar == null or bar.get_child_count() < 2:
-		page.queue_free()
-		return "SourceModeBar missing"
-	if str(page.get("_source_mode")) != "comrade":
-		page.queue_free()
-		return "comrade mode not set (got %s)" % str(page.get("_source_mode"))
-	var comrade_btn: Button = null
-	for ch in bar.get_children():
-		if ch is Button and str(ch.name) == "Source_comrade":
-			comrade_btn = ch as Button
-			break
-	if comrade_btn == null or not comrade_btn.button_pressed:
-		page.queue_free()
-		return "comrade tab not selected"
-	var reroll: Button = page.find_child("Reroll", true, false) as Button
-	if reroll != null and reroll.visible:
-		page.queue_free()
-		return "reroll still visible on comrade tab"
-	var pool: Array = page.call("_candidate_pool")
-	var found := false
-	for c in pool:
-		if str(c.id) == str(b.id):
-			found = true
-			break
-	if not found:
-		page.queue_free()
-		return "UI pool missing im_ui_b"
-	if page.has_method("_select"):
-		page.call("_select", b)
-	for _k in 4:
-		await get_tree().process_frame
-	var marry_btn: Button = page.find_child("MarriageActions", true, false).get_node_or_null("✓ 缔约") if false else null
-	## Name on CTA button varies; find by path MarriageActions last child or named.
-	var actions: Node = page.find_child("MarriageActions", true, false)
-	var cta: Button = null
-	if actions != null:
-		for ch in actions.get_children():
-			if ch is Button and str(ch.name).find("Reroll") < 0 and str(ch.name).find("Duty") < 0 \
-					and str(ch.name).find("Flag") < 0:
-				## CTA is the accent marry button — often last.
-				cta = ch as Button
-	if cta == null:
-		## Fallback: page._marry_btn
-		cta = page.get("_marry_btn") as Button
-	if cta == null:
-		page.queue_free()
-		return "marry CTA missing"
-	if "20" not in cta.text and str(CKFamilyState.INTERNAL_BRIDE_PRICE) not in cta.text:
-		page.queue_free()
-		return "CTA price not internal: %s" % cta.text
-	var silver0 := GameState.silver
-	## UI proved the 同袍 tab + price; marry via lineage with the same price the CTA shows.
-	page.set("_selected", b)
-	var price := CKFamilyState.bride_price_for(a, b)
-	var wed: Dictionary = Lineage.marry(a, b, price, null, false)
-	if not bool(wed.get("ok", false)):
-		page.queue_free()
-		return "UI lineage marry: %s" % str(wed.get("msg"))
-	for _m in 4:
-		await get_tree().process_frame
-	if page.has_method("_refresh"):
-		page.call("_refresh")
-	for _n in 4:
-		await get_tree().process_frame
-	if str(a.spouse_id) != str(b.id):
-		page.queue_free()
-		return "UI wed did not bind spouses"
-	var spent := silver0 - GameState.silver
-	if spent != CKFamilyState.INTERNAL_BRIDE_PRICE:
-		page.queue_free()
-		return "UI wed spent %d want %d" % [spent, CKFamilyState.INTERNAL_BRIDE_PRICE]
-	## After wed, CTA should flip to married state on refresh.
-	var cta2: Button = page.get("_marry_btn") as Button
-	if cta2 != null and not cta2.disabled and "20" in cta2.text:
-		page.queue_free()
-		return "CTA still looks unmarried after wed: %s" % cta2.text
+	if err == "":
+		var bar: Node = page.find_child("SourceModeBar", true, false)
+		if bar == null or bar.get_child_count() < 2:
+			err = "SourceModeBar missing"
+		elif str(page.get("_source_mode")) != "comrade":
+			err = "comrade mode not set (got %s)" % str(page.get("_source_mode"))
+		else:
+			var comrade_btn: Button = null
+			for ch in bar.get_children():
+				if ch is Button and str(ch.name) == "Source_comrade":
+					comrade_btn = ch as Button
+					break
+			if comrade_btn == null or not comrade_btn.button_pressed:
+				err = "comrade tab not selected"
+	if err == "":
+		var reroll: Button = page.find_child("Reroll", true, false) as Button
+		if reroll != null and reroll.visible:
+			err = "reroll still visible on comrade tab"
+	if err == "":
+		var pool: Array = page.call("_candidate_pool")
+		var found := false
+		for c in pool:
+			if str(c.id) == str(b.id):
+				found = true
+				break
+		if not found:
+			err = "UI pool missing im_ui_b"
+	if err == "":
+		if page.has_method("_select"):
+			page.call("_select", b)
+		for _k in 4:
+			await get_tree().process_frame
+		var cta: Button = page.get("_marry_btn") as Button
+		if cta == null:
+			err = "marry CTA missing"
+		elif "20" not in cta.text and str(CKFamilyState.INTERNAL_BRIDE_PRICE) not in cta.text:
+			err = "CTA price not internal: %s" % cta.text
+	if err == "":
+		var silver0 := GameState.silver
+		page.set("_selected", b)
+		var price := CKFamilyState.bride_price_for(a, b)
+		var wed: Dictionary = Lineage.marry(a, b, price, null, false)
+		if not bool(wed.get("ok", false)):
+			err = "UI lineage marry: %s" % str(wed.get("msg"))
+		else:
+			for _m in 4:
+				await get_tree().process_frame
+			if page.has_method("_refresh"):
+				page.call("_refresh")
+			for _n in 4:
+				await get_tree().process_frame
+			if str(a.spouse_id) != str(b.id):
+				err = "UI wed did not bind spouses"
+			else:
+				var spent := silver0 - GameState.silver
+				if spent != CKFamilyState.INTERNAL_BRIDE_PRICE:
+					err = "UI wed spent %d want %d" % [spent, CKFamilyState.INTERNAL_BRIDE_PRICE]
+				else:
+					var cta2: Button = page.get("_marry_btn") as Button
+					if cta2 != null and not cta2.disabled and "20" in cta2.text:
+						err = "CTA still looks unmarried after wed: %s" % cta2.text
+					else:
+						print("ROW PASS ui comrade tab spent=%d" % spent)
 	page.queue_free()
-	print("ROW PASS ui comrade tab spent=%d" % spent)
-	return ""
+	return err
 
 
 func _ui_estates_echo() -> String:
