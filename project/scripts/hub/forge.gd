@@ -136,6 +136,7 @@ func _render_left() -> void:
 func _slot(c: CKCharacter) -> Button:
 	var on := _sel == c
 	var b := Button.new()
+	b.name = "ForgeKnight_" + str(c.id)
 	var row_h := 58.0
 	if DeviceProfile.is_mobile():
 		row_h = maxf(row_h, DeviceProfile.hit_px())
@@ -424,6 +425,7 @@ func _m_render_all() -> void:
 		var b := MobilePage.button(Locale.t("mw_5cda7737") % [c.name, _weapon_name(c.weapon_id), c.derived_atk()], on, func():
 			_sel = c
 			_m_render_all())
+		b.name = "ForgeKnight_" + str(c.id)
 		b.custom_minimum_size = Vector2(0, 100)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		var pr := UIKit.make_portrait_rect(c, 72)
