@@ -142,7 +142,9 @@ const FEM_YOUNG_SWAPS := [
 ]
 
 static var _mem: Dictionary = {}
+static var _mem_path: Dictionary = {}
 static var _miss: Dictionary = {}
+static var _plate_rec: Dictionary = {}
 static var _lock: Dictionary = {}
 ## Optional. The bloodline pack may supply one extra prompt clause per unit. Empty until registered.
 static var bloodline_clause_hook: Callable = Callable()
@@ -200,6 +202,26 @@ static func stage_for_age(age_i: int) -> String:
 	if age_i < 55:
 		return "middle"
 	return "elder"
+
+## Play bands the UI swaps on. Distinct from the five farm stages: 3–11 and 12–15
+## both sit inside "youth", so the plate resolver salts them apart.
+static func play_band(age_i: int) -> String:
+	if age_i <= 2:
+		return "infant"
+	if age_i <= 11:
+		return "child"
+	if age_i <= 15:
+		return "teen"
+	return "adult"
+
+static func stage_for_play_band(band: String, age_i: int) -> String:
+	match band:
+		"infant":
+			return "infant"
+		"child", "teen":
+			return "youth"
+		_:
+			return stage_for_age(age_i)
 
 static func age_stage_of(c: Object) -> String:
 	return stage_for_age(int(c.get("age")))
@@ -537,14 +559,14 @@ static func texture(c: Object, tier: String = "large") -> Texture2D:
 	var stage := age_stage_of(c)
 	var key := "%s|%s|%s" % [stem, stage, use_tier]
 	if _mem.has(key) and _mem[key] is Texture2D:
+		CKArtPaths.last_loaded = str(_mem_path.get(key, ""))
 		return _mem[key]
 	if _miss.has(key):
 		return null
 	for name in _stage_names(stage):
 		var hit := _load_named("%s_%s" % [stem, name], use_tier)
 		if hit != null:
-			_mem[key] = hit
-			return hit
+			return _store_tex(key, hit)
 	var legacy := _load_named(stem, use_tier)
 	if legacy == null and dir_override == "":
 		var old := cache_key(c)
@@ -552,17 +574,82 @@ static func texture(c: Object, tier: String = "large") -> Texture2D:
 		if legacy == null:
 			legacy = CKArtPaths.load_portrait(USER_DIR + old + ".png", use_tier)
 	if legacy != null:
-		_mem[key] = legacy
-		return legacy
+		return _store_tex(key, legacy)
 	var bank := _bank_plate(c, use_tier)
 	if bank != null:
-		_mem[key] = bank
-		return bank
+		return _store_tex(key, bank)
 	_miss[key] = true
 	return null
 
+
+static func _store_tex(key: String, hit: Texture2D) -> Texture2D:
+	_mem[key] = hit
+	_mem_path[key] = CKArtPaths.last_loaded
+	return hit
+
+
+## One record for a unit at its play band. Adult keeps the authored unit_id plate
+## (then the nearest genome bucket). Younger bands are genome-seeded bank plates;
+## child and teen share the youth pool but different salts so the faces swap.
+static func plate_record(c: Object, tier: String = "") -> Dictionary:
+	var use := CKArtPaths.canonical_unit_tier(tier)
+	var age_i := int(c.get("age")) if c != null else 0
+	var band := play_band(age_i)
+	var stage := stage_for_play_band(band, age_i)
+	var id_stem := file_stem(str(c.get("id")) if c != null else "")
+	# Stage stays in the key so 16 / 40 / 60 (one play band) still swap plates.
+	var key := "%s|%s|%s|%s" % [id_stem, band, stage, use]
+	if _plate_rec.has(key):
+		return _plate_rec[key]
+	var rec := _plate_record_uncached(c, band, age_i, use)
+	_plate_rec[key] = rec
+	return rec
+
+
+static func _plate_record_uncached(c: Object, band: String, age_i: int, use: String) -> Dictionary:
+	var empty := {"texture": null, "path": "", "stem": "", "band": band, "tier": use, "stage": ""}
+	if c == null:
+		return empty
+	if band == "adult":
+		CKArtPaths.last_loaded = ""
+		var tex := texture(c, use)
+		if tex == null:
+			return empty
+		var path := CKArtPaths.last_loaded
+		return {
+			"texture": tex,
+			"path": path,
+			"stem": CKArtPaths._portrait_stem(path),
+			"band": band,
+			"tier": use,
+			"stage": stage_for_age(age_i),
+		}
+	var bank = _bank_script()
+	if bank == null:
+		return empty
+	var pack: Dictionary = bank.plate_for_band(c, band, use)
+	var tex2: Texture2D = pack.get("texture") as Texture2D
+	if tex2 == null:
+		return empty
+	var stem := str(pack.get("stem", ""))
+	if stem != "":
+		c.set_meta("ck_plate_stem", stem)
+	return {
+		"texture": tex2,
+		"path": str(pack.get("path", "")),
+		"stem": stem,
+		"band": band,
+		"tier": use,
+		"stage": stage_for_play_band(band, age_i),
+	}
+
+static func _bank_script():
+	# load() once: class_name CKPortraitBank would cycle with this script.
+	return load("res://scripts/art/portrait_bank.gd")
+
+
 static func _bank_plate(c: Object, tier: String = "large") -> Texture2D:
-	var scr = load("res://scripts/art/portrait_bank.gd")
+	var scr = _bank_script()
 	if scr == null:
 		return null
 	var pack = scr.try_texture(c, tier)
@@ -582,7 +669,9 @@ static func clear_mem() -> void:
 	## that resets the on-disk bank index and the next portrait re-lists ~9k
 	## files on the main thread (founding preview + hub taps stall on Android).
 	_mem.clear()
+	_mem_path.clear()
 	_miss.clear()
+	_plate_rec.clear()
 
 static func cache_key(c: Object) -> String:
 	_ensure(c)

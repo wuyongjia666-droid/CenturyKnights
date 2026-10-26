@@ -467,7 +467,7 @@ func _refresh_preview_art() -> void:
 	if _face != null:
 		_face.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
 		_face.gender = _gender
-	_portrait.texture = UnitArt.portrait(_face, 280, CKArtPaths.TIER_MEDIUM) if _face else null
+	_portrait.texture = UnitArt.unit_portrait(_face) if _face else null
 	## Thumbs only when the four face seeds changed (gender / reroll), not every colour tick.
 	if faces_before != _faces.size() or _face_btns_need_paint():
 		_paint_face_thumbs()
@@ -606,7 +606,7 @@ func _paint_face_thumbs() -> void:
 		return
 	for i in 4:
 		var tb: Button = _face_btns[i]
-		var tex: Texture2D = UnitArt.portrait(_faces[i], 96, CKArtPaths.TIER_MEDIUM)
+		var tex: Texture2D = UnitArt.unit_portrait(_faces[i])
 		tb.icon = tex
 		# Selected card gets a brighter modulate; others stay dimmer.
 		tb.modulate = Color(1, 1, 1, 1) if i == _face_idx else Color(0.72, 0.72, 0.78, 1)
