@@ -1337,6 +1337,18 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 	var rem_f := remaining_route_food()
 	var per := food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
+	# Winter bypass: camp strip prefers seal-aware remain so short-food warns match the detour.
+	var seal_bypass := false
+	var seal_need := 0
+	var held := held_march_dest()
+	var travel_dest := str(travel.get("dest", ""))
+	if held != "" and str(seal_detour.get("dest", "")) == held and (travel_dest == "" or travel_dest == held):
+		seal_need = seal_aware_remain_days(held)
+		if seal_need > 0:
+			seal_bypass = true
+			if seal_need > rem_d:
+				rem_d = seal_need
+				rem_f = per * rem_d
 	var thin := per > 0 and cover <= 1 and GameState.food > 0 and is_traveling()
 	var short := (rem_d > 0 and GameState.food < rem_f) or thin
 	return {
@@ -1347,6 +1359,8 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 		"remain_food": rem_f,
 		"cover_days": cover,
 		"short": short,
+		"seal_bypass": seal_bypass,
+		"seal_need": seal_need,
 		"a": str(e.get("a", "")),
 		"b": str(e.get("b", "")),
 	}

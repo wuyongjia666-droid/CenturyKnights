@@ -345,6 +345,7 @@ atlas_resupply_fail_silver,银币不足（需 %d）,Not enough silver (need %d)
 atlas_camp_readout,现有粮 %d · 日耗 %d · 余程 %d 日需 %d%s,Food %d · burn %d/day · %d days left need %d%s
 atlas_camp_short,（粮不足）, (short)
 atlas_camp_ok,（够走）, (enough)
+atlas_camp_seal_bypass,冬封旁路余程 %d 日 — 宿营按绕行计粮。,Winter bypass still has %d days — camp rations follow the detour.
 atlas_trade_loop_en,产线,LOOP
 atlas_trade_loop_title,产地买卖,Produce trade
 atlas_trade_loop_line,%s 买 %d → %s 卖 %d（%+d）,"%s buy %d → %s sell %d (%+d)"
