@@ -135,8 +135,8 @@ static func show_tip_once(host) -> void:
 		return
 	attach_dismiss(host, show_tip_panel(
 		host,
-		"交战锁定",
-		"跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。" % BattleRules.LEAVE_COST_LOCK,
+		Locale.t("shell_lock_tip_title"),
+		Locale.t("shell_lock_tip_body") % BattleRules.LEAVE_COST_LOCK,
 		0,
 		8.0
 	))
