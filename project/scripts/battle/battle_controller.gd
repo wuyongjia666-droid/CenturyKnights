@@ -1214,6 +1214,7 @@ func _draw_overlay() -> void:
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	BattleLinkTelegraph.draw(self, overlay)
+	BattleFoeOpeningTelegraph.draw(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		if s.age < 0.0: continue
@@ -1628,6 +1629,7 @@ func _click_cell(cell: Vector2i) -> void:
 							preview_move_cell = Vector2i(-1, -1)
 							ForecastPanel.refresh(self)
 							BattleLinkTelegraph.refresh(self)
+							BattleFoeOpeningTelegraph.refresh(self)
 							BattleRangePreview.keep_selected(self)
 							if DeviceProfile.is_mobile():
 								BattleMobileBar.rebuild(self)

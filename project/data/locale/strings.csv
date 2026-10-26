@@ -888,3 +888,4 @@ btn_sui_year,岁课回执,Year-card inbox
 shell_lock_tip_title,交战锁定,Engagement lock
 shell_lock_tip_body,跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。,"After you lock with someone, leaving costs +%d move; the locked foe counters more accurately. Break free with the art Step Out."
 shell_link_mark,连携,Link
+shell_foe_opening_mark,未刃,Unblooded
