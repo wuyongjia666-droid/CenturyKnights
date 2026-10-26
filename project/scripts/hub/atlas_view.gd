@@ -3892,10 +3892,24 @@ func _arb_pending_text(plan: Dictionary) -> String:
 	var g := str(plan.get("good", ""))
 	var dest := str(plan.get("sell_city", ""))
 	var dname := str(World.node(dest).get("name", dest))
-	return Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+	var base := Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+	var days := int(plan.get("march_days", 0))
+	var food := int(plan.get("march_food", 0))
+	if days <= 0:
+		var m: Dictionary = World.arbitrage_march_preview(dest)
+		days = int(m.get("days", 0))
+		food = int(m.get("food", 0))
+	if days > 0:
+		base += " · " + (Locale.t("atlas_arb_march_days") % [days, food])
+		var bypass := bool(plan.get("seal_bypass", false))
+		if not bypass:
+			bypass = bool(World.arbitrage_march_preview(dest).get("seal_bypass", false))
+		if bypass:
+			base += Locale.t("atlas_arb_bypass")
+	return base
 
 func _start_arbitrage_from_profile(good: String, sell_city: String) -> void:
-	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city)
+	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city, true)
 	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
 	if not bool(r.get("ok", false)):
 		return
