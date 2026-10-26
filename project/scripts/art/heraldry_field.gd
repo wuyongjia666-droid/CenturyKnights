@@ -4,9 +4,9 @@ extends RefCounted
 ## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal,
 ## city 本城之事 affairs overlay (团徽 + 本城邦徽), genealogy avatar-wall tiles,
 ## castle panorama lineage, castle-home roster row, marriage protocol / succession /
-## heir-trial duel strips, house-card person arms, roster crest strip / row /
-## hire-plate person arms, dialogue speaker plates, save-slot rows, battle
-## initiative order, commission-board plates, and shared banner plates.
+## heir-trial duel strips, house-card person arms, banner-school train
+## (pupil focus strip + row person arms), roster crest/row/hire plate,
+## dialogue / save / battle-order / board / tavern-annex Field plates.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -485,6 +485,35 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 	host.set_meta("has_right", right_c != null)
 	return host
 
+
+## Banner school focus strip: 团徽 + selected pupil 族徽|旗徽. No pupil → 团徽 only.
+static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if pupil != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "TrainFocusStrip", at, Vector2(w, shield.y))
+	var focus: TextureRect = null
+	if pupil != null:
+		focus = CKHeraldryChrome.make_person_arms(pupil, shield)
+		focus.name = "TrainFocusArms"
+	_pair(host, shield, focus)
+	host.set_meta("has_pupil", pupil != null)
+	return host
+
+
+## Pupil / tutor / promo pick row: person 族徽|旗徽. No marshalling with company arms.
+static func attach_train_row_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if host == null or c == null:
+		return null
+	_retire(host, "TrainRowArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "TrainRowArms"
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	host.add_child(arms)
+	return arms
 
 ## Roster header strip: 团徽 + company banner cloth (RosterCrestStrip / RosterBanner).
 static func place_roster_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
