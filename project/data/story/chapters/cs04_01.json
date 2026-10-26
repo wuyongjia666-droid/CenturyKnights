@@ -484,6 +484,36 @@
           "text": "训与脚步两行还亮。门廊上对鞋印。"
         },
         {
+          "id": "cs0401_aud1",
+          "speaker": "旁白",
+          "text": "家训末句的余音还在梁上。梁下只留笔响。"
+        },
+        {
+          "id": "cs0401_aud2",
+          "speaker": "岁吏",
+          "text": "训是说给人听的。栏是写给灯看的。"
+        },
+        {
+          "id": "cs0401_aud3",
+          "speaker": "书记官",
+          "text": "听过的话不进栏。进栏的只有验。"
+        },
+        {
+          "id": "cs0401_aud4",
+          "speaker": "旁白",
+          "text": "灯花结了一颗。结过，纸面无尘。"
+        },
+        {
+          "id": "cs0401_aud5",
+          "speaker": "岁吏",
+          "text": "无尘处落无字。字净，训才不羞。"
+        },
+        {
+          "id": "cs0401_aud6",
+          "speaker": "leader",
+          "text": "我落笔。无——训在胸，栏在纸。"
+        },
+        {
           "id": "cs0401_vhg1",
           "speaker": "书记官",
           "text": "家训卷轴立在沙漏侧。训条要月份来验，不靠背熟。"
@@ -827,6 +857,42 @@
           "when": {
             "flag": "cs04_mid_fought"
           }
+        },
+        {
+          "id": "cs0401_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "门廊牌稳了。稳处，训条旁假步退进影里。"
+        },
+        {
+          "id": "cs0401_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "假步走远了。真步留在门廊，一步一声。"
+        },
+        {
+          "id": "cs0401_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "训条不羞了。羞的是刚才那拨空嗓。"
+        },
+        {
+          "id": "cs0401_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "牌上的灰我拭过。拭过，字才肯亮。"
+        },
+        {
+          "id": "cs0401_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "旗角别扫训牌。牌脏了，步也脏。"
+        },
+        {
+          "id": "cs0401_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "锋跟步走完。训条我背得，廊我过。"
         },
         {
           "id": "cs04_mid_lost",
@@ -1500,6 +1566,36 @@
           "speaker": "leader",
           "text": "步还在夹页里。灰旗堡的家训柜，等这笔。"
         },
+      {
+        "id": "cs0401_ink1",
+        "speaker": "旁白",
+        "text": "家训两行的墨从捺脚往回收。收净，像步数也停在纸上。"
+      },
+      {
+        "id": "cs0401_ink2",
+        "speaker": "岁吏",
+        "text": "念漏的人下月再来。今晚只等这两行干，不补第三行。"
+      },
+      {
+        "id": "cs0401_ink3",
+        "speaker": "苇原·灯影",
+        "text": "绣词留在门外。门里的字干着，才像训，不像绣。"
+      },
+      {
+        "id": "cs0401_ink4",
+        "speaker": "旁白",
+        "text": "笔架上还有一滴未干的旧墨。旧的另放，不碰新的。"
+      },
+      {
+        "id": "cs0401_ink5",
+        "speaker": "岁吏",
+        "text": "两行干透，我按月收。湿训不当家训。"
+      },
+      {
+        "id": "cs0401_ink6",
+        "speaker": "leader",
+        "text": "训干了。绣词门外，步数我带走，字留下。"
+      },
         {
           "id": "cs0401_cls1",
           "speaker": "旁白",

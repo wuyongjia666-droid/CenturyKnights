@@ -1,7 +1,9 @@
 class_name BattleConfirmAffordance
 extends RefCounted
-## Y1-A T-P16: confirm / cancel affordance and a post-confirm camera that
-## lands in the same readable region T-P15 settles into.
+## Y1-A T-P16 + info/notch fat: confirm / cancel affordance and a post-confirm
+## camera that lands in the same readable region T-P15 settles into.
+## Chip pair clamps into the readable inset (info column + notch lip cut out)
+## so confirm/cancel never sit under the side rail or the cutout.
 ##
 ## The attack plate was a painted chip (often under a thumb) and was not a
 ## hit target. Landscape confirm/cancel chips are sized in screen pixels.
@@ -226,15 +228,48 @@ static func _edge_band(host) -> float:
 	return 0.0
 
 
+## Board-local clamp rect for chips: stage play inset minus info + notch lip.
+static func chip_bounds(host) -> Rect2:
+	var stage := Rect2()
+	if host != null and host.has_meta("m_board_area"):
+		var area = host.get_meta("m_board_area")
+		if area is Rect2:
+			stage = area
+	if stage.size.x < 8.0:
+		stage = BattlePick._stage_rect(host)
+	if stage.size.x < 8.0:
+		return Rect2()
+	return readable_inset(stage, _blockers(host), _edge_band(host))
+
+
+## True when both chips sit fully outside the info column block (when one is stamped).
+static func chips_clear_of_info(host) -> bool:
+	var pair := chips(host)
+	if pair.is_empty():
+		return true
+	var block := Rect2()
+	if host != null and host.has_meta("m_info_block"):
+		var b = host.get_meta("m_info_block")
+		if b is Rect2:
+			block = b
+	if block.size.x < 8.0:
+		return true
+	var confirm: Rect2 = pair.get("confirm", Rect2())
+	var cancel: Rect2 = pair.get("cancel", Rect2())
+	return not confirm.intersects(block) and not cancel.intersects(block)
+
+
 static func chips(host) -> Dictionary:
 	if not preview_latched(host):
 		return {}
 	var span := board_span(_zoom(host), _root_scale(host), screen_hit(_landscape(host)))
-	var bounds := Rect2()
-	if host.has_meta("m_board_area"):
-		var area = host.get_meta("m_board_area")
-		if area is Rect2:
-			bounds = area
+	var bounds := chip_bounds(host)
+	if bounds.size.x < span + 1.0 or bounds.size.y < span + 1.0:
+		# Readable inset too tight (tiny stage) — fall back to raw board area.
+		if host.has_meta("m_board_area"):
+			var area = host.get_meta("m_board_area")
+			if area is Rect2:
+				bounds = area
 	return chip_pair(chip_center(host), span, bounds)
 
 

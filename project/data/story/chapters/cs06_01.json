@@ -494,6 +494,36 @@
           "text": "沙圈两行都留着。去门廊对站位。"
         },
         {
+          "id": "cs0601_aud1",
+          "speaker": "旁白",
+          "text": "校场沙尘拍在门外。门内纸不进沙。"
+        },
+        {
+          "id": "cs0601_aud2",
+          "speaker": "岁吏",
+          "text": "场上的胜负归鼓。栏里的无归灯。"
+        },
+        {
+          "id": "cs0601_aud3",
+          "speaker": "书记官",
+          "text": "鼓歇了才准写。写时不许喘。"
+        },
+        {
+          "id": "cs0601_aud4",
+          "speaker": "旁白",
+          "text": "灯芯拔高一线。一线够看清格。"
+        },
+        {
+          "id": "cs0601_aud5",
+          "speaker": "岁吏",
+          "text": "格清了，无字才站得住脚。"
+        },
+        {
+          "id": "cs0601_aud6",
+          "speaker": "leader",
+          "text": "我落笔。无——沙在场，字在纸。"
+        },
+        {
           "id": "cs0601_vhg1",
           "speaker": "老旗手",
           "text": "校场册摊在沙漏下。胜负栏空，鼓却先响。"
@@ -827,6 +857,42 @@
           "when": {
             "flag": "cs06_mid_fought"
           }
+        },
+        {
+          "id": "cs0601_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "校场问声落地。落处，墙牌旁的笑哑了。"
+        },
+        {
+          "id": "cs0601_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "笑收了。赢的人不用再听那种笑。"
+        },
+        {
+          "id": "cs0601_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "上场过了。下场的汗，比笑真一寸。"
+        },
+        {
+          "id": "cs0601_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "沙我跺回坑。回坑，下一圈才平。"
+        },
+        {
+          "id": "cs0601_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "旗挂墙牌旁。挂正，笑就挂不上去。"
+        },
+        {
+          "id": "cs0601_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "锋跟圈走完。墙牌我挂得，场我认。"
         },
         {
           "id": "cs06_mid_lost",
@@ -1500,6 +1566,36 @@
           "speaker": "leader",
           "text": "沙坑靴印旁，灰旗堡的胜册等圈数。"
         },
+      {
+        "id": "cs0601_ink1",
+        "speaker": "旁白",
+        "text": "鼓停那一笔的墨边发白。白了，鼓声才真正停在纸上。"
+      },
+      {
+        "id": "cs0601_ink2",
+        "speaker": "岁吏",
+        "text": "胜者名没验过，栏空着。空栏旁边的鼓点，先等它干。"
+      },
+      {
+        "id": "cs0601_ink3",
+        "speaker": "石垒·晚担",
+        "text": "场沙卸在门外。门里的字干着，沙就进不来。"
+      },
+      {
+        "id": "cs0601_ink4",
+        "speaker": "旁白",
+        "text": "旗杆影从窗上移开。移开，案上只剩笔与干墨。"
+      },
+      {
+        "id": "cs0601_ink5",
+        "speaker": "岁吏",
+        "text": "鼓停笔记干透再收。湿着收，胜负会糊成一声响。"
+      },
+      {
+        "id": "cs0601_ink6",
+        "speaker": "leader",
+        "text": "鼓点干了。胜名没钉，旗我带回旗杆下。"
+      },
         {
           "id": "cs0601_cls1",
           "speaker": "旁白",

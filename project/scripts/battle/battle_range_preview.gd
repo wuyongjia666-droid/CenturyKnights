@@ -295,12 +295,13 @@ static func _clip_notch(host, inset: Rect2) -> Rect2:
 	# wrong DisplayServer window, which scales the notch into empty intersection
 	# and silently skips the clip. Prefer viewport whenever the sim env is set.
 	# On device CK_SAFE_INSETS is empty — real window + get_display_safe_area win.
-	if OS.get_environment("CK_SAFE_INSETS") != "" and vp.x >= 2.0 and vp.y >= 2.0:
+	var sim := OS.get_environment("CK_SAFE_INSETS") != ""
+	if sim and vp.x >= 2.0 and vp.y >= 2.0:
 		win = vp
 	elif win.x < 2.0 or win.y < 2.0:
 		win = vp
 	if win.x < 2.0 or win.y < 2.0:
-		return inset
+		return _clip_notch_sim(host, inset) if sim else inset
 	var safe := DeviceProfile.safe_area(win)
 	var sx := vp.x / win.x
 	var sy := vp.y / win.y
@@ -309,13 +310,48 @@ static func _clip_notch(host, inset: Rect2) -> Rect2:
 	var shown := _norm_rect(xform * inset.position, xform * inset.end)
 	var clipped := shown.intersection(safe_vp)
 	if clipped.size.x < 64.0 or clipped.size.y < 64.0:
-		return inset
+		return _clip_notch_sim(host, inset) if sim else inset
 	var inv := xform.affine_inverse()
 	var local := _norm_rect(inv * clipped.position, inv * clipped.end)
 	var both := inset.intersection(local)
 	if both.size.x < 64.0 or both.size.y < 64.0:
-		return inset
+		return _clip_notch_sim(host, inset) if sim else inset
 	return both
+
+
+## Algebraic notch clip for CK_SAFE_INSETS suites when transform×safe
+## intersection collapses in headless CI. Host already shifted by mobile_origin
+## has origin_g.x ≈ left inset → need=0 (no double count). Origin at 0 still
+## loses the lip.
+static func _clip_notch_sim(host, inset: Rect2) -> Rect2:
+	var sim := OS.get_environment("CK_SAFE_INSETS")
+	if sim == "":
+		return inset
+	var parts := sim.split(",")
+	if parts.size() != 4:
+		return inset
+	if not (host is CanvasItem) or not (host as CanvasItem).is_inside_tree():
+		return inset
+	var origin_g: Vector2 = (host as CanvasItem).get_global_transform() * Vector2.ZERO
+	var left := maxf(0.0, float(parts[0]) - origin_g.x)
+	var top := maxf(0.0, float(parts[1]) - origin_g.y)
+	var vp := (host as CanvasItem).get_viewport().get_visible_rect().size
+	var right_limit := vp.x - float(parts[2]) - origin_g.x
+	var bottom_limit := vp.y - float(parts[3]) - origin_g.y
+	var out := inset
+	if left > 0.5:
+		var x0 := maxf(out.position.x, left)
+		out = Rect2(Vector2(x0, out.position.y), Vector2(maxf(0.0, out.end.x - x0), out.size.y))
+	if top > 0.5:
+		var y0 := maxf(out.position.y, top)
+		out = Rect2(Vector2(out.position.x, y0), Vector2(out.size.x, maxf(0.0, out.end.y - y0)))
+	if vp.x >= 2.0 and right_limit + 0.5 < out.end.x:
+		out.size.x = maxf(0.0, right_limit - out.position.x)
+	if vp.y >= 2.0 and bottom_limit + 0.5 < out.end.y:
+		out.size.y = maxf(0.0, bottom_limit - out.position.y)
+	if out.size.x < 64.0 or out.size.y < 64.0:
+		return inset
+	return out
 
 
 static func _norm_rect(a: Vector2, b: Vector2) -> Rect2:

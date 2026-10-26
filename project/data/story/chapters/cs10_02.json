@@ -505,6 +505,36 @@
           "text": "假印一夜，印底就脏。"
         },
         {
+          "id": "cs1002_aud1",
+          "speaker": "旁白",
+          "text": "印框的边线用布拭过。拭过，再写征兆。"
+        },
+        {
+          "id": "cs1002_aud2",
+          "speaker": "岁吏",
+          "text": "框是给人看的。无是给灯认的。"
+        },
+        {
+          "id": "cs1002_aud3",
+          "speaker": "书记官",
+          "text": "认完才钤。钤完才算这一季。"
+        },
+        {
+          "id": "cs1002_aud4",
+          "speaker": "旁白",
+          "text": "灯油到了刻度。刻度内，写得完。"
+        },
+        {
+          "id": "cs1002_aud5",
+          "speaker": "岁吏",
+          "text": "写得完的无，比拖到明日的吉词硬。"
+        },
+        {
+          "id": "cs1002_aud6",
+          "speaker": "leader",
+          "text": "我写无。框收好，栏合上。"
+        },
+        {
           "id": "cs1002_vhg1",
           "speaker": "书记官",
           "text": "印底拓着空框。框在，印未落。"
@@ -859,6 +889,42 @@
           "when": {
             "flag": "cs10_mid_fought"
           }
+        },
+        {
+          "id": "cs1002_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "印谱复页翻开。开处，催脏印的人退到槛外。"
+        },
+        {
+          "id": "cs1002_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "催脏印的退了。退了，谱才肯亮。"
+        },
+        {
+          "id": "cs1002_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "第二圈泥色沉下去。沉下去，才像官事。"
+        },
+        {
+          "id": "cs1002_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "复页角我折齐。齐了，岁课才对得上。"
+        },
+        {
+          "id": "cs1002_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "旗立谱侧。立着看你盖，不替你盖。"
+        },
+        {
+          "id": "cs1002_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "锋再验场。印我复盖，谱我收。"
         },
         {
           "id": "cs10b_br_lost",
@@ -1535,6 +1601,36 @@
           "speaker": "leader",
           "text": "骑缝红圈旁，灰旗堡印底柜等复盖。"
         },
+      {
+        "id": "cs1002_ink1",
+        "speaker": "旁白",
+        "text": "空框留白处的纸干得发亮。亮着，催印的条子才显是垫在谱下的。"
+      },
+      {
+        "id": "cs1002_ink2",
+        "speaker": "岁吏",
+        "text": "催人去盖的条子不进栏。栏里的空框，先等它自己干。"
+      },
+      {
+        "id": "cs1002_ink3",
+        "speaker": "苇原·灯影",
+        "text": "第二圈墨香还在。香淡了，才像圈真的干了。"
+      },
+      {
+        "id": "cs1002_ink4",
+        "speaker": "旁白",
+        "text": "门外有人催了一声。催声停在槛外，槛内的框不答。"
+      },
+      {
+        "id": "cs1002_ink5",
+        "speaker": "岁吏",
+        "text": "空框干着留。催印的话垫谱下，明天再抽。"
+      },
+      {
+        "id": "cs1002_ink6",
+        "speaker": "leader",
+        "text": "第二圈干了才夹柜。催印的话，我留在门外。"
+      },
         {
           "id": "cs1002_cls1",
           "speaker": "旁白",
