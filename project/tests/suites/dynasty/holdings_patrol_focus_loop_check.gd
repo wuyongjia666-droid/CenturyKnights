@@ -50,6 +50,19 @@ func _ensure_holding() -> String:
 
 func _api_preview_short_and_ok() -> String:
 	_ensure_holding()
+	var err := _api_short_reject()
+	if err != "":
+		return err
+	err = _api_patrol_ok()
+	if err != "":
+		return err
+	err = _api_cd_clear()
+	if err != "":
+		return err
+	return ""
+
+
+func _api_short_reject() -> String:
 	GameState.silver = 5
 	GameState.food = 1
 	var prev: Dictionary = GameState.holding_patrol_preview(HID)
@@ -60,10 +73,13 @@ func _api_preview_short_and_ok() -> String:
 		return "short should reject patrol"
 	if int(GameState.holding_patrol_boost(HID)) != 0:
 		return "boost leaked on short reject"
+	return ""
 
+
+func _api_patrol_ok() -> String:
 	GameState.silver = 200
 	GameState.food = 80
-	prev = GameState.holding_patrol_preview(HID)
+	var prev: Dictionary = GameState.holding_patrol_preview(HID)
 	if bool(prev.get("short", false)) or bool(prev.get("blocked", false)):
 		return "preview should be clear: %s" % str(prev)
 	var cost_s := int(prev.get("cost_s", 0))
@@ -76,26 +92,23 @@ func _api_preview_short_and_ok() -> String:
 	var ok: Dictionary = GameState.patrol_holding(HID)
 	if not bool(ok.get("ok", false)):
 		return "patrol failed: %s" % str(ok)
-	if int(GameState.silver) != before_s - cost_s:
-		return "silver delta"
-	if int(GameState.food) != before_f - cost_f:
-		return "food delta"
-	if int(GameState.holding_patrol_boost(HID)) < 1:
-		return "boost not set"
-	if int(GameState.holding_patrol_cd(HID)) < 1:
-		return "cd not set"
+	if int(GameState.silver) != before_s - cost_s or int(GameState.food) != before_f - cost_f:
+		return "silver/food delta"
+	if int(GameState.holding_patrol_boost(HID)) < 1 or int(GameState.holding_patrol_cd(HID)) < 1:
+		return "boost/cd not set"
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	var pe := str(snap.get("patrol", ""))
 	if pe == "":
 		return "month_echo patrol empty after patrol_holding: %s" % str(snap)
 	print("api patrol ok cost=%d/%d echo=%s" % [cost_s, cost_f, pe])
-
-	# cooldown reject
 	var again: Dictionary = GameState.patrol_holding(HID)
 	if bool(again.get("ok", false)):
 		return "cd should block second patrol"
+	return ""
 
-	# month tick drains cd/boost (via economy tick; avoid calendar.gd / family_state #473 surface)
+
+func _api_cd_clear() -> String:
+	## month tick drains cd/boost (economy tick; avoid calendar/family_state #473 surface)
 	GameState.tick_patrol_month()
 	GameState.tick_patrol_month()
 	if int(GameState.holding_patrol_cd(HID)) != 0:
