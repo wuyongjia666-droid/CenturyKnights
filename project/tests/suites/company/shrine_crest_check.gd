@@ -10,6 +10,9 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		var _src := FileAccess.get_file_as_string("res://scripts/hub/shrine.gd")
+		_ok(_src.find("CKHeraldryField.place_nation_crest_strip") >= 0, "source Field call")
+		print("SHRINE FIELD CREST PASS")
 		print("SHRINE CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -48,6 +51,7 @@ func _collect(n: Node, node_name: String, out: Array) -> void:
 func _assert_chrome(page: Node, where: String) -> void:
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms (header/strip)" % where)
 	var strip := page.find_child("NationCrestStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "nation_strip", "nation_strip field_route")
 	_ok(strip != null, "%s NationCrestStrip" % where)
 	if strip != null:
 		var ca := strip.find_child("CastleArms", true, false)
@@ -125,6 +129,8 @@ func _run_mobile() -> void:
 	_assert_heal_filled(page, "mob")
 	var heal := page.find_child("HealCard", true, false)
 	_ok(heal != null and heal.find_child("ShrineHealStrip", true, false) != null, "mob strip on HealCard")
+	var _hs = heal.find_child("ShrineHealStrip", true, false) if heal else null
+	_ok(_hs != null and str(_hs.get_meta("field_route", "")) == "shrine_heal", "shrine_heal route")
 	page.queue_free()
 	await _settle(2)
 	OS.set_environment("CK_FORCE_MOBILE", "")

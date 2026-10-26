@@ -152,7 +152,7 @@ func set_unit(c, team: String = "player") -> void:
 		n += 1
 	var foe := str(get_meta("foe_nation", ""))
 	if foe == "" and str(team) != "player":
-		foe = CKHeraldryChrome.battle_foe_nation_for(null)
+		foe = CKHeraldryField.battle_foe_nation_for(null)
 	CKHeraldryField.attach_card_arms(self, c, team, foe)
 	if _mob:
 		_fit_mobile()

@@ -35,6 +35,7 @@ func _boot() -> void:
 
 func _assert_page(page: Node, where: String, nid: String) -> void:
 	var strip := page.find_child("NationCrestStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "nation_strip", "nation_strip field_route")
 	_ok(strip != null, "%s NationCrestStrip" % where)
 	if strip != null:
 		var ca := strip.find_child("CastleArms", true, false)
@@ -46,10 +47,16 @@ func _assert_page(page: Node, where: String, nid: String) -> void:
 	var btn := page.find_child("Nation_%s" % nid, true, false)
 	_ok(btn != null, "%s Nation_%s button" % [where, nid])
 	if btn != null:
-		var rail_arms := btn.find_child("CityNationArms", true, false)
-		_ok(rail_arms != null, "%s rail CityNationArms" % where)
+		var rail_arms := btn.find_child("CodexRailArms", true, false)
+		if rail_arms == null:
+			rail_arms = btn.find_child("CityNationArms", true, false)
+		_ok(rail_arms != null, "%s rail CodexRailArms" % where)
 		if rail_arms != null:
+			_ok(str(rail_arms.get_meta("field_route", "")) == "codex_rail", "%s rail field_route" % where)
 			_ok(str(rail_arms.get_meta("nation_id", "")) == nid, "%s rail nation_id" % where)
+			_ok(str(rail_arms.get_meta("arms_kind", "")) == "lb_city_arms", "%s rail 邦徽 kind" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/bloodline_codex.gd")
+	_ok(src.find("CKHeraldryField.attach_codex_rail_arms") >= 0, "%s codex calls Field rail" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")
@@ -89,7 +96,7 @@ func _run_helpers() -> void:
 	add_child(host)
 	var ids: Array = CKBloodline.nation_ids()
 	var nid := str(ids[0]) if not ids.is_empty() else "ashbanner"
-	var strip := CKHeraldryChrome.place_nation_crest_strip(host, nid, Vector2(10, 10), Vector2(36, 44))
+	var strip := CKHeraldryField.place_nation_crest_strip(host, nid, Vector2(10, 10), Vector2(36, 44))
 	_ok(strip != null and strip.name == "NationCrestStrip", "helper NationCrestStrip")
 	_ok(strip.find_child("CastleArms", true, false) != null, "helper CastleArms")
 	_ok(strip.find_child("CityNationArms", true, false) != null, "helper CityNationArms")
