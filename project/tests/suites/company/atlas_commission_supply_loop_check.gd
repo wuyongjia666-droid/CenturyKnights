@@ -123,6 +123,7 @@ func _api_supply_stamp() -> void:
 	_ok(Locale.t("wq_gather_buy_done") != "wq_gather_buy_done", "locale wq_gather_buy_done")
 	_ok(Locale.t("wq_mkt_gather_cost") != "wq_mkt_gather_cost", "locale wq_mkt_gather_cost")
 	_ok(Locale.t("wq_accept_supply_days") != "wq_accept_supply_days", "locale wq_accept_supply_days")
+	_ok(Locale.t("wq_board_supply_march") != "wq_board_supply_march", "locale wq_board_supply_march")
 
 
 func _api_accept_wrong_city() -> void:
@@ -256,6 +257,26 @@ func _ui_board_and_market() -> void:
 	_qty = int(q.qty)
 	_supply = World.gather_supply_city(q)
 	_supply_name = str(World.node(_supply).get("name", _supply))
+	# Pre-accept board: supply march row on offer detail
+	GameState.set_meta("city_id", HOME)
+	GameState.set_meta("city_tab", "board")
+	var pre = CITY_SCN.instantiate()
+	pre.position = Vector2.ZERO
+	pre.size = Vector2(1280, 720)
+	get_tree().root.add_child(pre)
+	for _pi in 6:
+		await get_tree().process_frame
+	if pre.has_method("_set_tab"):
+		pre.call("_set_tab", "board")
+	pre.set("_sel_quest", _qid)
+	if pre.has_method("_render_tab"):
+		pre.call("_render_tab")
+	for _pj in 4:
+		await get_tree().process_frame
+	var march_row := pre.find_child("BoardSupplyMarch", true, false)
+	_ok(march_row != null, "BoardSupplyMarch on offer detail")
+	pre.queue_free()
+	await get_tree().process_frame
 	var acc: Dictionary = World.accept_quest(HOME, _qid)
 	_ok(bool(acc.get("ok", false)), "ui accept")
 

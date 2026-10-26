@@ -249,6 +249,8 @@ wq_hint_gather,凑齐「%s」×%d 后，到「%s」交付（市集可买）,Gath
 wq_accept_wrong_city,须在发布委托的城中接取,Accept only at the issuing city
 wq_hint_gather_buy,打开舆图前往「%s」市集，购入「%s」×%d（图上有 ◇ 物产标记）,Open the atlas to 「%s」 market and buy 「%s」×%d (◇ supply mark)
 wq_board_supply,采购城,Supply city
+wq_board_supply_march,补给行程,Supply march
+wq_board_supply_days,约 %d 日 · 粮 %d,~%d days · food %d
 wq_mkt_gather_banner,委托急需：%s ×%d（还差 %d）——下方「委托购入」一键买齐,Commission needs: %s ×%d (%d short) — use GatherBuy below
 wq_mkt_gather_buy,委托购入 ×%d,GatherBuy ×%d
 wq_mkt_gather_cost,约 %d 银,~%d silver

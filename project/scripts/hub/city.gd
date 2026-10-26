@@ -1468,6 +1468,11 @@ func _tab_board() -> void:
 		var supply := World.gather_supply_city(sel)
 		if supply != "":
 			kv.add_child(UIKit.kv_row(Locale.t("wq_board_supply"), str(World.node(supply).get("name", supply)), UIKit.ACCENT, 380))
+			var march: Dictionary = World.gather_supply_march_preview(sel)
+			if int(march.get("days", 0)) > 0:
+				var march_lbl := UIKit.kv_row(Locale.t("wq_board_supply_march"), Locale.t("wq_board_supply_days") % [int(march.get("days", 0)), int(march.get("food", 0))], UIKit.OK, 380)
+				march_lbl.name = "BoardSupplyMarch"
+				kv.add_child(march_lbl)
 	elif str(sel.kind) == "clear":
 		kv.add_child(UIKit.kv_row("目标路段", "%s — %s" % [World.node(str(sel.edge[0])).get("name", ""), World.node(str(sel.edge[1])).get("name", "")], UIKit.DANGER, 380))
 	else:
