@@ -202,7 +202,7 @@ func _place_estates_crests() -> void:
 	## Estates chrome: 团徽 header + castle banner strip.
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
-	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryField.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
 
 func apply_mobile_layout() -> void:

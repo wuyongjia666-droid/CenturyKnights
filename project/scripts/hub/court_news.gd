@@ -148,7 +148,7 @@ func _place_gazette_crests(mobile: bool = false) -> void:
 	var at_y := 6.0 if mob else 8.0
 	var arms_x := (w - 64.0) if mob else 1180.0
 	var strip_x := (w - 140.0) if mob else 1100.0
-	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryField.place_company_header(self, Vector2(arms_x, at_y), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
 	var nid := World.nation_of(str(World.pos))
 	if nid == "":

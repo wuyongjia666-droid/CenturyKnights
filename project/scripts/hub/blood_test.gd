@@ -116,7 +116,7 @@ func _place_blood_crests(mobile: bool = false) -> void:
 	var at_y := 6.0 if mob else 8.0
 	var arms_x := (w - 64.0) if mob else 1180.0
 	var strip_x := (w - 140.0) if mob else 1100.0
-	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryField.place_company_header(self, Vector2(arms_x, at_y), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
 	var bat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, w - 240.0), at_y)
 	CKHeraldryField.place_blood_crest_strip(self, bat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))

@@ -101,6 +101,7 @@ func _run_helpers() -> void:
 	add_child(host)
 	var strip := CKHeraldryField.place_rite_crest_strip(host, kid, Vector2(10, 10), Vector2(36, 44))
 	_ok(strip != null and strip.name == "RiteCrestStrip", "helper RiteCrestStrip")
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "rite_strip", "helper field_route")
 	_ok(strip.find_child("CastleArms", true, false) != null, "helper CastleArms")
 	_ok(strip.find_child("LeaderArms", true, false) != null, "helper LeaderArms")
 	var empty := CKHeraldryField.place_rite_crest_strip(host, null, Vector2(10, 80), Vector2(36, 44))

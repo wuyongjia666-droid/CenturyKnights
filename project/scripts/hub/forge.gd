@@ -31,7 +31,7 @@ func _place_forge_crests() -> void:
 	## Forge chrome: 团徽 header + banner strip + Field focus (团徽+选中铁匠 族徽|旗徽).
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
-	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryField.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
 	var shield := Vector2(36, 44) if not mob else Vector2(32, 38)
 	var strip_w := shield.x if _sel == null else shield.x * 2.0 + 8.0

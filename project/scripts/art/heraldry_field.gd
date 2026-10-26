@@ -11,7 +11,8 @@ extends RefCounted
 ## hourglass / castle-view / blood / market Field strips,
 ## gazette / yeartrace / purse / yearcard Field plates,
 ## atlas travel / camp / encounter Field strips,
-## and city / aftermath / nation / rite / muster / battle-hud / field-row Field plates.
+## city / aftermath / nation / rite / muster / battle-hud / field-row Field plates,
+## and company-header CastleArms Field placement.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -1509,3 +1510,15 @@ static func attach_field_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(28
 	arms.set_meta("field_route", "field_row")
 	row.add_child(arms)
 	row.move_child(arms, 0)
+
+
+## Lone company CastleArms header (no banner cloth). Field owns CastleArms placement.
+static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
+	if parent == null:
+		return null
+	_retire(parent, "CastleArms")
+	var tr := CKHeraldryChrome.make_company_arms(size)
+	tr.position = at
+	tr.set_meta("field_route", "company_header")
+	parent.add_child(tr)
+	return tr

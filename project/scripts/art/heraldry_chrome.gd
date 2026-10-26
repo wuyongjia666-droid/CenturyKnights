@@ -165,15 +165,9 @@ static func attach_node_chrome(host: Control, c, node: Vector2) -> void:
 static func attach_hire_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
 	CKHeraldryField.attach_hire_plate_arms(parent, c, plate, arms_sz)
 
+## Lone company CastleArms header. Field owns CastleArms placement.
 static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
-	var old := parent.get_node_or_null("CastleArms")
-	if old:
-		old.name = "_CastleArmsDying"
-		old.queue_free()
-	var tr := make_company_arms(size)
-	tr.position = at
-	parent.add_child(tr)
-	return tr
+	return CKHeraldryField.place_company_header(parent, at, size)
 
 ## Title / settings / save / pause shell crest strip: 团徽 + 旗徽 cloth.
 ## Host name ShellCrestStrip — distinct from CastleBannerStrip so shell suites do not collide with hub asserts.
@@ -289,17 +283,9 @@ static func issuer_is_home(issuer_id: String) -> bool:
 	var id := str(issuer_id)
 	return id == "" or id == "hq"
 
-## Deploy / muster card plate: 族徽|旗徽 as DeployArms (lower-left of portrait plate).
+## Deploy / muster card plate. Field owns DeployArms via attach_deploy_slot_arms.
 static func attach_deploy_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
-	if parent == null or c == null:
-		return
-	var old := parent.get_node_or_null("DeployArms")
-	if old:
-		old.queue_free()
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "DeployArms"
-	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
-	parent.add_child(arms)
+	CKHeraldryField.attach_deploy_slot_arms(parent, c, plate, arms_sz)
 
 ## Train / pick-row inline arms (HBox-friendly). Caller parents the returned TextureRect.
 static func make_row_arms(c, size: Vector2 = Vector2(28, 34)) -> TextureRect:
