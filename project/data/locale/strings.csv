@@ -889,3 +889,14 @@ shell_lock_tip_title,交战锁定,Engagement lock
 shell_lock_tip_body,跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。,"After you lock with someone, leaving costs +%d move; the locked foe counters more accurately. Break free with the art Step Out."
 shell_link_mark,连携,Link
 shell_foe_opening_mark,未刃,Unblooded
+shell_art_hit_up_mark,加准,Sure-aim
+shell_art_hit_down_mark,偏斜,Off-aim
+shell_skill_sanctuary_mark,圣域,Sanctuary
+shell_skill_break_lock_mark,拆锁,Break-lock
+shell_skill_terrain_ward_mark,地利,Ground-edge
+shell_skill_zoc_aura_note,（控带强化）,(zone strengthened)
+shell_skill_heal_cast_log,%s 释放「%s」，治疗 %d 人,%s casts 「%s」, heals %d
+shell_skill_buff_cast_log,%s 释放「%s」%s,%s casts 「%s」%s
+shell_lock_aim_mark,缠,Bound
+shell_wounded_aim_mark,伤,Wounded
+shell_lethal_aim_mark,斩,Lethal
