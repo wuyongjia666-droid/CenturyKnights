@@ -1065,8 +1065,11 @@ func upgrade_holding(hid: String) -> Dictionary:
 func assign_steward(hid: String, cid: String) -> Dictionary:
 	return CKEconomyState.assign_steward(self, hid, cid)
 
-func clear_steward(hid: String) -> void:
-	CKEconomyState.clear_steward(self, hid)
+func clear_steward(hid: String) -> Dictionary:
+	return CKEconomyState.clear_steward(self, hid)
+
+func holding_steward_preview(hid: String, cid: String = "") -> Dictionary:
+	return CKEconomyState.holding_steward_preview(self, hid, cid)
 
 func holding_patrol_boost(hid: String) -> int:
 	return CKEconomyState.holding_patrol_boost(self, hid)

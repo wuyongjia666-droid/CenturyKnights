@@ -209,25 +209,67 @@ static func upgrade_holding(host, hid: String) -> Dictionary:
 	host.mark_dirty()
 	return {"ok": true, "msg": "%s 升至 Lv%d%s" % [HOLDING_DEFS[hid].name, lv + 1, ("；" + " / ".join(amb)) if amb else ""]}
 
-static func assign_steward(host, hid: String, cid: String) -> Dictionary:
+static func holding_steward_preview(host, hid: String, cid: String = "") -> Dictionary:
+	## Gate readout for assign/clear (UI + E2E). Avoids #473 surface.
 	if not host.holdings.has(hid):
-		return {"ok": false, "msg": "属地未开垦"}
+		return {"ok": false, "reason": "locked", "has_steward": false, "cid": ""}
+	var cur := str(host.holdings[hid].get("steward_id", ""))
+	var out := {
+		"ok": true,
+		"hid": hid,
+		"has_steward": cur != "",
+		"cid": cur,
+		"reason": "",
+	}
+	if cid == "":
+		return out
 	var c: CKCharacter = host.characters.get(cid)
 	if c == null or not c.alive or not c.in_roster:
-		return {"ok": false, "msg": "须选花名册成员"}
+		out["ok"] = false
+		out["reason"] = "roster"
+		return out
+	# already steward here
+	if cur == cid:
+		out["ok"] = false
+		out["reason"] = "same"
+		return out
+	return out
+
+
+static func assign_steward(host, hid: String, cid: String) -> Dictionary:
+	var prev: Dictionary = CKEconomyState.holding_steward_preview(host, hid, cid)
+	if not host.holdings.has(hid):
+		return {"ok": false, "msg": "属地未开垦", "preview": prev}
+	var c: CKCharacter = host.characters.get(cid)
+	if c == null or not c.alive or not c.in_roster:
+		return {"ok": false, "msg": "须选花名册成员", "preview": prev}
+	if str(prev.get("reason", "")) == "same":
+		return {"ok": false, "msg": Locale.t("holding_steward_same"), "preview": prev}
 	# 一人一属地
 	for other in host.holdings.keys():
 		if str(host.holdings[other].get("steward_id", "")) == cid:
 			host.holdings[other]["steward_id"] = ""
 	host.holdings[hid]["steward_id"] = cid
-	host.log_event("%s 出任 %s 庄头" % [c.name, HOLDING_DEFS[hid].name])
+	var nm := str(HOLDING_DEFS[hid].name)
+	host.log_event("%s 出任 %s 庄头" % [c.name, nm])
+	CKEconomyState.month_echo_note("steward", Locale.t("holding_echo_steward_on", [c.name, nm]))
 	host.mark_dirty()
-	return {"ok": true, "msg": "%s 就任 %s 庄头（月结+成，且本月抗劫）" % [c.name, HOLDING_DEFS[hid].name]}
+	return {"ok": true, "msg": "%s 就任 %s 庄头（月结+成，且本月抗劫）" % [c.name, nm], "preview": prev}
 
-static func clear_steward(host, hid: String) -> void:
-	if host.holdings.has(hid):
-		host.holdings[hid]["steward_id"] = ""
-		host.mark_dirty()
+
+static func clear_steward(host, hid: String) -> Dictionary:
+	if not host.holdings.has(hid):
+		return {"ok": false, "msg": "属地未开垦"}
+	var cur := str(host.holdings[hid].get("steward_id", ""))
+	if cur == "":
+		return {"ok": false, "msg": Locale.t("holding_steward_none")}
+	var c: CKCharacter = host.characters.get(cur)
+	var cname := str(c.name) if c != null else cur
+	var nm := str(HOLDING_DEFS[hid].name)
+	host.holdings[hid]["steward_id"] = ""
+	CKEconomyState.month_echo_note("steward", Locale.t("holding_echo_steward_off", [cname, nm]))
+	host.mark_dirty()
+	return {"ok": true, "msg": Locale.t("holding_steward_cleared", [cname, nm]), "cid": cur}
 
 static func holding_patrol_boost(host, hid: String) -> int:
 	if not host.holdings.has(hid):
@@ -1115,7 +1157,7 @@ static func month_echo_lines() -> Array:
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
-		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol",
+		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
