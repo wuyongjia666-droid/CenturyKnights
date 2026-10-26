@@ -140,6 +140,7 @@ static func drag_commit_enabled() -> bool:
 static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
 	host.preview_attack_ui = -1
+	BattleCounterTelegraph.clear(host)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.
@@ -366,6 +367,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 	if host.attack_mode and ui >= 0 and str(host.units[ui].team) == "enemy" and host.units[ui].char.hp > 0:
 		if host._can_attack_from(su, cell):
 			host.preview_attack_ui = ui
+			BattleCounterTelegraph.refresh(host)
 			host.preview_move_cell = Vector2i(-1, -1)
 			if DeviceProfile.is_mobile():
 				BattleMobileBar.rebuild(host)
@@ -411,6 +413,7 @@ static func on_drag_end(host, screen_pos: Vector2) -> bool:
 	if host.attack_mode or int(host.preview_attack_ui) >= 0:
 		if ui >= 0 and str(host.units[ui].team) == "enemy" and host.units[ui].char.hp > 0 and host._can_attack_from(su, cell):
 			host.preview_attack_ui = ui
+			BattleCounterTelegraph.refresh(host)
 			confirm_attack(host)
 			return true
 		_clear_stale_preview(host)
