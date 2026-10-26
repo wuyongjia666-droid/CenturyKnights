@@ -9,7 +9,8 @@ extends RefCounted
 ## dialogue / save / battle-order / board / tavern-annex Field plates,
 ## infirmary / deploy / office Field arms,
 ## hourglass / castle-view / blood / market Field strips,
-## and gazette / yeartrace / purse / yearcard Field plates.
+## gazette / yeartrace / purse / yearcard Field plates,
+## and atlas travel / camp / encounter Field strips.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -1199,3 +1200,81 @@ static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2
 	if box is Container:
 		box.move_child(head, 0)
 	return arms
+
+
+## Atlas travel strip: 团徽 + territory 领地徽 (TravelCrestStrip). Empty nation → 团徽 only.
+static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "TravelCrestStrip")
+	var host := Control.new()
+	host.name = "TravelCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "travel_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(territory_nation)
+	if nid != "":
+		var terr := CKHeraldryChrome.make_territory_arms(nid, shield)
+		terr.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(terr)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+
+## Night-camp / road-event crest strip: 团徽 + 营地所在邦的领地徽 (CampCrestStrip).
+static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "CampCrestStrip")
+	var host := Control.new()
+	host.name = "CampCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "camp_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(territory_nation)
+	if nid != "":
+		var terr := CKHeraldryChrome.make_territory_arms(nid, shield)
+		terr.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(terr)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+
+## Road encounter crest strip: 团徽 + 敌徽 (EncounterCrestStrip).
+static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "EncounterCrestStrip")
+	var host := Control.new()
+	host.name = "EncounterCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "encounter_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(foe_nation)
+	if nid != "":
+		var foe := CKHeraldryChrome.make_nation_arms(nid, shield)
+		foe.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(foe)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host

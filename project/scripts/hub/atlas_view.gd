@@ -1380,7 +1380,7 @@ func _render_hud() -> void:
 	var terr_nid := World.nation_of(World.pos)
 	if terr_nid == "" and not World.encounter.is_empty():
 		terr_nid = str(World.encounter.get("nation", ""))
-	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(700, 8), terr_nid, Vector2(32, 38))
+	CKHeraldryField.place_travel_crest_strip(p, Vector2(700, 8), terr_nid, Vector2(32, 38))
 	var eh := UIKit.mono("TRAVEL // 行军推演", 9, UIKit.ACCENT)
 	eh.position = Vector2(16, 10)
 	p.add_child(eh)
@@ -2000,7 +2000,7 @@ func _paint_sortie_garrison(p: Control) -> void:
 func _show_travel_halt_modal() -> void:
 	var p := _modal_panel(260)
 	p.name = "TravelHaltModal"
-	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(World.pos), Vector2(36, 44))
+	CKHeraldryField.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(World.pos), Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_travel_halt_title"), 22)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
@@ -2049,7 +2049,7 @@ func _show_stopover_modal() -> void:
 		h = 360.0
 	var p := _modal_panel(h)
 	p.name = "StopoverModal"
-	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
+	CKHeraldryField.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_stopover_title"), 22)
 	t.position = Vector2(24, 20)
 	p.add_child(t)
@@ -3138,9 +3138,9 @@ func _show_event_modal(ev: Dictionary) -> void:
 	if ev_nid == "":
 		ev_nid = World.nation_of(World.pos)
 	if camp_like:
-		CKHeraldryChrome.place_camp_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
+		CKHeraldryField.place_camp_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
 	else:
-		CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
+		CKHeraldryField.place_travel_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
 	var tag := "NIGHT CAMP" if camp_like else "ROAD EVENT"
 	var el := UIKit.mono("%s // %s" % [tag, World.node(str(ev.get("b", ""))).get("name", "")], 9, UIKit.ACCENT)
 	el.position = Vector2(24, 18)
@@ -3428,7 +3428,7 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)
 	p.name = "EncounterModal"
-	CKHeraldryChrome.place_encounter_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
+	CKHeraldryField.place_encounter_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
 	var el := UIKit.mono("ENCOUNTER // %s" % str(World.data.get("biome_keyword", {}).get(str(World.node(str(enc.get("node", ""))).get("biome", "")), "")).to_upper(), 9, UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -4250,7 +4250,7 @@ func _m_log() -> void:
 	crest_row.name = "TravelCrestHost"
 	crest_row.custom_minimum_size = Vector2(0, 44)
 	box.add_child(crest_row)
-	CKHeraldryChrome.place_travel_crest_strip(crest_row, Vector2(0, 2), World.nation_of(World.pos), Vector2(36, 44))
+	CKHeraldryField.place_travel_crest_strip(crest_row, Vector2(0, 2), World.nation_of(World.pos), Vector2(36, 44))
 	box.add_child(UIKit.title_label(Locale.t("mob_ui_041") % here.get("name", ""), 28))
 	if not World.last_city_sortie.is_empty():
 		var sh := _m_label(World.city_sortie_hud_text(), UIKit.EMBER)

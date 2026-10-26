@@ -588,89 +588,17 @@ static func make_territory_arms(nid: String, size: Vector2 = Vector2(40, 48)) ->
 	tr.set_meta("nation_id", str(nid))
 	return tr
 
-## Atlas travel HUD / halt / stopover: 团徽 + 领地徽 (nation underfoot or along the route).
-## Host name TravelCrestStrip.
+## Atlas travel strip. Field owns TravelCrestStrip.
 static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("TravelCrestStrip")
-	if old:
-		old.name = "_TravelCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "TravelCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var w := shield.x
-	var nid := str(territory_nation)
-	if nid != "":
-		var terr := make_territory_arms(nid, shield)
-		terr.position = Vector2(shield.x + 8.0, 0)
-		host.add_child(terr)
-		w = shield.x * 2.0 + 8.0
-	host.size = Vector2(w, shield.y)
-	host.set_meta("nation_id", nid)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_travel_crest_strip(parent, at, territory_nation, shield)
 
-## Night-camp / road-event crest strip: 团徽 + 营地所在邦的领地徽.
-## Host name CampCrestStrip.
+## Night-camp crest strip. Field owns CampCrestStrip.
 static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("CampCrestStrip")
-	if old:
-		old.name = "_CampCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "CampCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var w := shield.x
-	var nid := str(territory_nation)
-	if nid != "":
-		var terr := make_territory_arms(nid, shield)
-		terr.position = Vector2(shield.x + 8.0, 0)
-		host.add_child(terr)
-		w = shield.x * 2.0 + 8.0
-	host.size = Vector2(w, shield.y)
-	host.set_meta("nation_id", nid)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_camp_crest_strip(parent, at, territory_nation, shield)
 
-## Road encounter crest strip: 团徽 + 敌徽 (foe nation of the clash). Distinct from AftermathCrestStrip.
-## Host name EncounterCrestStrip.
+## Road encounter crest strip. Field owns EncounterCrestStrip.
 static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	if parent == null:
-		return null
-	var old := parent.get_node_or_null("EncounterCrestStrip")
-	if old:
-		old.name = "_EncounterCrestStripDying"
-		old.queue_free()
-	var host := Control.new()
-	host.name = "EncounterCrestStrip"
-	host.position = at
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var arms := make_company_arms(shield)
-	arms.position = Vector2.ZERO
-	host.add_child(arms)
-	var w := shield.x
-	var nid := str(foe_nation)
-	if nid != "":
-		var foe := make_nation_arms(nid, shield)
-		foe.position = Vector2(shield.x + 8.0, 0)
-		host.add_child(foe)
-		w = shield.x * 2.0 + 8.0
-	host.size = Vector2(w, shield.y)
-	host.set_meta("nation_id", nid)
-	parent.add_child(host)
-	return host
+	return CKHeraldryField.place_encounter_crest_strip(parent, at, foe_nation, shield)
 
 ## Field-book / 属事处 header strip: 团徽 + 旗布 (FieldCrestStrip). Distinct from CastleBannerStrip.
 static func place_field_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
