@@ -2858,8 +2858,32 @@ func take_rival_thefts() -> Array:
 func peek_rival_thefts() -> Array:
 	return rival_thefts.duplicate(true)
 
+## Seal-aware days/food for the armed (or proposed) arbitrage sell march.
+func arbitrage_march_preview(sell_city: String = "") -> Dictionary:
+	var dest := str(sell_city)
+	if dest == "" and not arbitrage.is_empty():
+		dest = str(arbitrage.get("sell_city", ""))
+	if dest == "" or dest == pos:
+		return {"days": 0, "food": 0, "short_food": false, "seal_bypass": false, "dest": dest, "here": dest == pos and dest != ""}
+	var pv: Dictionary = seal_aware_travel_preview(dest)
+	if not bool(pv.get("ok", false)):
+		var raw: Dictionary = route(pos, dest)
+		var days := int(raw.get("days", 0))
+		var food := food_per_day() * days
+		return {"days": days, "food": food, "short_food": GameState.food < food, "seal_bypass": false, "dest": dest, "here": false, "ok": not raw.is_empty()}
+	return {
+		"ok": true,
+		"dest": dest,
+		"days": int(pv.get("days", 0)),
+		"food": int(pv.get("food", 0)),
+		"short_food": bool(pv.get("short_food", false)),
+		"seal_bypass": bool(pv.get("seal_bypass", false)),
+		"here": false,
+	}
+
+
 ## Buy local produce and arm a sell-at destination for atlas arbitrage E2E.
-func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dictionary:
+func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "", require_food: bool = false) -> Dictionary:
 	if not arbitrage.is_empty():
 		return {"ok": false, "msg": Locale.t("atlas_arb_busy")}
 	var g := str(good)
@@ -2871,6 +2895,16 @@ func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dict
 		dest = str(best.get("city", ""))
 	if dest == "" or dest == pos:
 		return {"ok": false, "msg": Locale.t("atlas_arb_no_dest")}
+	var march: Dictionary = arbitrage_march_preview(dest)
+	if require_food and bool(march.get("short_food", false)):
+		return {"ok": false, "msg": Locale.t("atlas_arb_short_food") % int(march.get("food", 0)), "march": march}
+	# Local produce soft-lock: top up market stock so one-tap run is not blocked by empty stall.
+	if g in node(pos).get("produce", []) and stock(pos, g) < qty:
+		if not market.has(pos):
+			_init_market(pos)
+		var m: Dictionary = market[pos]
+		m[g] = maxi(int(m.get(g, 0)), maxi(qty, _target_stock(pos, g)))
+		market[pos] = m
 	var bought: Dictionary = market_buy(pos, g, qty)
 	if not bool(bought.get("ok", false)):
 		return bought
@@ -2880,9 +2914,17 @@ func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dict
 		"buy_city": pos,
 		"sell_city": dest,
 		"cost": int(bought.get("cost", 0)),
+		"march_days": int(march.get("days", 0)),
+		"march_food": int(march.get("food", 0)),
+		"seal_bypass": bool(march.get("seal_bypass", false)),
 	}
 	world_changed.emit()
-	return {"ok": true, "msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))], "plan": arbitrage.duplicate(true)}
+	return {
+		"ok": true,
+		"msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))],
+		"plan": arbitrage.duplicate(true),
+		"march": march,
+	}
 
 func clear_arbitrage() -> void:
 	arbitrage = {}
