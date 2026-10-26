@@ -1974,7 +1974,37 @@ func buy_item(city: String, iid: String) -> Dictionary:
 	world_changed.emit()
 	return {"ok": true, "msg": "购入「%s」（-%d 银）" % [items[iid].name, cost]}
 
-func forge_item(city: String, iid: String) -> Dictionary:
+## Preview missing forge mats + local market buy cost to top them up.
+func forge_mats_preview(city: String, iid: String) -> Dictionary:
+	var it: Dictionary = items.get(iid, {})
+	if it.is_empty():
+		return {"ok": false, "miss": {}, "mat_silver": 0, "forge_silver": 0, "total": 0, "can_buy": false}
+	var miss := mats_ok(it)
+	var mat_silver := 0
+	var can_buy := true
+	var lines: Array = []
+	for g in miss.keys():
+		var need := int(miss[g])
+		var unit := price(city, str(g), "buy")
+		var stock_n := stock(city, str(g))
+		var line_cost := unit * need
+		mat_silver += line_cost
+		if stock_n < need:
+			can_buy = false
+		lines.append({"good": str(g), "need": need, "unit": unit, "cost": line_cost, "stock": stock_n})
+	var forge_silver := int(it.get("forge_silver", 0))
+	return {
+		"ok": true,
+		"miss": miss,
+		"lines": lines,
+		"mat_silver": mat_silver,
+		"forge_silver": forge_silver,
+		"total": mat_silver + forge_silver,
+		"can_buy": can_buy and not miss.is_empty(),
+		"short_silver": GameState.silver < (mat_silver + forge_silver),
+	}
+
+func forge_item(city: String, iid: String, buy_mats: bool = false) -> Dictionary:
 	if city != pos:
 		return {"ok": false, "msg": "须身在此城"}
 	var e := _stock_entry(city, iid)
@@ -1982,11 +2012,27 @@ func forge_item(city: String, iid: String) -> Dictionary:
 		return {"ok": false, "msg": str(e.get("reason", "此铺不能打造"))}
 	var it: Dictionary = items[iid]
 	var miss := mats_ok(it)
+	var mat_spent := 0
 	if not miss.is_empty():
-		var parts: Array = []
+		if not buy_mats:
+			var parts: Array = []
+			for g in miss.keys():
+				parts.append("%s×%d" % [good_name(str(g)), int(miss[g])])
+			return {"ok": false, "msg": Locale.t("smith_forge_short_mats") % "、".join(parts), "miss": miss}
+		var prev: Dictionary = forge_mats_preview(city, iid)
+		if not bool(prev.get("can_buy", false)):
+			return {"ok": false, "msg": Locale.t("smith_forge_mats_unstocked"), "preview": prev}
+		if bool(prev.get("short_silver", false)):
+			return {"ok": false, "msg": Locale.t("smith_forge_short_silver") % int(prev.get("total", 0)), "preview": prev}
 		for g in miss.keys():
-			parts.append("%s×%d" % [good_name(str(g)), int(miss[g])])
-		return {"ok": false, "msg": "缺材料：" + "、".join(parts)}
+			var need := int(miss[g])
+			var bought: Dictionary = market_buy(city, str(g), need)
+			if not bool(bought.get("ok", false)):
+				return bought
+			mat_spent += int(bought.get("cost", 0))
+		miss = mats_ok(it)
+		if not miss.is_empty():
+			return {"ok": false, "msg": Locale.t("smith_forge_short_mats") % "购料后", "miss": miss}
 	var cost := int(it.get("forge_silver", 0))
 	if GameState.silver < cost:
 		return {"ok": false, "msg": "工钱不足（需 %d 银）" % cost}
@@ -1998,7 +2044,10 @@ func forge_item(city: String, iid: String) -> Dictionary:
 	GameState.log_event("%s铁匠为灰旗打造「%s」" % [node(city).get("name", ""), it.name])
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": "打造完成：「%s」（工钱 %d 银 + 材料）" % [it.name, cost]}
+	var msg := "打造完成：「%s」（工钱 %d 银 + 材料）" % [it.name, cost]
+	if mat_spent > 0:
+		msg = Locale.t("smith_forge_bought_mats_done") % [it.name, cost, mat_spent]
+	return {"ok": true, "msg": msg, "forge_silver": cost, "mat_silver": mat_spent}
 
 func item(iid: String) -> Dictionary:
 	return items.get(iid, {})

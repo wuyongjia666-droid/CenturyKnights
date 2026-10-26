@@ -584,3 +584,8 @@ atlas_resume_go_named,续行至 %s,Resume to %s
 atlas_resume_fail,还不能续行,Cannot resume yet
 atlas_camp_halt,粮草告急，在此停军,Rations low — halt here
 atlas_camp_halted,已在 %s 停军，补给后续行。,Halted at %s. Resupply then resume.
+smith_forge_short_mats,缺材料：%s,Missing mats: %s
+smith_forge_mats_unstocked,市集缺打造材料,Market lacks forge mats
+smith_forge_short_silver,购料+工钱不足（需 %d 银）,Need %d silver for mats+labor
+smith_forge_bought_mats_done,打造完成：「%s」（工钱 %d · 购料 %d 银）,Forged "%s" (labor %d · mats %d silver)
+smith_forge_buy_mats_btn,购料打造 · %d,Buy mats & forge · %d
