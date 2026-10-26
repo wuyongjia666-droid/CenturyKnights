@@ -114,8 +114,17 @@ func _run() -> void:
 	var scroll := v.find_child("LineageGridScroll", true, false) as ScrollContainer
 	await _settle(2)
 	_ok(scroll != null and scroll.get_v_scroll_bar().max_value > scroll.size.y + 1.0, "many: grid does not scroll")
+	_ok(v.find_child("GenBand_peers", true, false) != null, "many: peers band missing")
+	_ok(v.find_child("GenBand_parents", true, false) != null, "many: parents band missing")
+	_ok(v.find_child("GenBand_children", true, false) != null, "many: children band missing")
+	_ok(v.find_child("GenBand_banner", true, false) == null, "many: banner band without a familyless roster")
 	var hit := DeviceProfile.hit_px()
-	for b in v.find_child("LineageGrid", true, false).get_children():
+	var avatars: Array = []
+	for b in v.find_children("*", "Button", true, false):
+		if str(b.name).begins_with("Avatar_"):
+			avatars.append(b)
+	_ok(avatars.size() == 35, "many: avatar count %d" % avatars.size())
+	for b in avatars:
 		_ok((b as Control).custom_minimum_size.x >= hit and (b as Control).custom_minimum_size.y >= hit, "avatar under 48dp")
 		_ok((b as Control).mouse_filter == Control.MOUSE_FILTER_PASS, "avatar blocks drag-scroll")
 	var dk: CKCharacter = fam.kids[3]

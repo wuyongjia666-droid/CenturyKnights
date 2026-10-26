@@ -87,6 +87,7 @@ var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
 var last_siege_loot: Dictionary = {}  # unanswered siege sacked stockade cache
 var last_siege_convoy: Dictionary = {}  # evacuated granary under siege
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
+var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -204,6 +205,7 @@ func reset() -> void:
 	last_siege_loot = {}
 	last_siege_convoy = {}
 	last_march_muster = {}
+	last_neutral_contest = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -292,6 +294,7 @@ func from_save(d: Dictionary) -> void:
 	last_siege_loot = {}
 	last_siege_convoy = {}
 	last_march_muster = {}
+	last_neutral_contest = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -2660,6 +2663,22 @@ func take_siege_alert() -> Dictionary:
 
 func dismiss_siege_alert() -> void:
 	last_siege_alert = {}
+
+## Neutral multi-faction tug-of-war — keep first unread; refresh if same site.
+func mark_neutral_contest(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	if last_neutral_contest.is_empty() or str(last_neutral_contest.get("id", "")) == str(payload.get("id", "")):
+		last_neutral_contest = payload.duplicate(true)
+
+func take_neutral_contest() -> Dictionary:
+	var d: Dictionary = last_neutral_contest.duplicate(true)
+	last_neutral_contest = {}
+	return d
+
+func dismiss_neutral_contest() -> void:
+	last_neutral_contest = {}
+
 
 
 ## Unanswered siege sacked the stockade granary (held half / lost all).

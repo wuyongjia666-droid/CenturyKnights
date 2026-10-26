@@ -1913,6 +1913,8 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 	o.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(o)
 	_aff_overlay = o
+	var ash := Vector2(36, 44)
+	CKHeraldryField.place_affairs_crest_strip(o, city, Vector2(maxf(8.0, size.x - ash.x * 2.0 - 48.0), 16.0), ash)
 	var m := MarginContainer.new()
 	m.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
@@ -1934,6 +1936,8 @@ func _open_affairs_mobile(msg: String, ok: bool) -> void:
 	var o := sh[0] as Control
 	var card := sh[1] as VBoxContainer
 	_aff_overlay = o
+	var ash := Vector2(32, 38)
+	CKHeraldryField.place_affairs_crest_strip(card, city, Vector2(8, 6), ash)
 	var list := MobilePage.sheet_scroll(card, MobilePage.HIT + 36.0)
 	_fill_affairs_body(list, msg, ok, true, func(): pass)
 	var close := MobilePage.button(Locale.t("js_4782a703"), false, func():
@@ -2018,7 +2022,9 @@ func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, o
 				var b := MobilePage.button(Locale.t("js_f6db50d5") % c.name, false, func():
 					var rr := CKJobSeals.stamp(GameState.characters[cid], jid, city)
 					open_affairs(str(rr.get("msg", "")), bool(rr.get("ok", false))))
+				b.name = "AffairSealBtn"
 				b.disabled = not bool(g.get("ok", false))
+				CKHeraldryField.attach_affairs_seal_arms(b, c, Vector2(28, 34))
 				v.add_child(b)
 				if not bool(g.get("ok", false)):
 					var gm := UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, fs_dim)
@@ -2027,7 +2033,9 @@ func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, o
 					v.add_child(gm)
 			else:
 				var row := HBoxContainer.new()
+				row.name = "AffairSealRow"
 				row.add_theme_constant_override("separation", 8)
+				CKHeraldryField.attach_affairs_seal_arms(row, c, Vector2(26, 32))
 				var b2 := UIKit.ghost_button(Locale.t("js_f6db50d5") % c.name, 200, hit)
 				b2.disabled = not bool(g.get("ok", false))
 				b2.pressed.connect(func():
