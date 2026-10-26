@@ -94,3 +94,9 @@
 
 - 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
 - 验收：`content_season_theme_open_chain_check` — hub chip → 首拍针口头 → 下一拍。
+
+## 访月整装口头加厚（muster-plate）
+
+- 各章 visit 拍（hourglass/audit/birth）在 `_vhg` 后加 `_msr1`–`_msr6` 季题整装口头，全库去重；收束非旁白。
+- 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
+- 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。
