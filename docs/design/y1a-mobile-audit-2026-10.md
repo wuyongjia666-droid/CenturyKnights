@@ -276,6 +276,11 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 
 ---
 
+
+## 5r. 回合回场桥 + 双账待动可点
+
+**DONE（本 PR）**。玩家回合开始：`BattleTurnBridge.note_player_return` 拉起待动脚底脉冲、自动选中第一名待动、双账 Ready 条可点循环 `FormationCycle`（仅 Ready STOP，面板 IGNORE，不抢棋盘）。`combat_turn_bridge_ledger_check` 双图真 E2E。禁瞄准预告碎刀。
+
 ## 5. T-P17 移动/攻击范围预览
 
 **DONE（本 PR）**。高亮格按格子画，点选却走 `BattlePick.resolve`，软半径把蓝格吸到邻单位，闪拒也落在被吸走的格子上。攻击红格只画在当前站位已进入武器射程的敌人上，空射程和移动幽灵周围没有圈。预览锁住后，范围外的空点直接清幽灵，不经过 `note_reject`；桌面没开 touch-confirm 时非法移动完全不闪。预览跟焦追目的地，双方装不下时居中，选中身框滑出可玩区，横屏还会进刘海。
