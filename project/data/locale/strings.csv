@@ -904,3 +904,4 @@ shell_flank_aim_mark,夹,Flank
 shell_counter_aim_mark,反,Counter
 shell_followup_aim_mark,追,Follow-up
 shell_sure_hit_aim_mark,稳,Sure
+shell_crit_aim_mark,暴,Crit
