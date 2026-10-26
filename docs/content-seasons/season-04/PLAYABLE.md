@@ -119,6 +119,7 @@
 - 各章 visit 拍（audit/birth/hourglass）拍首加 `_vop1`–`_vop6` 入厅整装口头（`_vhg`/`_msr` 前），全库去重；收束非旁白。
 - 验收：`content_season_visit_open_chain_check` — hub chip → 入厅针口头。
 - 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_cls`/`_sec`/`_tvp`。
+
 ## 战后收锋口头加厚（battle-settle）
 - 各章试锋胜后 `_win4` 后、`mid_lost`（若有）前加 `_wex1`–`_wex6` 收锋口头，全库去重；收束非旁白。
 - 验收：`content_season_battle_settle_chain_check` — hub chip → 收锋针口头。
