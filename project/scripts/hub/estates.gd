@@ -346,11 +346,24 @@ func _rebuild() -> void:
 		ac.add_theme_constant_override("separation", 4)
 		p.add_child(ac)
 		if unlocked and lv < 3:
-			var b := UIKit.cta_button("升级属地", "A" if focused else "", 190, 32)
+			var b := UIKit.cta_button(Locale.t("holding_upgrade_btn"), "A" if focused else "", 190, 32)
+			b.name = "HoldingUpgrade_%s" % bid
+			var uprev: Dictionary = GameState.holding_upgrade_preview(bid)
+			var utip = Locale.t("holding_upgrade_cost_tip", [int(uprev.get("cost_s", 0)), int(uprev.get("cost_f", 0)), int(uprev.get("next", 0))])
+			if bool(uprev.get("short", false)):
+				utip = Locale.t("holding_upgrade_short_tip", [utip])
+				b.disabled = true
+			b.tooltip_text = utip
 			b.pressed.connect(func(): _upgrade(bid))
 			ac.add_child(b)
+		elif unlocked:
+			var b2 := UIKit.ghost_button(Locale.t("holding_upgrade_max_tip"), 190, 32)
+			b2.name = "HoldingUpgrade_%s" % bid
+			b2.disabled = true
+			b2.tooltip_text = Locale.t("holding_upgrade_max_tip")
+			ac.add_child(b2)
 		else:
-			var b2 := UIKit.ghost_button("已满级" if unlocked else "前置未满足", 190, 32)
+			var b2 := UIKit.ghost_button("前置未满足", 190, 32)
 			b2.disabled = true
 			ac.add_child(b2)
 		if unlocked:
@@ -907,7 +920,15 @@ func _m_holding(hid: String) -> Control:
 	v.add_child(ar)
 	var bid := hid
 	var up := MobilePage.button(Locale.t("mw_91c7146a") if lv < 3 else Locale.t("mw_8fde9e92"), lv < 3, func(): _upgrade(bid))
-	up.disabled = lv >= 3
+	up.name = "HoldingUpgrade_%s" % bid
+	var uprev_m: Dictionary = GameState.holding_upgrade_preview(bid)
+	up.disabled = lv >= 3 or bool(uprev_m.get("short", false)) or bool(uprev_m.get("maxed", false))
+	if bool(uprev_m.get("maxed", false)):
+		up.tooltip_text = Locale.t("holding_upgrade_max_tip")
+	elif bool(uprev_m.get("short", false)):
+		up.tooltip_text = Locale.t("holding_upgrade_short_tip", [Locale.t("holding_upgrade_cost_tip", [int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))])])
+	else:
+		up.tooltip_text = Locale.t("holding_upgrade_cost_tip", [int(uprev_m.get("cost_s", 0)), int(uprev_m.get("cost_f", 0)), int(uprev_m.get("next", 0))])
 	ar.add_child(up)
 	if st != null:
 		var mbc := MobilePage.button(Locale.t("mw_14f8cc32"), false, func(): _clear_steward(bid))
