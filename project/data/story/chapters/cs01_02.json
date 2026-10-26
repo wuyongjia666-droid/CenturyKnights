@@ -1,1725 +1,1755 @@
 {
-  "id": "cs01_02",
-  "title": "副页上的灯",
-  "legacy_index": 411,
-  "return_scene": "res://scenes/hub/castle_hub.tscn",
-  "source": "docs/content-seasons/season-01/NOVEL.md",
-  "beats": [
-    {
-      "id": "slip",
-      "title": "副页",
-      "lines": [
-        {
-          "id": "cs01_02_slip_0",
-          "speaker": "旁白",
-          "text": "账房。上回回执已入柜。副页还空着一格。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_1",
-          "speaker": "书记官",
-          "text": "正面写过了。副页要能念，不能只剩墨味。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_2",
-          "speaker": "leader",
-          "text": "我要听空格。空着也得说得出。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_3",
-          "speaker": "旁白",
-          "text": "柜门一响。回执与副页并排放上长桌。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_4",
-          "speaker": "老管事",
-          "text": "挂板的人催得急。空格的人说再等等。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_5",
-          "speaker": "岁吏",
-          "text": "年迹旁多了一行「副页夜」。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_6",
-          "speaker": "苇原·灯影",
-          "text": "巡防不问谁挂板。问今夜谁还空着格。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_7",
-          "speaker": "旁白",
-          "text": "两行字第一次对视。正面亮，副页暗。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_8",
-          "speaker": "书记官",
-          "text": "能念的字在正面。坐得住的空在副页等。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_9",
-          "speaker": "leader",
-          "text": "把空格念给我听。别念催条。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_10",
-          "speaker": "老管事",
-          "text": "催条可以撕。副页撕不得。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_11",
-          "speaker": "旁白",
-          "text": "灯矮了一寸。空格反而更清楚。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_12",
-          "speaker": "岁吏",
-          "text": "回执已记账。副页记账才算整张。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_13",
-          "speaker": "书记官",
-          "text": "并排不是拖。是让空格也有灯。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_14",
-          "speaker": "leader",
-          "text": "我听懂了。空着，也要并排。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_15",
-          "speaker": "旁白",
-          "text": "风从窗缝进来。纸角动，字不动。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_16",
-          "speaker": "老管事",
-          "text": "挂板的锣在门外。锣响不进账房。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_slip_y17",
-          "speaker": "旁白",
-          "text": "副页灯花爆在空格外，爆完纸上多了一粒烫点。"
-        },
-        {
-          "id": "cs01_02_slip_y18",
-          "speaker": "石垒·晚担",
-          "text": "烫点不在字上。字还没写，别捂。"
-        },
-        {
-          "id": "cs01_02_slip_y19",
-          "speaker": "leader",
-          "text": "副页先留烫点。假名不往上凑。"
-        },
-        {
-          "id": "cs01_02_slip_17",
-          "speaker": "槐里·青禾",
-          "text": "副页比回执薄。薄的反而难装。",
-          "stage": {
-            "card": "一　副页",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        }
-      ],
-      "next": "wu"
-    },
-    {
-      "id": "wu",
-      "title": "空格",
-      "lines": [
-        {
-          "id": "cs01_02_wu_0",
-          "speaker": "旁白",
-          "text": "空格摊开。吴姓那格亮着，旁格还空。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_1",
-          "speaker": "老管事",
-          "text": "上回写吴的，格里有字。压下的，格仍空。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_2",
-          "speaker": "旁白",
-          "text": "两行字第二次吵架。回读逼它们对视·回执。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_3",
-          "speaker": "苇原·灯影",
-          "text": "巡防不问谁姓吴。问今夜谁还空着格。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_4",
-          "speaker": "书记官",
-          "text": "有字的格能念。空格要人敢看。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_5",
-          "speaker": "leader",
-          "text": "空格不是错。催满才是错。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_6",
-          "speaker": "岁吏",
-          "text": "年迹不改姓。只记你敢不敢对空。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_7",
-          "speaker": "旁白",
-          "text": "墨干了。空格的边还潮。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_8",
-          "speaker": "老管事",
-          "text": "挂板锣又响。响在门外，进不了格。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_9",
-          "speaker": "书记官",
-          "text": "并排留空，比硬填假名干净。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_10",
-          "speaker": "leader",
-          "text": "假名我不要。空格我要听。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_11",
-          "speaker": "旁白",
-          "text": "灯把空格照成浅坑。坑里没有字。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_12",
-          "speaker": "岁吏",
-          "text": "回执上的吴还在。副页上的空也在。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_13",
-          "speaker": "苇原·灯影",
-          "text": "带牌去。牌上写副页，不写催。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_14",
-          "speaker": "老管事",
-          "text": "催条叠得高。空格叠不住。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_15",
-          "speaker": "书记官",
-          "text": "能念的在正面。敢留的在副页。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_16",
-          "speaker": "旁白",
-          "text": "纸角又动。空格仍空。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_wu_y17",
-          "speaker": "旁白",
-          "text": "空格四边都起毛，毛比副页上的泥印老实。"
-        },
-        {
-          "id": "cs01_02_wu_y18",
-          "speaker": "石垒·晚担",
-          "text": "泥印会干。毛边干了还扎手，才算数。"
-        },
-        {
-          "id": "cs01_02_wu_y19",
-          "speaker": "leader",
-          "text": "空格留着扎手的。催出来的不留。"
-        },
-        {
-          "id": "cs01_02_wu_17",
-          "speaker": "老旗手",
-          "text": "空格灯还亮。亮着，才敢回读。",
-          "stage": {
-            "card": "二　空格",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "close"
-          }
-        }
-      ],
-      "next": "hourglass"
-    },
-    {
-      "id": "hourglass",
-      "title": "两行",
-      "lines": [
-        {
-          "id": "cs01_02_hourglass_0",
-          "speaker": "旁白",
-          "text": "沙漏厅。上行回执、下行副页。回读把两行按住。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_1",
-          "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对空。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_2",
-          "speaker": "岁吏",
-          "text": "年迹旁多了一行「副页回读」。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_3",
-          "speaker": "书记官",
-          "text": "能念的字在上行。空得住的格还在下行等。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_4",
-          "speaker": "leader",
-          "text": "两行都打开。我要听对看。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_5",
-          "speaker": "旁白",
-          "text": "沙响。上行亮，下行仍暗。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_6",
-          "speaker": "苇原·灯影",
-          "text": "巡防牌上写副页。不写急锣。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_7",
-          "speaker": "老管事",
-          "text": "催挂板的人在门外跺脚。跺不进沙漏。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_8",
-          "speaker": "书记官",
-          "text": "并排不是拖月。是让空格跟月份并排走。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_9",
-          "speaker": "岁吏",
-          "text": "月结不抹空。空也要入迹。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_10",
-          "speaker": "leader",
-          "text": "我听空格。不听跺脚。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_11",
-          "speaker": "旁白",
-          "text": "沙又落一层。下行多了一点亮。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_12",
-          "speaker": "老管事",
-          "text": "锣停了。空格还在。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_13",
-          "speaker": "书记官",
-          "text": "回读夜的字，比催条长命。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_14",
-          "speaker": "岁吏",
-          "text": "带牌出去。沙漏还转。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_15",
-          "speaker": "旁白",
-          "text": "两行终于对上。一对，就不敢假填。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_16",
-          "speaker": "老管事",
-          "text": "假名进不了沙漏。空格能。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_hourglass_y17",
-          "speaker": "旁白",
-          "text": "沙漏座边灯花又爆，爆完上行的无还在。"
-        },
-        {
-          "id": "cs01_02_hourglass_y18",
-          "speaker": "石垒·晚担",
-          "text": "沙盖住假亮。盖不住的，才是这格的字。"
-        },
-        {
-          "id": "cs01_02_hourglass_y19",
-          "speaker": "leader",
-          "text": "两行里只留盖不住的。"
-        },
-        {
-          "id": "cs01_02_hourglass_17",
-          "speaker": "苇原·灯影",
-          "text": "带牌去。牌上写副页，不写急。",
-          "stage": {
-            "card": "三　两行",
-            "bg": "hourglass",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs0102_vis_mv1",
-          "speaker": "旁白",
-          "text": "时漏沙声细。细到能听见自己的呼吸。"
-        },
-        {
-          "id": "cs0102_vis_mv2",
-          "speaker": "岁吏",
-          "text": "呼吸稳，沙才听得进。"
-        },
-        {
-          "id": "cs0102_vis_mv3",
-          "speaker": "槐里·青禾",
-          "text": "沙漏不问空格急不急。"
-        },
-        {
-          "id": "cs0102_vst1",
-          "speaker": "岁吏",
-          "text": "月份从泥印边沿挪开。挪开，才看见真沙漏。"
-        },
-        {
-          "id": "cs0102_vst2",
-          "speaker": "书记官",
-          "text": "补欠那格，要等桥泥干。"
-        },
-        {
-          "id": "cs0102_vst3",
-          "speaker": "leader",
-          "text": "月份挪过。欠，我补。"
-        },
-        {
-          "id": "cs0102_vis_mv4",
-          "speaker": "leader",
-          "text": "不急。去看月份怎么走。"
-        }
-      ],
-      "next": "bridge",
-      "actions": [
-        {
-          "id": "open_hourglass",
-          "label": "去看月份怎么往前走",
-          "do": [
-            {
-              "op": "visit",
-              "path": "res://scenes/hub/hourglass.tscn"
-            }
-          ]
-        },
-        {
-          "id": "continue_after_visit",
-          "label": "继续，去门廊",
-          "do": [
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "bridge",
-      "title": "门廊",
-      "lines": [
-        {
-          "id": "cs01_02_bridge_0",
-          "speaker": "旁白",
-          "text": "门廊。副页灯还在身后。锋镝在桥上试。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_1",
-          "speaker": "岁吏",
-          "text": "试锋不改空格。只问你手稳不稳。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_2",
-          "speaker": "leader",
-          "text": "先试一锋。赢了再谈挂板。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_3",
-          "speaker": "老旗手",
-          "text": "锋收回来也行。空格不靠锋填。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_4",
-          "speaker": "旁白",
-          "text": "桥风大。灯小。字还在。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_5",
-          "speaker": "书记官",
-          "text": "催条可以撕。副页本撕不得。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_6",
-          "speaker": "苇原·灯影",
-          "text": "巡防站桥侧。不问胜负，问你还回不回读。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_7",
-          "speaker": "老管事",
-          "text": "锣在城门。桥上只听见水。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_8",
-          "speaker": "leader",
-          "text": "锋出不出，空格都在。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_9",
-          "speaker": "岁吏",
-          "text": "试锋得手，锋镝压下，并排纸可续。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_10",
-          "speaker": "旁白",
-          "text": "水声盖过远处锣。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_11",
-          "speaker": "老旗手",
-          "text": "伤还在也行。先去酒馆选题。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_12",
-          "speaker": "书记官",
-          "text": "选题在前。假名在后——后的不要。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_13",
-          "speaker": "苇原·灯影",
-          "text": "牌还在手里。牌上仍是副页。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_14",
-          "speaker": "老管事",
-          "text": "挂板的人等不及。你等得及。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_15",
-          "speaker": "leader",
-          "text": "我等空格。不等锣。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_16",
-          "speaker": "旁白",
-          "text": "桥板一颤。灯不灭。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_17",
-          "speaker": "岁吏",
-          "text": "未试锋——锋未出鞘，也可去酒馆。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_18",
-          "speaker": "老旗手",
-          "text": "试锋未成——伤还在，先去酒馆。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_bridge_y20",
-          "speaker": "旁白",
-          "text": "门廊风把副页毛边吹立起来，立着比印清楚。"
-        },
-        {
-          "id": "cs01_02_bridge_y21",
-          "speaker": "石垒·晚担",
-          "text": "立起来的毛，刀风吹不倒。倒的是假页。"
-        },
-        {
-          "id": "cs01_02_bridge_y22",
-          "speaker": "leader",
-          "text": "毛边还立着。真的，并排带去。"
-        },
-        {
-          "id": "cs01_02_bridge_19",
-          "speaker": "岁吏",
-          "text": "催条可以撕。副页本撕不得·回执。",
-          "stage": {
-            "card": "四　门廊",
-            "bg": "bridge",
-            "music": "battle_prep",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs0102_mid_mv1",
-          "speaker": "旁白",
-          "text": "副页钉在门边。风一过，纸角翘起来像招手。"
-        },
-        {
-          "id": "cs0102_mid_mv2",
-          "speaker": "岁吏",
-          "text": "副页招手，不等于让你空着手出去。"
-        },
-        {
-          "id": "cs0102_mid_mv3",
-          "speaker": "石垒·晚担",
-          "text": "空着手出去，回来只配写半行。"
-        },
-        {
-          "id": "cs0102_mid_mv4",
-          "speaker": "槐里·青禾",
-          "text": "半行也比假满强。假满见光就灰。"
-        },
-        {
-          "id": "cs0102_mid_mv5",
-          "speaker": "老旗手",
-          "text": "门外那拨盯着空格。空格不是给他们填的。"
-        },
-        {
-          "id": "cs0102_mid_mv6",
-          "speaker": "leader",
-          "text": "空格我守。锋先问清楚。"
-        },
-        {
-          "id": "cs0102_win1",
-          "speaker": "旁白",
-          "text": "锋再定。桥侧泥印浅了，滑步那拨退到芦里。",
-          "when": {
-            "flag": "cs01_mid_fought"
-          }
-        },
-        {
-          "id": "cs0102_win2",
-          "speaker": "老旗手",
-          "text": "泥里的脚窝，比刀痕好认。",
-          "when": {
-            "flag": "cs01_mid_fought"
-          }
-        },
-        {
-          "id": "cs0102_win3",
-          "speaker": "苇原·灯影",
-          "text": "吴钩的影短了。短了，才敢回头。",
-          "when": {
-            "flag": "cs01_mid_fought"
-          }
-        },
-        {
-          "id": "cs0102_win4",
-          "speaker": "leader",
-          "text": "这一锋补上月的欠。桥，我还过。",
-          "when": {
-            "flag": "cs01_mid_fought"
-          }
-        },
-        {
-          "speaker": "旁白",
-          "text": "锋收回来。副页纸还钉着。空格旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs01_mid_lost"
-              },
-              {
-                "not_flag": "cs01_mid_fought"
-              }
-            ]
-          },
-          "id": "cs01b_br_lost"
-        }
-      ],
-      "next": "tavern",
-      "actions": [
-        {
-          "id": "open_skirmish",
-          "label": "先试一锋",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs01_mid_fought"
-              },
-              {
-                "not_flag": "cs01_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs01_mid_fought"
-              ],
-              "lose_flags": [
-                "cs01_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "副页上的灯",
-                "outcome": "副页旁试锋得手——锋镝压下，并排纸可续",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "retry_skirmish",
-          "label": "再试锋镝",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs01_mid_fought"
-              },
-              {
-                "flag": "cs01_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs01_mid_fought"
-              ],
-              "lose_flags": [
-                "cs01_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "副页上的灯",
-                "outcome": "副页旁试锋得手——锋镝压下，并排纸可续",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "continue_after_battle",
-          "label": "继续，去酒馆",
-          "do": [
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs01_mid_fought"
-                  },
-                  {
-                    "not_flag": "cs01_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs01_02",
-              "choice": "mid_skirmish_skip",
-              "title": "副页上的灯",
-              "outcome": "未试锋——锋未出鞘，径去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs01_mid_fought"
-                  },
-                  {
-                    "flag": "cs01_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs01_02",
-              "choice": "mid_skirmish_abort",
-              "title": "副页上的灯",
-              "outcome": "试锋未成——伤还在，先去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tavern",
-      "title": "选题",
-      "lines": [
-        {
-          "id": "cs01_02_tavern_0",
-          "speaker": "旁白",
-          "text": "酒馆。板上两道题。手按上去。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_1",
-          "speaker": "掌柜",
-          "text": "一道空格并排留。一道先催挂板。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_2",
-          "speaker": "leader",
-          "text": "我看题。不看谁嗓门大。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_3",
-          "speaker": "老管事",
-          "text": "并排留真。催挂板快。快的未必真。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_4",
-          "speaker": "书记官",
-          "text": "空格进谱，才算整张回执。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_5",
-          "speaker": "岁吏",
-          "text": "年迹听选择。不听锣。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_6",
-          "speaker": "旁白",
-          "text": "酒气里纸更白。白得能看见空。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_7",
-          "speaker": "掌柜",
-          "text": "选完入柜。副页柜门会响。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_8",
-          "speaker": "苇原·灯影",
-          "text": "巡防在门外。门内只选题。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_9",
-          "speaker": "leader",
-          "text": "空格并排留——我手按这道。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_10",
-          "speaker": "老管事",
-          "text": "按实了。别悬着。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_11",
-          "speaker": "书记官",
-          "text": "假名那道我划掉。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_12",
-          "speaker": "旁白",
-          "text": "板面一热。字进手心。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_13",
-          "speaker": "岁吏",
-          "text": "选择入账。副页夜可结。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_14",
-          "speaker": "掌柜",
-          "text": "另一道也在。你不选它。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_15",
-          "speaker": "老管事",
-          "text": "催挂板的锣远了。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_16",
-          "speaker": "旁白",
-          "text": "两道题还在板上。只一道进柜。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs01_02_tavern_y17",
-          "speaker": "旁白",
-          "text": "酒馆灯花爆在副页夹缝，缝里有一点没干的油。"
-        },
-        {
-          "id": "cs01_02_tavern_y18",
-          "speaker": "石垒·晚担",
-          "text": "油还黏。黏的不是假名，是刚核对过。"
-        },
-        {
-          "id": "cs01_02_tavern_y19",
-          "speaker": "leader",
-          "text": "黏着的副页带回。假名留在柜外。"
-        },
-        {
-          "id": "cs01_02_tavern_17",
-          "speaker": "老管事",
-          "text": "选完入柜。副页柜门会响·回执。",
-          "stage": {
-            "card": "五　选题",
-            "bg": "tavern",
-            "music": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs0102_ret_mv1",
-          "speaker": "旁白",
-          "text": "副页话题在酒桌上滚了一圈，又滚回来。"
-        },
-        {
-          "id": "cs0102_ret_mv2",
-          "speaker": "掌柜",
-          "text": "滚回来的话，要过板。"
-        },
-        {
-          "id": "cs0102_ret_mv3",
-          "speaker": "岁吏",
-          "text": "过板的才配回读。"
-        },
-        {
-          "id": "cs0102_tvn1",
-          "speaker": "掌柜",
-          "text": "桥泥那一锋，靴底还潮。"
-        },
-        {
-          "id": "cs0102_tvn2",
-          "speaker": "石垒·晚担",
-          "text": "芦里那拨退了。退了才配要酒。"
-        },
-        {
-          "id": "cs0102_tvn3",
-          "speaker": "听回",
-          "text": "吴钩影短的事，桌上有人传。"
-        },
-        {
-          "id": "cs0102_tvn4",
-          "speaker": "leader",
-          "text": "泥干。人在。补欠，算数。"
-        },
-        {
-          "id": "cs0102_ret_mv4",
-          "speaker": "leader",
-          "text": "过板。回堡入谱。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "keep_slip",
-          "label": "空格并排留",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs01_slip_parallel",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs01_02",
-              "choice": "keep_slip",
-              "title": "副页上的灯",
-              "outcome": "副页回读后空格并排记入谱",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        },
-        {
-          "id": "push_board",
-          "label": "先催挂板",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs01_slip_push",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs01_02",
-              "choice": "push_board",
-              "title": "副页上的灯",
-              "outcome": "副页回读后先催挂板",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ledger",
-      "title": "入谱",
-      "lines": [
-        {
-          "id": "cs01_02_ledger_0",
-          "speaker": "旁白",
-          "text": "入谱。副页与回执并排进柜。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_1",
-          "speaker": "书记官",
-          "text": "空格有灯。灯不灭。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_2",
-          "speaker": "leader",
-          "text": "我看见空了。空也在谱里。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_3",
-          "speaker": "岁吏",
-          "text": "年迹末行写：副页并排留。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_4",
-          "speaker": "老管事",
-          "text": "挂板锣再响，也撕不开柜门。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_5",
-          "speaker": "旁白",
-          "text": "柜门一合。灯还在缝里。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_6",
-          "speaker": "苇原·灯影",
-          "text": "巡防收牌。牌上副页两字还热。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_7",
-          "speaker": "书记官",
-          "text": "整张回执，才算回。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_8",
-          "speaker": "leader",
-          "text": "假名没进来。好。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_9",
-          "speaker": "岁吏",
-          "text": "月结旁多一笔空格。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_10",
-          "speaker": "老管事",
-          "text": "催条叠在门外。谱在门内。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_11",
-          "speaker": "旁白",
-          "text": "墨干。空格的边也干了。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_12",
-          "speaker": "书记官",
-          "text": "下次打开，空格还在——带着灯。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_13",
-          "speaker": "leader",
-          "text": "够了。去灰旗堡。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_14",
-          "speaker": "苇原·灯影",
-          "text": "堡门亮着。副页灯跟着。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_15",
-          "speaker": "岁吏",
-          "text": "年迹合上。字还在。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_16",
-          "speaker": "老管事",
-          "text": "账房可歇。谱不可假。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_17",
-          "speaker": "旁白",
-          "text": "风停。纸平。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_18",
-          "speaker": "书记官",
-          "text": "并排不是拖。是完整。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs01_02_ledger_y19",
-          "speaker": "旁白",
-          "text": "册边起毛。毛边比印鉴老实。"
-        },
-        {
-          "id": "cs01_02_ledger_y20",
-          "speaker": "石垒·晚担",
-          "text": "老实的才并排。"
-        },
-        {
-          "id": "cs01_02_ledger_y21",
-          "speaker": "leader",
-          "text": "并排留真。"
-        },
-        {
-          "id": "cs0102_ldg1",
-          "speaker": "岁吏",
-          "text": "副页空格与泥印并排，补欠才像真的。"
-        },
-        {
-          "id": "cs0102_ldg2",
-          "speaker": "书记官",
-          "text": "滑步那拨的脚窝，只进旁注不进正格。"
-        },
-        {
-          "id": "cs0102_ldg3",
-          "speaker": "槐里·青禾",
-          "text": "薄页难装——装下的，才是补上的欠。"
-        },
-        {
-          "id": "cs0102_ldg4",
-          "speaker": "leader",
-          "text": "空格并排留。灯不灭，副页在柜。"
-        },
-        {
-          "id": "cs0102_ldg_end",
-          "speaker": "leader",
-          "text": "桥泥干处，灰旗堡副页柜等补欠入谱。"
-        }
-      ],
-      "actions": []
-    }
-  ],
-  "title_en": "Lamp on the Slip Page"
+	"id": "cs01_02",
+	"title": "副页上的灯",
+	"legacy_index": 411,
+	"return_scene": "res://scenes/hub/castle_hub.tscn",
+	"source": "docs/content-seasons/season-01/NOVEL.md",
+	"beats": [
+		{
+			"id": "slip",
+			"title": "副页",
+			"lines": [
+				{
+					"id": "cs01_02_slip_0",
+					"speaker": "旁白",
+					"text": "账房。上回回执已入柜。副页还空着一格。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_1",
+					"speaker": "书记官",
+					"text": "正面写过了。副页要能念，不能只剩墨味。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_2",
+					"speaker": "leader",
+					"text": "我要听空格。空着也得说得出。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_3",
+					"speaker": "旁白",
+					"text": "柜门一响。回执与副页并排放上长桌。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_4",
+					"speaker": "老管事",
+					"text": "挂板的人催得急。空格的人说再等等。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_5",
+					"speaker": "岁吏",
+					"text": "年迹旁多了一行「副页夜」。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁挂板。问今夜谁还空着格。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_7",
+					"speaker": "旁白",
+					"text": "两行字第一次对视。正面亮，副页暗。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_8",
+					"speaker": "书记官",
+					"text": "能念的字在正面。坐得住的空在副页等。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_9",
+					"speaker": "leader",
+					"text": "把空格念给我听。别念催条。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_10",
+					"speaker": "老管事",
+					"text": "催条可以撕。副页撕不得。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_11",
+					"speaker": "旁白",
+					"text": "灯矮了一寸。空格反而更清楚。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_12",
+					"speaker": "岁吏",
+					"text": "回执已记账。副页记账才算整张。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_13",
+					"speaker": "书记官",
+					"text": "并排不是拖。是让空格也有灯。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_14",
+					"speaker": "leader",
+					"text": "我听懂了。空着，也要并排。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_15",
+					"speaker": "旁白",
+					"text": "风从窗缝进来。纸角动，字不动。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_16",
+					"speaker": "老管事",
+					"text": "挂板的锣在门外。锣响不进账房。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_slip_y17",
+					"speaker": "旁白",
+					"text": "副页灯花爆在空格外，爆完纸上多了一粒烫点。"
+				},
+				{
+					"id": "cs01_02_slip_y18",
+					"speaker": "石垒·晚担",
+					"text": "烫点不在字上。字还没写，别捂。"
+				},
+				{
+					"id": "cs01_02_slip_y19",
+					"speaker": "leader",
+					"text": "副页先留烫点。假名不往上凑。"
+				},
+				{
+					"id": "cs01_02_slip_17",
+					"speaker": "槐里·青禾",
+					"text": "副页比回执薄。薄的反而难装。",
+					"stage": {
+						"card": "一　副页",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				}
+			],
+			"next": "wu"
+		},
+		{
+			"id": "wu",
+			"title": "空格",
+			"lines": [
+				{
+					"id": "cs01_02_wu_0",
+					"speaker": "旁白",
+					"text": "空格摊开。吴姓那格亮着，旁格还空。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_1",
+					"speaker": "老管事",
+					"text": "上回写吴的，格里有字。压下的，格仍空。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_2",
+					"speaker": "旁白",
+					"text": "两行字第二次吵架。回读逼它们对视·回执。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_3",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁姓吴。问今夜谁还空着格。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_4",
+					"speaker": "书记官",
+					"text": "有字的格能念。空格要人敢看。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_5",
+					"speaker": "leader",
+					"text": "空格不是错。催满才是错。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_6",
+					"speaker": "岁吏",
+					"text": "年迹不改姓。只记你敢不敢对空。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_7",
+					"speaker": "旁白",
+					"text": "墨干了。空格的边还潮。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_8",
+					"speaker": "老管事",
+					"text": "挂板锣又响。响在门外，进不了格。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_9",
+					"speaker": "书记官",
+					"text": "并排留空，比硬填假名干净。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_10",
+					"speaker": "leader",
+					"text": "假名我不要。空格我要听。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_11",
+					"speaker": "旁白",
+					"text": "灯把空格照成浅坑。坑里没有字。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_12",
+					"speaker": "岁吏",
+					"text": "回执上的吴还在。副页上的空也在。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_13",
+					"speaker": "苇原·灯影",
+					"text": "带牌去。牌上写副页，不写催。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_14",
+					"speaker": "老管事",
+					"text": "催条叠得高。空格叠不住。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_15",
+					"speaker": "书记官",
+					"text": "能念的在正面。敢留的在副页。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_16",
+					"speaker": "旁白",
+					"text": "纸角又动。空格仍空。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_wu_y17",
+					"speaker": "旁白",
+					"text": "空格四边都起毛，毛比副页上的泥印老实。"
+				},
+				{
+					"id": "cs01_02_wu_y18",
+					"speaker": "石垒·晚担",
+					"text": "泥印会干。毛边干了还扎手，才算数。"
+				},
+				{
+					"id": "cs01_02_wu_y19",
+					"speaker": "leader",
+					"text": "空格留着扎手的。催出来的不留。"
+				},
+				{
+					"id": "cs01_02_wu_17",
+					"speaker": "老旗手",
+					"text": "空格灯还亮。亮着，才敢回读。",
+					"stage": {
+						"card": "二　空格",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				}
+			],
+			"next": "hourglass"
+		},
+		{
+			"id": "hourglass",
+			"title": "两行",
+			"lines": [
+				{
+					"id": "cs01_02_hourglass_0",
+					"speaker": "旁白",
+					"text": "沙漏厅。上行回执、下行副页。回读把两行按住。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_1",
+					"speaker": "老管事",
+					"text": "月份往前走。回读不改月份，只改你敢不敢对空。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_2",
+					"speaker": "岁吏",
+					"text": "年迹旁多了一行「副页回读」。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_3",
+					"speaker": "书记官",
+					"text": "能念的字在上行。空得住的格还在下行等。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_4",
+					"speaker": "leader",
+					"text": "两行都打开。我要听对看。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_5",
+					"speaker": "旁白",
+					"text": "沙响。上行亮，下行仍暗。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防牌上写副页。不写急锣。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_7",
+					"speaker": "老管事",
+					"text": "催挂板的人在门外跺脚。跺不进沙漏。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_8",
+					"speaker": "书记官",
+					"text": "并排不是拖月。是让空格跟月份并排走。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_9",
+					"speaker": "岁吏",
+					"text": "月结不抹空。空也要入迹。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_10",
+					"speaker": "leader",
+					"text": "我听空格。不听跺脚。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_11",
+					"speaker": "旁白",
+					"text": "沙又落一层。下行多了一点亮。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_12",
+					"speaker": "老管事",
+					"text": "锣停了。空格还在。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_13",
+					"speaker": "书记官",
+					"text": "回读夜的字，比催条长命。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_14",
+					"speaker": "岁吏",
+					"text": "带牌出去。沙漏还转。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_15",
+					"speaker": "旁白",
+					"text": "两行终于对上。一对，就不敢假填。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_16",
+					"speaker": "老管事",
+					"text": "假名进不了沙漏。空格能。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_hourglass_y17",
+					"speaker": "旁白",
+					"text": "沙漏座边灯花又爆，爆完上行的无还在。"
+				},
+				{
+					"id": "cs01_02_hourglass_y18",
+					"speaker": "石垒·晚担",
+					"text": "沙盖住假亮。盖不住的，才是这格的字。"
+				},
+				{
+					"id": "cs01_02_hourglass_y19",
+					"speaker": "leader",
+					"text": "两行里只留盖不住的。"
+				},
+				{
+					"id": "cs01_02_hourglass_17",
+					"speaker": "苇原·灯影",
+					"text": "带牌去。牌上写副页，不写急。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs0102_vis_mv1",
+					"speaker": "旁白",
+					"text": "时漏沙声细。细到能听见自己的呼吸。"
+				},
+				{
+					"id": "cs0102_vis_mv2",
+					"speaker": "岁吏",
+					"text": "呼吸稳，沙才听得进。"
+				},
+				{
+					"id": "cs0102_vis_mv3",
+					"speaker": "槐里·青禾",
+					"text": "沙漏不问空格急不急。"
+				},
+				{
+					"id": "cs0102_vst1",
+					"speaker": "岁吏",
+					"text": "月份从泥印边沿挪开。挪开，才看见真沙漏。"
+				},
+				{
+					"id": "cs0102_vst2",
+					"speaker": "书记官",
+					"text": "补欠那格，要等桥泥干。"
+				},
+				{
+					"id": "cs0102_vst3",
+					"speaker": "leader",
+					"text": "月份挪过。欠，我补。"
+				},
+				{
+					"id": "cs0102_vis_mv4",
+					"speaker": "leader",
+					"text": "不急。去看月份怎么走。"
+				}
+			],
+			"next": "bridge",
+			"actions": [
+				{
+					"id": "open_hourglass",
+					"label": "去看月份怎么往前走",
+					"do": [
+						{
+							"op": "visit",
+							"path": "res://scenes/hub/hourglass.tscn"
+						}
+					]
+				},
+				{
+					"id": "continue_after_visit",
+					"label": "继续，去门廊",
+					"do": [
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bridge",
+			"title": "门廊",
+			"lines": [
+				{
+					"id": "cs01_02_bridge_0",
+					"speaker": "旁白",
+					"text": "门廊。副页灯还在身后。锋镝在桥上试。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_1",
+					"speaker": "岁吏",
+					"text": "试锋不改空格。只问你手稳不稳。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_2",
+					"speaker": "leader",
+					"text": "先试一锋。赢了再谈挂板。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_3",
+					"speaker": "老旗手",
+					"text": "锋收回来也行。空格不靠锋填。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_4",
+					"speaker": "旁白",
+					"text": "桥风大。灯小。字还在。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_5",
+					"speaker": "书记官",
+					"text": "催条可以撕。副页本撕不得。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防站桥侧。不问胜负，问你还回不回读。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_7",
+					"speaker": "老管事",
+					"text": "锣在城门。桥上只听见水。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_8",
+					"speaker": "leader",
+					"text": "锋出不出，空格都在。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_9",
+					"speaker": "岁吏",
+					"text": "试锋得手，锋镝压下，并排纸可续。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_10",
+					"speaker": "旁白",
+					"text": "水声盖过远处锣。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_11",
+					"speaker": "老旗手",
+					"text": "伤还在也行。先去酒馆选题。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_12",
+					"speaker": "书记官",
+					"text": "选题在前。假名在后——后的不要。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_13",
+					"speaker": "苇原·灯影",
+					"text": "牌还在手里。牌上仍是副页。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_14",
+					"speaker": "老管事",
+					"text": "挂板的人等不及。你等得及。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_15",
+					"speaker": "leader",
+					"text": "我等空格。不等锣。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_16",
+					"speaker": "旁白",
+					"text": "桥板一颤。灯不灭。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_17",
+					"speaker": "岁吏",
+					"text": "未试锋——锋未出鞘，也可去酒馆。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_18",
+					"speaker": "老旗手",
+					"text": "试锋未成——伤还在，先去酒馆。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_bridge_y20",
+					"speaker": "旁白",
+					"text": "门廊风把副页毛边吹立起来，立着比印清楚。"
+				},
+				{
+					"id": "cs01_02_bridge_y21",
+					"speaker": "石垒·晚担",
+					"text": "立起来的毛，刀风吹不倒。倒的是假页。"
+				},
+				{
+					"id": "cs01_02_bridge_y22",
+					"speaker": "leader",
+					"text": "毛边还立着。真的，并排带去。"
+				},
+				{
+					"id": "cs01_02_bridge_19",
+					"speaker": "岁吏",
+					"text": "催条可以撕。副页本撕不得·回执。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs0102_mid_mv1",
+					"speaker": "旁白",
+					"text": "副页钉在门边。风一过，纸角翘起来像招手。"
+				},
+				{
+					"id": "cs0102_mid_mv2",
+					"speaker": "岁吏",
+					"text": "副页招手，不等于让你空着手出去。"
+				},
+				{
+					"id": "cs0102_mid_mv3",
+					"speaker": "石垒·晚担",
+					"text": "空着手出去，回来只配写半行。"
+				},
+				{
+					"id": "cs0102_mid_mv4",
+					"speaker": "槐里·青禾",
+					"text": "半行也比假满强。假满见光就灰。"
+				},
+				{
+					"id": "cs0102_mid_mv5",
+					"speaker": "老旗手",
+					"text": "门外那拨盯着空格。空格不是给他们填的。"
+				},
+				{
+					"id": "cs0102_mid_mv6",
+					"speaker": "leader",
+					"text": "空格我守。锋先问清楚。"
+				},
+				{
+					"id": "cs0102_win1",
+					"speaker": "旁白",
+					"text": "锋再定。桥侧泥印浅了，滑步那拨退到芦里。",
+					"when": {
+						"flag": "cs01_mid_fought"
+					}
+				},
+				{
+					"id": "cs0102_win2",
+					"speaker": "老旗手",
+					"text": "泥里的脚窝，比刀痕好认。",
+					"when": {
+						"flag": "cs01_mid_fought"
+					}
+				},
+				{
+					"id": "cs0102_win3",
+					"speaker": "苇原·灯影",
+					"text": "吴钩的影短了。短了，才敢回头。",
+					"when": {
+						"flag": "cs01_mid_fought"
+					}
+				},
+				{
+					"id": "cs0102_win4",
+					"speaker": "leader",
+					"text": "这一锋补上月的欠。桥，我还过。",
+					"when": {
+						"flag": "cs01_mid_fought"
+					}
+				},
+				{
+					"speaker": "旁白",
+					"text": "锋收回来。副页纸还钉着。空格旁那拨，没散。",
+					"when": {
+						"all": [
+							{
+								"flag": "cs01_mid_lost"
+							},
+							{
+								"not_flag": "cs01_mid_fought"
+							}
+						]
+					},
+					"id": "cs01b_br_lost"
+				}
+			],
+			"next": "tavern",
+			"actions": [
+				{
+					"id": "open_skirmish",
+					"label": "先试一锋",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs01_mid_fought"
+							},
+							{
+								"not_flag": "cs01_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs01_mid_fought"
+							],
+							"lose_flags": [
+								"cs01_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "副页上的灯",
+								"outcome": "副页旁试锋得手——锋镝压下，并排纸可续",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "retry_skirmish",
+					"label": "再试锋镝",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs01_mid_fought"
+							},
+							{
+								"flag": "cs01_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs01_mid_fought"
+							],
+							"lose_flags": [
+								"cs01_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "副页上的灯",
+								"outcome": "副页旁试锋得手——锋镝压下，并排纸可续",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "continue_after_battle",
+					"label": "继续，去酒馆",
+					"do": [
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs01_mid_fought"
+									},
+									{
+										"not_flag": "cs01_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs01_02",
+							"choice": "mid_skirmish_skip",
+							"title": "副页上的灯",
+							"outcome": "未试锋——锋未出鞘，径去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs01_mid_fought"
+									},
+									{
+										"flag": "cs01_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs01_02",
+							"choice": "mid_skirmish_abort",
+							"title": "副页上的灯",
+							"outcome": "试锋未成——伤还在，先去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tavern",
+			"title": "选题",
+			"lines": [
+				{
+					"id": "cs01_02_tavern_0",
+					"speaker": "旁白",
+					"text": "酒馆。板上两道题。手按上去。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_1",
+					"speaker": "掌柜",
+					"text": "一道空格并排留。一道先催挂板。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_2",
+					"speaker": "leader",
+					"text": "我看题。不看谁嗓门大。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_3",
+					"speaker": "老管事",
+					"text": "并排留真。催挂板快。快的未必真。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_4",
+					"speaker": "书记官",
+					"text": "空格进谱，才算整张回执。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_5",
+					"speaker": "岁吏",
+					"text": "年迹听选择。不听锣。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_6",
+					"speaker": "旁白",
+					"text": "酒气里纸更白。白得能看见空。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_7",
+					"speaker": "掌柜",
+					"text": "选完入柜。副页柜门会响。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_8",
+					"speaker": "苇原·灯影",
+					"text": "巡防在门外。门内只选题。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_9",
+					"speaker": "leader",
+					"text": "空格并排留——我手按这道。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_10",
+					"speaker": "老管事",
+					"text": "按实了。别悬着。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_11",
+					"speaker": "书记官",
+					"text": "假名那道我划掉。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_12",
+					"speaker": "旁白",
+					"text": "板面一热。字进手心。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_13",
+					"speaker": "岁吏",
+					"text": "选择入账。副页夜可结。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_14",
+					"speaker": "掌柜",
+					"text": "另一道也在。你不选它。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_15",
+					"speaker": "老管事",
+					"text": "催挂板的锣远了。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_16",
+					"speaker": "旁白",
+					"text": "两道题还在板上。只一道进柜。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs01_02_tavern_y17",
+					"speaker": "旁白",
+					"text": "酒馆灯花爆在副页夹缝，缝里有一点没干的油。"
+				},
+				{
+					"id": "cs01_02_tavern_y18",
+					"speaker": "石垒·晚担",
+					"text": "油还黏。黏的不是假名，是刚核对过。"
+				},
+				{
+					"id": "cs01_02_tavern_y19",
+					"speaker": "leader",
+					"text": "黏着的副页带回。假名留在柜外。"
+				},
+				{
+					"id": "cs01_02_tavern_17",
+					"speaker": "老管事",
+					"text": "选完入柜。副页柜门会响·回执。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs0102_ret_mv1",
+					"speaker": "旁白",
+					"text": "副页话题在酒桌上滚了一圈，又滚回来。"
+				},
+				{
+					"id": "cs0102_ret_mv2",
+					"speaker": "掌柜",
+					"text": "滚回来的话，要过板。"
+				},
+				{
+					"id": "cs0102_ret_mv3",
+					"speaker": "岁吏",
+					"text": "过板的才配回读。"
+				},
+				{
+					"id": "cs0102_tvp1",
+					"speaker": "旁白",
+					"text": "副页从袖里抽出时，折痕正对挂板的空格。"
+				},
+				{
+					"id": "cs0102_tvp2",
+					"speaker": "掌柜",
+					"text": "空格等副页，不等闲话。闲话占格，格就废。"
+				},
+				{
+					"id": "cs0102_tvp3",
+					"speaker": "岁吏",
+					"text": "废格明年还在。在的是空，不是你的借口。"
+				},
+				{
+					"id": "cs0102_tvp4",
+					"speaker": "石垒·晚担",
+					"text": "副页薄。薄页上钉，钉要轻，字要重。"
+				},
+				{
+					"id": "cs0102_tvp5",
+					"speaker": "书记官",
+					"text": "重字才配并排。轻字像偷挂。"
+				},
+				{
+					"id": "cs0102_tvp6",
+					"speaker": "leader",
+					"text": "副页我按进空格。挂之前，先问自己一句。"
+				},
+				{
+					"id": "cs0102_tvn1",
+					"speaker": "掌柜",
+					"text": "桥泥那一锋，靴底还潮。"
+				},
+				{
+					"id": "cs0102_tvn2",
+					"speaker": "石垒·晚担",
+					"text": "芦里那拨退了。退了才配要酒。"
+				},
+				{
+					"id": "cs0102_tvn3",
+					"speaker": "听回",
+					"text": "吴钩影短的事，桌上有人传。"
+				},
+				{
+					"id": "cs0102_tvn4",
+					"speaker": "leader",
+					"text": "泥干。人在。补欠，算数。"
+				},
+				{
+					"id": "cs0102_ret_mv4",
+					"speaker": "leader",
+					"text": "过板。回堡入谱。"
+				}
+			],
+			"actions": [
+				{
+					"id": "keep_slip",
+					"label": "空格并排留",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs01_slip_parallel",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs01_02",
+							"choice": "keep_slip",
+							"title": "副页上的灯",
+							"outcome": "副页回读后空格并排记入谱",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				},
+				{
+					"id": "push_board",
+					"label": "先催挂板",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs01_slip_push",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs01_02",
+							"choice": "push_board",
+							"title": "副页上的灯",
+							"outcome": "副页回读后先催挂板",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ledger",
+			"title": "入谱",
+			"lines": [
+				{
+					"id": "cs01_02_ledger_0",
+					"speaker": "旁白",
+					"text": "入谱。副页与回执并排进柜。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_1",
+					"speaker": "书记官",
+					"text": "空格有灯。灯不灭。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_2",
+					"speaker": "leader",
+					"text": "我看见空了。空也在谱里。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_3",
+					"speaker": "岁吏",
+					"text": "年迹末行写：副页并排留。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_4",
+					"speaker": "老管事",
+					"text": "挂板锣再响，也撕不开柜门。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_5",
+					"speaker": "旁白",
+					"text": "柜门一合。灯还在缝里。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防收牌。牌上副页两字还热。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_7",
+					"speaker": "书记官",
+					"text": "整张回执，才算回。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_8",
+					"speaker": "leader",
+					"text": "假名没进来。好。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_9",
+					"speaker": "岁吏",
+					"text": "月结旁多一笔空格。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_10",
+					"speaker": "老管事",
+					"text": "催条叠在门外。谱在门内。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_11",
+					"speaker": "旁白",
+					"text": "墨干。空格的边也干了。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_12",
+					"speaker": "书记官",
+					"text": "下次打开，空格还在——带着灯。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_13",
+					"speaker": "leader",
+					"text": "够了。去灰旗堡。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_14",
+					"speaker": "苇原·灯影",
+					"text": "堡门亮着。副页灯跟着。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_15",
+					"speaker": "岁吏",
+					"text": "年迹合上。字还在。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_16",
+					"speaker": "老管事",
+					"text": "账房可歇。谱不可假。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_17",
+					"speaker": "旁白",
+					"text": "风停。纸平。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_18",
+					"speaker": "书记官",
+					"text": "并排不是拖。是完整。",
+					"stage": {
+						"card": "六　入谱",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs01_02_ledger_y19",
+					"speaker": "旁白",
+					"text": "册边起毛。毛边比印鉴老实。"
+				},
+				{
+					"id": "cs01_02_ledger_y20",
+					"speaker": "石垒·晚担",
+					"text": "老实的才并排。"
+				},
+				{
+					"id": "cs01_02_ledger_y21",
+					"speaker": "leader",
+					"text": "并排留真。"
+				},
+				{
+					"id": "cs0102_ldg1",
+					"speaker": "岁吏",
+					"text": "副页空格与泥印并排，补欠才像真的。"
+				},
+				{
+					"id": "cs0102_ldg2",
+					"speaker": "书记官",
+					"text": "滑步那拨的脚窝，只进旁注不进正格。"
+				},
+				{
+					"id": "cs0102_ldg3",
+					"speaker": "槐里·青禾",
+					"text": "薄页难装——装下的，才是补上的欠。"
+				},
+				{
+					"id": "cs0102_ldg4",
+					"speaker": "leader",
+					"text": "空格并排留。灯不灭，副页在柜。"
+				},
+				{
+					"id": "cs0102_ldg_end",
+					"speaker": "leader",
+					"text": "桥泥干处，灰旗堡副页柜等补欠入谱。"
+				}
+			],
+			"actions": []
+		}
+	],
+	"title_en": "Lamp on the Slip Page"
 }

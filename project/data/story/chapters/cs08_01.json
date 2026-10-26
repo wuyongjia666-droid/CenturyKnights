@@ -1,1065 +1,1095 @@
 {
-  "id": "cs08_01",
-  "title": "祖祠上的灯",
-  "legacy_index": 408,
-  "return_scene": "res://scenes/hub/castle_hub.tscn",
-  "source": "docs/content-seasons/season-08/NOVEL.md",
-  "beats": [
-    {
-      "id": "yard",
-      "title": "挂栏",
-      "next": "stele",
-      "lines": [
-        {
-          "id": "cs08_yd_0",
-          "speaker": "旁白",
-          "text": "祖祠。名册末行空着。祖祠上的灯还亮。",
-          "stage": {
-            "card": "一　挂栏",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs08_yd_1",
-          "speaker": "书记官",
-          "text": "祖祠栏要念得像碑阴的空行，不像催条上的已。"
-        },
-        {
-          "id": "cs08_yd_2",
-          "speaker": "leader",
-          "text": "写碑已写。"
-        },
-        {
-          "id": "cs08_yd_3",
-          "speaker": "旁白",
-          "text": "笔尖停一下。末行落下「碑已写」三字。"
-        },
-        {
-          "id": "cs08_yd_4",
-          "speaker": "老旗手",
-          "text": "旗角誊的是碑已写没有，不把碑名卖到旗面上。"
-        },
-        {
-          "id": "cs08_yd_5",
-          "speaker": "岁吏",
-          "text": "谱可以进栏。祖祠是另一本账。"
-        },
-        {
-          "id": "cs08_yd_6",
-          "speaker": "石垒·晚担",
-          "text": "碑上写得好看容易。在祠前站稳再刻，才难。"
-        },
-        {
-          "id": "cs08_yard_x0",
-          "speaker": "旁白",
-          "text": "笔搁在边上。墨还没干，催条已经又来一张。"
-        },
-        {
-          "id": "cs08_yard_x1",
-          "speaker": "书记官",
-          "text": "催条爱写「已」。已字一多，空格就难受。"
-        },
-        {
-          "id": "cs08_yard_x2",
-          "speaker": "老管事",
-          "text": "难受就对。难受说明栏还没骗过人。"
-        },
-        {
-          "id": "cs08_yard_x3",
-          "speaker": "槐里·青禾",
-          "text": "孩子以后抄名册，先抄空，再抄满。"
-        },
-        {
-          "id": "cs08_yard_x4",
-          "speaker": "苇原·灯影",
-          "text": "巡防夜里走过，看见空格，才肯信这灯。"
-        },
-        {
-          "id": "cs08_yard_x5",
-          "speaker": "老旗手",
-          "text": "旗角给人核。核的时候，空比满更像真。"
-        },
-        {
-          "id": "cs08_yard_x6",
-          "speaker": "岁吏",
-          "text": "年迹匣认空。空着，红脸少记一笔。"
-        },
-        {
-          "id": "cs08_yard_x7",
-          "speaker": "石垒·晚担",
-          "text": "桩要站。站之前，别先把名字钉死。"
-        },
-        {
-          "id": "cs08_yard_x8",
-          "speaker": "旁白",
-          "text": "厅里风小。风小的时候，人更容易听见自己的急。"
-        },
-        {
-          "id": "cs08_yard_x9",
-          "speaker": "掌柜",
-          "text": "酒馆墙上有圈。圈等选题，不等人喊已经。"
-        },
-        {
-          "id": "cs08_yd_y17",
-          "speaker": "旁白",
-          "text": "院墙上的碑阴还潮，潮口比白天深一指。"
-        },
-        {
-          "id": "cs08_yd_y18",
-          "speaker": "石垒·晚担",
-          "text": "深一指的字口，经得住今年的风。浅的先别认。"
-        },
-        {
-          "id": "cs08_yd_y19",
-          "speaker": "leader",
-          "text": "我认这面墙上的深。浅刻不进栏。"
-        },
-        {
-          "id": "cs08_yd_7",
-          "speaker": "leader",
-          "text": "栏挂上了。去看祖祠。"
-        }
-      ]
-    },
-    {
-      "id": "stele",
-      "title": "祖祠",
-      "next": "hourglass",
-      "lines": [
-        {
-          "id": "cs08_st_0",
-          "speaker": "旁白",
-          "text": "祖祠未结。灯照着香灰上的白。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs08_st_1",
-          "speaker": "老管事",
-          "text": "祖祠：对碑已记，点灯待对。碑名栏仍空。"
-        },
-        {
-          "id": "cs08_st_2",
-          "speaker": "旁白",
-          "text": "名册说碑已写。祖祠说还在对。两行字第一次吵架。"
-        },
-        {
-          "id": "cs08_st_3",
-          "speaker": "苇原·灯影",
-          "text": "巡防不问谁入祠。问今夜谁还没对碑。"
-        },
-        {
-          "id": "cs08_st_4",
-          "speaker": "槐里·青禾",
-          "text": "祠门大开，碑上却像已经住满。没跪过的人一近，字就假。"
-        },
-        {
-          "id": "cs08_st_5",
-          "speaker": "老管事",
-          "text": "祖祠还差两格。跳格去刻名，桩会从碑座裂开。"
-        },
-        {
-          "id": "cs08_stele_x0",
-          "speaker": "旁白",
-          "text": "香灰白一层。白得像还没人敢踩上去。"
-        },
-        {
-          "id": "cs08_stele_x1",
-          "speaker": "老管事",
-          "text": "对碑是手活。手活不能靠嘴快。"
-        },
-        {
-          "id": "cs08_stele_x2",
-          "speaker": "石垒·晚担",
-          "text": "影正了再动手。影偏就等。"
-        },
-        {
-          "id": "cs08_stele_x3",
-          "speaker": "书记官",
-          "text": "小字写「未结」。小字不抢正文，正文才站得住。"
-        },
-        {
-          "id": "cs08_stele_x4",
-          "speaker": "岁吏",
-          "text": "回执在侧室。侧室不闹，闹的是正厅。"
-        },
-        {
-          "id": "cs08_stele_x5",
-          "speaker": "苇原·灯影",
-          "text": "谁摸过灰，手会黑。黑着手别卖「已点」。"
-        },
-        {
-          "id": "cs08_stele_x6",
-          "speaker": "槐里·青禾",
-          "text": "空格问人。问得出口，姓才像能传。"
-        },
-        {
-          "id": "cs08_stele_x7",
-          "speaker": "老旗手",
-          "text": "旗断口还在。断口提醒：未完不是丢人。"
-        },
-        {
-          "id": "cs08_stele_x8",
-          "speaker": "旁白",
-          "text": "灯芯跳一下。跳完又稳。稳比旺好。"
-        },
-        {
-          "id": "cs08_stele_x9",
-          "speaker": "老管事",
-          "text": "旺晃眼。晃眼就看不清空格边齐不齐。"
-        },
-        {
-          "id": "cs08_st_y16",
-          "speaker": "旁白",
-          "text": "新香灰落在碑座凹槽里，凹槽还没有鞋印。"
-        },
-        {
-          "id": "cs08_st_y17",
-          "speaker": "石垒·晚担",
-          "text": "灰轻得一口气能吹散。碑座不跟灰一起轻。"
-        },
-        {
-          "id": "cs08_st_y18",
-          "speaker": "leader",
-          "text": "碑阴空行先留着。名，等灰里有了鞋印。"
-        },
-        {
-          "id": "cs08_st_6",
-          "speaker": "leader",
-          "text": "碑还没对完。先去看沙漏，碑名后刻。"
-        }
-      ]
-    },
-    {
-      "id": "hourglass",
-      "title": "两行",
-      "next": "bridge",
-      "lines": [
-        {
-          "id": "cs08_hg_0",
-          "speaker": "旁白",
-          "text": "沙漏多出两行：上行碑已写，下行祖祠未结。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs08_hg_1",
-          "speaker": "老管事",
-          "text": "碑名钉在上行。未对灯的那行谁要撕，先把香灰拍干净。"
-        },
-        {
-          "id": "cs08_hg_2",
-          "speaker": "岁吏",
-          "text": "回执在侧室。谱与祠，两本账。"
-        },
-        {
-          "id": "cs08_hg_3",
-          "speaker": "书记官",
-          "text": "香案不肯收成一行碑名。点过的灯和没点的灯得分开。"
-        },
-        {
-          "id": "cs08_hg_4",
-          "speaker": "苇原·灯影",
-          "text": "香灭了一寸，更鼓才响。响之前先看谁还没对碑。"
-        },
-        {
-          "id": "cs08_hg_5",
-          "speaker": "槐里·青禾",
-          "text": "孩子来抄祖祠，抄未点的灯，别只抄碑名。"
-        },
-        {
-          "id": "cs08_hourglass_x0",
-          "speaker": "旁白",
-          "text": "细线钉住两行。拔线要带木茬，扎手。"
-        },
-        {
-          "id": "cs08_hourglass_x1",
-          "speaker": "老管事",
-          "text": "扎手正好。不疼的「已」，多半是假的。"
-        },
-        {
-          "id": "cs08_hourglass_x2",
-          "speaker": "书记官",
-          "text": "议会摘要爱一行。我们给两行。给完不改。"
-        },
-        {
-          "id": "cs08_hourglass_x3",
-          "speaker": "岁吏",
-          "text": "红脸可以过夜。假绿进匣，我半夜也醒。"
-        },
-        {
-          "id": "cs08_hourglass_x4",
-          "speaker": "苇原·灯影",
-          "text": "更次还在交。交更的人先看下行。"
-        },
-        {
-          "id": "cs08_hourglass_x5",
-          "speaker": "槐里·青禾",
-          "text": "抄未结的孩子，长大才敢问空。"
-        },
-        {
-          "id": "cs08_hourglass_x6",
-          "speaker": "石垒·晚担",
-          "text": "沙漏两行之间留得下一张在碑前发红的脸。"
-        },
-        {
-          "id": "cs08_hourglass_x7",
-          "speaker": "老旗手",
-          "text": "核旗的时候，两行都要在。少一行，角先裂。"
-        },
-        {
-          "id": "cs08_hourglass_x8",
-          "speaker": "旁白",
-          "text": "沙漏沙子慢。慢不是停。慢是还在走。"
-        },
-        {
-          "id": "cs08_hourglass_x9",
-          "speaker": "掌柜",
-          "text": "墙牌比纸硬。硬的东西，撕起来才有账。"
-        },
-        {
-          "id": "cs08_hg_y16",
-          "speaker": "旁白",
-          "text": "沙漏座石缝里渗出碑阴的潮，潮把下行浸深了。"
-        },
-        {
-          "id": "cs08_hg_y17",
-          "speaker": "石垒·晚担",
-          "text": "浸深的那一行经年。浮在沙上的，是催条。"
-        },
-        {
-          "id": "cs08_hg_y18",
-          "speaker": "leader",
-          "text": "我认浸深的下行。浮字不进月份。"
-        },
-        {
-          "id": "cs08_hg_6",
-          "speaker": "leader",
-          "text": "香案两行都留着。去门廊对碑。"
-        },
-        {
-          "id": "cs0801_vis_mv1",
-          "speaker": "旁白",
-          "text": "香灰落进沙漏座缝。灰和沙混在一起。"
-        },
-        {
-          "id": "cs0801_vis_mv2",
-          "speaker": "书记官",
-          "text": "混了要拨开。碑事不跟灰混。"
-        },
-        {
-          "id": "cs0801_vis_mv3",
-          "speaker": "石垒·晚担",
-          "text": "拨开再看月份。"
-        },
-        {
-          "id": "cs0801_vst1",
-          "speaker": "岁吏",
-          "text": "月份从碑阴凉处挪到香案前。挪得轻，像怕惊祖。"
-        },
-        {
-          "id": "cs0801_vst2",
-          "speaker": "书记官",
-          "text": "碑录格要等香稳了再落笔。"
-        },
-        {
-          "id": "cs0801_vst3",
-          "speaker": "leader",
-          "text": "月份挪过。香，我添。"
-        },
-        {
-          "id": "cs0801_vis_mv4",
-          "speaker": "leader",
-          "text": "拨开。去看。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "open_hourglass",
-          "label": "去看月份怎么往前走",
-          "do": [
-            {
-              "op": "visit",
-              "path": "res://scenes/hub/hourglass.tscn"
-            }
-          ]
-        },
-        {
-          "id": "continue_after_visit",
-          "label": "继续，去门廊",
-          "do": [
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "bridge",
-      "title": "门廊",
-      "next": "tavern",
-      "lines": [
-        {
-          "id": "cs08_br_0",
-          "speaker": "旁白",
-          "text": "门廊问谁入祠。墙牌两行一起响。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs08_br_1",
-          "speaker": "石垒·晚担",
-          "text": "祠前木牌比拓纸硬，拓纸又比嘴里的碑名硬。"
-        },
-        {
-          "id": "cs08_br_2",
-          "speaker": "老旗手",
-          "text": "旗角拿来核有没有对过碑，不拿来卖祠名。"
-        },
-        {
-          "id": "cs08_br_3",
-          "speaker": "苇原·灯影",
-          "text": "香案前还空着一个人的位置。位置有人了，再刻碑。"
-        },
-        {
-          "id": "cs08_br_4",
-          "speaker": "槐里·青禾",
-          "text": "谎抄进祖祠藏不住。孩子会问碑座为什么还空。"
-        },
-        {
-          "id": "cs08_br_5",
-          "speaker": "老管事",
-          "text": "祠外的话比香灰走得快。灰还在座上，话已经散了。"
-        },
-        {
-          "id": "cs08_br_6",
-          "speaker": "岁吏",
-          "text": "谱很长。祖祠很静。静是还在对。"
-        },
-        {
-          "id": "cs08_br_7",
-          "speaker": "leader",
-          "text": "牌还在祠阶上。带去酒馆，别在门廊抢碑名。"
-        },
-        {
-          "id": "cs08_bridge_x0",
-          "speaker": "旁白",
-          "text": "门廊风大。风把闲话吹薄，把牌沿吹响。"
-        },
-        {
-          "id": "cs08_bridge_x1",
-          "speaker": "石垒·晚担",
-          "text": "有人想绕牌。绕得过纸，绕不过桩。"
-        },
-        {
-          "id": "cs08_bridge_x2",
-          "speaker": "老旗手",
-          "text": "有人想从碑侧把名字卖掉。旗角钉在祠门闩上，不让过。"
-        },
-        {
-          "id": "cs08_bridge_x3",
-          "speaker": "苇原·灯影",
-          "text": "点灯的人还在廊外。香先续上，碑名等他跪完。"
-        },
-        {
-          "id": "cs08_bridge_x4",
-          "speaker": "槐里·青禾",
-          "text": "孩子问空，比大人喊满更难挡。"
-        },
-        {
-          "id": "cs08_bridge_x5",
-          "speaker": "老管事",
-          "text": "对碑阴不能赶。赶完的闲话隔夜就散，座上的灰还在。"
-        },
-        {
-          "id": "cs08_bridge_x6",
-          "speaker": "岁吏",
-          "text": "谱很长。长的东西，更要静着对。"
-        },
-        {
-          "id": "cs08_bridge_x7",
-          "speaker": "书记官",
-          "text": "门廊记事：谁来问，谁摸过灰，谁短笑。"
-        },
-        {
-          "id": "cs08_bridge_x8",
-          "speaker": "旁白",
-          "text": "墙牌旁有人朝碑座短笑。短笑像试探，不是行礼。"
-        },
-        {
-          "id": "cs08_bridge_x9",
-          "speaker": "掌柜",
-          "text": "短笑飘到祠外就散。灶上的圈只收跪过的人。"
-        },
-        {
-          "id": "cs08_mid_y18",
-          "speaker": "旁白",
-          "text": "门廊门槛上落了一层从祠里带出来的香灰。"
-        },
-        {
-          "id": "cs08_mid_y19",
-          "speaker": "石垒·晚担",
-          "text": "门槛上的灰一脚就没。碑座里的灰，踩不散。"
-        },
-        {
-          "id": "cs08_mid_y20",
-          "speaker": "leader",
-          "text": "踩不散的留下。门槛上的空名不刻。"
-        },
-        {
-          "id": "cs0801_mid_mv1",
-          "speaker": "旁白",
-          "text": "祖祠香灰被过堂风掀起一缕，落在碑座新缝里。"
-        },
-        {
-          "id": "cs0801_mid_mv2",
-          "speaker": "书记官",
-          "text": "新缝要记。记完再问门外声。"
-        },
-        {
-          "id": "cs0801_mid_mv3",
-          "speaker": "石垒·晚担",
-          "text": "门外声杂。杂里有刀鞘响。"
-        },
-        {
-          "id": "cs0801_mid_mv4",
-          "speaker": "槐里·青禾",
-          "text": "刀鞘响，香火也稳不住。"
-        },
-        {
-          "id": "cs0801_mid_mv5",
-          "speaker": "掌柜",
-          "text": "墙牌旁那拨，专等你们拜完再抢。"
-        },
-        {
-          "id": "cs0801_mid_mv6",
-          "speaker": "leader",
-          "text": "拜完不让抢。锋先拦。"
-        },
-        {
-          "id": "cs0801_win1",
-          "speaker": "旁白",
-          "text": "锋定。祖祠香火稳了，墙牌旁那拨抢不着。",
-          "when": {
-            "flag": "cs08_mid_fought"
-          }
-        },
-        {
-          "id": "cs0801_win2",
-          "speaker": "掌柜",
-          "text": "拜完的香，今晚没人敢吹。",
-          "when": {
-            "flag": "cs08_mid_fought"
-          }
-        },
-        {
-          "id": "cs0801_win3",
-          "speaker": "槐里·青禾",
-          "text": "刀鞘不响了。香火，自己稳。",
-          "when": {
-            "flag": "cs08_mid_fought"
-          }
-        },
-        {
-          "id": "cs0801_win4",
-          "speaker": "leader",
-          "text": "锋拦过抢。祖祠，我跪得。",
-          "when": {
-            "flag": "cs08_mid_fought"
-          }
-        },
-        {
-          "id": "cs08_mid_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。祖祠问声还在。墙牌旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs08_mid_lost"
-              },
-              {
-                "not_flag": "cs08_mid_fought"
-              }
-            ]
-          }
-        }
-      ],
-      "actions": [
-        {
-          "id": "open_skirmish",
-          "label": "先试一锋",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs08_mid_fought"
-              },
-              {
-                "not_flag": "cs08_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs08_mid_fought"
-              ],
-              "lose_flags": [
-                "cs08_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "祖祠上的灯",
-                "outcome": "祖祠口试锋得手——问声旁锋镝先亮",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "retry_skirmish",
-          "label": "再试锋镝",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs08_mid_fought"
-              },
-              {
-                "flag": "cs08_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs08_mid_fought"
-              ],
-              "lose_flags": [
-                "cs08_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "祖祠上的灯",
-                "outcome": "祖祠口试锋得手——问声旁锋镝先亮",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "continue_after_battle",
-          "label": "继续，去酒馆",
-          "do": [
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs08_mid_fought"
-                  },
-                  {
-                    "not_flag": "cs08_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs08_01",
-              "choice": "mid_skirmish_skip",
-              "title": "祖祠上的灯",
-              "outcome": "未试锋——锋未出鞘，径去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs08_mid_fought"
-                  },
-                  {
-                    "flag": "cs08_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs08_01",
-              "choice": "mid_skirmish_abort",
-              "title": "祖祠上的灯",
-              "outcome": "试锋未成——伤还在，先去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tavern",
-      "title": "选题",
-      "lines": [
-        {
-          "id": "cs08_tav_0",
-          "speaker": "旁白",
-          "text": "烽火酒馆。碗沿两圈：祖祠并排记，和先钉碑名。",
-          "stage": {
-            "bg": "tavern",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs08_tav_1",
-          "speaker": "掌柜",
-          "text": "碑名拓片占了半面墙。另一半空着，留给还没跪的人。"
-        },
-        {
-          "id": "cs08_tav_2",
-          "speaker": "槐里·青禾",
-          "text": "裁祖祠的人，先把剪刀放下。"
-        },
-        {
-          "id": "cs08_tav_3",
-          "speaker": "老管事",
-          "text": "并排钉。谁撕祖祠抄本，谁结账。"
-        },
-        {
-          "id": "cs08_tav_4",
-          "speaker": "石垒·晚担",
-          "text": "栏是拿来念的，碑是拿来站的。祖祠两样都要。"
-        },
-        {
-          "id": "cs08_tav_5",
-          "speaker": "苇原·灯影",
-          "text": "沙漏还亮。谁买一行结论，带他去摸灰。"
-        },
-        {
-          "id": "cs08_tav_6",
-          "speaker": "旁白",
-          "text": "灰先落在碑名纸上。并排记那张还白。你收白的，还是灰的。"
-        },
-        {
-          "id": "cs08_tavern_x0",
-          "speaker": "旁白",
-          "text": "花生壳轻了。轻的时候，人反而听得见自己的选。"
-        },
-        {
-          "id": "cs08_tavern_x1",
-          "speaker": "掌柜",
-          "text": "圈是选题。选完再喝。空喊的，酒钱加倍。"
-        },
-        {
-          "id": "cs08_tavern_x2",
-          "speaker": "槐里·青禾",
-          "text": "裁祖祠像裁布。布裁错了，鞋也穿不成。"
-        },
-        {
-          "id": "cs08_tavern_x3",
-          "speaker": "老管事",
-          "text": "并排不是怕事。并排是让事看得见。"
-        },
-        {
-          "id": "cs08_tavern_x4",
-          "speaker": "石垒·晚担",
-          "text": "栏能念，桩能站。少一样，厅会晃。"
-        },
-        {
-          "id": "cs08_tavern_x5",
-          "speaker": "苇原·灯影",
-          "text": "买一行结论的人，先去摸灰。摸完再出价。"
-        },
-        {
-          "id": "cs08_tavern_x6",
-          "speaker": "岁吏",
-          "text": "回执不认吆喝。认并排，认灯，认手。"
-        },
-        {
-          "id": "cs08_tavern_x7",
-          "speaker": "书记官",
-          "text": "两张纸都在风里。风不会替你选。"
-        },
-        {
-          "id": "cs08_tavern_x8",
-          "speaker": "老旗手",
-          "text": "旗角听得到圈。圈选偏了，角会先响。"
-        },
-        {
-          "id": "cs08_tavern_y16",
-          "speaker": "旁白",
-          "text": "酒碗外沿凝着碑阴带来的潮，潮把纸边浸深。"
-        },
-        {
-          "id": "cs08_tavern_y17",
-          "speaker": "石垒·晚担",
-          "text": "浸到酒碗上的深，才经得起今夜。浮沫不算。"
-        },
-        {
-          "id": "cs08_tavern_y18",
-          "speaker": "leader",
-          "text": "我认碗沿这圈深。浮名不带回堡。"
-        },
-        {
-          "id": "cs08_tavern_x9",
-          "speaker": "旁白",
-          "text": "你还没开口。没开口的时候，空格最清楚。"
-        },
-        {
-          "id": "cs0801_ret_mv1",
-          "speaker": "旁白",
-          "text": "祖祠香火被说成酒馆熏香。说的人自己先笑岔。"
-        },
-        {
-          "id": "cs0801_ret_mv2",
-          "speaker": "掌柜",
-          "text": "笑岔的别碰碑。"
-        },
-        {
-          "id": "cs0801_ret_mv3",
-          "speaker": "书记官",
-          "text": "碑事回堡记。"
-        },
-        {
-          "id": "cs0801_tvn1",
-          "speaker": "掌柜",
-          "text": "祖祠那一锋，酒要冷——冷着敬祖。"
-        },
-        {
-          "id": "cs0801_tvn2",
-          "speaker": "石垒·晚担",
-          "text": "抢香的人散了。散了，座才清。"
-        },
-        {
-          "id": "cs0801_tvn3",
-          "speaker": "老旗手",
-          "text": "旗在祠阶下低过。低过，再举不愧。"
-        },
-        {
-          "id": "cs0801_tvn4",
-          "speaker": "leader",
-          "text": "香稳。人齐。祖前，不抢。"
-        },
-        {
-          "id": "cs0801_ret_mv4",
-          "speaker": "leader",
-          "text": "回堡记碑。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "keep_stele",
-          "label": "祖祠并排记",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs08_kept_stele",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs08_01",
-              "choice": "keep_stele",
-              "title": "祖祠上的灯",
-              "outcome": "祖祠并排记入谱",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        },
-        {
-          "id": "name_stele",
-          "label": "先钉碑名",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs08_name_stele",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs08_01",
-              "choice": "name_stele",
-              "title": "祖祠上的灯",
-              "outcome": "先钉碑名",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ledger",
-      "title": "入册",
-      "lines": [
-        {
-          "id": "cs08_led_0",
-          "speaker": "旁白",
-          "text": "旗册封面四个字：祖祠上的灯。末页已厚。柜上两把钥匙。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs08_led_par",
-          "speaker": "旁白",
-          "text": "你留下两行。议会仍爱一行。柜子认灯。",
-          "when": {
-            "flag": "cs08_kept_stele"
-          }
-        },
-        {
-          "id": "cs08_led_name",
-          "speaker": "旁白",
-          "text": "你先钉碑名。沙漏仍在亮——月会替你写下行。",
-          "when": {
-            "flag": "cs08_name_stele"
-          }
-        },
-        {
-          "id": "cs08_led_1",
-          "speaker": "老管事",
-          "text": "存档不刊也行。不丢，就是缝。"
-        },
-        {
-          "id": "cs08_led_2",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄过祖祠，才配以后念栏。"
-        },
-        {
-          "id": "cs08_led_3",
-          "speaker": "老旗手",
-          "text": "并排。不要裁。缝在名册与祖祠之间。"
-        },
-        {
-          "id": "cs08_led_4",
-          "speaker": "岁吏",
-          "text": "回执在侧室。谱与祠，两本账。"
-        },
-        {
-          "id": "cs08_led_5",
-          "speaker": "苇原·灯影",
-          "text": "更还在交。下次挂嗣，下行先响。"
-        },
-        {
-          "id": "cs08_ledger_x0",
-          "speaker": "旁白",
-          "text": "钥匙冰手。冰手提醒：柜不是广告栏。"
-        },
-        {
-          "id": "cs08_ledger_x1",
-          "speaker": "老管事",
-          "text": "缝留着。缝不是裂。缝是还能补的地方。"
-        },
-        {
-          "id": "cs08_ledger_x2",
-          "speaker": "槐里·青禾",
-          "text": "抄过未结，才配念栏。这句留给以后。"
-        },
-        {
-          "id": "cs08_ledger_x3",
-          "speaker": "老旗手",
-          "text": "并排入柜。裁掉的半本，我不收。"
-        },
-        {
-          "id": "cs08_ledger_x4",
-          "speaker": "岁吏",
-          "text": "侧室回执还在。还在，红脸就还诚实。"
-        },
-        {
-          "id": "cs08_ledger_x5",
-          "speaker": "苇原·灯影",
-          "text": "下次挂嗣，下行先响。响了再谈名。"
-        },
-        {
-          "id": "cs08_ledger_x6",
-          "speaker": "书记官",
-          "text": "封面四个字压住催条。催条再来，也压得住。"
-        },
-        {
-          "id": "cs08_ledger_x7",
-          "speaker": "石垒·晚担",
-          "text": "桩还在。桩在，名才有地方站。"
-        },
-        {
-          "id": "cs08_ledger_x8",
-          "speaker": "掌柜",
-          "text": "圈可以擦。擦过的墙，比从没画过更值钱。"
-        },
-        {
-          "id": "cs08_ledger_x9",
-          "speaker": "旁白",
-          "text": "灯还在。灯在，这一季就还没把人骗完。"
-        },
-        {
-          "id": "cs08_led_6",
-          "speaker": "leader",
-          "text": "栏与祠，并排。谁来认嗣位，先念完。"
-        },
-        {
-          "id": "cs08_led_y19",
-          "speaker": "旁白",
-          "text": "香灰落在碑座。"
-        },
-        {
-          "id": "cs08_led_y20",
-          "speaker": "石垒·晚担",
-          "text": "灰轻，碑重。"
-        },
-        {
-          "id": "cs08_led_y21",
-          "speaker": "leader",
-          "text": "碑阴并排留。"
-        },
-        {
-          "id": "cs0801_ldg1",
-          "speaker": "岁吏",
-          "text": "碑阴拓纸边的潮干了，碑已写才算。"
-        },
-        {
-          "id": "cs0801_ldg2",
-          "speaker": "书记官",
-          "text": "抢拓的手印，不进碑录。"
-        },
-        {
-          "id": "cs0801_ldg3",
-          "speaker": "老旗手",
-          "text": "旗在祠阶低过。低过的，才配入谱。"
-        },
-        {
-          "id": "cs0801_ldg4",
-          "speaker": "leader",
-          "text": "碑已写还在。两行之间，留给香稳。"
-        },
-        {
-          "id": "cs0801_ldg_end",
-          "speaker": "leader",
-          "text": "香案前，灰旗堡碑录等这笔拓实。"
-        }
-      ],
-      "actions": []
-    }
-  ]
+	"id": "cs08_01",
+	"title": "祖祠上的灯",
+	"legacy_index": 408,
+	"return_scene": "res://scenes/hub/castle_hub.tscn",
+	"source": "docs/content-seasons/season-08/NOVEL.md",
+	"beats": [
+		{
+			"id": "yard",
+			"title": "挂栏",
+			"next": "stele",
+			"lines": [
+				{
+					"id": "cs08_yd_0",
+					"speaker": "旁白",
+					"text": "祖祠。名册末行空着。祖祠上的灯还亮。",
+					"stage": {
+						"card": "一　挂栏",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs08_yd_1",
+					"speaker": "书记官",
+					"text": "祖祠栏要念得像碑阴的空行，不像催条上的已。"
+				},
+				{
+					"id": "cs08_yd_2",
+					"speaker": "leader",
+					"text": "写碑已写。"
+				},
+				{
+					"id": "cs08_yd_3",
+					"speaker": "旁白",
+					"text": "笔尖停一下。末行落下「碑已写」三字。"
+				},
+				{
+					"id": "cs08_yd_4",
+					"speaker": "老旗手",
+					"text": "旗角誊的是碑已写没有，不把碑名卖到旗面上。"
+				},
+				{
+					"id": "cs08_yd_5",
+					"speaker": "岁吏",
+					"text": "谱可以进栏。祖祠是另一本账。"
+				},
+				{
+					"id": "cs08_yd_6",
+					"speaker": "石垒·晚担",
+					"text": "碑上写得好看容易。在祠前站稳再刻，才难。"
+				},
+				{
+					"id": "cs08_yard_x0",
+					"speaker": "旁白",
+					"text": "笔搁在边上。墨还没干，催条已经又来一张。"
+				},
+				{
+					"id": "cs08_yard_x1",
+					"speaker": "书记官",
+					"text": "催条爱写「已」。已字一多，空格就难受。"
+				},
+				{
+					"id": "cs08_yard_x2",
+					"speaker": "老管事",
+					"text": "难受就对。难受说明栏还没骗过人。"
+				},
+				{
+					"id": "cs08_yard_x3",
+					"speaker": "槐里·青禾",
+					"text": "孩子以后抄名册，先抄空，再抄满。"
+				},
+				{
+					"id": "cs08_yard_x4",
+					"speaker": "苇原·灯影",
+					"text": "巡防夜里走过，看见空格，才肯信这灯。"
+				},
+				{
+					"id": "cs08_yard_x5",
+					"speaker": "老旗手",
+					"text": "旗角给人核。核的时候，空比满更像真。"
+				},
+				{
+					"id": "cs08_yard_x6",
+					"speaker": "岁吏",
+					"text": "年迹匣认空。空着，红脸少记一笔。"
+				},
+				{
+					"id": "cs08_yard_x7",
+					"speaker": "石垒·晚担",
+					"text": "桩要站。站之前，别先把名字钉死。"
+				},
+				{
+					"id": "cs08_yard_x8",
+					"speaker": "旁白",
+					"text": "厅里风小。风小的时候，人更容易听见自己的急。"
+				},
+				{
+					"id": "cs08_yard_x9",
+					"speaker": "掌柜",
+					"text": "酒馆墙上有圈。圈等选题，不等人喊已经。"
+				},
+				{
+					"id": "cs08_yd_y17",
+					"speaker": "旁白",
+					"text": "院墙上的碑阴还潮，潮口比白天深一指。"
+				},
+				{
+					"id": "cs08_yd_y18",
+					"speaker": "石垒·晚担",
+					"text": "深一指的字口，经得住今年的风。浅的先别认。"
+				},
+				{
+					"id": "cs08_yd_y19",
+					"speaker": "leader",
+					"text": "我认这面墙上的深。浅刻不进栏。"
+				},
+				{
+					"id": "cs08_yd_7",
+					"speaker": "leader",
+					"text": "栏挂上了。去看祖祠。"
+				}
+			]
+		},
+		{
+			"id": "stele",
+			"title": "祖祠",
+			"next": "hourglass",
+			"lines": [
+				{
+					"id": "cs08_st_0",
+					"speaker": "旁白",
+					"text": "祖祠未结。灯照着香灰上的白。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs08_st_1",
+					"speaker": "老管事",
+					"text": "祖祠：对碑已记，点灯待对。碑名栏仍空。"
+				},
+				{
+					"id": "cs08_st_2",
+					"speaker": "旁白",
+					"text": "名册说碑已写。祖祠说还在对。两行字第一次吵架。"
+				},
+				{
+					"id": "cs08_st_3",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁入祠。问今夜谁还没对碑。"
+				},
+				{
+					"id": "cs08_st_4",
+					"speaker": "槐里·青禾",
+					"text": "祠门大开，碑上却像已经住满。没跪过的人一近，字就假。"
+				},
+				{
+					"id": "cs08_st_5",
+					"speaker": "老管事",
+					"text": "祖祠还差两格。跳格去刻名，桩会从碑座裂开。"
+				},
+				{
+					"id": "cs08_stele_x0",
+					"speaker": "旁白",
+					"text": "香灰白一层。白得像还没人敢踩上去。"
+				},
+				{
+					"id": "cs08_stele_x1",
+					"speaker": "老管事",
+					"text": "对碑是手活。手活不能靠嘴快。"
+				},
+				{
+					"id": "cs08_stele_x2",
+					"speaker": "石垒·晚担",
+					"text": "影正了再动手。影偏就等。"
+				},
+				{
+					"id": "cs08_stele_x3",
+					"speaker": "书记官",
+					"text": "小字写「未结」。小字不抢正文，正文才站得住。"
+				},
+				{
+					"id": "cs08_stele_x4",
+					"speaker": "岁吏",
+					"text": "回执在侧室。侧室不闹，闹的是正厅。"
+				},
+				{
+					"id": "cs08_stele_x5",
+					"speaker": "苇原·灯影",
+					"text": "谁摸过灰，手会黑。黑着手别卖「已点」。"
+				},
+				{
+					"id": "cs08_stele_x6",
+					"speaker": "槐里·青禾",
+					"text": "空格问人。问得出口，姓才像能传。"
+				},
+				{
+					"id": "cs08_stele_x7",
+					"speaker": "老旗手",
+					"text": "旗断口还在。断口提醒：未完不是丢人。"
+				},
+				{
+					"id": "cs08_stele_x8",
+					"speaker": "旁白",
+					"text": "灯芯跳一下。跳完又稳。稳比旺好。"
+				},
+				{
+					"id": "cs08_stele_x9",
+					"speaker": "老管事",
+					"text": "旺晃眼。晃眼就看不清空格边齐不齐。"
+				},
+				{
+					"id": "cs08_st_y16",
+					"speaker": "旁白",
+					"text": "新香灰落在碑座凹槽里，凹槽还没有鞋印。"
+				},
+				{
+					"id": "cs08_st_y17",
+					"speaker": "石垒·晚担",
+					"text": "灰轻得一口气能吹散。碑座不跟灰一起轻。"
+				},
+				{
+					"id": "cs08_st_y18",
+					"speaker": "leader",
+					"text": "碑阴空行先留着。名，等灰里有了鞋印。"
+				},
+				{
+					"id": "cs08_st_6",
+					"speaker": "leader",
+					"text": "碑还没对完。先去看沙漏，碑名后刻。"
+				}
+			]
+		},
+		{
+			"id": "hourglass",
+			"title": "两行",
+			"next": "bridge",
+			"lines": [
+				{
+					"id": "cs08_hg_0",
+					"speaker": "旁白",
+					"text": "沙漏多出两行：上行碑已写，下行祖祠未结。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs08_hg_1",
+					"speaker": "老管事",
+					"text": "碑名钉在上行。未对灯的那行谁要撕，先把香灰拍干净。"
+				},
+				{
+					"id": "cs08_hg_2",
+					"speaker": "岁吏",
+					"text": "回执在侧室。谱与祠，两本账。"
+				},
+				{
+					"id": "cs08_hg_3",
+					"speaker": "书记官",
+					"text": "香案不肯收成一行碑名。点过的灯和没点的灯得分开。"
+				},
+				{
+					"id": "cs08_hg_4",
+					"speaker": "苇原·灯影",
+					"text": "香灭了一寸，更鼓才响。响之前先看谁还没对碑。"
+				},
+				{
+					"id": "cs08_hg_5",
+					"speaker": "槐里·青禾",
+					"text": "孩子来抄祖祠，抄未点的灯，别只抄碑名。"
+				},
+				{
+					"id": "cs08_hourglass_x0",
+					"speaker": "旁白",
+					"text": "细线钉住两行。拔线要带木茬，扎手。"
+				},
+				{
+					"id": "cs08_hourglass_x1",
+					"speaker": "老管事",
+					"text": "扎手正好。不疼的「已」，多半是假的。"
+				},
+				{
+					"id": "cs08_hourglass_x2",
+					"speaker": "书记官",
+					"text": "议会摘要爱一行。我们给两行。给完不改。"
+				},
+				{
+					"id": "cs08_hourglass_x3",
+					"speaker": "岁吏",
+					"text": "红脸可以过夜。假绿进匣，我半夜也醒。"
+				},
+				{
+					"id": "cs08_hourglass_x4",
+					"speaker": "苇原·灯影",
+					"text": "更次还在交。交更的人先看下行。"
+				},
+				{
+					"id": "cs08_hourglass_x5",
+					"speaker": "槐里·青禾",
+					"text": "抄未结的孩子，长大才敢问空。"
+				},
+				{
+					"id": "cs08_hourglass_x6",
+					"speaker": "石垒·晚担",
+					"text": "沙漏两行之间留得下一张在碑前发红的脸。"
+				},
+				{
+					"id": "cs08_hourglass_x7",
+					"speaker": "老旗手",
+					"text": "核旗的时候，两行都要在。少一行，角先裂。"
+				},
+				{
+					"id": "cs08_hourglass_x8",
+					"speaker": "旁白",
+					"text": "沙漏沙子慢。慢不是停。慢是还在走。"
+				},
+				{
+					"id": "cs08_hourglass_x9",
+					"speaker": "掌柜",
+					"text": "墙牌比纸硬。硬的东西，撕起来才有账。"
+				},
+				{
+					"id": "cs08_hg_y16",
+					"speaker": "旁白",
+					"text": "沙漏座石缝里渗出碑阴的潮，潮把下行浸深了。"
+				},
+				{
+					"id": "cs08_hg_y17",
+					"speaker": "石垒·晚担",
+					"text": "浸深的那一行经年。浮在沙上的，是催条。"
+				},
+				{
+					"id": "cs08_hg_y18",
+					"speaker": "leader",
+					"text": "我认浸深的下行。浮字不进月份。"
+				},
+				{
+					"id": "cs08_hg_6",
+					"speaker": "leader",
+					"text": "香案两行都留着。去门廊对碑。"
+				},
+				{
+					"id": "cs0801_vis_mv1",
+					"speaker": "旁白",
+					"text": "香灰落进沙漏座缝。灰和沙混在一起。"
+				},
+				{
+					"id": "cs0801_vis_mv2",
+					"speaker": "书记官",
+					"text": "混了要拨开。碑事不跟灰混。"
+				},
+				{
+					"id": "cs0801_vis_mv3",
+					"speaker": "石垒·晚担",
+					"text": "拨开再看月份。"
+				},
+				{
+					"id": "cs0801_vst1",
+					"speaker": "岁吏",
+					"text": "月份从碑阴凉处挪到香案前。挪得轻，像怕惊祖。"
+				},
+				{
+					"id": "cs0801_vst2",
+					"speaker": "书记官",
+					"text": "碑录格要等香稳了再落笔。"
+				},
+				{
+					"id": "cs0801_vst3",
+					"speaker": "leader",
+					"text": "月份挪过。香，我添。"
+				},
+				{
+					"id": "cs0801_vis_mv4",
+					"speaker": "leader",
+					"text": "拨开。去看。"
+				}
+			],
+			"actions": [
+				{
+					"id": "open_hourglass",
+					"label": "去看月份怎么往前走",
+					"do": [
+						{
+							"op": "visit",
+							"path": "res://scenes/hub/hourglass.tscn"
+						}
+					]
+				},
+				{
+					"id": "continue_after_visit",
+					"label": "继续，去门廊",
+					"do": [
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bridge",
+			"title": "门廊",
+			"next": "tavern",
+			"lines": [
+				{
+					"id": "cs08_br_0",
+					"speaker": "旁白",
+					"text": "门廊问谁入祠。墙牌两行一起响。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs08_br_1",
+					"speaker": "石垒·晚担",
+					"text": "祠前木牌比拓纸硬，拓纸又比嘴里的碑名硬。"
+				},
+				{
+					"id": "cs08_br_2",
+					"speaker": "老旗手",
+					"text": "旗角拿来核有没有对过碑，不拿来卖祠名。"
+				},
+				{
+					"id": "cs08_br_3",
+					"speaker": "苇原·灯影",
+					"text": "香案前还空着一个人的位置。位置有人了，再刻碑。"
+				},
+				{
+					"id": "cs08_br_4",
+					"speaker": "槐里·青禾",
+					"text": "谎抄进祖祠藏不住。孩子会问碑座为什么还空。"
+				},
+				{
+					"id": "cs08_br_5",
+					"speaker": "老管事",
+					"text": "祠外的话比香灰走得快。灰还在座上，话已经散了。"
+				},
+				{
+					"id": "cs08_br_6",
+					"speaker": "岁吏",
+					"text": "谱很长。祖祠很静。静是还在对。"
+				},
+				{
+					"id": "cs08_br_7",
+					"speaker": "leader",
+					"text": "牌还在祠阶上。带去酒馆，别在门廊抢碑名。"
+				},
+				{
+					"id": "cs08_bridge_x0",
+					"speaker": "旁白",
+					"text": "门廊风大。风把闲话吹薄，把牌沿吹响。"
+				},
+				{
+					"id": "cs08_bridge_x1",
+					"speaker": "石垒·晚担",
+					"text": "有人想绕牌。绕得过纸，绕不过桩。"
+				},
+				{
+					"id": "cs08_bridge_x2",
+					"speaker": "老旗手",
+					"text": "有人想从碑侧把名字卖掉。旗角钉在祠门闩上，不让过。"
+				},
+				{
+					"id": "cs08_bridge_x3",
+					"speaker": "苇原·灯影",
+					"text": "点灯的人还在廊外。香先续上，碑名等他跪完。"
+				},
+				{
+					"id": "cs08_bridge_x4",
+					"speaker": "槐里·青禾",
+					"text": "孩子问空，比大人喊满更难挡。"
+				},
+				{
+					"id": "cs08_bridge_x5",
+					"speaker": "老管事",
+					"text": "对碑阴不能赶。赶完的闲话隔夜就散，座上的灰还在。"
+				},
+				{
+					"id": "cs08_bridge_x6",
+					"speaker": "岁吏",
+					"text": "谱很长。长的东西，更要静着对。"
+				},
+				{
+					"id": "cs08_bridge_x7",
+					"speaker": "书记官",
+					"text": "门廊记事：谁来问，谁摸过灰，谁短笑。"
+				},
+				{
+					"id": "cs08_bridge_x8",
+					"speaker": "旁白",
+					"text": "墙牌旁有人朝碑座短笑。短笑像试探，不是行礼。"
+				},
+				{
+					"id": "cs08_bridge_x9",
+					"speaker": "掌柜",
+					"text": "短笑飘到祠外就散。灶上的圈只收跪过的人。"
+				},
+				{
+					"id": "cs08_mid_y18",
+					"speaker": "旁白",
+					"text": "门廊门槛上落了一层从祠里带出来的香灰。"
+				},
+				{
+					"id": "cs08_mid_y19",
+					"speaker": "石垒·晚担",
+					"text": "门槛上的灰一脚就没。碑座里的灰，踩不散。"
+				},
+				{
+					"id": "cs08_mid_y20",
+					"speaker": "leader",
+					"text": "踩不散的留下。门槛上的空名不刻。"
+				},
+				{
+					"id": "cs0801_mid_mv1",
+					"speaker": "旁白",
+					"text": "祖祠香灰被过堂风掀起一缕，落在碑座新缝里。"
+				},
+				{
+					"id": "cs0801_mid_mv2",
+					"speaker": "书记官",
+					"text": "新缝要记。记完再问门外声。"
+				},
+				{
+					"id": "cs0801_mid_mv3",
+					"speaker": "石垒·晚担",
+					"text": "门外声杂。杂里有刀鞘响。"
+				},
+				{
+					"id": "cs0801_mid_mv4",
+					"speaker": "槐里·青禾",
+					"text": "刀鞘响，香火也稳不住。"
+				},
+				{
+					"id": "cs0801_mid_mv5",
+					"speaker": "掌柜",
+					"text": "墙牌旁那拨，专等你们拜完再抢。"
+				},
+				{
+					"id": "cs0801_mid_mv6",
+					"speaker": "leader",
+					"text": "拜完不让抢。锋先拦。"
+				},
+				{
+					"id": "cs0801_win1",
+					"speaker": "旁白",
+					"text": "锋定。祖祠香火稳了，墙牌旁那拨抢不着。",
+					"when": {
+						"flag": "cs08_mid_fought"
+					}
+				},
+				{
+					"id": "cs0801_win2",
+					"speaker": "掌柜",
+					"text": "拜完的香，今晚没人敢吹。",
+					"when": {
+						"flag": "cs08_mid_fought"
+					}
+				},
+				{
+					"id": "cs0801_win3",
+					"speaker": "槐里·青禾",
+					"text": "刀鞘不响了。香火，自己稳。",
+					"when": {
+						"flag": "cs08_mid_fought"
+					}
+				},
+				{
+					"id": "cs0801_win4",
+					"speaker": "leader",
+					"text": "锋拦过抢。祖祠，我跪得。",
+					"when": {
+						"flag": "cs08_mid_fought"
+					}
+				},
+				{
+					"id": "cs08_mid_lost",
+					"speaker": "旁白",
+					"text": "锋收回来。祖祠问声还在。墙牌旁那拨，没散。",
+					"when": {
+						"all": [
+							{
+								"flag": "cs08_mid_lost"
+							},
+							{
+								"not_flag": "cs08_mid_fought"
+							}
+						]
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "open_skirmish",
+					"label": "先试一锋",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs08_mid_fought"
+							},
+							{
+								"not_flag": "cs08_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs08_mid_fought"
+							],
+							"lose_flags": [
+								"cs08_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "祖祠上的灯",
+								"outcome": "祖祠口试锋得手——问声旁锋镝先亮",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "retry_skirmish",
+					"label": "再试锋镝",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs08_mid_fought"
+							},
+							{
+								"flag": "cs08_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs08_mid_fought"
+							],
+							"lose_flags": [
+								"cs08_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "祖祠上的灯",
+								"outcome": "祖祠口试锋得手——问声旁锋镝先亮",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "continue_after_battle",
+					"label": "继续，去酒馆",
+					"do": [
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs08_mid_fought"
+									},
+									{
+										"not_flag": "cs08_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs08_01",
+							"choice": "mid_skirmish_skip",
+							"title": "祖祠上的灯",
+							"outcome": "未试锋——锋未出鞘，径去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs08_mid_fought"
+									},
+									{
+										"flag": "cs08_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs08_01",
+							"choice": "mid_skirmish_abort",
+							"title": "祖祠上的灯",
+							"outcome": "试锋未成——伤还在，先去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tavern",
+			"title": "选题",
+			"lines": [
+				{
+					"id": "cs08_tav_0",
+					"speaker": "旁白",
+					"text": "烽火酒馆。碗沿两圈：祖祠并排记，和先钉碑名。",
+					"stage": {
+						"bg": "tavern",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs08_tav_1",
+					"speaker": "掌柜",
+					"text": "碑名拓片占了半面墙。另一半空着，留给还没跪的人。"
+				},
+				{
+					"id": "cs08_tav_2",
+					"speaker": "槐里·青禾",
+					"text": "裁祖祠的人，先把剪刀放下。"
+				},
+				{
+					"id": "cs08_tav_3",
+					"speaker": "老管事",
+					"text": "并排钉。谁撕祖祠抄本，谁结账。"
+				},
+				{
+					"id": "cs08_tav_4",
+					"speaker": "石垒·晚担",
+					"text": "栏是拿来念的，碑是拿来站的。祖祠两样都要。"
+				},
+				{
+					"id": "cs08_tav_5",
+					"speaker": "苇原·灯影",
+					"text": "沙漏还亮。谁买一行结论，带他去摸灰。"
+				},
+				{
+					"id": "cs08_tav_6",
+					"speaker": "旁白",
+					"text": "灰先落在碑名纸上。并排记那张还白。你收白的，还是灰的。"
+				},
+				{
+					"id": "cs08_tavern_x0",
+					"speaker": "旁白",
+					"text": "花生壳轻了。轻的时候，人反而听得见自己的选。"
+				},
+				{
+					"id": "cs08_tavern_x1",
+					"speaker": "掌柜",
+					"text": "圈是选题。选完再喝。空喊的，酒钱加倍。"
+				},
+				{
+					"id": "cs08_tavern_x2",
+					"speaker": "槐里·青禾",
+					"text": "裁祖祠像裁布。布裁错了，鞋也穿不成。"
+				},
+				{
+					"id": "cs08_tavern_x3",
+					"speaker": "老管事",
+					"text": "并排不是怕事。并排是让事看得见。"
+				},
+				{
+					"id": "cs08_tavern_x4",
+					"speaker": "石垒·晚担",
+					"text": "栏能念，桩能站。少一样，厅会晃。"
+				},
+				{
+					"id": "cs08_tavern_x5",
+					"speaker": "苇原·灯影",
+					"text": "买一行结论的人，先去摸灰。摸完再出价。"
+				},
+				{
+					"id": "cs08_tavern_x6",
+					"speaker": "岁吏",
+					"text": "回执不认吆喝。认并排，认灯，认手。"
+				},
+				{
+					"id": "cs08_tavern_x7",
+					"speaker": "书记官",
+					"text": "两张纸都在风里。风不会替你选。"
+				},
+				{
+					"id": "cs08_tavern_x8",
+					"speaker": "老旗手",
+					"text": "旗角听得到圈。圈选偏了，角会先响。"
+				},
+				{
+					"id": "cs08_tavern_y16",
+					"speaker": "旁白",
+					"text": "酒碗外沿凝着碑阴带来的潮，潮把纸边浸深。"
+				},
+				{
+					"id": "cs08_tavern_y17",
+					"speaker": "石垒·晚担",
+					"text": "浸到酒碗上的深，才经得起今夜。浮沫不算。"
+				},
+				{
+					"id": "cs08_tavern_y18",
+					"speaker": "leader",
+					"text": "我认碗沿这圈深。浮名不带回堡。"
+				},
+				{
+					"id": "cs08_tavern_x9",
+					"speaker": "旁白",
+					"text": "你还没开口。没开口的时候，空格最清楚。"
+				},
+				{
+					"id": "cs0801_ret_mv1",
+					"speaker": "旁白",
+					"text": "祖祠香火被说成酒馆熏香。说的人自己先笑岔。"
+				},
+				{
+					"id": "cs0801_ret_mv2",
+					"speaker": "掌柜",
+					"text": "笑岔的别碰碑。"
+				},
+				{
+					"id": "cs0801_ret_mv3",
+					"speaker": "书记官",
+					"text": "碑事回堡记。"
+				},
+				{
+					"id": "cs0801_tvp1",
+					"speaker": "旁白",
+					"text": "祖祠香案的烟味跟进店里，挂板上像蒙了一层灰纱。"
+				},
+				{
+					"id": "cs0801_tvp2",
+					"speaker": "掌柜",
+					"text": "纱要擦。擦完再钉碑名，名才清。"
+				},
+				{
+					"id": "cs0801_tvp3",
+					"speaker": "槐里·青禾",
+					"text": "碑名清了，才配跟香灰一起被记得。"
+				},
+				{
+					"id": "cs0801_tvp4",
+					"speaker": "老管事",
+					"text": "先钉碑名的，常忘擦灰。灰里的名，像假的。"
+				},
+				{
+					"id": "cs0801_tvp5",
+					"speaker": "书记官",
+					"text": "祖祠并排记。记香，也记人。"
+				},
+				{
+					"id": "cs0801_tvp6",
+					"speaker": "leader",
+					"text": "灰我擦。碑名我验。验完再选挂法。"
+				},
+				{
+					"id": "cs0801_tvn1",
+					"speaker": "掌柜",
+					"text": "祖祠那一锋，酒要冷——冷着敬祖。"
+				},
+				{
+					"id": "cs0801_tvn2",
+					"speaker": "石垒·晚担",
+					"text": "抢香的人散了。散了，座才清。"
+				},
+				{
+					"id": "cs0801_tvn3",
+					"speaker": "老旗手",
+					"text": "旗在祠阶下低过。低过，再举不愧。"
+				},
+				{
+					"id": "cs0801_tvn4",
+					"speaker": "leader",
+					"text": "香稳。人齐。祖前，不抢。"
+				},
+				{
+					"id": "cs0801_ret_mv4",
+					"speaker": "leader",
+					"text": "回堡记碑。"
+				}
+			],
+			"actions": [
+				{
+					"id": "keep_stele",
+					"label": "祖祠并排记",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs08_kept_stele",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs08_01",
+							"choice": "keep_stele",
+							"title": "祖祠上的灯",
+							"outcome": "祖祠并排记入谱",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				},
+				{
+					"id": "name_stele",
+					"label": "先钉碑名",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs08_name_stele",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs08_01",
+							"choice": "name_stele",
+							"title": "祖祠上的灯",
+							"outcome": "先钉碑名",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ledger",
+			"title": "入册",
+			"lines": [
+				{
+					"id": "cs08_led_0",
+					"speaker": "旁白",
+					"text": "旗册封面四个字：祖祠上的灯。末页已厚。柜上两把钥匙。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs08_led_par",
+					"speaker": "旁白",
+					"text": "你留下两行。议会仍爱一行。柜子认灯。",
+					"when": {
+						"flag": "cs08_kept_stele"
+					}
+				},
+				{
+					"id": "cs08_led_name",
+					"speaker": "旁白",
+					"text": "你先钉碑名。沙漏仍在亮——月会替你写下行。",
+					"when": {
+						"flag": "cs08_name_stele"
+					}
+				},
+				{
+					"id": "cs08_led_1",
+					"speaker": "老管事",
+					"text": "存档不刊也行。不丢，就是缝。"
+				},
+				{
+					"id": "cs08_led_2",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄过祖祠，才配以后念栏。"
+				},
+				{
+					"id": "cs08_led_3",
+					"speaker": "老旗手",
+					"text": "并排。不要裁。缝在名册与祖祠之间。"
+				},
+				{
+					"id": "cs08_led_4",
+					"speaker": "岁吏",
+					"text": "回执在侧室。谱与祠，两本账。"
+				},
+				{
+					"id": "cs08_led_5",
+					"speaker": "苇原·灯影",
+					"text": "更还在交。下次挂嗣，下行先响。"
+				},
+				{
+					"id": "cs08_ledger_x0",
+					"speaker": "旁白",
+					"text": "钥匙冰手。冰手提醒：柜不是广告栏。"
+				},
+				{
+					"id": "cs08_ledger_x1",
+					"speaker": "老管事",
+					"text": "缝留着。缝不是裂。缝是还能补的地方。"
+				},
+				{
+					"id": "cs08_ledger_x2",
+					"speaker": "槐里·青禾",
+					"text": "抄过未结，才配念栏。这句留给以后。"
+				},
+				{
+					"id": "cs08_ledger_x3",
+					"speaker": "老旗手",
+					"text": "并排入柜。裁掉的半本，我不收。"
+				},
+				{
+					"id": "cs08_ledger_x4",
+					"speaker": "岁吏",
+					"text": "侧室回执还在。还在，红脸就还诚实。"
+				},
+				{
+					"id": "cs08_ledger_x5",
+					"speaker": "苇原·灯影",
+					"text": "下次挂嗣，下行先响。响了再谈名。"
+				},
+				{
+					"id": "cs08_ledger_x6",
+					"speaker": "书记官",
+					"text": "封面四个字压住催条。催条再来，也压得住。"
+				},
+				{
+					"id": "cs08_ledger_x7",
+					"speaker": "石垒·晚担",
+					"text": "桩还在。桩在，名才有地方站。"
+				},
+				{
+					"id": "cs08_ledger_x8",
+					"speaker": "掌柜",
+					"text": "圈可以擦。擦过的墙，比从没画过更值钱。"
+				},
+				{
+					"id": "cs08_ledger_x9",
+					"speaker": "旁白",
+					"text": "灯还在。灯在，这一季就还没把人骗完。"
+				},
+				{
+					"id": "cs08_led_6",
+					"speaker": "leader",
+					"text": "栏与祠，并排。谁来认嗣位，先念完。"
+				},
+				{
+					"id": "cs08_led_y19",
+					"speaker": "旁白",
+					"text": "香灰落在碑座。"
+				},
+				{
+					"id": "cs08_led_y20",
+					"speaker": "石垒·晚担",
+					"text": "灰轻，碑重。"
+				},
+				{
+					"id": "cs08_led_y21",
+					"speaker": "leader",
+					"text": "碑阴并排留。"
+				},
+				{
+					"id": "cs0801_ldg1",
+					"speaker": "岁吏",
+					"text": "碑阴拓纸边的潮干了，碑已写才算。"
+				},
+				{
+					"id": "cs0801_ldg2",
+					"speaker": "书记官",
+					"text": "抢拓的手印，不进碑录。"
+				},
+				{
+					"id": "cs0801_ldg3",
+					"speaker": "老旗手",
+					"text": "旗在祠阶低过。低过的，才配入谱。"
+				},
+				{
+					"id": "cs0801_ldg4",
+					"speaker": "leader",
+					"text": "碑已写还在。两行之间，留给香稳。"
+				},
+				{
+					"id": "cs0801_ldg_end",
+					"speaker": "leader",
+					"text": "香案前，灰旗堡碑录等这笔拓实。"
+				}
+			],
+			"actions": []
+		}
+	]
 }

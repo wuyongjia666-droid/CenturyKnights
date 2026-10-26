@@ -1,1080 +1,1110 @@
 {
-  "id": "cs05_02",
-  "title": "回读上的灯",
-  "legacy_index": 415,
-  "return_scene": "res://scenes/hub/castle_hub.tscn",
-  "source": "docs/content-seasons/season-05/NOVEL.md",
-  "beats": [
-    {
-      "id": "reread",
-      "title": "回读",
-      "lines": [
-        {
-          "id": "cs05b_ct_0",
-          "speaker": "旁白",
-          "text": "嗣位庭。上回的选择已入柜。名册末行还在发光。",
-          "stage": {
-            "card": "一　回读",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs05b_ct_1",
-          "speaker": "书记官",
-          "text": "并排的人说空椅还空。钉名的人说栏已能念。"
-        },
-        {
-          "id": "cs05b_ct_2",
-          "speaker": "leader",
-          "text": "两本都打开。我要听回读。"
-        },
-        {
-          "id": "cs05b_ct_3",
-          "speaker": "旁白",
-          "text": "柜门一响。并排纸与钉名条并排放上长桌。"
-        },
-        {
-          "id": "cs05b_ct_4",
-          "speaker": "老管事",
-          "text": "回读不是翻旧账。是看链有没有骗人。"
-        },
-        {
-          "id": "cs05b_ct_5",
-          "speaker": "岁吏",
-          "text": "谱上的字会老。椅腿上的灰不会替人撒谎。"
-        },
-        {
-          "id": "cs05b_ct_6",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄过空。今天抄回读。抄假的手会抖。"
-        },
-        {
-          "id": "cs05b_ct_7",
-          "speaker": "石垒·晚担",
-          "text": "坐得住才算坐。写得好看不算。"
-        },
-        {
-          "id": "cs05b_ct_8",
-          "speaker": "苇原·灯影",
-          "text": "巡夜只问谁还空着。回读夜也一样。"
-        },
-        {
-          "id": "cs05b_ct_9",
-          "speaker": "老旗手",
-          "text": "旗角给人核。核时把回读本也递过去。"
-        },
-        {
-          "id": "cs05b_ct_10",
-          "speaker": "掌柜",
-          "text": "酒馆墙上那圈还在。圈等回读，不等喊坐满。"
-        },
-        {
-          "id": "cs05b_ct_11",
-          "speaker": "旁白",
-          "text": "厅风比上回小。风小，字更清楚。"
-        },
-        {
-          "id": "cs05b_ct_12",
-          "speaker": "书记官",
-          "text": "急字好念。回读难受。难受就对。"
-        },
-        {
-          "id": "cs05b_ct_13",
-          "speaker": "老管事",
-          "text": "难受说明链还没骗过人。"
-        },
-        {
-          "id": "cs05b_ct_14",
-          "speaker": "岁吏",
-          "text": "链未到的格，绿栏仍不收。"
-        },
-        {
-          "id": "cs05b_ct_15",
-          "speaker": "leader",
-          "text": "柜开了。去看链格。"
-        },
-        {
-          "id": "cs05b_ct_16",
-          "speaker": "旁白",
-          "text": "名册旁多了一本薄册。封皮写「回读」。"
-        },
-        {
-          "id": "cs05b_ct_x17",
-          "speaker": "旁白",
-          "text": "回读不是翻旧账，是把灯芯再拧半寸。"
-        },
-        {
-          "id": "cs05b_ct_x18",
-          "speaker": "槐里·青禾",
-          "text": "薄册边角起毛了。毛边比印章真。"
-        },
-        {
-          "id": "cs05b_ct_x19",
-          "speaker": "leader",
-          "text": "真的才许并排。假的只配单列。"
-        },
-        {
-          "id": "cs05b_ct_17",
-          "speaker": "槐里·青禾",
-          "text": "薄册比名册轻。轻的反而难装。"
-        }
-      ],
-      "next": "chain"
-    },
-    {
-      "id": "chain",
-      "title": "链格",
-      "lines": [
-        {
-          "id": "cs05b_ch_0",
-          "speaker": "旁白",
-          "text": "联姻链摊开。婚仪已记，诞育待对，继承人栏仍空。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs05b_ch_1",
-          "speaker": "老管事",
-          "text": "上回选并排的，链格亮着空。选钉名的，栏上有字、椅仍空。"
-        },
-        {
-          "id": "cs05b_ch_2",
-          "speaker": "旁白",
-          "text": "两行字第二次吵架。回读逼它们对视。"
-        },
-        {
-          "id": "cs05b_ch_3",
-          "speaker": "苇原·灯影",
-          "text": "回读链格时巡防不问谁已经坐下。问哪一环今夜还空。"
-        },
-        {
-          "id": "cs05b_ch_4",
-          "speaker": "槐里·青禾",
-          "text": "链环扣得上椅背才叫满。扣不上的满，是画出来的。"
-        },
-        {
-          "id": "cs05b_ch_5",
-          "speaker": "石垒·晚担",
-          "text": "垫再厚，脚够不着也别先写满。"
-        },
-        {
-          "id": "cs05b_ch_6",
-          "speaker": "岁吏",
-          "text": "年迹进谱可以。落座另算。"
-        },
-        {
-          "id": "cs05b_ch_7",
-          "speaker": "书记官",
-          "text": "议会要听念。回读要听空。"
-        },
-        {
-          "id": "cs05b_ch_8",
-          "speaker": "老旗手",
-          "text": "旗布完整。旗角不绣假名。"
-        },
-        {
-          "id": "cs05b_ch_9",
-          "speaker": "掌柜",
-          "text": "花生壳票还夹在并排纸里。谁撕谁留痕。"
-        },
-        {
-          "id": "cs05b_ch_10",
-          "speaker": "旁白",
-          "text": "侧室回执条压在婚约匣下。匣比嘴硬。"
-        },
-        {
-          "id": "cs05b_ch_11",
-          "speaker": "老管事",
-          "text": "匣上的印对得上联姻回响，对不上抢来的名。"
-        },
-        {
-          "id": "cs05b_ch_12",
-          "speaker": "leader",
-          "text": "链格看见了。去沙漏对两行。"
-        },
-        {
-          "id": "cs05b_ch_13",
-          "speaker": "旁白",
-          "text": "薄册翻到「待对」。墨干了，字还烫。"
-        },
-        {
-          "id": "cs05b_ch_14",
-          "speaker": "槐里·青禾",
-          "text": "烫说明有人刚摸过。摸过就要回读。"
-        },
-        {
-          "id": "cs05b_ch_15",
-          "speaker": "石垒·晚担",
-          "text": "摸亮的名册最怕假亮。"
-        },
-        {
-          "id": "cs05b_ch_17",
-          "speaker": "旁白",
-          "text": "空椅灯还亮。亮着，才敢回读。"
-        },
-        {
-          "id": "cs05b_ch_x17",
-          "speaker": "旁白",
-          "text": "链格空着一格。空格比满格吵。"
-        },
-        {
-          "id": "cs05b_ch_x18",
-          "speaker": "石垒·晚担",
-          "text": "空着，是还给后来人的。"
-        },
-        {
-          "id": "cs05b_ch_x19",
-          "speaker": "苇原·灯影",
-          "text": "交更时我数空格，不数满格。"
-        },
-        {
-          "id": "cs05b_ch_16",
-          "speaker": "苇原·灯影",
-          "text": "交更过庭。空名单短，我反而警惕。"
-        }
-      ],
-      "next": "hourglass"
-    },
-    {
-      "id": "hourglass",
-      "title": "两行",
-      "lines": [
-        {
-          "id": "cs05b_hg_0",
-          "speaker": "旁白",
-          "text": "沙漏厅。上行栏、下行空。回读把两行按住。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs05b_hg_1",
-          "speaker": "老管事",
-          "text": "月份往前走。回读不改月份，只改你敢不敢对看。"
-        },
-        {
-          "id": "cs05b_hg_2",
-          "speaker": "岁吏",
-          "text": "年迹旁多了一行「回读夜」。"
-        },
-        {
-          "id": "cs05b_hg_3",
-          "speaker": "书记官",
-          "text": "能念的字在上行。坐得住的人还在下行等。"
-        },
-        {
-          "id": "cs05b_hg_4",
-          "speaker": "苇原·灯影",
-          "text": "沙漏不催坐。沙漏只记谁空。"
-        },
-        {
-          "id": "cs05b_hg_5",
-          "speaker": "槐里·青禾",
-          "text": "孩子问：回读是不是考试。我说是对账。"
-        },
-        {
-          "id": "cs05b_hg_6",
-          "speaker": "石垒·晚担",
-          "text": "对账比考试狠。考试能抄，账抄不住。"
-        },
-        {
-          "id": "cs05b_hg_7",
-          "speaker": "老旗手",
-          "text": "旗角在风里响。响的是核，不是卖名。"
-        },
-        {
-          "id": "cs05b_hg_8",
-          "speaker": "掌柜",
-          "text": "酒馆圈旁写了「回读后再选」。"
-        },
-        {
-          "id": "cs05b_hg_9",
-          "speaker": "旁白",
-          "text": "两根木条并排。你按住它们，像按住两句半截话。"
-        },
-        {
-          "id": "cs05b_hg_10",
-          "speaker": "leader",
-          "text": "两行都在。去门廊问谁坐。"
-        },
-        {
-          "id": "cs05b_hg_11",
-          "speaker": "老管事",
-          "text": "门廊不问你选过什么。问你今晚还空谁。"
-        },
-        {
-          "id": "cs05b_hg_12",
-          "speaker": "岁吏",
-          "text": "空名单短，催条反而多。"
-        },
-        {
-          "id": "cs05b_hg_13",
-          "speaker": "书记官",
-          "text": "催条爱写「已有嗣」。回读爱写「仍空」。"
-        },
-        {
-          "id": "cs05b_hg_14",
-          "speaker": "旁白",
-          "text": "厅灯照着沙漏腰。腰细的地方，字最清楚。"
-        },
-        {
-          "id": "cs05b_hg_15",
-          "speaker": "槐里·青禾",
-          "text": "清楚才像椅。糊了就像没回读。"
-        },
-        {
-          "id": "cs05b_hg_16",
-          "speaker": "石垒·晚担",
-          "text": "我不糊。脚够不着就说够不着。"
-        },
-        {
-          "id": "cs05b_hg_x17",
-          "speaker": "旁白",
-          "text": "沙漏颈细。细处最容易堵假沙。"
-        },
-        {
-          "id": "cs05b_hg_x18",
-          "speaker": "leader",
-          "text": "去沙漏。看它漏真漏假。"
-        },
-        {
-          "id": "cs05b_hg_x19",
-          "speaker": "苇原·灯影",
-          "text": "漏真的沙，声也轻。"
-        },
-        {
-          "id": "cs05b_hg_17",
-          "speaker": "苇原·灯影",
-          "text": "带牌去。牌上写回读，不写急。"
-        },
-        {
-          "id": "cs0502_vis_mv1",
-          "speaker": "旁白",
-          "text": "回读案边，沙漏沙少半指。有人偷过？"
-        },
-        {
-          "id": "cs0502_vis_mv2",
-          "speaker": "岁吏",
-          "text": "少半指也要问。问完再走。"
-        },
-        {
-          "id": "cs0502_vis_mv3",
-          "speaker": "老旗手",
-          "text": "问清楚，椅才不冤。"
-        },
-        {
-          "id": "cs0502_vst1",
-          "speaker": "岁吏",
-          "text": "月份从链环缝里转过一圈。圈满，月份才算走完。"
-        },
-        {
-          "id": "cs0502_vst2",
-          "speaker": "书记官",
-          "text": "链录格要等扣死再写。"
-        },
-        {
-          "id": "cs0502_vst3",
-          "speaker": "leader",
-          "text": "月份转过。链，我扣。"
-        },
-        {
-          "id": "cs0502_vis_mv4",
-          "speaker": "leader",
-          "text": "问月份。去。"
-        }
-      ],
-      "next": "bridge",
-      "actions": [
-        {
-          "id": "open_hourglass",
-          "label": "去看月份怎么往前走",
-          "do": [
-            {
-              "op": "visit",
-              "path": "res://scenes/hub/hourglass.tscn"
-            }
-          ]
-        },
-        {
-          "id": "continue_after_visit",
-          "label": "继续，去门廊",
-          "do": [
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "bridge",
-      "title": "门廊",
-      "lines": [
-        {
-          "id": "cs05b_br_0",
-          "speaker": "旁白",
-          "text": "门廊风大。牌上「回读」两字被吹得发白。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs05b_br_1",
-          "speaker": "石垒·晚担",
-          "text": "谁坐？先看牌，再看脚。"
-        },
-        {
-          "id": "cs05b_br_2",
-          "speaker": "苇原·灯影",
-          "text": "巡防交更。空椅还在名单上。"
-        },
-        {
-          "id": "cs05b_br_3",
-          "speaker": "旁白",
-          "text": "有人来劝：栏已能念，何必回读。"
-        },
-        {
-          "id": "cs05b_br_4",
-          "speaker": "leader",
-          "text": "能念不等于能坐。回读就是问坐。"
-        },
-        {
-          "id": "cs05b_br_5",
-          "speaker": "老旗手",
-          "text": "旗角给人核。核完再谈催坐。"
-        },
-        {
-          "id": "cs05b_br_6",
-          "speaker": "槐里·青禾",
-          "text": "劝钉名的札又来了。札比人急。"
-        },
-        {
-          "id": "cs05b_br_7",
-          "speaker": "岁吏",
-          "text": "急字过夜会褪。空椅过夜更清楚。"
-        },
-        {
-          "id": "cs05b_br_8",
-          "speaker": "书记官",
-          "text": "议会廊外有人等听念。我们先听空。"
-        },
-        {
-          "id": "cs05b_br_9",
-          "speaker": "老管事",
-          "text": "带牌去酒馆。回读圈还在墙上。"
-        },
-        {
-          "id": "cs05b_br_10",
-          "speaker": "掌柜",
-          "text": "圈等选题。回读后的题更沉。"
-        },
-        {
-          "id": "cs05b_br_11",
-          "speaker": "旁白",
-          "text": "桥木响。响的是鞋，不是假名。"
-        },
-        {
-          "id": "cs05b_br_12",
-          "speaker": "石垒·晚担",
-          "text": "干净靴也留痕。痕留给回读的人。"
-        },
-        {
-          "id": "cs05b_br_13",
-          "speaker": "苇原·灯影",
-          "text": "锋镝先试一试。试完再去回读圈前。"
-        },
-        {
-          "id": "cs05b_br_14",
-          "speaker": "leader",
-          "text": "门廊问过了。去酒馆看回读。"
-        },
-        {
-          "id": "cs05b_br_15",
-          "speaker": "旁白",
-          "text": "牌收回来。回读两字没有被风吹掉。"
-        },
-        {
-          "id": "cs05b_br_16",
-          "speaker": "槐里·青禾",
-          "text": "吹不掉才像回读。"
-        },
-        {
-          "id": "cs05b_br_17",
-          "speaker": "老旗手",
-          "text": "旗布没破。破的是催坐条。"
-        },
-        {
-          "id": "cs05b_br_x19",
-          "speaker": "旁白",
-          "text": "门廊风斜。斜风专吹站不稳的人。"
-        },
-        {
-          "id": "cs05b_br_x20",
-          "speaker": "岁吏",
-          "text": "试锋可以输。输了把旗收好。"
-        },
-        {
-          "id": "cs05b_br_x21",
-          "speaker": "leader",
-          "text": "收好旗，才有下一场。"
-        },
-        {
-          "id": "cs05b_br_18",
-          "speaker": "岁吏",
-          "text": "催条可以撕。回读本撕不得。"
-        },
-        {
-          "id": "cs0502_mid_mv1",
-          "speaker": "旁白",
-          "text": "回读纸被灯烤得发脆。一折就响，像干柴。"
-        },
-        {
-          "id": "cs0502_mid_mv2",
-          "speaker": "岁吏",
-          "text": "脆纸怕撕。更怕有人趁脆动手。"
-        },
-        {
-          "id": "cs0502_mid_mv3",
-          "speaker": "石垒·晚担",
-          "text": "动手的在椅影里。影里还有刀尖。"
-        },
-        {
-          "id": "cs0502_mid_mv4",
-          "speaker": "苇原·灯影",
-          "text": "刀尖对纸，纸会哭。对锋，锋会答。"
-        },
-        {
-          "id": "cs0502_mid_mv5",
-          "speaker": "老旗手",
-          "text": "答要用真劲。假声回读听得见。"
-        },
-        {
-          "id": "cs0502_mid_mv6",
-          "speaker": "leader",
-          "text": "真劲试锋。回读才站得住。"
-        },
-        {
-          "id": "cs0502_win1",
-          "speaker": "旁白",
-          "text": "锋再定。链环扣死，夺链那拨退到阶下。",
-          "when": {
-            "flag": "cs05_mid_fought"
-          }
-        },
-        {
-          "id": "cs0502_win2",
-          "speaker": "掌柜",
-          "text": "链要扣。扣死，才不像挂着玩的。",
-          "when": {
-            "flag": "cs05_mid_fought"
-          }
-        },
-        {
-          "id": "cs0502_win3",
-          "speaker": "槐里·青禾",
-          "text": "环声一下实，假环就响不起来。",
-          "when": {
-            "flag": "cs05_mid_fought"
-          }
-        },
-        {
-          "id": "cs0502_win4",
-          "speaker": "leader",
-          "text": "锋护过链。扣，我锁得。",
-          "when": {
-            "flag": "cs05_mid_fought"
-          }
-        },
-        {
-          "id": "cs05b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。回读纸还钉着。椅旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs05_mid_lost"
-              },
-              {
-                "not_flag": "cs05_mid_fought"
-              }
-            ]
-          }
-        }
-      ],
-      "next": "tavern",
-      "actions": [
-        {
-          "id": "open_skirmish",
-          "label": "先试一锋",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs05_mid_fought"
-              },
-              {
-                "not_flag": "cs05_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs05_mid_fought"
-              ],
-              "lose_flags": [
-                "cs05_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "回读上的灯",
-                "outcome": "回读旁试锋得手——锋镝压下，并排纸可续",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "retry_skirmish",
-          "label": "再试锋镝",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs05_mid_fought"
-              },
-              {
-                "flag": "cs05_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs05_mid_fought"
-              ],
-              "lose_flags": [
-                "cs05_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "回读上的灯",
-                "outcome": "回读旁试锋得手——锋镝压下，并排纸可续",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "continue_after_battle",
-          "label": "继续，去酒馆",
-          "do": [
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs05_mid_fought"
-                  },
-                  {
-                    "not_flag": "cs05_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs05_02",
-              "choice": "mid_skirmish_skip",
-              "title": "回读上的灯",
-              "outcome": "未试锋——锋未出鞘，径去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs05_mid_fought"
-                  },
-                  {
-                    "flag": "cs05_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs05_02",
-              "choice": "mid_skirmish_abort",
-              "title": "回读上的灯",
-              "outcome": "试锋未成——伤还在，先去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tavern",
-      "title": "选题",
-      "lines": [
-        {
-          "id": "cs05b_tv_0",
-          "speaker": "旁白",
-          "text": "酒馆板上钉着回读摘抄。空与栏并排。",
-          "stage": {
-            "bg": "tavern",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs05b_tv_1",
-          "speaker": "掌柜",
-          "text": "不是我要钉回读。有人出酒钱。挂不挂你们裁。"
-        },
-        {
-          "id": "cs05b_tv_2",
-          "speaker": "leader",
-          "text": "挂回读。挂三天。谁加字，我认指甲。"
-        },
-        {
-          "id": "cs05b_tv_3",
-          "speaker": "石垒·晚担",
-          "text": "挂着才像回读账。藏起来才像骗。"
-        },
-        {
-          "id": "cs05b_tv_4",
-          "speaker": "槐里·青禾",
-          "text": "孩子来抄回读板。抄到空字会停一下。"
-        },
-        {
-          "id": "cs05b_tv_5",
-          "speaker": "苇原·灯影",
-          "text": "停一下好。不停着抄栏最危险。"
-        },
-        {
-          "id": "cs05b_tv_6",
-          "speaker": "老管事",
-          "text": "回读后的选择：链仍并排，或栏优先催坐。"
-        },
-        {
-          "id": "cs05b_tv_7",
-          "speaker": "岁吏",
-          "text": "并排是认空。催坐是认急。"
-        },
-        {
-          "id": "cs05b_tv_8",
-          "speaker": "书记官",
-          "text": "急好念。空椅难受。难受就对。"
-        },
-        {
-          "id": "cs05b_tv_9",
-          "speaker": "老旗手",
-          "text": "旗角在门外。核的人能看见回读板。"
-        },
-        {
-          "id": "cs05b_tv_10",
-          "speaker": "旁白",
-          "text": "花生壳圈还在。圈心写「回读选题」。"
-        },
-        {
-          "id": "cs05b_tv_11",
-          "speaker": "掌柜",
-          "text": "回读圈心比酒醒。醒着才选得动。"
-        },
-        {
-          "id": "cs05b_tv_12",
-          "speaker": "leader",
-          "text": "栏与空都看见了。选。"
-        },
-        {
-          "id": "cs05b_tv_13",
-          "speaker": "石垒·晚担",
-          "text": "我站回读圈外。站着也算见证。"
-        },
-        {
-          "id": "cs05b_tv_14",
-          "speaker": "槐里·青禾",
-          "text": "见证要写进薄册。不写等于没来。"
-        },
-        {
-          "id": "cs05b_tv_15",
-          "speaker": "苇原·灯影",
-          "text": "薄册比嘴硬。嘴会改口。"
-        },
-        {
-          "id": "cs05b_tv_16",
-          "speaker": "旁白",
-          "text": "回读板前安静。安静里只剩两道选择题。"
-        },
-        {
-          "id": "cs05b_tv_x17",
-          "speaker": "旁白",
-          "text": "酒馆桌湿。湿痕像没写完的句。"
-        },
-        {
-          "id": "cs05b_tv_x18",
-          "speaker": "老管事",
-          "text": "选题别赶。赶的题会反咬。"
-        },
-        {
-          "id": "cs05b_tv_x19",
-          "speaker": "leader",
-          "text": "我选慢的那条。"
-        },
-        {
-          "id": "cs05b_tv_17",
-          "speaker": "老管事",
-          "text": "选完入柜。回读柜门会响。"
-        },
-        {
-          "id": "cs0502_ret_mv1",
-          "speaker": "旁白",
-          "text": "回读段子讲到椅脚，有人假装去上茅房。"
-        },
-        {
-          "id": "cs0502_ret_mv2",
-          "speaker": "掌柜",
-          "text": "躲茅房躲不掉板。"
-        },
-        {
-          "id": "cs0502_ret_mv3",
-          "speaker": "岁吏",
-          "text": "板挂完回堡。"
-        },
-        {
-          "id": "cs0502_tvn1",
-          "speaker": "掌柜",
-          "text": "护链那一锋，酒里有铁味。"
-        },
-        {
-          "id": "cs0502_tvn2",
-          "speaker": "石垒·晚担",
-          "text": "阶下那拨退了。退了才碰杯。"
-        },
-        {
-          "id": "cs0502_tvn3",
-          "speaker": "听回",
-          "text": "环声实的事，酒桌上传开了。"
-        },
-        {
-          "id": "cs0502_tvn4",
-          "speaker": "leader",
-          "text": "链死。人齐。铁味，我认。"
-        },
-        {
-          "id": "cs0502_ret_mv4",
-          "speaker": "leader",
-          "text": "回堡续回读。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "keep_reread",
-          "label": "链仍并排",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs05_reread_parallel",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs05_02",
-              "choice": "keep_reread",
-              "title": "回读上的灯",
-              "outcome": "回读后链仍并排记入谱",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        },
-        {
-          "id": "push_seat",
-          "label": "栏优先催坐",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs05_reread_push",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs05_02",
-              "choice": "push_seat",
-              "title": "回读上的灯",
-              "outcome": "回读后栏优先催坐",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ledger",
-      "title": "入册",
-      "lines": [
-        {
-          "id": "cs05b_ld_0",
-          "speaker": "旁白",
-          "text": "西阁。回读本与名册并排入柜。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs05b_ld_1",
-          "speaker": "旁白",
-          "text": "你留链并排。空椅仍空，栏不骗人。"
-        },
-        {
-          "id": "cs05b_ld_2",
-          "speaker": "旁白",
-          "text": "你催栏优先。字能念，沙漏下行仍亮着空。"
-        },
-        {
-          "id": "cs05b_ld_3",
-          "speaker": "老管事",
-          "text": "柜门一响。四字落款：回读已记。"
-        },
-        {
-          "id": "cs05b_ld_4",
-          "speaker": "岁吏",
-          "text": "年迹旁补回读一行。不改前季。"
-        },
-        {
-          "id": "cs05b_ld_5",
-          "speaker": "书记官",
-          "text": "议会要听念，就念回读本。"
-        },
-        {
-          "id": "cs05b_ld_6",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄完空椅。说手不抖了。"
-        },
-        {
-          "id": "cs05b_ld_7",
-          "speaker": "石垒·晚担",
-          "text": "不抖说明没装坐。"
-        },
-        {
-          "id": "cs05b_ld_8",
-          "speaker": "苇原·灯影",
-          "text": "巡夜名单还短。短着也好过假坐。"
-        },
-        {
-          "id": "cs05b_ld_9",
-          "speaker": "老旗手",
-          "text": "旗角给人核。核完空椅旗还在。"
-        },
-        {
-          "id": "cs05b_ld_10",
-          "speaker": "掌柜",
-          "text": "回读圈可以擦。柜里回读本擦不掉。"
-        },
-        {
-          "id": "cs05b_ld_11",
-          "speaker": "leader",
-          "text": "回读记了。灯还亮。"
-        },
-        {
-          "id": "cs05b_ld_12",
-          "speaker": "旁白",
-          "text": "空椅灯照着椅腿灰。灰还在，人还诚实。"
-        },
-        {
-          "id": "cs05b_ld_13",
-          "speaker": "老管事",
-          "text": "诚实比能念的栏贵。"
-        },
-        {
-          "id": "cs05b_ld_14",
-          "speaker": "岁吏",
-          "text": "贵的账才值得回读。"
-        },
-        {
-          "id": "cs05b_ld_15",
-          "speaker": "书记官",
-          "text": "嗓子轻一点。轻着念回读，字更真。"
-        },
-        {
-          "id": "cs05b_ld_16",
-          "speaker": "旁白",
-          "text": "柜锁落下。回读第二可玩章收束。"
-        },
-        {
-          "id": "cs05b_ld_17",
-          "speaker": "槐里·青禾",
-          "text": "收束不是结束。是敢把空椅留下。"
-        },
-        {
-          "id": "cs05b_ld_18",
-          "speaker": "石垒·晚担",
-          "text": "留下空，才有人坐得住。"
-        },
-        {
-          "id": "cs05b_ld_x19",
-          "speaker": "旁白",
-          "text": "账册末行空着。空行等一句硬话。"
-        },
-        {
-          "id": "cs05b_ld_x20",
-          "speaker": "槐里·青禾",
-          "text": "硬话不长。长了就软。"
-        },
-        {
-          "id": "cs05b_ld_x21",
-          "speaker": "leader",
-          "text": "并排留真。今日记下。"
-        },
-        {
-          "id": "cs0502_ldg1",
-          "speaker": "岁吏",
-          "text": "链环扣死与回读并排，假环响不进册。"
-        },
-        {
-          "id": "cs0502_ldg2",
-          "speaker": "书记官",
-          "text": "夺链的阶下影，不进回读。"
-        },
-        {
-          "id": "cs0502_ldg3",
-          "speaker": "槐里·青禾",
-          "text": "环声一下实，回读才像有主。"
-        },
-        {
-          "id": "cs0502_ldg4",
-          "speaker": "leader",
-          "text": "链死并排。灯不灭，回读在柜。"
-        },
-        {
-          "id": "cs0502_ldg_end",
-          "speaker": "leader",
-          "text": "环扣旁，灰旗堡回读柜等真链。"
-        }
-      ],
-      "actions": []
-    }
-  ],
-  "title_en": "The Lamp on the Reread"
+	"id": "cs05_02",
+	"title": "回读上的灯",
+	"legacy_index": 415,
+	"return_scene": "res://scenes/hub/castle_hub.tscn",
+	"source": "docs/content-seasons/season-05/NOVEL.md",
+	"beats": [
+		{
+			"id": "reread",
+			"title": "回读",
+			"lines": [
+				{
+					"id": "cs05b_ct_0",
+					"speaker": "旁白",
+					"text": "嗣位庭。上回的选择已入柜。名册末行还在发光。",
+					"stage": {
+						"card": "一　回读",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs05b_ct_1",
+					"speaker": "书记官",
+					"text": "并排的人说空椅还空。钉名的人说栏已能念。"
+				},
+				{
+					"id": "cs05b_ct_2",
+					"speaker": "leader",
+					"text": "两本都打开。我要听回读。"
+				},
+				{
+					"id": "cs05b_ct_3",
+					"speaker": "旁白",
+					"text": "柜门一响。并排纸与钉名条并排放上长桌。"
+				},
+				{
+					"id": "cs05b_ct_4",
+					"speaker": "老管事",
+					"text": "回读不是翻旧账。是看链有没有骗人。"
+				},
+				{
+					"id": "cs05b_ct_5",
+					"speaker": "岁吏",
+					"text": "谱上的字会老。椅腿上的灰不会替人撒谎。"
+				},
+				{
+					"id": "cs05b_ct_6",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄过空。今天抄回读。抄假的手会抖。"
+				},
+				{
+					"id": "cs05b_ct_7",
+					"speaker": "石垒·晚担",
+					"text": "坐得住才算坐。写得好看不算。"
+				},
+				{
+					"id": "cs05b_ct_8",
+					"speaker": "苇原·灯影",
+					"text": "巡夜只问谁还空着。回读夜也一样。"
+				},
+				{
+					"id": "cs05b_ct_9",
+					"speaker": "老旗手",
+					"text": "旗角给人核。核时把回读本也递过去。"
+				},
+				{
+					"id": "cs05b_ct_10",
+					"speaker": "掌柜",
+					"text": "酒馆墙上那圈还在。圈等回读，不等喊坐满。"
+				},
+				{
+					"id": "cs05b_ct_11",
+					"speaker": "旁白",
+					"text": "厅风比上回小。风小，字更清楚。"
+				},
+				{
+					"id": "cs05b_ct_12",
+					"speaker": "书记官",
+					"text": "急字好念。回读难受。难受就对。"
+				},
+				{
+					"id": "cs05b_ct_13",
+					"speaker": "老管事",
+					"text": "难受说明链还没骗过人。"
+				},
+				{
+					"id": "cs05b_ct_14",
+					"speaker": "岁吏",
+					"text": "链未到的格，绿栏仍不收。"
+				},
+				{
+					"id": "cs05b_ct_15",
+					"speaker": "leader",
+					"text": "柜开了。去看链格。"
+				},
+				{
+					"id": "cs05b_ct_16",
+					"speaker": "旁白",
+					"text": "名册旁多了一本薄册。封皮写「回读」。"
+				},
+				{
+					"id": "cs05b_ct_x17",
+					"speaker": "旁白",
+					"text": "回读不是翻旧账，是把灯芯再拧半寸。"
+				},
+				{
+					"id": "cs05b_ct_x18",
+					"speaker": "槐里·青禾",
+					"text": "薄册边角起毛了。毛边比印章真。"
+				},
+				{
+					"id": "cs05b_ct_x19",
+					"speaker": "leader",
+					"text": "真的才许并排。假的只配单列。"
+				},
+				{
+					"id": "cs05b_ct_17",
+					"speaker": "槐里·青禾",
+					"text": "薄册比名册轻。轻的反而难装。"
+				}
+			],
+			"next": "chain"
+		},
+		{
+			"id": "chain",
+			"title": "链格",
+			"lines": [
+				{
+					"id": "cs05b_ch_0",
+					"speaker": "旁白",
+					"text": "联姻链摊开。婚仪已记，诞育待对，继承人栏仍空。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs05b_ch_1",
+					"speaker": "老管事",
+					"text": "上回选并排的，链格亮着空。选钉名的，栏上有字、椅仍空。"
+				},
+				{
+					"id": "cs05b_ch_2",
+					"speaker": "旁白",
+					"text": "两行字第二次吵架。回读逼它们对视。"
+				},
+				{
+					"id": "cs05b_ch_3",
+					"speaker": "苇原·灯影",
+					"text": "回读链格时巡防不问谁已经坐下。问哪一环今夜还空。"
+				},
+				{
+					"id": "cs05b_ch_4",
+					"speaker": "槐里·青禾",
+					"text": "链环扣得上椅背才叫满。扣不上的满，是画出来的。"
+				},
+				{
+					"id": "cs05b_ch_5",
+					"speaker": "石垒·晚担",
+					"text": "垫再厚，脚够不着也别先写满。"
+				},
+				{
+					"id": "cs05b_ch_6",
+					"speaker": "岁吏",
+					"text": "年迹进谱可以。落座另算。"
+				},
+				{
+					"id": "cs05b_ch_7",
+					"speaker": "书记官",
+					"text": "议会要听念。回读要听空。"
+				},
+				{
+					"id": "cs05b_ch_8",
+					"speaker": "老旗手",
+					"text": "旗布完整。旗角不绣假名。"
+				},
+				{
+					"id": "cs05b_ch_9",
+					"speaker": "掌柜",
+					"text": "花生壳票还夹在并排纸里。谁撕谁留痕。"
+				},
+				{
+					"id": "cs05b_ch_10",
+					"speaker": "旁白",
+					"text": "侧室回执条压在婚约匣下。匣比嘴硬。"
+				},
+				{
+					"id": "cs05b_ch_11",
+					"speaker": "老管事",
+					"text": "匣上的印对得上联姻回响，对不上抢来的名。"
+				},
+				{
+					"id": "cs05b_ch_12",
+					"speaker": "leader",
+					"text": "链格看见了。去沙漏对两行。"
+				},
+				{
+					"id": "cs05b_ch_13",
+					"speaker": "旁白",
+					"text": "薄册翻到「待对」。墨干了，字还烫。"
+				},
+				{
+					"id": "cs05b_ch_14",
+					"speaker": "槐里·青禾",
+					"text": "烫说明有人刚摸过。摸过就要回读。"
+				},
+				{
+					"id": "cs05b_ch_15",
+					"speaker": "石垒·晚担",
+					"text": "摸亮的名册最怕假亮。"
+				},
+				{
+					"id": "cs05b_ch_17",
+					"speaker": "旁白",
+					"text": "空椅灯还亮。亮着，才敢回读。"
+				},
+				{
+					"id": "cs05b_ch_x17",
+					"speaker": "旁白",
+					"text": "链格空着一格。空格比满格吵。"
+				},
+				{
+					"id": "cs05b_ch_x18",
+					"speaker": "石垒·晚担",
+					"text": "空着，是还给后来人的。"
+				},
+				{
+					"id": "cs05b_ch_x19",
+					"speaker": "苇原·灯影",
+					"text": "交更时我数空格，不数满格。"
+				},
+				{
+					"id": "cs05b_ch_16",
+					"speaker": "苇原·灯影",
+					"text": "交更过庭。空名单短，我反而警惕。"
+				}
+			],
+			"next": "hourglass"
+		},
+		{
+			"id": "hourglass",
+			"title": "两行",
+			"lines": [
+				{
+					"id": "cs05b_hg_0",
+					"speaker": "旁白",
+					"text": "沙漏厅。上行栏、下行空。回读把两行按住。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs05b_hg_1",
+					"speaker": "老管事",
+					"text": "月份往前走。回读不改月份，只改你敢不敢对看。"
+				},
+				{
+					"id": "cs05b_hg_2",
+					"speaker": "岁吏",
+					"text": "年迹旁多了一行「回读夜」。"
+				},
+				{
+					"id": "cs05b_hg_3",
+					"speaker": "书记官",
+					"text": "能念的字在上行。坐得住的人还在下行等。"
+				},
+				{
+					"id": "cs05b_hg_4",
+					"speaker": "苇原·灯影",
+					"text": "沙漏不催坐。沙漏只记谁空。"
+				},
+				{
+					"id": "cs05b_hg_5",
+					"speaker": "槐里·青禾",
+					"text": "孩子问：回读是不是考试。我说是对账。"
+				},
+				{
+					"id": "cs05b_hg_6",
+					"speaker": "石垒·晚担",
+					"text": "对账比考试狠。考试能抄，账抄不住。"
+				},
+				{
+					"id": "cs05b_hg_7",
+					"speaker": "老旗手",
+					"text": "旗角在风里响。响的是核，不是卖名。"
+				},
+				{
+					"id": "cs05b_hg_8",
+					"speaker": "掌柜",
+					"text": "酒馆圈旁写了「回读后再选」。"
+				},
+				{
+					"id": "cs05b_hg_9",
+					"speaker": "旁白",
+					"text": "两根木条并排。你按住它们，像按住两句半截话。"
+				},
+				{
+					"id": "cs05b_hg_10",
+					"speaker": "leader",
+					"text": "两行都在。去门廊问谁坐。"
+				},
+				{
+					"id": "cs05b_hg_11",
+					"speaker": "老管事",
+					"text": "门廊不问你选过什么。问你今晚还空谁。"
+				},
+				{
+					"id": "cs05b_hg_12",
+					"speaker": "岁吏",
+					"text": "空名单短，催条反而多。"
+				},
+				{
+					"id": "cs05b_hg_13",
+					"speaker": "书记官",
+					"text": "催条爱写「已有嗣」。回读爱写「仍空」。"
+				},
+				{
+					"id": "cs05b_hg_14",
+					"speaker": "旁白",
+					"text": "厅灯照着沙漏腰。腰细的地方，字最清楚。"
+				},
+				{
+					"id": "cs05b_hg_15",
+					"speaker": "槐里·青禾",
+					"text": "清楚才像椅。糊了就像没回读。"
+				},
+				{
+					"id": "cs05b_hg_16",
+					"speaker": "石垒·晚担",
+					"text": "我不糊。脚够不着就说够不着。"
+				},
+				{
+					"id": "cs05b_hg_x17",
+					"speaker": "旁白",
+					"text": "沙漏颈细。细处最容易堵假沙。"
+				},
+				{
+					"id": "cs05b_hg_x18",
+					"speaker": "leader",
+					"text": "去沙漏。看它漏真漏假。"
+				},
+				{
+					"id": "cs05b_hg_x19",
+					"speaker": "苇原·灯影",
+					"text": "漏真的沙，声也轻。"
+				},
+				{
+					"id": "cs05b_hg_17",
+					"speaker": "苇原·灯影",
+					"text": "带牌去。牌上写回读，不写急。"
+				},
+				{
+					"id": "cs0502_vis_mv1",
+					"speaker": "旁白",
+					"text": "回读案边，沙漏沙少半指。有人偷过？"
+				},
+				{
+					"id": "cs0502_vis_mv2",
+					"speaker": "岁吏",
+					"text": "少半指也要问。问完再走。"
+				},
+				{
+					"id": "cs0502_vis_mv3",
+					"speaker": "老旗手",
+					"text": "问清楚，椅才不冤。"
+				},
+				{
+					"id": "cs0502_vst1",
+					"speaker": "岁吏",
+					"text": "月份从链环缝里转过一圈。圈满，月份才算走完。"
+				},
+				{
+					"id": "cs0502_vst2",
+					"speaker": "书记官",
+					"text": "链录格要等扣死再写。"
+				},
+				{
+					"id": "cs0502_vst3",
+					"speaker": "leader",
+					"text": "月份转过。链，我扣。"
+				},
+				{
+					"id": "cs0502_vis_mv4",
+					"speaker": "leader",
+					"text": "问月份。去。"
+				}
+			],
+			"next": "bridge",
+			"actions": [
+				{
+					"id": "open_hourglass",
+					"label": "去看月份怎么往前走",
+					"do": [
+						{
+							"op": "visit",
+							"path": "res://scenes/hub/hourglass.tscn"
+						}
+					]
+				},
+				{
+					"id": "continue_after_visit",
+					"label": "继续，去门廊",
+					"do": [
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bridge",
+			"title": "门廊",
+			"lines": [
+				{
+					"id": "cs05b_br_0",
+					"speaker": "旁白",
+					"text": "门廊风大。牌上「回读」两字被吹得发白。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs05b_br_1",
+					"speaker": "石垒·晚担",
+					"text": "谁坐？先看牌，再看脚。"
+				},
+				{
+					"id": "cs05b_br_2",
+					"speaker": "苇原·灯影",
+					"text": "巡防交更。空椅还在名单上。"
+				},
+				{
+					"id": "cs05b_br_3",
+					"speaker": "旁白",
+					"text": "有人来劝：栏已能念，何必回读。"
+				},
+				{
+					"id": "cs05b_br_4",
+					"speaker": "leader",
+					"text": "能念不等于能坐。回读就是问坐。"
+				},
+				{
+					"id": "cs05b_br_5",
+					"speaker": "老旗手",
+					"text": "旗角给人核。核完再谈催坐。"
+				},
+				{
+					"id": "cs05b_br_6",
+					"speaker": "槐里·青禾",
+					"text": "劝钉名的札又来了。札比人急。"
+				},
+				{
+					"id": "cs05b_br_7",
+					"speaker": "岁吏",
+					"text": "急字过夜会褪。空椅过夜更清楚。"
+				},
+				{
+					"id": "cs05b_br_8",
+					"speaker": "书记官",
+					"text": "议会廊外有人等听念。我们先听空。"
+				},
+				{
+					"id": "cs05b_br_9",
+					"speaker": "老管事",
+					"text": "带牌去酒馆。回读圈还在墙上。"
+				},
+				{
+					"id": "cs05b_br_10",
+					"speaker": "掌柜",
+					"text": "圈等选题。回读后的题更沉。"
+				},
+				{
+					"id": "cs05b_br_11",
+					"speaker": "旁白",
+					"text": "桥木响。响的是鞋，不是假名。"
+				},
+				{
+					"id": "cs05b_br_12",
+					"speaker": "石垒·晚担",
+					"text": "干净靴也留痕。痕留给回读的人。"
+				},
+				{
+					"id": "cs05b_br_13",
+					"speaker": "苇原·灯影",
+					"text": "锋镝先试一试。试完再去回读圈前。"
+				},
+				{
+					"id": "cs05b_br_14",
+					"speaker": "leader",
+					"text": "门廊问过了。去酒馆看回读。"
+				},
+				{
+					"id": "cs05b_br_15",
+					"speaker": "旁白",
+					"text": "牌收回来。回读两字没有被风吹掉。"
+				},
+				{
+					"id": "cs05b_br_16",
+					"speaker": "槐里·青禾",
+					"text": "吹不掉才像回读。"
+				},
+				{
+					"id": "cs05b_br_17",
+					"speaker": "老旗手",
+					"text": "旗布没破。破的是催坐条。"
+				},
+				{
+					"id": "cs05b_br_x19",
+					"speaker": "旁白",
+					"text": "门廊风斜。斜风专吹站不稳的人。"
+				},
+				{
+					"id": "cs05b_br_x20",
+					"speaker": "岁吏",
+					"text": "试锋可以输。输了把旗收好。"
+				},
+				{
+					"id": "cs05b_br_x21",
+					"speaker": "leader",
+					"text": "收好旗，才有下一场。"
+				},
+				{
+					"id": "cs05b_br_18",
+					"speaker": "岁吏",
+					"text": "催条可以撕。回读本撕不得。"
+				},
+				{
+					"id": "cs0502_mid_mv1",
+					"speaker": "旁白",
+					"text": "回读纸被灯烤得发脆。一折就响，像干柴。"
+				},
+				{
+					"id": "cs0502_mid_mv2",
+					"speaker": "岁吏",
+					"text": "脆纸怕撕。更怕有人趁脆动手。"
+				},
+				{
+					"id": "cs0502_mid_mv3",
+					"speaker": "石垒·晚担",
+					"text": "动手的在椅影里。影里还有刀尖。"
+				},
+				{
+					"id": "cs0502_mid_mv4",
+					"speaker": "苇原·灯影",
+					"text": "刀尖对纸，纸会哭。对锋，锋会答。"
+				},
+				{
+					"id": "cs0502_mid_mv5",
+					"speaker": "老旗手",
+					"text": "答要用真劲。假声回读听得见。"
+				},
+				{
+					"id": "cs0502_mid_mv6",
+					"speaker": "leader",
+					"text": "真劲试锋。回读才站得住。"
+				},
+				{
+					"id": "cs0502_win1",
+					"speaker": "旁白",
+					"text": "锋再定。链环扣死，夺链那拨退到阶下。",
+					"when": {
+						"flag": "cs05_mid_fought"
+					}
+				},
+				{
+					"id": "cs0502_win2",
+					"speaker": "掌柜",
+					"text": "链要扣。扣死，才不像挂着玩的。",
+					"when": {
+						"flag": "cs05_mid_fought"
+					}
+				},
+				{
+					"id": "cs0502_win3",
+					"speaker": "槐里·青禾",
+					"text": "环声一下实，假环就响不起来。",
+					"when": {
+						"flag": "cs05_mid_fought"
+					}
+				},
+				{
+					"id": "cs0502_win4",
+					"speaker": "leader",
+					"text": "锋护过链。扣，我锁得。",
+					"when": {
+						"flag": "cs05_mid_fought"
+					}
+				},
+				{
+					"id": "cs05b_br_lost",
+					"speaker": "旁白",
+					"text": "锋收回来。回读纸还钉着。椅旁那拨，没散。",
+					"when": {
+						"all": [
+							{
+								"flag": "cs05_mid_lost"
+							},
+							{
+								"not_flag": "cs05_mid_fought"
+							}
+						]
+					}
+				}
+			],
+			"next": "tavern",
+			"actions": [
+				{
+					"id": "open_skirmish",
+					"label": "先试一锋",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs05_mid_fought"
+							},
+							{
+								"not_flag": "cs05_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs05_mid_fought"
+							],
+							"lose_flags": [
+								"cs05_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "回读上的灯",
+								"outcome": "回读旁试锋得手——锋镝压下，并排纸可续",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "retry_skirmish",
+					"label": "再试锋镝",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs05_mid_fought"
+							},
+							{
+								"flag": "cs05_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs05_mid_fought"
+							],
+							"lose_flags": [
+								"cs05_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "回读上的灯",
+								"outcome": "回读旁试锋得手——锋镝压下，并排纸可续",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "continue_after_battle",
+					"label": "继续，去酒馆",
+					"do": [
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs05_mid_fought"
+									},
+									{
+										"not_flag": "cs05_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs05_02",
+							"choice": "mid_skirmish_skip",
+							"title": "回读上的灯",
+							"outcome": "未试锋——锋未出鞘，径去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs05_mid_fought"
+									},
+									{
+										"flag": "cs05_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs05_02",
+							"choice": "mid_skirmish_abort",
+							"title": "回读上的灯",
+							"outcome": "试锋未成——伤还在，先去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tavern",
+			"title": "选题",
+			"lines": [
+				{
+					"id": "cs05b_tv_0",
+					"speaker": "旁白",
+					"text": "酒馆板上钉着回读摘抄。空与栏并排。",
+					"stage": {
+						"bg": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs05b_tv_1",
+					"speaker": "掌柜",
+					"text": "不是我要钉回读。有人出酒钱。挂不挂你们裁。"
+				},
+				{
+					"id": "cs05b_tv_2",
+					"speaker": "leader",
+					"text": "挂回读。挂三天。谁加字，我认指甲。"
+				},
+				{
+					"id": "cs05b_tv_3",
+					"speaker": "石垒·晚担",
+					"text": "挂着才像回读账。藏起来才像骗。"
+				},
+				{
+					"id": "cs05b_tv_4",
+					"speaker": "槐里·青禾",
+					"text": "孩子来抄回读板。抄到空字会停一下。"
+				},
+				{
+					"id": "cs05b_tv_5",
+					"speaker": "苇原·灯影",
+					"text": "停一下好。不停着抄栏最危险。"
+				},
+				{
+					"id": "cs05b_tv_6",
+					"speaker": "老管事",
+					"text": "回读后的选择：链仍并排，或栏优先催坐。"
+				},
+				{
+					"id": "cs05b_tv_7",
+					"speaker": "岁吏",
+					"text": "并排是认空。催坐是认急。"
+				},
+				{
+					"id": "cs05b_tv_8",
+					"speaker": "书记官",
+					"text": "急好念。空椅难受。难受就对。"
+				},
+				{
+					"id": "cs05b_tv_9",
+					"speaker": "老旗手",
+					"text": "旗角在门外。核的人能看见回读板。"
+				},
+				{
+					"id": "cs05b_tv_10",
+					"speaker": "旁白",
+					"text": "花生壳圈还在。圈心写「回读选题」。"
+				},
+				{
+					"id": "cs05b_tv_11",
+					"speaker": "掌柜",
+					"text": "回读圈心比酒醒。醒着才选得动。"
+				},
+				{
+					"id": "cs05b_tv_12",
+					"speaker": "leader",
+					"text": "栏与空都看见了。选。"
+				},
+				{
+					"id": "cs05b_tv_13",
+					"speaker": "石垒·晚担",
+					"text": "我站回读圈外。站着也算见证。"
+				},
+				{
+					"id": "cs05b_tv_14",
+					"speaker": "槐里·青禾",
+					"text": "见证要写进薄册。不写等于没来。"
+				},
+				{
+					"id": "cs05b_tv_15",
+					"speaker": "苇原·灯影",
+					"text": "薄册比嘴硬。嘴会改口。"
+				},
+				{
+					"id": "cs05b_tv_16",
+					"speaker": "旁白",
+					"text": "回读板前安静。安静里只剩两道选择题。"
+				},
+				{
+					"id": "cs05b_tv_x17",
+					"speaker": "旁白",
+					"text": "酒馆桌湿。湿痕像没写完的句。"
+				},
+				{
+					"id": "cs05b_tv_x18",
+					"speaker": "老管事",
+					"text": "选题别赶。赶的题会反咬。"
+				},
+				{
+					"id": "cs05b_tv_x19",
+					"speaker": "leader",
+					"text": "我选慢的那条。"
+				},
+				{
+					"id": "cs05b_tv_17",
+					"speaker": "老管事",
+					"text": "选完入柜。回读柜门会响。"
+				},
+				{
+					"id": "cs0502_ret_mv1",
+					"speaker": "旁白",
+					"text": "回读段子讲到椅脚，有人假装去上茅房。"
+				},
+				{
+					"id": "cs0502_ret_mv2",
+					"speaker": "掌柜",
+					"text": "躲茅房躲不掉板。"
+				},
+				{
+					"id": "cs0502_ret_mv3",
+					"speaker": "岁吏",
+					"text": "板挂完回堡。"
+				},
+				{
+					"id": "cs0502_tvp1",
+					"speaker": "旁白",
+					"text": "回读页夹着空椅小图，图角被酒滴洇开一晕。"
+				},
+				{
+					"id": "cs0502_tvp2",
+					"speaker": "掌柜",
+					"text": "洇了就换页。换页比硬挂一张脏图体面。"
+				},
+				{
+					"id": "cs0502_tvp3",
+					"speaker": "槐里·青禾",
+					"text": "回读是给后来人看的。脏图教坏手。"
+				},
+				{
+					"id": "cs0502_tvp4",
+					"speaker": "书记官",
+					"text": "栏优先催坐——催的是人，不是墨。"
+				},
+				{
+					"id": "cs0502_tvp5",
+					"speaker": "老旗手",
+					"text": "人未坐稳，旗别垂到椅面。"
+				},
+				{
+					"id": "cs0502_tvp6",
+					"speaker": "leader",
+					"text": "链仍并排。催坐的话，等回读页干透。"
+				},
+				{
+					"id": "cs0502_tvn1",
+					"speaker": "掌柜",
+					"text": "护链那一锋，酒里有铁味。"
+				},
+				{
+					"id": "cs0502_tvn2",
+					"speaker": "石垒·晚担",
+					"text": "阶下那拨退了。退了才碰杯。"
+				},
+				{
+					"id": "cs0502_tvn3",
+					"speaker": "听回",
+					"text": "环声实的事，酒桌上传开了。"
+				},
+				{
+					"id": "cs0502_tvn4",
+					"speaker": "leader",
+					"text": "链死。人齐。铁味，我认。"
+				},
+				{
+					"id": "cs0502_ret_mv4",
+					"speaker": "leader",
+					"text": "回堡续回读。"
+				}
+			],
+			"actions": [
+				{
+					"id": "keep_reread",
+					"label": "链仍并排",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs05_reread_parallel",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs05_02",
+							"choice": "keep_reread",
+							"title": "回读上的灯",
+							"outcome": "回读后链仍并排记入谱",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				},
+				{
+					"id": "push_seat",
+					"label": "栏优先催坐",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs05_reread_push",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs05_02",
+							"choice": "push_seat",
+							"title": "回读上的灯",
+							"outcome": "回读后栏优先催坐",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ledger",
+			"title": "入册",
+			"lines": [
+				{
+					"id": "cs05b_ld_0",
+					"speaker": "旁白",
+					"text": "西阁。回读本与名册并排入柜。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs05b_ld_1",
+					"speaker": "旁白",
+					"text": "你留链并排。空椅仍空，栏不骗人。"
+				},
+				{
+					"id": "cs05b_ld_2",
+					"speaker": "旁白",
+					"text": "你催栏优先。字能念，沙漏下行仍亮着空。"
+				},
+				{
+					"id": "cs05b_ld_3",
+					"speaker": "老管事",
+					"text": "柜门一响。四字落款：回读已记。"
+				},
+				{
+					"id": "cs05b_ld_4",
+					"speaker": "岁吏",
+					"text": "年迹旁补回读一行。不改前季。"
+				},
+				{
+					"id": "cs05b_ld_5",
+					"speaker": "书记官",
+					"text": "议会要听念，就念回读本。"
+				},
+				{
+					"id": "cs05b_ld_6",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄完空椅。说手不抖了。"
+				},
+				{
+					"id": "cs05b_ld_7",
+					"speaker": "石垒·晚担",
+					"text": "不抖说明没装坐。"
+				},
+				{
+					"id": "cs05b_ld_8",
+					"speaker": "苇原·灯影",
+					"text": "巡夜名单还短。短着也好过假坐。"
+				},
+				{
+					"id": "cs05b_ld_9",
+					"speaker": "老旗手",
+					"text": "旗角给人核。核完空椅旗还在。"
+				},
+				{
+					"id": "cs05b_ld_10",
+					"speaker": "掌柜",
+					"text": "回读圈可以擦。柜里回读本擦不掉。"
+				},
+				{
+					"id": "cs05b_ld_11",
+					"speaker": "leader",
+					"text": "回读记了。灯还亮。"
+				},
+				{
+					"id": "cs05b_ld_12",
+					"speaker": "旁白",
+					"text": "空椅灯照着椅腿灰。灰还在，人还诚实。"
+				},
+				{
+					"id": "cs05b_ld_13",
+					"speaker": "老管事",
+					"text": "诚实比能念的栏贵。"
+				},
+				{
+					"id": "cs05b_ld_14",
+					"speaker": "岁吏",
+					"text": "贵的账才值得回读。"
+				},
+				{
+					"id": "cs05b_ld_15",
+					"speaker": "书记官",
+					"text": "嗓子轻一点。轻着念回读，字更真。"
+				},
+				{
+					"id": "cs05b_ld_16",
+					"speaker": "旁白",
+					"text": "柜锁落下。回读第二可玩章收束。"
+				},
+				{
+					"id": "cs05b_ld_17",
+					"speaker": "槐里·青禾",
+					"text": "收束不是结束。是敢把空椅留下。"
+				},
+				{
+					"id": "cs05b_ld_18",
+					"speaker": "石垒·晚担",
+					"text": "留下空，才有人坐得住。"
+				},
+				{
+					"id": "cs05b_ld_x19",
+					"speaker": "旁白",
+					"text": "账册末行空着。空行等一句硬话。"
+				},
+				{
+					"id": "cs05b_ld_x20",
+					"speaker": "槐里·青禾",
+					"text": "硬话不长。长了就软。"
+				},
+				{
+					"id": "cs05b_ld_x21",
+					"speaker": "leader",
+					"text": "并排留真。今日记下。"
+				},
+				{
+					"id": "cs0502_ldg1",
+					"speaker": "岁吏",
+					"text": "链环扣死与回读并排，假环响不进册。"
+				},
+				{
+					"id": "cs0502_ldg2",
+					"speaker": "书记官",
+					"text": "夺链的阶下影，不进回读。"
+				},
+				{
+					"id": "cs0502_ldg3",
+					"speaker": "槐里·青禾",
+					"text": "环声一下实，回读才像有主。"
+				},
+				{
+					"id": "cs0502_ldg4",
+					"speaker": "leader",
+					"text": "链死并排。灯不灭，回读在柜。"
+				},
+				{
+					"id": "cs0502_ldg_end",
+					"speaker": "leader",
+					"text": "环扣旁，灰旗堡回读柜等真链。"
+				}
+			],
+			"actions": []
+		}
+	],
+	"title_en": "The Lamp on the Reread"
 }

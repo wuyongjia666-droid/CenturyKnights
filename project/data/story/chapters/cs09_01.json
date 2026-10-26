@@ -1,1065 +1,1095 @@
 {
-  "id": "cs09_01",
-  "title": "血验上的灯",
-  "legacy_index": 409,
-  "return_scene": "res://scenes/hub/castle_hub.tscn",
-  "source": "docs/content-seasons/season-09/NOVEL.md",
-  "beats": [
-    {
-      "id": "yard",
-      "title": "挂栏",
-      "next": "blood",
-      "lines": [
-        {
-          "id": "cs09_yd_0",
-          "speaker": "旁白",
-          "text": "血验。名册末行空着。血验上的灯还亮。",
-          "stage": {
-            "card": "一　挂栏",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs09_yd_1",
-          "speaker": "书记官",
-          "text": "血验栏要念得像灯下的空栏，不像催条上的已记。"
-        },
-        {
-          "id": "cs09_yd_2",
-          "speaker": "leader",
-          "text": "写验已写。"
-        },
-        {
-          "id": "cs09_yd_3",
-          "speaker": "旁白",
-          "text": "笔尖停一下。末行落下「验已写」三字。"
-        },
-        {
-          "id": "cs09_yd_4",
-          "speaker": "老旗手",
-          "text": "旗角誊的是验已写没有，不把血名卖到旗面上。"
-        },
-        {
-          "id": "cs09_yd_5",
-          "speaker": "岁吏",
-          "text": "谱可以进栏。血验是另一本账。"
-        },
-        {
-          "id": "cs09_yd_6",
-          "speaker": "石垒·晚担",
-          "text": "验条上写得好看容易。手不抖着对完，才难。"
-        },
-        {
-          "id": "cs09_yard_x0",
-          "speaker": "旁白",
-          "text": "验条右栏空着。空得像故意留给人问。"
-        },
-        {
-          "id": "cs09_yard_x1",
-          "speaker": "书记官",
-          "text": "催条写「血验已记」。记在纸上，不在灯上。"
-        },
-        {
-          "id": "cs09_yard_x2",
-          "speaker": "老管事",
-          "text": "纸暖，灯冷。冷的才是要你亲手对的。"
-        },
-        {
-          "id": "cs09_yard_x3",
-          "speaker": "槐里·青禾",
-          "text": "孩子先看空栏。空栏比满栏更像家规。"
-        },
-        {
-          "id": "cs09_yard_x4",
-          "speaker": "苇原·灯影",
-          "text": "巡走过东厢，先问今夜谁还没对条。"
-        },
-        {
-          "id": "cs09_yard_x5",
-          "speaker": "老旗手",
-          "text": "旗角不卖名。验条也不给人跳格。"
-        },
-        {
-          "id": "cs09_yard_x6",
-          "speaker": "岁吏",
-          "text": "谱进栏可以。血验另本账。账对不上就红脸。"
-        },
-        {
-          "id": "cs09_yard_x7",
-          "speaker": "石垒·晚担",
-          "text": "写好看不难。验得住才难。"
-        },
-        {
-          "id": "cs09_yard_x8",
-          "speaker": "旁白",
-          "text": "窗纸新，桌却旧。旧桌认手，不认催。"
-        },
-        {
-          "id": "cs09_yard_x9",
-          "speaker": "掌柜",
-          "text": "酒馆圈等着血验选题。选题公开，扯皮少。"
-        },
-        {
-          "id": "cs09_yd_y17",
-          "speaker": "旁白",
-          "text": "血验灯在空栏上晃了一下，晃完火焰自己站直。"
-        },
-        {
-          "id": "cs09_yd_y18",
-          "speaker": "石垒·晚担",
-          "text": "晃的是握灯的手。血若跟着晃，就还没验完。"
-        },
-        {
-          "id": "cs09_yd_y19",
-          "speaker": "leader",
-          "text": "灯站直了再写血。手抖的字不进栏。"
-        },
-        {
-          "id": "cs09_yd_7",
-          "speaker": "leader",
-          "text": "栏挂上了。去看血验。"
-        }
-      ]
-    },
-    {
-      "id": "blood",
-      "title": "血验",
-      "next": "hourglass",
-      "lines": [
-        {
-          "id": "cs09_bl_0",
-          "speaker": "旁白",
-          "text": "血验未结。灯照着验条上的白。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs09_bl_1",
-          "speaker": "老管事",
-          "text": "血验：对条已记，点验待对。血名栏仍空。"
-        },
-        {
-          "id": "cs09_bl_2",
-          "speaker": "旁白",
-          "text": "名册说验已写。血验说还在对。两行字第一次吵架。"
-        },
-        {
-          "id": "cs09_bl_3",
-          "speaker": "苇原·灯影",
-          "text": "巡防不问谁入验。问今夜谁还没对条。"
-        },
-        {
-          "id": "cs09_bl_4",
-          "speaker": "槐里·青禾",
-          "text": "巾上还缺一颗星。血名先写满，星对不上，这场验是假的。"
-        },
-        {
-          "id": "cs09_bl_5",
-          "speaker": "老管事",
-          "text": "血验还差两格。跳格去写血名，栏会从灯座裂开。"
-        },
-        {
-          "id": "cs09_blood_x0",
-          "speaker": "旁白",
-          "text": "验灯白得像旧伤。白光里，空格最清楚。"
-        },
-        {
-          "id": "cs09_blood_x1",
-          "speaker": "老管事",
-          "text": "对条已记，点验待对。血名栏仍空。"
-        },
-        {
-          "id": "cs09_blood_x2",
-          "speaker": "石垒·晚担",
-          "text": "影正再对。影偏就停手。"
-        },
-        {
-          "id": "cs09_blood_x3",
-          "speaker": "书记官",
-          "text": "旁注写「血验未结」。旁注是缝，不是丢人。"
-        },
-        {
-          "id": "cs09_blood_x4",
-          "speaker": "岁吏",
-          "text": "两本账。谱很长，血验很静。静是还在对。"
-        },
-        {
-          "id": "cs09_blood_x5",
-          "speaker": "苇原·灯影",
-          "text": "摸过罩的手会黑。黑着手别喊已点。"
-        },
-        {
-          "id": "cs09_blood_x6",
-          "speaker": "槐里·青禾",
-          "text": "空着诚实。写满却验不上，才是骗人。"
-        },
-        {
-          "id": "cs09_blood_x7",
-          "speaker": "老旗手",
-          "text": "跳格的栏，桩会裂。裂了再补，更疼。"
-        },
-        {
-          "id": "cs09_blood_x8",
-          "speaker": "旁白",
-          "text": "灯罩边毛还是齐，一眼能看出来。"
-        },
-        {
-          "id": "cs09_blood_x9",
-          "speaker": "老管事",
-          "text": "边毛是急。急点进册，以后当众脸红。"
-        },
-        {
-          "id": "cs09_bl_y16",
-          "speaker": "旁白",
-          "text": "验册旧渍沉在纸底，沉处不是今夜新滴的。"
-        },
-        {
-          "id": "cs09_bl_y17",
-          "speaker": "石垒·晚担",
-          "text": "新泼的浮在面上。沉底的那点，才是旧案。"
-        },
-        {
-          "id": "cs09_bl_y18",
-          "speaker": "leader",
-          "text": "新泼的血我不认。旧渍留在册底。"
-        },
-        {
-          "id": "cs09_bl_6",
-          "speaker": "leader",
-          "text": "血还没对稳。先去看沙漏，血名后钉。"
-        }
-      ]
-    },
-    {
-      "id": "hourglass",
-      "title": "两行",
-      "next": "bridge",
-      "lines": [
-        {
-          "id": "cs09_hg_0",
-          "speaker": "旁白",
-          "text": "沙漏多出两行：上行验已写，下行血验未结。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs09_hg_1",
-          "speaker": "老管事",
-          "text": "验完钉在上行。血未对的那行谁要撕，先把巾角对齐。"
-        },
-        {
-          "id": "cs09_hg_2",
-          "speaker": "岁吏",
-          "text": "回执在侧室。谱与验，两本账。"
-        },
-        {
-          "id": "cs09_hg_3",
-          "speaker": "书记官",
-          "text": "一行血名好上报。灯下巾还湿，湿的那行不肯被摘要吃掉。"
-        },
-        {
-          "id": "cs09_hg_4",
-          "speaker": "苇原·灯影",
-          "text": "血灯跳了一下，更鼓跟着响。响完先看巾，不看名单。"
-        },
-        {
-          "id": "cs09_hg_5",
-          "speaker": "槐里·青禾",
-          "text": "孩子来抄血验，抄未干的空栏，别只抄血名。"
-        },
-        {
-          "id": "cs09_hourglass_x0",
-          "speaker": "旁白",
-          "text": "上行血验已记，下行血验未结。细线钉死。"
-        },
-        {
-          "id": "cs09_hourglass_x1",
-          "speaker": "老管事",
-          "text": "谁撕下行，谁去摸罩结账。"
-        },
-        {
-          "id": "cs09_hourglass_x2",
-          "speaker": "书记官",
-          "text": "一行血名好念。两行里有未对的巾，才像验过。我们留两行。"
-        },
-        {
-          "id": "cs09_hourglass_x3",
-          "speaker": "岁吏",
-          "text": "回执认并排。并排认灯。灯不认抢跑。"
-        },
-        {
-          "id": "cs09_hourglass_x4",
-          "speaker": "苇原·灯影",
-          "text": "血验的更鼓还在交班。下行那一声先落地，上行才许跟着听。"
-        },
-        {
-          "id": "cs09_hourglass_x5",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄未结。抄名的时候，空要在。"
-        },
-        {
-          "id": "cs09_hourglass_x6",
-          "speaker": "石垒·晚担",
-          "text": "间距够脸红。红完再谈点验。"
-        },
-        {
-          "id": "cs09_hourglass_x7",
-          "speaker": "老旗手",
-          "text": "核的时候两行都在。少一行，角先裂。"
-        },
-        {
-          "id": "cs09_hourglass_x8",
-          "speaker": "旁白",
-          "text": "沙子慢。慢着走，才像血验该有的速度。"
-        },
-        {
-          "id": "cs09_hourglass_x9",
-          "speaker": "掌柜",
-          "text": "墙牌硬。硬牌撕起来，手会记得疼。"
-        },
-        {
-          "id": "cs09_hg_y16",
-          "speaker": "旁白",
-          "text": "沙漏座上血验灯又晃，晃的影子投进空着的下行。"
-        },
-        {
-          "id": "cs09_hg_y17",
-          "speaker": "石垒·晚担",
-          "text": "影子晃是手。下行里的血若跟着晃，就别填月。"
-        },
-        {
-          "id": "cs09_hg_y18",
-          "speaker": "leader",
-          "text": "手稳了再让月份走。血不稳，两行都停。"
-        },
-        {
-          "id": "cs09_hg_6",
-          "speaker": "leader",
-          "text": "血灯两行都留着。去门廊对巾。"
-        },
-        {
-          "id": "cs0901_vis_mv1",
-          "speaker": "旁白",
-          "text": "血验灯下，沙漏沙粒像细血珠——其实是影。"
-        },
-        {
-          "id": "cs0901_vis_mv2",
-          "speaker": "书记官",
-          "text": "影不是血。血要另验。"
-        },
-        {
-          "id": "cs0901_vis_mv3",
-          "speaker": "槐里·青禾",
-          "text": "另验前，月份先走一遭。"
-        },
-        {
-          "id": "cs0901_vst1",
-          "speaker": "岁吏",
-          "text": "月份从血验巾角滴过一星。星干了，月份才算走完。"
-        },
-        {
-          "id": "cs0901_vst2",
-          "speaker": "书记官",
-          "text": "名册边上沙漏，最怕湿墨。"
-        },
-        {
-          "id": "cs0901_vst3",
-          "speaker": "leader",
-          "text": "月份干过。名，我自己签。"
-        },
-        {
-          "id": "cs0901_vis_mv4",
-          "speaker": "leader",
-          "text": "走一遭。去看。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "open_hourglass",
-          "label": "去看月份怎么往前走",
-          "do": [
-            {
-              "op": "visit",
-              "path": "res://scenes/hub/hourglass.tscn"
-            }
-          ]
-        },
-        {
-          "id": "continue_after_visit",
-          "label": "继续，去门廊",
-          "do": [
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "bridge",
-      "title": "门廊",
-      "next": "tavern",
-      "lines": [
-        {
-          "id": "cs09_br_0",
-          "speaker": "旁白",
-          "text": "门廊先问谁还没入验。墙牌上两行血事一起响。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs09_br_1",
-          "speaker": "石垒·晚担",
-          "text": "验巾上的牌比血纸硬，血纸又比嘴里的已验硬。"
-        },
-        {
-          "id": "cs09_br_2",
-          "speaker": "老旗手",
-          "text": "旗角拿来核巾上的星，不拿来卖血名。"
-        },
-        {
-          "id": "cs09_br_3",
-          "speaker": "苇原·灯影",
-          "text": "巾角还缺一颗星。星齐了，血名才许出口。"
-        },
-        {
-          "id": "cs09_br_4",
-          "speaker": "槐里·青禾",
-          "text": "谎抄进验册藏不住。孩子会问巾上为什么还空。"
-        },
-        {
-          "id": "cs09_br_5",
-          "speaker": "老管事",
-          "text": "厢外的话比旧渍走得快。渍沉在纸底，话沉不下去。"
-        },
-        {
-          "id": "cs09_br_6",
-          "speaker": "岁吏",
-          "text": "谱很长。血验很静。静是还在对。"
-        },
-        {
-          "id": "cs09_br_7",
-          "speaker": "leader",
-          "text": "牌还在巾上。带去酒馆，别在门廊认新泼。"
-        },
-        {
-          "id": "cs09_bridge_x0",
-          "speaker": "旁白",
-          "text": "第二次问仍是谁入验。墙牌两行没改成一行。"
-        },
-        {
-          "id": "cs09_bridge_x1",
-          "speaker": "石垒·晚担",
-          "text": "牌比纸硬。绕牌的人，先撞桩。"
-        },
-        {
-          "id": "cs09_bridge_x2",
-          "speaker": "老旗手",
-          "text": "旗角给人核。验给人站。两样并排。"
-        },
-        {
-          "id": "cs09_bridge_x3",
-          "speaker": "苇原·灯影",
-          "text": "下落不清，验先别谈。谈了是吵。"
-        },
-        {
-          "id": "cs09_bridge_x4",
-          "speaker": "槐里·青禾",
-          "text": "谎抄不住。孩子会指着空栏问。"
-        },
-        {
-          "id": "cs09_bridge_x5",
-          "speaker": "老管事",
-          "text": "门廊上的闲话盖不住旧渍。渍还暗，话已经亮完了。"
-        },
-        {
-          "id": "cs09_bridge_x6",
-          "speaker": "岁吏",
-          "text": "谱很长。血验很静。静着对，才像真。"
-        },
-        {
-          "id": "cs09_bridge_x7",
-          "speaker": "书记官",
-          "text": "记谁摸罩、谁短笑、谁催已点。"
-        },
-        {
-          "id": "cs09_bridge_x8",
-          "speaker": "旁白",
-          "text": "短笑在牌旁散开。散开不像结论。"
-        },
-        {
-          "id": "cs09_bridge_x9",
-          "speaker": "掌柜",
-          "text": "圈还在墙上。圈不等短笑落地。"
-        },
-        {
-          "id": "cs09_mid_y18",
-          "speaker": "旁白",
-          "text": "门廊石缝里嵌着验册上揭下来的旧渍。"
-        },
-        {
-          "id": "cs09_mid_y19",
-          "speaker": "石垒·晚担",
-          "text": "嵌进石缝的不是今夜泼的。新泼的还亮，一擦就没。"
-        },
-        {
-          "id": "cs09_mid_y20",
-          "speaker": "leader",
-          "text": "擦得掉的新泼不认。石缝里的旧渍认。"
-        },
-        {
-          "id": "cs0901_mid_mv1",
-          "speaker": "旁白",
-          "text": "血验册翻开，旧渍在灯下发暗，像沉在水底。"
-        },
-        {
-          "id": "cs0901_mid_mv2",
-          "speaker": "书记官",
-          "text": "沉底的旧，比新泼的老实。"
-        },
-        {
-          "id": "cs0901_mid_mv3",
-          "speaker": "石垒·晚担",
-          "text": "新泼爱冒充旧。冒充最要打。"
-        },
-        {
-          "id": "cs0901_mid_mv4",
-          "speaker": "槐里·青禾",
-          "text": "打之前先问清：谁的血，谁的名。"
-        },
-        {
-          "id": "cs0901_mid_mv5",
-          "speaker": "掌柜",
-          "text": "墙牌旁那拨，专卖新泼当旧。"
-        },
-        {
-          "id": "cs0901_mid_mv6",
-          "speaker": "leader",
-          "text": "新泼不认。锋问明白。"
-        },
-        {
-          "id": "cs0901_win1",
-          "speaker": "旁白",
-          "text": "锋定。血验问声清了，墙牌旁卖新泼的退了。",
-          "when": {
-            "flag": "cs09_mid_fought"
-          }
-        },
-        {
-          "id": "cs0901_win2",
-          "speaker": "掌柜",
-          "text": "新泼当旧的，今晚卖不出去。",
-          "when": {
-            "flag": "cs09_mid_fought"
-          }
-        },
-        {
-          "id": "cs0901_win3",
-          "speaker": "槐里·青禾",
-          "text": "谁的血，谁的名——问清了。",
-          "when": {
-            "flag": "cs09_mid_fought"
-          }
-        },
-        {
-          "id": "cs0901_win4",
-          "speaker": "leader",
-          "text": "锋问明白。血，我认自己的。",
-          "when": {
-            "flag": "cs09_mid_fought"
-          }
-        },
-        {
-          "id": "cs09_mid_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。血验问声还在。墙牌旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs09_mid_lost"
-              },
-              {
-                "not_flag": "cs09_mid_fought"
-              }
-            ]
-          }
-        }
-      ],
-      "actions": [
-        {
-          "id": "open_skirmish",
-          "label": "先试一锋",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs09_mid_fought"
-              },
-              {
-                "not_flag": "cs09_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs09_mid_fought"
-              ],
-              "lose_flags": [
-                "cs09_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "血验上的灯",
-                "outcome": "血验口试锋得手——问声旁锋镝先亮",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "retry_skirmish",
-          "label": "再试锋镝",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs09_mid_fought"
-              },
-              {
-                "flag": "cs09_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs09_mid_fought"
-              ],
-              "lose_flags": [
-                "cs09_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "血验上的灯",
-                "outcome": "血验口试锋得手——问声旁锋镝先亮",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "continue_after_battle",
-          "label": "继续，去酒馆",
-          "do": [
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs09_mid_fought"
-                  },
-                  {
-                    "not_flag": "cs09_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs09_01",
-              "choice": "mid_skirmish_skip",
-              "title": "血验上的灯",
-              "outcome": "未试锋——锋未出鞘，径去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs09_mid_fought"
-                  },
-                  {
-                    "flag": "cs09_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs09_01",
-              "choice": "mid_skirmish_abort",
-              "title": "血验上的灯",
-              "outcome": "试锋未成——伤还在，先去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tavern",
-      "title": "选题",
-      "lines": [
-        {
-          "id": "cs09_tav_0",
-          "speaker": "旁白",
-          "text": "烽火酒馆。碗沿两圈：血验并排记，和先钉血名。",
-          "stage": {
-            "bg": "tavern",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs09_tav_1",
-          "speaker": "掌柜",
-          "text": "血名纸条钉在灯座旁。喝多的人看不见，对过的人看得见。"
-        },
-        {
-          "id": "cs09_tav_2",
-          "speaker": "槐里·青禾",
-          "text": "裁验册的人，剪刀放在灯座另一侧，别对着巾。"
-        },
-        {
-          "id": "cs09_tav_3",
-          "speaker": "老管事",
-          "text": "并排钉。谁撕血验抄本，谁结账。"
-        },
-        {
-          "id": "cs09_tav_4",
-          "speaker": "石垒·晚担",
-          "text": "栏是拿来念的，巾是拿来验的。血验两样都要。"
-        },
-        {
-          "id": "cs09_tav_5",
-          "speaker": "苇原·灯影",
-          "text": "沙漏还亮。谁买一行结论，带他去摸验灯。"
-        },
-        {
-          "id": "cs09_tav_6",
-          "speaker": "旁白",
-          "text": "血名纸先卷边。并排记摊平，边还没沾油。"
-        },
-        {
-          "id": "cs09_tavern_x0",
-          "speaker": "旁白",
-          "text": "碗沿两圈：并排记，先钉血名。"
-        },
-        {
-          "id": "cs09_tavern_x1",
-          "speaker": "掌柜",
-          "text": "选完再喝。空喊嗣的，酒钱加倍。"
-        },
-        {
-          "id": "cs09_tavern_x2",
-          "speaker": "槐里·青禾",
-          "text": "剪刀上有一点干了的灯油。油还在就别裁验册。"
-        },
-        {
-          "id": "cs09_tavern_x3",
-          "speaker": "老管事",
-          "text": "并排让空可见。可见才逼人来对。"
-        },
-        {
-          "id": "cs09_tavern_x4",
-          "speaker": "石垒·晚担",
-          "text": "栏能念，验能对。少一样厅会晃。"
-        },
-        {
-          "id": "cs09_tavern_x5",
-          "speaker": "苇原·灯影",
-          "text": "买一行结论，先摸罩。摸完再出价。"
-        },
-        {
-          "id": "cs09_tavern_x6",
-          "speaker": "岁吏",
-          "text": "回执不认吆喝。认灯，认手，认边。"
-        },
-        {
-          "id": "cs09_tavern_x7",
-          "speaker": "书记官",
-          "text": "灯油滴在血名纸角。并排那张还干。滴到哪张，不由风。"
-        },
-        {
-          "id": "cs09_tavern_x8",
-          "speaker": "老旗手",
-          "text": "圈选偏，旗角先响。响了就停手。"
-        },
-        {
-          "id": "cs09_tavern_y16",
-          "speaker": "旁白",
-          "text": "酒馆灯把血验的火苗又吹歪一下，歪完自己正回来。"
-        },
-        {
-          "id": "cs09_tavern_y17",
-          "speaker": "石垒·晚担",
-          "text": "吹歪的是风和手。血星若跟着歪，这杯先停。"
-        },
-        {
-          "id": "cs09_tavern_y18",
-          "speaker": "leader",
-          "text": "火苗正了再回堡。歪着的血名不带。"
-        },
-        {
-          "id": "cs09_tavern_x9",
-          "speaker": "旁白",
-          "text": "你还没选。没选时，罩边最清楚。"
-        },
-        {
-          "id": "cs0901_ret_mv1",
-          "speaker": "旁白",
-          "text": "血验被说成验酒。酒桌上一阵起哄。"
-        },
-        {
-          "id": "cs0901_ret_mv2",
-          "speaker": "掌柜",
-          "text": "起哄验不了血。"
-        },
-        {
-          "id": "cs0901_ret_mv3",
-          "speaker": "书记官",
-          "text": "血名回堡钉。"
-        },
-        {
-          "id": "cs0901_tvn1",
-          "speaker": "掌柜",
-          "text": "血验那一锋，酒要干净——杯也要净。"
-        },
-        {
-          "id": "cs0901_tvn2",
-          "speaker": "石垒·晚担",
-          "text": "卖泼的退了。退了，才敢碰杯。"
-        },
-        {
-          "id": "cs0901_tvn3",
-          "speaker": "听回",
-          "text": "巾角那星干了。干了才像真验过。"
-        },
-        {
-          "id": "cs0901_tvn4",
-          "speaker": "leader",
-          "text": "血清。名清。酒，可以。"
-        },
-        {
-          "id": "cs0901_ret_mv4",
-          "speaker": "leader",
-          "text": "回堡钉名。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "keep_blood",
-          "label": "血验并排记",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs09_kept_blood",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs09_01",
-              "choice": "keep_blood",
-              "title": "血验上的灯",
-              "outcome": "血验并排记入谱",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        },
-        {
-          "id": "name_blood",
-          "label": "先钉血名",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs09_name_blood",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs09_01",
-              "choice": "name_blood",
-              "title": "血验上的灯",
-              "outcome": "先钉血名",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ledger",
-      "title": "入册",
-      "lines": [
-        {
-          "id": "cs09_led_0",
-          "speaker": "旁白",
-          "text": "旗册封面四个字：血验上的灯。末页已厚。柜上两把钥匙。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs09_led_par",
-          "speaker": "旁白",
-          "text": "你留下两行。议会仍爱一行。柜子认灯。",
-          "when": {
-            "flag": "cs09_kept_blood"
-          }
-        },
-        {
-          "id": "cs09_led_name",
-          "speaker": "旁白",
-          "text": "你先钉血名。沙漏仍在亮——月会替你写下行。",
-          "when": {
-            "flag": "cs09_name_blood"
-          }
-        },
-        {
-          "id": "cs09_led_1",
-          "speaker": "老管事",
-          "text": "存档不刊也行。不丢，就是缝。"
-        },
-        {
-          "id": "cs09_led_2",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄过血验，才配以后念栏。"
-        },
-        {
-          "id": "cs09_led_3",
-          "speaker": "老旗手",
-          "text": "并排。不要裁。缝在名册与血验之间。"
-        },
-        {
-          "id": "cs09_led_4",
-          "speaker": "岁吏",
-          "text": "回执在侧室。谱与验，两本账。"
-        },
-        {
-          "id": "cs09_led_5",
-          "speaker": "苇原·灯影",
-          "text": "更还在交。下次挂嗣，下行先响。"
-        },
-        {
-          "id": "cs09_ledger_x0",
-          "speaker": "旁白",
-          "text": "旗册封面：血验上的灯。钥匙两把。"
-        },
-        {
-          "id": "cs09_ledger_x1",
-          "speaker": "老管事",
-          "text": "缝在名册与血验之间。缝要留。"
-        },
-        {
-          "id": "cs09_ledger_x2",
-          "speaker": "槐里·青禾",
-          "text": "抄过空格，才配以后念栏。"
-        },
-        {
-          "id": "cs09_ledger_x3",
-          "speaker": "老旗手",
-          "text": "并排入柜。裁半本的，我不收。"
-        },
-        {
-          "id": "cs09_ledger_x4",
-          "speaker": "岁吏",
-          "text": "侧室回执还在。红脸还诚实。"
-        },
-        {
-          "id": "cs09_ledger_x5",
-          "speaker": "苇原·灯影",
-          "text": "下次挂嗣，下行先响。"
-        },
-        {
-          "id": "cs09_ledger_x6",
-          "speaker": "书记官",
-          "text": "催条再来，封面四个字压得住。"
-        },
-        {
-          "id": "cs09_ledger_x7",
-          "speaker": "石垒·晚担",
-          "text": "桩在，血名才有地方站。"
-        },
-        {
-          "id": "cs09_ledger_x8",
-          "speaker": "掌柜",
-          "text": "擦过急圈的墙，更值钱。"
-        },
-        {
-          "id": "cs09_ledger_x9",
-          "speaker": "旁白",
-          "text": "灯还在。灯在，就还没骗完这一季。"
-        },
-        {
-          "id": "cs09_led_6",
-          "speaker": "leader",
-          "text": "栏与验，并排。谁来认嗣位，先念完。"
-        },
-        {
-          "id": "cs09_led_y19",
-          "speaker": "旁白",
-          "text": "册上旧渍沉底。"
-        },
-        {
-          "id": "cs09_led_y20",
-          "speaker": "石垒·晚担",
-          "text": "沉底的不是新泼。"
-        },
-        {
-          "id": "cs09_led_y21",
-          "speaker": "leader",
-          "text": "新泼的不认。"
-        },
-        {
-          "id": "cs0901_ldg1",
-          "speaker": "岁吏",
-          "text": "血巾两星干并排，验已写才合册。"
-        },
-        {
-          "id": "cs0901_ldg2",
-          "speaker": "书记官",
-          "text": "卖泼的声，不进名册。"
-        },
-        {
-          "id": "cs0901_ldg3",
-          "speaker": "槐里·青禾",
-          "text": "谁的血谁的名——旁注写清了。"
-        },
-        {
-          "id": "cs0901_ldg4",
-          "speaker": "leader",
-          "text": "验已写还在。空着的格，等真血。"
-        },
-        {
-          "id": "cs0901_ldg_end",
-          "speaker": "leader",
-          "text": "巾角干星旁，灰旗堡验册等合页。"
-        }
-      ],
-      "actions": []
-    }
-  ]
+	"id": "cs09_01",
+	"title": "血验上的灯",
+	"legacy_index": 409,
+	"return_scene": "res://scenes/hub/castle_hub.tscn",
+	"source": "docs/content-seasons/season-09/NOVEL.md",
+	"beats": [
+		{
+			"id": "yard",
+			"title": "挂栏",
+			"next": "blood",
+			"lines": [
+				{
+					"id": "cs09_yd_0",
+					"speaker": "旁白",
+					"text": "血验。名册末行空着。血验上的灯还亮。",
+					"stage": {
+						"card": "一　挂栏",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs09_yd_1",
+					"speaker": "书记官",
+					"text": "血验栏要念得像灯下的空栏，不像催条上的已记。"
+				},
+				{
+					"id": "cs09_yd_2",
+					"speaker": "leader",
+					"text": "写验已写。"
+				},
+				{
+					"id": "cs09_yd_3",
+					"speaker": "旁白",
+					"text": "笔尖停一下。末行落下「验已写」三字。"
+				},
+				{
+					"id": "cs09_yd_4",
+					"speaker": "老旗手",
+					"text": "旗角誊的是验已写没有，不把血名卖到旗面上。"
+				},
+				{
+					"id": "cs09_yd_5",
+					"speaker": "岁吏",
+					"text": "谱可以进栏。血验是另一本账。"
+				},
+				{
+					"id": "cs09_yd_6",
+					"speaker": "石垒·晚担",
+					"text": "验条上写得好看容易。手不抖着对完，才难。"
+				},
+				{
+					"id": "cs09_yard_x0",
+					"speaker": "旁白",
+					"text": "验条右栏空着。空得像故意留给人问。"
+				},
+				{
+					"id": "cs09_yard_x1",
+					"speaker": "书记官",
+					"text": "催条写「血验已记」。记在纸上，不在灯上。"
+				},
+				{
+					"id": "cs09_yard_x2",
+					"speaker": "老管事",
+					"text": "纸暖，灯冷。冷的才是要你亲手对的。"
+				},
+				{
+					"id": "cs09_yard_x3",
+					"speaker": "槐里·青禾",
+					"text": "孩子先看空栏。空栏比满栏更像家规。"
+				},
+				{
+					"id": "cs09_yard_x4",
+					"speaker": "苇原·灯影",
+					"text": "巡走过东厢，先问今夜谁还没对条。"
+				},
+				{
+					"id": "cs09_yard_x5",
+					"speaker": "老旗手",
+					"text": "旗角不卖名。验条也不给人跳格。"
+				},
+				{
+					"id": "cs09_yard_x6",
+					"speaker": "岁吏",
+					"text": "谱进栏可以。血验另本账。账对不上就红脸。"
+				},
+				{
+					"id": "cs09_yard_x7",
+					"speaker": "石垒·晚担",
+					"text": "写好看不难。验得住才难。"
+				},
+				{
+					"id": "cs09_yard_x8",
+					"speaker": "旁白",
+					"text": "窗纸新，桌却旧。旧桌认手，不认催。"
+				},
+				{
+					"id": "cs09_yard_x9",
+					"speaker": "掌柜",
+					"text": "酒馆圈等着血验选题。选题公开，扯皮少。"
+				},
+				{
+					"id": "cs09_yd_y17",
+					"speaker": "旁白",
+					"text": "血验灯在空栏上晃了一下，晃完火焰自己站直。"
+				},
+				{
+					"id": "cs09_yd_y18",
+					"speaker": "石垒·晚担",
+					"text": "晃的是握灯的手。血若跟着晃，就还没验完。"
+				},
+				{
+					"id": "cs09_yd_y19",
+					"speaker": "leader",
+					"text": "灯站直了再写血。手抖的字不进栏。"
+				},
+				{
+					"id": "cs09_yd_7",
+					"speaker": "leader",
+					"text": "栏挂上了。去看血验。"
+				}
+			]
+		},
+		{
+			"id": "blood",
+			"title": "血验",
+			"next": "hourglass",
+			"lines": [
+				{
+					"id": "cs09_bl_0",
+					"speaker": "旁白",
+					"text": "血验未结。灯照着验条上的白。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs09_bl_1",
+					"speaker": "老管事",
+					"text": "血验：对条已记，点验待对。血名栏仍空。"
+				},
+				{
+					"id": "cs09_bl_2",
+					"speaker": "旁白",
+					"text": "名册说验已写。血验说还在对。两行字第一次吵架。"
+				},
+				{
+					"id": "cs09_bl_3",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁入验。问今夜谁还没对条。"
+				},
+				{
+					"id": "cs09_bl_4",
+					"speaker": "槐里·青禾",
+					"text": "巾上还缺一颗星。血名先写满，星对不上，这场验是假的。"
+				},
+				{
+					"id": "cs09_bl_5",
+					"speaker": "老管事",
+					"text": "血验还差两格。跳格去写血名，栏会从灯座裂开。"
+				},
+				{
+					"id": "cs09_blood_x0",
+					"speaker": "旁白",
+					"text": "验灯白得像旧伤。白光里，空格最清楚。"
+				},
+				{
+					"id": "cs09_blood_x1",
+					"speaker": "老管事",
+					"text": "对条已记，点验待对。血名栏仍空。"
+				},
+				{
+					"id": "cs09_blood_x2",
+					"speaker": "石垒·晚担",
+					"text": "影正再对。影偏就停手。"
+				},
+				{
+					"id": "cs09_blood_x3",
+					"speaker": "书记官",
+					"text": "旁注写「血验未结」。旁注是缝，不是丢人。"
+				},
+				{
+					"id": "cs09_blood_x4",
+					"speaker": "岁吏",
+					"text": "两本账。谱很长，血验很静。静是还在对。"
+				},
+				{
+					"id": "cs09_blood_x5",
+					"speaker": "苇原·灯影",
+					"text": "摸过罩的手会黑。黑着手别喊已点。"
+				},
+				{
+					"id": "cs09_blood_x6",
+					"speaker": "槐里·青禾",
+					"text": "空着诚实。写满却验不上，才是骗人。"
+				},
+				{
+					"id": "cs09_blood_x7",
+					"speaker": "老旗手",
+					"text": "跳格的栏，桩会裂。裂了再补，更疼。"
+				},
+				{
+					"id": "cs09_blood_x8",
+					"speaker": "旁白",
+					"text": "灯罩边毛还是齐，一眼能看出来。"
+				},
+				{
+					"id": "cs09_blood_x9",
+					"speaker": "老管事",
+					"text": "边毛是急。急点进册，以后当众脸红。"
+				},
+				{
+					"id": "cs09_bl_y16",
+					"speaker": "旁白",
+					"text": "验册旧渍沉在纸底，沉处不是今夜新滴的。"
+				},
+				{
+					"id": "cs09_bl_y17",
+					"speaker": "石垒·晚担",
+					"text": "新泼的浮在面上。沉底的那点，才是旧案。"
+				},
+				{
+					"id": "cs09_bl_y18",
+					"speaker": "leader",
+					"text": "新泼的血我不认。旧渍留在册底。"
+				},
+				{
+					"id": "cs09_bl_6",
+					"speaker": "leader",
+					"text": "血还没对稳。先去看沙漏，血名后钉。"
+				}
+			]
+		},
+		{
+			"id": "hourglass",
+			"title": "两行",
+			"next": "bridge",
+			"lines": [
+				{
+					"id": "cs09_hg_0",
+					"speaker": "旁白",
+					"text": "沙漏多出两行：上行验已写，下行血验未结。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs09_hg_1",
+					"speaker": "老管事",
+					"text": "验完钉在上行。血未对的那行谁要撕，先把巾角对齐。"
+				},
+				{
+					"id": "cs09_hg_2",
+					"speaker": "岁吏",
+					"text": "回执在侧室。谱与验，两本账。"
+				},
+				{
+					"id": "cs09_hg_3",
+					"speaker": "书记官",
+					"text": "一行血名好上报。灯下巾还湿，湿的那行不肯被摘要吃掉。"
+				},
+				{
+					"id": "cs09_hg_4",
+					"speaker": "苇原·灯影",
+					"text": "血灯跳了一下，更鼓跟着响。响完先看巾，不看名单。"
+				},
+				{
+					"id": "cs09_hg_5",
+					"speaker": "槐里·青禾",
+					"text": "孩子来抄血验，抄未干的空栏，别只抄血名。"
+				},
+				{
+					"id": "cs09_hourglass_x0",
+					"speaker": "旁白",
+					"text": "上行血验已记，下行血验未结。细线钉死。"
+				},
+				{
+					"id": "cs09_hourglass_x1",
+					"speaker": "老管事",
+					"text": "谁撕下行，谁去摸罩结账。"
+				},
+				{
+					"id": "cs09_hourglass_x2",
+					"speaker": "书记官",
+					"text": "一行血名好念。两行里有未对的巾，才像验过。我们留两行。"
+				},
+				{
+					"id": "cs09_hourglass_x3",
+					"speaker": "岁吏",
+					"text": "回执认并排。并排认灯。灯不认抢跑。"
+				},
+				{
+					"id": "cs09_hourglass_x4",
+					"speaker": "苇原·灯影",
+					"text": "血验的更鼓还在交班。下行那一声先落地，上行才许跟着听。"
+				},
+				{
+					"id": "cs09_hourglass_x5",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄未结。抄名的时候，空要在。"
+				},
+				{
+					"id": "cs09_hourglass_x6",
+					"speaker": "石垒·晚担",
+					"text": "间距够脸红。红完再谈点验。"
+				},
+				{
+					"id": "cs09_hourglass_x7",
+					"speaker": "老旗手",
+					"text": "核的时候两行都在。少一行，角先裂。"
+				},
+				{
+					"id": "cs09_hourglass_x8",
+					"speaker": "旁白",
+					"text": "沙子慢。慢着走，才像血验该有的速度。"
+				},
+				{
+					"id": "cs09_hourglass_x9",
+					"speaker": "掌柜",
+					"text": "墙牌硬。硬牌撕起来，手会记得疼。"
+				},
+				{
+					"id": "cs09_hg_y16",
+					"speaker": "旁白",
+					"text": "沙漏座上血验灯又晃，晃的影子投进空着的下行。"
+				},
+				{
+					"id": "cs09_hg_y17",
+					"speaker": "石垒·晚担",
+					"text": "影子晃是手。下行里的血若跟着晃，就别填月。"
+				},
+				{
+					"id": "cs09_hg_y18",
+					"speaker": "leader",
+					"text": "手稳了再让月份走。血不稳，两行都停。"
+				},
+				{
+					"id": "cs09_hg_6",
+					"speaker": "leader",
+					"text": "血灯两行都留着。去门廊对巾。"
+				},
+				{
+					"id": "cs0901_vis_mv1",
+					"speaker": "旁白",
+					"text": "血验灯下，沙漏沙粒像细血珠——其实是影。"
+				},
+				{
+					"id": "cs0901_vis_mv2",
+					"speaker": "书记官",
+					"text": "影不是血。血要另验。"
+				},
+				{
+					"id": "cs0901_vis_mv3",
+					"speaker": "槐里·青禾",
+					"text": "另验前，月份先走一遭。"
+				},
+				{
+					"id": "cs0901_vst1",
+					"speaker": "岁吏",
+					"text": "月份从血验巾角滴过一星。星干了，月份才算走完。"
+				},
+				{
+					"id": "cs0901_vst2",
+					"speaker": "书记官",
+					"text": "名册边上沙漏，最怕湿墨。"
+				},
+				{
+					"id": "cs0901_vst3",
+					"speaker": "leader",
+					"text": "月份干过。名，我自己签。"
+				},
+				{
+					"id": "cs0901_vis_mv4",
+					"speaker": "leader",
+					"text": "走一遭。去看。"
+				}
+			],
+			"actions": [
+				{
+					"id": "open_hourglass",
+					"label": "去看月份怎么往前走",
+					"do": [
+						{
+							"op": "visit",
+							"path": "res://scenes/hub/hourglass.tscn"
+						}
+					]
+				},
+				{
+					"id": "continue_after_visit",
+					"label": "继续，去门廊",
+					"do": [
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bridge",
+			"title": "门廊",
+			"next": "tavern",
+			"lines": [
+				{
+					"id": "cs09_br_0",
+					"speaker": "旁白",
+					"text": "门廊先问谁还没入验。墙牌上两行血事一起响。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs09_br_1",
+					"speaker": "石垒·晚担",
+					"text": "验巾上的牌比血纸硬，血纸又比嘴里的已验硬。"
+				},
+				{
+					"id": "cs09_br_2",
+					"speaker": "老旗手",
+					"text": "旗角拿来核巾上的星，不拿来卖血名。"
+				},
+				{
+					"id": "cs09_br_3",
+					"speaker": "苇原·灯影",
+					"text": "巾角还缺一颗星。星齐了，血名才许出口。"
+				},
+				{
+					"id": "cs09_br_4",
+					"speaker": "槐里·青禾",
+					"text": "谎抄进验册藏不住。孩子会问巾上为什么还空。"
+				},
+				{
+					"id": "cs09_br_5",
+					"speaker": "老管事",
+					"text": "厢外的话比旧渍走得快。渍沉在纸底，话沉不下去。"
+				},
+				{
+					"id": "cs09_br_6",
+					"speaker": "岁吏",
+					"text": "谱很长。血验很静。静是还在对。"
+				},
+				{
+					"id": "cs09_br_7",
+					"speaker": "leader",
+					"text": "牌还在巾上。带去酒馆，别在门廊认新泼。"
+				},
+				{
+					"id": "cs09_bridge_x0",
+					"speaker": "旁白",
+					"text": "第二次问仍是谁入验。墙牌两行没改成一行。"
+				},
+				{
+					"id": "cs09_bridge_x1",
+					"speaker": "石垒·晚担",
+					"text": "牌比纸硬。绕牌的人，先撞桩。"
+				},
+				{
+					"id": "cs09_bridge_x2",
+					"speaker": "老旗手",
+					"text": "旗角给人核。验给人站。两样并排。"
+				},
+				{
+					"id": "cs09_bridge_x3",
+					"speaker": "苇原·灯影",
+					"text": "下落不清，验先别谈。谈了是吵。"
+				},
+				{
+					"id": "cs09_bridge_x4",
+					"speaker": "槐里·青禾",
+					"text": "谎抄不住。孩子会指着空栏问。"
+				},
+				{
+					"id": "cs09_bridge_x5",
+					"speaker": "老管事",
+					"text": "门廊上的闲话盖不住旧渍。渍还暗，话已经亮完了。"
+				},
+				{
+					"id": "cs09_bridge_x6",
+					"speaker": "岁吏",
+					"text": "谱很长。血验很静。静着对，才像真。"
+				},
+				{
+					"id": "cs09_bridge_x7",
+					"speaker": "书记官",
+					"text": "记谁摸罩、谁短笑、谁催已点。"
+				},
+				{
+					"id": "cs09_bridge_x8",
+					"speaker": "旁白",
+					"text": "短笑在牌旁散开。散开不像结论。"
+				},
+				{
+					"id": "cs09_bridge_x9",
+					"speaker": "掌柜",
+					"text": "圈还在墙上。圈不等短笑落地。"
+				},
+				{
+					"id": "cs09_mid_y18",
+					"speaker": "旁白",
+					"text": "门廊石缝里嵌着验册上揭下来的旧渍。"
+				},
+				{
+					"id": "cs09_mid_y19",
+					"speaker": "石垒·晚担",
+					"text": "嵌进石缝的不是今夜泼的。新泼的还亮，一擦就没。"
+				},
+				{
+					"id": "cs09_mid_y20",
+					"speaker": "leader",
+					"text": "擦得掉的新泼不认。石缝里的旧渍认。"
+				},
+				{
+					"id": "cs0901_mid_mv1",
+					"speaker": "旁白",
+					"text": "血验册翻开，旧渍在灯下发暗，像沉在水底。"
+				},
+				{
+					"id": "cs0901_mid_mv2",
+					"speaker": "书记官",
+					"text": "沉底的旧，比新泼的老实。"
+				},
+				{
+					"id": "cs0901_mid_mv3",
+					"speaker": "石垒·晚担",
+					"text": "新泼爱冒充旧。冒充最要打。"
+				},
+				{
+					"id": "cs0901_mid_mv4",
+					"speaker": "槐里·青禾",
+					"text": "打之前先问清：谁的血，谁的名。"
+				},
+				{
+					"id": "cs0901_mid_mv5",
+					"speaker": "掌柜",
+					"text": "墙牌旁那拨，专卖新泼当旧。"
+				},
+				{
+					"id": "cs0901_mid_mv6",
+					"speaker": "leader",
+					"text": "新泼不认。锋问明白。"
+				},
+				{
+					"id": "cs0901_win1",
+					"speaker": "旁白",
+					"text": "锋定。血验问声清了，墙牌旁卖新泼的退了。",
+					"when": {
+						"flag": "cs09_mid_fought"
+					}
+				},
+				{
+					"id": "cs0901_win2",
+					"speaker": "掌柜",
+					"text": "新泼当旧的，今晚卖不出去。",
+					"when": {
+						"flag": "cs09_mid_fought"
+					}
+				},
+				{
+					"id": "cs0901_win3",
+					"speaker": "槐里·青禾",
+					"text": "谁的血，谁的名——问清了。",
+					"when": {
+						"flag": "cs09_mid_fought"
+					}
+				},
+				{
+					"id": "cs0901_win4",
+					"speaker": "leader",
+					"text": "锋问明白。血，我认自己的。",
+					"when": {
+						"flag": "cs09_mid_fought"
+					}
+				},
+				{
+					"id": "cs09_mid_lost",
+					"speaker": "旁白",
+					"text": "锋收回来。血验问声还在。墙牌旁那拨，没散。",
+					"when": {
+						"all": [
+							{
+								"flag": "cs09_mid_lost"
+							},
+							{
+								"not_flag": "cs09_mid_fought"
+							}
+						]
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "open_skirmish",
+					"label": "先试一锋",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs09_mid_fought"
+							},
+							{
+								"not_flag": "cs09_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs09_mid_fought"
+							],
+							"lose_flags": [
+								"cs09_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "血验上的灯",
+								"outcome": "血验口试锋得手——问声旁锋镝先亮",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "retry_skirmish",
+					"label": "再试锋镝",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs09_mid_fought"
+							},
+							{
+								"flag": "cs09_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs09_mid_fought"
+							],
+							"lose_flags": [
+								"cs09_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "血验上的灯",
+								"outcome": "血验口试锋得手——问声旁锋镝先亮",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "continue_after_battle",
+					"label": "继续，去酒馆",
+					"do": [
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs09_mid_fought"
+									},
+									{
+										"not_flag": "cs09_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs09_01",
+							"choice": "mid_skirmish_skip",
+							"title": "血验上的灯",
+							"outcome": "未试锋——锋未出鞘，径去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs09_mid_fought"
+									},
+									{
+										"flag": "cs09_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs09_01",
+							"choice": "mid_skirmish_abort",
+							"title": "血验上的灯",
+							"outcome": "试锋未成——伤还在，先去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tavern",
+			"title": "选题",
+			"lines": [
+				{
+					"id": "cs09_tav_0",
+					"speaker": "旁白",
+					"text": "烽火酒馆。碗沿两圈：血验并排记，和先钉血名。",
+					"stage": {
+						"bg": "tavern",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs09_tav_1",
+					"speaker": "掌柜",
+					"text": "血名纸条钉在灯座旁。喝多的人看不见，对过的人看得见。"
+				},
+				{
+					"id": "cs09_tav_2",
+					"speaker": "槐里·青禾",
+					"text": "裁验册的人，剪刀放在灯座另一侧，别对着巾。"
+				},
+				{
+					"id": "cs09_tav_3",
+					"speaker": "老管事",
+					"text": "并排钉。谁撕血验抄本，谁结账。"
+				},
+				{
+					"id": "cs09_tav_4",
+					"speaker": "石垒·晚担",
+					"text": "栏是拿来念的，巾是拿来验的。血验两样都要。"
+				},
+				{
+					"id": "cs09_tav_5",
+					"speaker": "苇原·灯影",
+					"text": "沙漏还亮。谁买一行结论，带他去摸验灯。"
+				},
+				{
+					"id": "cs09_tav_6",
+					"speaker": "旁白",
+					"text": "血名纸先卷边。并排记摊平，边还没沾油。"
+				},
+				{
+					"id": "cs09_tavern_x0",
+					"speaker": "旁白",
+					"text": "碗沿两圈：并排记，先钉血名。"
+				},
+				{
+					"id": "cs09_tavern_x1",
+					"speaker": "掌柜",
+					"text": "选完再喝。空喊嗣的，酒钱加倍。"
+				},
+				{
+					"id": "cs09_tavern_x2",
+					"speaker": "槐里·青禾",
+					"text": "剪刀上有一点干了的灯油。油还在就别裁验册。"
+				},
+				{
+					"id": "cs09_tavern_x3",
+					"speaker": "老管事",
+					"text": "并排让空可见。可见才逼人来对。"
+				},
+				{
+					"id": "cs09_tavern_x4",
+					"speaker": "石垒·晚担",
+					"text": "栏能念，验能对。少一样厅会晃。"
+				},
+				{
+					"id": "cs09_tavern_x5",
+					"speaker": "苇原·灯影",
+					"text": "买一行结论，先摸罩。摸完再出价。"
+				},
+				{
+					"id": "cs09_tavern_x6",
+					"speaker": "岁吏",
+					"text": "回执不认吆喝。认灯，认手，认边。"
+				},
+				{
+					"id": "cs09_tavern_x7",
+					"speaker": "书记官",
+					"text": "灯油滴在血名纸角。并排那张还干。滴到哪张，不由风。"
+				},
+				{
+					"id": "cs09_tavern_x8",
+					"speaker": "老旗手",
+					"text": "圈选偏，旗角先响。响了就停手。"
+				},
+				{
+					"id": "cs09_tavern_y16",
+					"speaker": "旁白",
+					"text": "酒馆灯把血验的火苗又吹歪一下，歪完自己正回来。"
+				},
+				{
+					"id": "cs09_tavern_y17",
+					"speaker": "石垒·晚担",
+					"text": "吹歪的是风和手。血星若跟着歪，这杯先停。"
+				},
+				{
+					"id": "cs09_tavern_y18",
+					"speaker": "leader",
+					"text": "火苗正了再回堡。歪着的血名不带。"
+				},
+				{
+					"id": "cs09_tavern_x9",
+					"speaker": "旁白",
+					"text": "你还没选。没选时，罩边最清楚。"
+				},
+				{
+					"id": "cs0901_ret_mv1",
+					"speaker": "旁白",
+					"text": "血验被说成验酒。酒桌上一阵起哄。"
+				},
+				{
+					"id": "cs0901_ret_mv2",
+					"speaker": "掌柜",
+					"text": "起哄验不了血。"
+				},
+				{
+					"id": "cs0901_ret_mv3",
+					"speaker": "书记官",
+					"text": "血名回堡钉。"
+				},
+				{
+					"id": "cs0901_tvp1",
+					"speaker": "旁白",
+					"text": "血验册的封条边还粘着一点干褐，像旧针眼。"
+				},
+				{
+					"id": "cs0901_tvp2",
+					"speaker": "掌柜",
+					"text": "针眼不是吓客。是提醒：这页不是酒令。"
+				},
+				{
+					"id": "cs0901_tvp3",
+					"speaker": "听回",
+					"text": "血验并排记。记的是验过，不是喊过。"
+				},
+				{
+					"id": "cs0901_tvp4",
+					"speaker": "石垒·晚担",
+					"text": "先钉血名的人，多半怕夜长。"
+				},
+				{
+					"id": "cs0901_tvp5",
+					"speaker": "老旗手",
+					"text": "旗别沾封条。沾了，像拿旗去赌。"
+				},
+				{
+					"id": "cs0901_tvp6",
+					"speaker": "leader",
+					"text": "血名我验。赌挂的话，今晚不听。"
+				},
+				{
+					"id": "cs0901_tvn1",
+					"speaker": "掌柜",
+					"text": "血验那一锋，酒要干净——杯也要净。"
+				},
+				{
+					"id": "cs0901_tvn2",
+					"speaker": "石垒·晚担",
+					"text": "卖泼的退了。退了，才敢碰杯。"
+				},
+				{
+					"id": "cs0901_tvn3",
+					"speaker": "听回",
+					"text": "巾角那星干了。干了才像真验过。"
+				},
+				{
+					"id": "cs0901_tvn4",
+					"speaker": "leader",
+					"text": "血清。名清。酒，可以。"
+				},
+				{
+					"id": "cs0901_ret_mv4",
+					"speaker": "leader",
+					"text": "回堡钉名。"
+				}
+			],
+			"actions": [
+				{
+					"id": "keep_blood",
+					"label": "血验并排记",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs09_kept_blood",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs09_01",
+							"choice": "keep_blood",
+							"title": "血验上的灯",
+							"outcome": "血验并排记入谱",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				},
+				{
+					"id": "name_blood",
+					"label": "先钉血名",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs09_name_blood",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs09_01",
+							"choice": "name_blood",
+							"title": "血验上的灯",
+							"outcome": "先钉血名",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ledger",
+			"title": "入册",
+			"lines": [
+				{
+					"id": "cs09_led_0",
+					"speaker": "旁白",
+					"text": "旗册封面四个字：血验上的灯。末页已厚。柜上两把钥匙。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs09_led_par",
+					"speaker": "旁白",
+					"text": "你留下两行。议会仍爱一行。柜子认灯。",
+					"when": {
+						"flag": "cs09_kept_blood"
+					}
+				},
+				{
+					"id": "cs09_led_name",
+					"speaker": "旁白",
+					"text": "你先钉血名。沙漏仍在亮——月会替你写下行。",
+					"when": {
+						"flag": "cs09_name_blood"
+					}
+				},
+				{
+					"id": "cs09_led_1",
+					"speaker": "老管事",
+					"text": "存档不刊也行。不丢，就是缝。"
+				},
+				{
+					"id": "cs09_led_2",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄过血验，才配以后念栏。"
+				},
+				{
+					"id": "cs09_led_3",
+					"speaker": "老旗手",
+					"text": "并排。不要裁。缝在名册与血验之间。"
+				},
+				{
+					"id": "cs09_led_4",
+					"speaker": "岁吏",
+					"text": "回执在侧室。谱与验，两本账。"
+				},
+				{
+					"id": "cs09_led_5",
+					"speaker": "苇原·灯影",
+					"text": "更还在交。下次挂嗣，下行先响。"
+				},
+				{
+					"id": "cs09_ledger_x0",
+					"speaker": "旁白",
+					"text": "旗册封面：血验上的灯。钥匙两把。"
+				},
+				{
+					"id": "cs09_ledger_x1",
+					"speaker": "老管事",
+					"text": "缝在名册与血验之间。缝要留。"
+				},
+				{
+					"id": "cs09_ledger_x2",
+					"speaker": "槐里·青禾",
+					"text": "抄过空格，才配以后念栏。"
+				},
+				{
+					"id": "cs09_ledger_x3",
+					"speaker": "老旗手",
+					"text": "并排入柜。裁半本的，我不收。"
+				},
+				{
+					"id": "cs09_ledger_x4",
+					"speaker": "岁吏",
+					"text": "侧室回执还在。红脸还诚实。"
+				},
+				{
+					"id": "cs09_ledger_x5",
+					"speaker": "苇原·灯影",
+					"text": "下次挂嗣，下行先响。"
+				},
+				{
+					"id": "cs09_ledger_x6",
+					"speaker": "书记官",
+					"text": "催条再来，封面四个字压得住。"
+				},
+				{
+					"id": "cs09_ledger_x7",
+					"speaker": "石垒·晚担",
+					"text": "桩在，血名才有地方站。"
+				},
+				{
+					"id": "cs09_ledger_x8",
+					"speaker": "掌柜",
+					"text": "擦过急圈的墙，更值钱。"
+				},
+				{
+					"id": "cs09_ledger_x9",
+					"speaker": "旁白",
+					"text": "灯还在。灯在，就还没骗完这一季。"
+				},
+				{
+					"id": "cs09_led_6",
+					"speaker": "leader",
+					"text": "栏与验，并排。谁来认嗣位，先念完。"
+				},
+				{
+					"id": "cs09_led_y19",
+					"speaker": "旁白",
+					"text": "册上旧渍沉底。"
+				},
+				{
+					"id": "cs09_led_y20",
+					"speaker": "石垒·晚担",
+					"text": "沉底的不是新泼。"
+				},
+				{
+					"id": "cs09_led_y21",
+					"speaker": "leader",
+					"text": "新泼的不认。"
+				},
+				{
+					"id": "cs0901_ldg1",
+					"speaker": "岁吏",
+					"text": "血巾两星干并排，验已写才合册。"
+				},
+				{
+					"id": "cs0901_ldg2",
+					"speaker": "书记官",
+					"text": "卖泼的声，不进名册。"
+				},
+				{
+					"id": "cs0901_ldg3",
+					"speaker": "槐里·青禾",
+					"text": "谁的血谁的名——旁注写清了。"
+				},
+				{
+					"id": "cs0901_ldg4",
+					"speaker": "leader",
+					"text": "验已写还在。空着的格，等真血。"
+				},
+				{
+					"id": "cs0901_ldg_end",
+					"speaker": "leader",
+					"text": "巾角干星旁，灰旗堡验册等合页。"
+				}
+			],
+			"actions": []
+		}
+	]
 }

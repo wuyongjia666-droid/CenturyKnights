@@ -1,1095 +1,1125 @@
 {
-  "id": "cs07_01",
-  "title": "仪典上的灯",
-  "legacy_index": 407,
-  "return_scene": "res://scenes/hub/castle_hub.tscn",
-  "source": "docs/content-seasons/season-07/NOVEL.md",
-  "beats": [
-    {
-      "id": "yard",
-      "title": "挂栏",
-      "next": "rite",
-      "lines": [
-        {
-          "id": "cs07_yd_0",
-          "speaker": "旁白",
-          "text": "认宗仪典。名册末行空着。仪典上的灯还亮。",
-          "stage": {
-            "card": "一　挂栏",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs07_yd_1",
-          "speaker": "书记官",
-          "text": "仪典栏要念得像孩子够得着的灯，不像催条上的满。"
-        },
-        {
-          "id": "cs07_yd_2",
-          "speaker": "leader",
-          "text": "写路已选。"
-        },
-        {
-          "id": "cs07_yd_3",
-          "speaker": "旁白",
-          "text": "笔尖停一下。末行落下「路已选」三字。"
-        },
-        {
-          "id": "cs07_yd_4",
-          "speaker": "老旗手",
-          "text": "旗角誊的是路已选没有，不把代选的姓卖出去。"
-        },
-        {
-          "id": "cs07_yd_5",
-          "speaker": "岁吏",
-          "text": "谱可以进栏。仪典是另一本账。"
-        },
-        {
-          "id": "cs07_yd_6",
-          "speaker": "石垒·晚担",
-          "text": "灯下写得好看容易。自己站上路砖，才难。"
-        },
-        {
-          "id": "cs07_yard_x0",
-          "speaker": "旁白",
-          "text": "仪典棚支起来。灯比孩子头顶高一掌。"
-        },
-        {
-          "id": "cs07_yard_x1",
-          "speaker": "书记官",
-          "text": "栏要写得正。正不等于抢着写满。"
-        },
-        {
-          "id": "cs07_yard_x2",
-          "speaker": "老管事",
-          "text": "路没选，印先凉。凉着对。"
-        },
-        {
-          "id": "cs07_yard_x3",
-          "speaker": "槐里·青禾",
-          "text": "够不着灯就对。够着再选路。"
-        },
-        {
-          "id": "cs07_yard_x4",
-          "speaker": "苇原·灯影",
-          "text": "巡问谁选路，不问谁喊已入册。"
-        },
-        {
-          "id": "cs07_yard_x5",
-          "speaker": "老旗手",
-          "text": "路空着，我绣空。绣满是骗人。"
-        },
-        {
-          "id": "cs07_yard_x6",
-          "speaker": "岁吏",
-          "text": "代选不进年迹。孩子自己站上灯才进。"
-        },
-        {
-          "id": "cs07_yard_x7",
-          "speaker": "石垒·晚担",
-          "text": "影正再绣满。影偏就等。"
-        },
-        {
-          "id": "cs07_yard_x8",
-          "speaker": "旁白",
-          "text": "印纽放在盒里。盒盖没开，是规矩。"
-        },
-        {
-          "id": "cs07_yard_x9",
-          "speaker": "掌柜",
-          "text": "酒馆圈等仪典选题。公开选，少扯皮。"
-        },
-        {
-          "id": "cs0701_ya_d1",
-          "speaker": "槐里·青禾",
-          "text": "空步先于假名。先停。"
-        },
-        {
-          "id": "cs0701_ya_d2",
-          "speaker": "石垒·晚担",
-          "text": "选路砖有泥才算走。"
-        },
-        {
-          "id": "cs0701_ya_d3",
-          "speaker": "苇原·灯影",
-          "text": "问空牌在。先空着。"
-        },
-        {
-          "id": "cs0701_ya_d4",
-          "speaker": "岁吏",
-          "text": "边注不擦。未稳就写未稳。"
-        },
-        {
-          "id": "cs0701_ya_d5",
-          "speaker": "书记官",
-          "text": "摘要两行。一行易谎。"
-        },
-        {
-          "id": "cs07_yd_7",
-          "speaker": "leader",
-          "text": "栏挂上了。去看仪典。"
-        }
-      ]
-    },
-    {
-      "id": "rite",
-      "title": "仪典",
-      "next": "hourglass",
-      "lines": [
-        {
-          "id": "cs07_rt_0",
-          "speaker": "旁白",
-          "text": "仪典未结。灯照着印泥上的红。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs07_rt_1",
-          "speaker": "老管事",
-          "text": "仪典：选路已记，盖印待对。路名栏仍空。"
-        },
-        {
-          "id": "cs07_rt_2",
-          "speaker": "旁白",
-          "text": "名册说路已选。仪典说还在选。两行字第一次吵架。"
-        },
-        {
-          "id": "cs07_rt_3",
-          "speaker": "苇原·灯影",
-          "text": "巡防不问谁入谱。问今夜谁还没选路。"
-        },
-        {
-          "id": "cs07_rt_4",
-          "speaker": "槐里·青禾",
-          "text": "灯够得着，脚还停在砖外。名字先满，灯不认这笔。"
-        },
-        {
-          "id": "cs07_rt_5",
-          "speaker": "老管事",
-          "text": "还差两步。跳步的栏，桩会裂。"
-        },
-        {
-          "id": "cs07_rite_x0",
-          "speaker": "旁白",
-          "text": "空位被灯照着。照着的是问，不是名。"
-        },
-        {
-          "id": "cs07_rite_x1",
-          "speaker": "老管事",
-          "text": "仪典已挂。未选路，印待对。"
-        },
-        {
-          "id": "cs07_rite_x2",
-          "speaker": "石垒·晚担",
-          "text": "路偏了，明年孩子骂的是我们。"
-        },
-        {
-          "id": "cs07_rite_x3",
-          "speaker": "书记官",
-          "text": "夹缝写「未选路」。小字是缝。"
-        },
-        {
-          "id": "cs07_rite_x4",
-          "speaker": "岁吏",
-          "text": "孩子自己的红脸可以留一夜。代他写进匣的绿，我会半夜抽出来。"
-        },
-        {
-          "id": "cs07_rite_x5",
-          "speaker": "苇原·灯影",
-          "text": "指不清路，就别卖已定。"
-        },
-        {
-          "id": "cs07_rite_x6",
-          "speaker": "槐里·青禾",
-          "text": "选早了，路是大人的，不是孩子的。"
-        },
-        {
-          "id": "cs07_rite_x7",
-          "speaker": "老旗手",
-          "text": "跳步盖印，谱灯会红脸。"
-        },
-        {
-          "id": "cs07_rite_x8",
-          "speaker": "旁白",
-          "text": "雨打棚顶。灯偏一瞬，又被人扶正。"
-        },
-        {
-          "id": "cs07_rite_x9",
-          "speaker": "老管事",
-          "text": "灯可以偏。路不可以偏。"
-        },
-        {
-          "id": "cs0701_ri_d1",
-          "speaker": "老旗手",
-          "text": "不绣喊出来的仪典。"
-        },
-        {
-          "id": "cs0701_ri_d2",
-          "speaker": "老管事",
-          "text": "细线别，不裁。"
-        },
-        {
-          "id": "cs0701_ri_d3",
-          "speaker": "掌柜",
-          "text": "整句免费看步。半截不售。"
-        },
-        {
-          "id": "cs0701_ri_d4",
-          "speaker": "leader",
-          "text": "四步都亮，再谈入。"
-        },
-        {
-          "id": "cs0701_ri_d5",
-          "speaker": "旁白",
-          "text": "仪典棚灯小。步却大。"
-        },
-        {
-          "id": "cs07_rt_6",
-          "speaker": "leader",
-          "text": "路还没自己走完。先去看沙漏，路名后钉。"
-        }
-      ]
-    },
-    {
-      "id": "hourglass",
-      "title": "两行",
-      "next": "bridge",
-      "lines": [
-        {
-          "id": "cs07_hg_0",
-          "speaker": "旁白",
-          "text": "沙漏多出两行：上行路已选，下行仪典未结。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs07_hg_1",
-          "speaker": "老管事",
-          "text": "路名钉在上行。没站过的那行谁要撕，先把灯油摸一手。"
-        },
-        {
-          "id": "cs07_hg_2",
-          "speaker": "岁吏",
-          "text": "回执在侧室。谱与仪，两本账。"
-        },
-        {
-          "id": "cs07_hg_3",
-          "speaker": "书记官",
-          "text": "议会的摘要只肯留一行路名。灯下的人还站着，一行装不下。"
-        },
-        {
-          "id": "cs07_hg_4",
-          "speaker": "苇原·灯影",
-          "text": "灯花跳的时候更也在换。跳完看谁还没站上路。"
-        },
-        {
-          "id": "cs07_hg_5",
-          "speaker": "槐里·青禾",
-          "text": "孩子来抄仪典，抄还没站上的空步，别只抄路名。"
-        },
-        {
-          "id": "cs07_hourglass_x0",
-          "speaker": "旁白",
-          "text": "上行仪典已挂，下行未选路。细线钉住。"
-        },
-        {
-          "id": "cs07_hourglass_x1",
-          "speaker": "老管事",
-          "text": "撕掉仪典下行的人，先把手按上未冷的印纽再结账。"
-        },
-        {
-          "id": "cs07_hourglass_x2",
-          "speaker": "书记官",
-          "text": "一行路名好念。两行里有未站的人，才像仪典。"
-        },
-        {
-          "id": "cs07_hourglass_x3",
-          "speaker": "岁吏",
-          "text": "回执认并排。并排认路。路不认代选。"
-        },
-        {
-          "id": "cs07_hourglass_x4",
-          "speaker": "苇原·灯影",
-          "text": "香柱还剩半寸。接更的人先看砖上谁的脚还没踩实。"
-        },
-        {
-          "id": "cs07_hourglass_x5",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄未选。抄路的时候，空要在。"
-        },
-        {
-          "id": "cs07_hourglass_x6",
-          "speaker": "石垒·晚担",
-          "text": "间距够脸红。红完再谈钉路。"
-        },
-        {
-          "id": "cs07_hourglass_x7",
-          "speaker": "老旗手",
-          "text": "核旗时仪典两行都要在。少了未站那行，旗角先裂。"
-        },
-        {
-          "id": "cs07_hourglass_x8",
-          "speaker": "旁白",
-          "text": "沙子慢。慢着选，才像仪典该有的速度。"
-        },
-        {
-          "id": "cs07_hourglass_x9",
-          "speaker": "掌柜",
-          "text": "仪典墙牌是硬的。撕掉空步那行的手，会记得疼。"
-        },
-        {
-          "id": "cs0701_ho_d1",
-          "speaker": "槐里·青禾",
-          "text": "双灯都亮才谈。灭一盏，停。"
-        },
-        {
-          "id": "cs0701_ho_d2",
-          "speaker": "石垒·晚担",
-          "text": "门槛四拍。拍齐进棚。"
-        },
-        {
-          "id": "cs0701_ho_d3",
-          "speaker": "苇原·灯影",
-          "text": "假入一夜，宗谱就脏。"
-        },
-        {
-          "id": "cs0701_ho_d4",
-          "speaker": "岁吏",
-          "text": "潮墨慢滤。急盖过不了。"
-        },
-        {
-          "id": "cs0701_ho_d5",
-          "speaker": "书记官",
-          "text": "乳名不进摘要。护到步稳。"
-        },
-        {
-          "id": "cs07_hg_6",
-          "speaker": "leader",
-          "text": "灯下两行都留着。去门廊问路砖。"
-        },
-        {
-          "id": "cs0701_vis_mv1",
-          "speaker": "旁白",
-          "text": "仪典鼓槌靠在沙漏架上，槌头还热。"
-        },
-        {
-          "id": "cs0701_vis_mv2",
-          "speaker": "书记官",
-          "text": "热槌说明催过场。催场不怕，怕代选。"
-        },
-        {
-          "id": "cs0701_vis_mv3",
-          "speaker": "槐里·青禾",
-          "text": "代选前先看月份说话。"
-        },
-        {
-          "id": "cs0701_vst1",
-          "speaker": "岁吏",
-          "text": "月份从仪典香灰里漏出一粒。粒小，却是真月份。"
-        },
-        {
-          "id": "cs0701_vst2",
-          "speaker": "书记官",
-          "text": "仪典册页边，沙漏不敢走快。"
-        },
-        {
-          "id": "cs0701_vst3",
-          "speaker": "leader",
-          "text": "月份漏过。台阶，我一步步上。"
-        },
-        {
-          "id": "cs0701_vis_mv4",
-          "speaker": "leader",
-          "text": "听月份。去。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "open_hourglass",
-          "label": "去看月份怎么往前走",
-          "do": [
-            {
-              "op": "visit",
-              "path": "res://scenes/hub/hourglass.tscn"
-            }
-          ]
-        },
-        {
-          "id": "continue_after_visit",
-          "label": "继续，去门廊",
-          "do": [
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "bridge",
-      "title": "门廊",
-      "next": "tavern",
-      "lines": [
-        {
-          "id": "cs07_br_0",
-          "speaker": "旁白",
-          "text": "门廊问谁入。墙牌两行一起响。",
-          "stage": {
-            "bg": "hall",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs07_br_1",
-          "speaker": "石垒·晚担",
-          "text": "路砖上的牌比路纸硬，路纸又比代选的嘴硬。"
-        },
-        {
-          "id": "cs07_br_2",
-          "speaker": "老旗手",
-          "text": "旗角拿来核有没有自己站过，不拿来卖路名。"
-        },
-        {
-          "id": "cs07_br_3",
-          "speaker": "苇原·灯影",
-          "text": "路砖上还有一只没踩热的脚印。热了再谈谁的路。"
-        },
-        {
-          "id": "cs07_br_4",
-          "speaker": "槐里·青禾",
-          "text": "谎抄进仪典藏不住。孩子会问灯下为什么还空。"
-        },
-        {
-          "id": "cs07_br_5",
-          "speaker": "老管事",
-          "text": "棚外的话比脚印走得快。脚印留在砖上，话留不住。"
-        },
-        {
-          "id": "cs07_br_6",
-          "speaker": "岁吏",
-          "text": "谱很长。仪典很吵。吵是还在选。"
-        },
-        {
-          "id": "cs07_br_7",
-          "speaker": "leader",
-          "text": "牌还在灯下。带去酒馆，别在门廊代选。"
-        },
-        {
-          "id": "cs07_bridge_x0",
-          "speaker": "旁白",
-          "text": "门廊问谁选路。墙牌两行一起响。"
-        },
-        {
-          "id": "cs07_bridge_x1",
-          "speaker": "石垒·晚担",
-          "text": "想绕过路牌的人，先撞上还没踩热的砖。"
-        },
-        {
-          "id": "cs07_bridge_x2",
-          "speaker": "老旗手",
-          "text": "旗角给人核。路给人站。"
-        },
-        {
-          "id": "cs07_bridge_x3",
-          "speaker": "苇原·灯影",
-          "text": "路不清，印先别谈。"
-        },
-        {
-          "id": "cs07_bridge_x4",
-          "speaker": "槐里·青禾",
-          "text": "谎抄不住。孩子会指着空位问。"
-        },
-        {
-          "id": "cs07_bridge_x5",
-          "speaker": "老管事",
-          "text": "闲话快。选路慢。慢的留下。"
-        },
-        {
-          "id": "cs07_bridge_x6",
-          "speaker": "岁吏",
-          "text": "谱很长。仪典很静。静着选。"
-        },
-        {
-          "id": "cs07_bridge_x7",
-          "speaker": "书记官",
-          "text": "记谁催已定、谁短笑、谁想代选。"
-        },
-        {
-          "id": "cs07_bridge_x8",
-          "speaker": "旁白",
-          "text": "墙牌旁的短笑散在香灰里。散了不是仪典收场。"
-        },
-        {
-          "id": "cs07_bridge_x9",
-          "speaker": "掌柜",
-          "text": "路砖还凉。酒馆那个圈不肯用笑声把路捂热。"
-        },
-        {
-          "id": "cs0701_mid_mv1",
-          "speaker": "旁白",
-          "text": "仪典鼓皮松了半寸。有人用指节敲，敲出闷响。"
-        },
-        {
-          "id": "cs0701_mid_mv2",
-          "speaker": "书记官",
-          "text": "闷响提醒：礼未定，人先乱。"
-        },
-        {
-          "id": "cs0701_mid_mv3",
-          "speaker": "石垒·晚担",
-          "text": "乱的人想代选。代选最脏。"
-        },
-        {
-          "id": "cs0701_mid_mv4",
-          "speaker": "槐里·青禾",
-          "text": "脏手碰绶，绶会淡。"
-        },
-        {
-          "id": "cs0701_mid_mv5",
-          "speaker": "掌柜",
-          "text": "墙牌旁那拨，专催你们快点定。"
-        },
-        {
-          "id": "cs0701_mid_mv6",
-          "speaker": "苇原·灯影",
-          "text": "快点定，不如先试清。"
-        },
-        {
-          "id": "cs0701_mid_mv7",
-          "speaker": "leader",
-          "text": "试清再定。锋不问代嘴。"
-        },
-        {
-          "id": "cs0701_win1",
-          "speaker": "旁白",
-          "text": "锋定。仪典问声沉了，墙牌旁催的人退了。",
-          "when": {
-            "flag": "cs07_mid_fought"
-          }
-        },
-        {
-          "id": "cs0701_win2",
-          "speaker": "掌柜",
-          "text": "催不停的，今晚停了。",
-          "when": {
-            "flag": "cs07_mid_fought"
-          }
-        },
-        {
-          "id": "cs0701_win3",
-          "speaker": "苇原·灯影",
-          "text": "定之前试清了。清了，才配上台阶。",
-          "when": {
-            "flag": "cs07_mid_fought"
-          }
-        },
-        {
-          "id": "cs0701_win4",
-          "speaker": "leader",
-          "text": "锋不问代嘴。仪典，我自己应。",
-          "when": {
-            "flag": "cs07_mid_fought"
-          }
-        },
-        {
-          "id": "cs07_mid_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。仪典问声还在。墙牌旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs07_mid_lost"
-              },
-              {
-                "not_flag": "cs07_mid_fought"
-              }
-            ]
-          }
-        }
-      ],
-      "actions": [
-        {
-          "id": "open_skirmish",
-          "label": "先试一锋",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs07_mid_fought"
-              },
-              {
-                "not_flag": "cs07_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs07_mid_fought"
-              ],
-              "lose_flags": [
-                "cs07_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "仪典上的灯",
-                "outcome": "仪典口试锋得手——问声旁锋镝先亮",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "retry_skirmish",
-          "label": "再试锋镝",
-          "when": {
-            "all": [
-              {
-                "not_flag": "cs07_mid_fought"
-              },
-              {
-                "flag": "cs07_mid_lost"
-              }
-            ]
-          },
-          "do": [
-            {
-              "op": "battle",
-              "map": "quest_bandit",
-              "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn",
-              "win_flags": [
-                "cs07_mid_fought"
-              ],
-              "lose_flags": [
-                "cs07_mid_lost"
-              ],
-              "win_ledger": {
-                "choice": "mid_skirmish",
-                "title": "仪典上的灯",
-                "outcome": "仪典口试锋得手——问声旁锋镝先亮",
-                "yeartrace": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "continue_after_battle",
-          "label": "继续，去酒馆",
-          "do": [
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs07_mid_fought"
-                  },
-                  {
-                    "not_flag": "cs07_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs07_01",
-              "choice": "mid_skirmish_skip",
-              "title": "仪典上的灯",
-              "outcome": "未试锋——锋未出鞘，径去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "season_ledger",
-              "when": {
-                "all": [
-                  {
-                    "not_flag": "cs07_mid_fought"
-                  },
-                  {
-                    "flag": "cs07_mid_lost"
-                  }
-                ]
-              },
-              "chapter": "cs07_01",
-              "choice": "mid_skirmish_abort",
-              "title": "仪典上的灯",
-              "outcome": "试锋未成——伤还在，先去酒馆",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "next"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tavern",
-      "title": "选题",
-      "lines": [
-        {
-          "id": "cs07_tav_0",
-          "speaker": "旁白",
-          "text": "烽火酒馆。碗沿两圈：仪典并排记，和先钉路名。",
-          "stage": {
-            "bg": "tavern",
-            "camera": "wide"
-          }
-        },
-        {
-          "id": "cs07_tav_1",
-          "speaker": "掌柜",
-          "text": "路名纸被香熏卷了。我压在酒坛底下，压平再让你选。"
-        },
-        {
-          "id": "cs07_tav_2",
-          "speaker": "槐里·青禾",
-          "text": "裁仪典的人，先把剪刀放下。"
-        },
-        {
-          "id": "cs07_tav_3",
-          "speaker": "老管事",
-          "text": "并排钉。谁撕仪典抄本，谁结账。"
-        },
-        {
-          "id": "cs07_tav_4",
-          "speaker": "石垒·晚担",
-          "text": "栏是拿来念的，路砖是拿来站的。仪典两样都要。"
-        },
-        {
-          "id": "cs07_tav_5",
-          "speaker": "苇原·灯影",
-          "text": "沙漏还亮。谁买一行结论，带他去摸印。"
-        },
-        {
-          "id": "cs07_tav_6",
-          "speaker": "旁白",
-          "text": "路名纸发硬，并排记还软。软的在香里。"
-        },
-        {
-          "id": "cs07_tavern_x0",
-          "speaker": "旁白",
-          "text": "碗沿两圈：仪典并排记，先钉路名。"
-        },
-        {
-          "id": "cs07_tavern_x1",
-          "speaker": "掌柜",
-          "text": "选完再喝。空喊路定，酒钱加倍。"
-        },
-        {
-          "id": "cs07_tavern_x2",
-          "speaker": "槐里·青禾",
-          "text": "裁未选路的人，先放下剪刀。"
-        },
-        {
-          "id": "cs07_tavern_x3",
-          "speaker": "老管事",
-          "text": "并排让空可见。可见才逼人来选。"
-        },
-        {
-          "id": "cs07_tavern_x4",
-          "speaker": "石垒·晚担",
-          "text": "栏能念，路能站。少一样厅晃。"
-        },
-        {
-          "id": "cs07_tavern_x5",
-          "speaker": "苇原·灯影",
-          "text": "买一行结论，先去指空位。"
-        },
-        {
-          "id": "cs07_tavern_x6",
-          "speaker": "岁吏",
-          "text": "回执不认吆喝。认路，认灯，认手。"
-        },
-        {
-          "id": "cs07_tavern_x7",
-          "speaker": "书记官",
-          "text": "香把一张纸熏硬，另一张还软。硬软都在，风不做主。"
-        },
-        {
-          "id": "cs07_tavern_x8",
-          "speaker": "老旗手",
-          "text": "路选歪了，旗角会在门槛上抽一下。抽的是针，不是嘴。"
-        },
-        {
-          "id": "cs0701_ta_d1",
-          "speaker": "掌柜",
-          "text": "空壳席：先看四步。"
-        },
-        {
-          "id": "cs0701_ta_d2",
-          "speaker": "老管事",
-          "text": "死结下降，无锣也好。"
-        },
-        {
-          "id": "cs0701_ta_d3",
-          "speaker": "老旗手",
-          "text": "旁注钉活着。可拔才真。"
-        },
-        {
-          "id": "cs0701_ta_d4",
-          "speaker": "岁吏",
-          "text": "禁言解禁只准先问空。"
-        },
-        {
-          "id": "cs07_tavern_x9",
-          "speaker": "旁白",
-          "text": "你还没选。没选时，空位最清楚。"
-        },
-        {
-          "id": "cs0701_ret_mv1",
-          "speaker": "旁白",
-          "text": "仪典人选被起哄成划拳。拳响谱不响。"
-        },
-        {
-          "id": "cs0701_ret_mv2",
-          "speaker": "掌柜",
-          "text": "拳不算数。谱才算。"
-        },
-        {
-          "id": "cs0701_ret_mv3",
-          "speaker": "书记官",
-          "text": "谱回堡钉。"
-        },
-        {
-          "id": "cs0701_tvn1",
-          "speaker": "掌柜",
-          "text": "仪典那一锋，酒要浅——浅着敬。"
-        },
-        {
-          "id": "cs0701_tvn2",
-          "speaker": "石垒·晚担",
-          "text": "催的人退了。退了才有座位。"
-        },
-        {
-          "id": "cs0701_tvn3",
-          "speaker": "听回",
-          "text": "香灰里那粒月份，有人看见了。"
-        },
-        {
-          "id": "cs0701_tvn4",
-          "speaker": "leader",
-          "text": "应过了。酒浅着。名，不代。"
-        },
-        {
-          "id": "cs0701_ret_mv4",
-          "speaker": "leader",
-          "text": "回堡钉谱。"
-        }
-      ],
-      "actions": [
-        {
-          "id": "keep_rite",
-          "label": "仪典并排记",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs07_kept_rite",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs07_01",
-              "choice": "keep_rite",
-              "title": "仪典上的灯",
-              "outcome": "仪典并排记入谱",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        },
-        {
-          "id": "name_path",
-          "label": "先钉路名",
-          "do": [
-            {
-              "op": "set_flag",
-              "flag": "cs07_name_path",
-              "value": true
-            },
-            {
-              "op": "season_ledger",
-              "chapter": "cs07_01",
-              "choice": "name_path",
-              "title": "仪典上的灯",
-              "outcome": "先钉路名",
-              "yeartrace": true
-            },
-            {
-              "op": "goto",
-              "beat": "ledger"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ledger",
-      "title": "入册",
-      "lines": [
-        {
-          "id": "cs07_led_0",
-          "speaker": "旁白",
-          "text": "旗册封面四个字：仪典上的灯。末页已厚。柜上两把钥匙。",
-          "stage": {
-            "bg": "hall",
-            "camera": "close"
-          }
-        },
-        {
-          "id": "cs07_led_par",
-          "speaker": "旁白",
-          "text": "你留下两行。议会仍爱一行。柜子认灯。",
-          "when": {
-            "flag": "cs07_kept_rite"
-          }
-        },
-        {
-          "id": "cs07_led_name",
-          "speaker": "旁白",
-          "text": "你先钉路名。沙漏仍在亮——月会替你写下行。",
-          "when": {
-            "flag": "cs07_name_path"
-          }
-        },
-        {
-          "id": "cs07_led_1",
-          "speaker": "老管事",
-          "text": "存档不刊也行。不丢，就是缝。"
-        },
-        {
-          "id": "cs07_led_2",
-          "speaker": "槐里·青禾",
-          "text": "孩子抄过仪典，才配以后念栏。"
-        },
-        {
-          "id": "cs07_led_3",
-          "speaker": "老旗手",
-          "text": "并排。不要裁。缝在名册与仪典之间。"
-        },
-        {
-          "id": "cs07_led_4",
-          "speaker": "岁吏",
-          "text": "回执在侧室。谱与仪，两本账。"
-        },
-        {
-          "id": "cs07_led_5",
-          "speaker": "苇原·灯影",
-          "text": "更还在交。下次挂嗣，下行先响。"
-        },
-        {
-          "id": "cs07_ledger_x0",
-          "speaker": "旁白",
-          "text": "旗册封面：仪典上的灯。钥匙两把。"
-        },
-        {
-          "id": "cs07_ledger_x1",
-          "speaker": "老管事",
-          "text": "缝在名册与未选路之间。缝要留。"
-        },
-        {
-          "id": "cs07_ledger_x2",
-          "speaker": "槐里·青禾",
-          "text": "抄过空位，才配以后念栏。"
-        },
-        {
-          "id": "cs07_ledger_x3",
-          "speaker": "老旗手",
-          "text": "并排入柜。裁半本的，我不收。"
-        },
-        {
-          "id": "cs07_ledger_x4",
-          "speaker": "岁吏",
-          "text": "侧室回执还在。红脸还诚实。"
-        },
-        {
-          "id": "cs07_ledger_x5",
-          "speaker": "苇原·灯影",
-          "text": "下次挂嗣，下行先响。"
-        },
-        {
-          "id": "cs07_ledger_x6",
-          "speaker": "书记官",
-          "text": "催条再来，封面压得住。"
-        },
-        {
-          "id": "cs07_ledger_x7",
-          "speaker": "石垒·晚担",
-          "text": "桩在，路名才有地方站。"
-        },
-        {
-          "id": "cs07_ledger_x8",
-          "speaker": "掌柜",
-          "text": "擦过急圈的墙，更值钱。"
-        },
-        {
-          "id": "cs07_ledger_x9",
-          "speaker": "旁白",
-          "text": "灯还在。灯在，这一季就还没骗完。"
-        },
-        {
-          "id": "cs07_led_6",
-          "speaker": "leader",
-          "text": "栏与仪，并排。谁来认嗣位，先念完。"
-        },
-        {
-          "id": "cs0701_le_d1",
-          "speaker": "旁白",
-          "text": "栏与仪并排。剪刀封柜。"
-        },
-        {
-          "id": "cs0701_le_d2",
-          "speaker": "书记官",
-          "text": "念完四步，再认嗣位。"
-        },
-        {
-          "id": "cs0701_le_d3",
-          "speaker": "槐里·青禾",
-          "text": "空步光荣。装满可耻。"
-        },
-        {
-          "id": "cs0701_le_d4",
-          "speaker": "leader",
-          "text": "并排。记下。"
-        },
-        {
-          "id": "cs0701_ldg1",
-          "speaker": "岁吏",
-          "text": "仪典路已选——香灰里那粒月份，并进旁注。"
-        },
-        {
-          "id": "cs0701_ldg2",
-          "speaker": "书记官",
-          "text": "代嘴的字，一概不收。"
-        },
-        {
-          "id": "cs0701_ldg3",
-          "speaker": "掌柜",
-          "text": "催的人退了。退了，谱才清。"
-        },
-        {
-          "id": "cs0701_ldg4",
-          "speaker": "leader",
-          "text": "路已选还在。两行之间的空，我守。"
-        },
-        {
-          "id": "cs0701_ldg_end",
-          "speaker": "leader",
-          "text": "台阶上的应，灰旗堡宗谱等自己签。"
-        }
-      ],
-      "actions": []
-    }
-  ]
+	"id": "cs07_01",
+	"title": "仪典上的灯",
+	"legacy_index": 407,
+	"return_scene": "res://scenes/hub/castle_hub.tscn",
+	"source": "docs/content-seasons/season-07/NOVEL.md",
+	"beats": [
+		{
+			"id": "yard",
+			"title": "挂栏",
+			"next": "rite",
+			"lines": [
+				{
+					"id": "cs07_yd_0",
+					"speaker": "旁白",
+					"text": "认宗仪典。名册末行空着。仪典上的灯还亮。",
+					"stage": {
+						"card": "一　挂栏",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs07_yd_1",
+					"speaker": "书记官",
+					"text": "仪典栏要念得像孩子够得着的灯，不像催条上的满。"
+				},
+				{
+					"id": "cs07_yd_2",
+					"speaker": "leader",
+					"text": "写路已选。"
+				},
+				{
+					"id": "cs07_yd_3",
+					"speaker": "旁白",
+					"text": "笔尖停一下。末行落下「路已选」三字。"
+				},
+				{
+					"id": "cs07_yd_4",
+					"speaker": "老旗手",
+					"text": "旗角誊的是路已选没有，不把代选的姓卖出去。"
+				},
+				{
+					"id": "cs07_yd_5",
+					"speaker": "岁吏",
+					"text": "谱可以进栏。仪典是另一本账。"
+				},
+				{
+					"id": "cs07_yd_6",
+					"speaker": "石垒·晚担",
+					"text": "灯下写得好看容易。自己站上路砖，才难。"
+				},
+				{
+					"id": "cs07_yard_x0",
+					"speaker": "旁白",
+					"text": "仪典棚支起来。灯比孩子头顶高一掌。"
+				},
+				{
+					"id": "cs07_yard_x1",
+					"speaker": "书记官",
+					"text": "栏要写得正。正不等于抢着写满。"
+				},
+				{
+					"id": "cs07_yard_x2",
+					"speaker": "老管事",
+					"text": "路没选，印先凉。凉着对。"
+				},
+				{
+					"id": "cs07_yard_x3",
+					"speaker": "槐里·青禾",
+					"text": "够不着灯就对。够着再选路。"
+				},
+				{
+					"id": "cs07_yard_x4",
+					"speaker": "苇原·灯影",
+					"text": "巡问谁选路，不问谁喊已入册。"
+				},
+				{
+					"id": "cs07_yard_x5",
+					"speaker": "老旗手",
+					"text": "路空着，我绣空。绣满是骗人。"
+				},
+				{
+					"id": "cs07_yard_x6",
+					"speaker": "岁吏",
+					"text": "代选不进年迹。孩子自己站上灯才进。"
+				},
+				{
+					"id": "cs07_yard_x7",
+					"speaker": "石垒·晚担",
+					"text": "影正再绣满。影偏就等。"
+				},
+				{
+					"id": "cs07_yard_x8",
+					"speaker": "旁白",
+					"text": "印纽放在盒里。盒盖没开，是规矩。"
+				},
+				{
+					"id": "cs07_yard_x9",
+					"speaker": "掌柜",
+					"text": "酒馆圈等仪典选题。公开选，少扯皮。"
+				},
+				{
+					"id": "cs0701_ya_d1",
+					"speaker": "槐里·青禾",
+					"text": "空步先于假名。先停。"
+				},
+				{
+					"id": "cs0701_ya_d2",
+					"speaker": "石垒·晚担",
+					"text": "选路砖有泥才算走。"
+				},
+				{
+					"id": "cs0701_ya_d3",
+					"speaker": "苇原·灯影",
+					"text": "问空牌在。先空着。"
+				},
+				{
+					"id": "cs0701_ya_d4",
+					"speaker": "岁吏",
+					"text": "边注不擦。未稳就写未稳。"
+				},
+				{
+					"id": "cs0701_ya_d5",
+					"speaker": "书记官",
+					"text": "摘要两行。一行易谎。"
+				},
+				{
+					"id": "cs07_yd_7",
+					"speaker": "leader",
+					"text": "栏挂上了。去看仪典。"
+				}
+			]
+		},
+		{
+			"id": "rite",
+			"title": "仪典",
+			"next": "hourglass",
+			"lines": [
+				{
+					"id": "cs07_rt_0",
+					"speaker": "旁白",
+					"text": "仪典未结。灯照着印泥上的红。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs07_rt_1",
+					"speaker": "老管事",
+					"text": "仪典：选路已记，盖印待对。路名栏仍空。"
+				},
+				{
+					"id": "cs07_rt_2",
+					"speaker": "旁白",
+					"text": "名册说路已选。仪典说还在选。两行字第一次吵架。"
+				},
+				{
+					"id": "cs07_rt_3",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁入谱。问今夜谁还没选路。"
+				},
+				{
+					"id": "cs07_rt_4",
+					"speaker": "槐里·青禾",
+					"text": "灯够得着，脚还停在砖外。名字先满，灯不认这笔。"
+				},
+				{
+					"id": "cs07_rt_5",
+					"speaker": "老管事",
+					"text": "还差两步。跳步的栏，桩会裂。"
+				},
+				{
+					"id": "cs07_rite_x0",
+					"speaker": "旁白",
+					"text": "空位被灯照着。照着的是问，不是名。"
+				},
+				{
+					"id": "cs07_rite_x1",
+					"speaker": "老管事",
+					"text": "仪典已挂。未选路，印待对。"
+				},
+				{
+					"id": "cs07_rite_x2",
+					"speaker": "石垒·晚担",
+					"text": "路偏了，明年孩子骂的是我们。"
+				},
+				{
+					"id": "cs07_rite_x3",
+					"speaker": "书记官",
+					"text": "夹缝写「未选路」。小字是缝。"
+				},
+				{
+					"id": "cs07_rite_x4",
+					"speaker": "岁吏",
+					"text": "孩子自己的红脸可以留一夜。代他写进匣的绿，我会半夜抽出来。"
+				},
+				{
+					"id": "cs07_rite_x5",
+					"speaker": "苇原·灯影",
+					"text": "指不清路，就别卖已定。"
+				},
+				{
+					"id": "cs07_rite_x6",
+					"speaker": "槐里·青禾",
+					"text": "选早了，路是大人的，不是孩子的。"
+				},
+				{
+					"id": "cs07_rite_x7",
+					"speaker": "老旗手",
+					"text": "跳步盖印，谱灯会红脸。"
+				},
+				{
+					"id": "cs07_rite_x8",
+					"speaker": "旁白",
+					"text": "雨打棚顶。灯偏一瞬，又被人扶正。"
+				},
+				{
+					"id": "cs07_rite_x9",
+					"speaker": "老管事",
+					"text": "灯可以偏。路不可以偏。"
+				},
+				{
+					"id": "cs0701_ri_d1",
+					"speaker": "老旗手",
+					"text": "不绣喊出来的仪典。"
+				},
+				{
+					"id": "cs0701_ri_d2",
+					"speaker": "老管事",
+					"text": "细线别，不裁。"
+				},
+				{
+					"id": "cs0701_ri_d3",
+					"speaker": "掌柜",
+					"text": "整句免费看步。半截不售。"
+				},
+				{
+					"id": "cs0701_ri_d4",
+					"speaker": "leader",
+					"text": "四步都亮，再谈入。"
+				},
+				{
+					"id": "cs0701_ri_d5",
+					"speaker": "旁白",
+					"text": "仪典棚灯小。步却大。"
+				},
+				{
+					"id": "cs07_rt_6",
+					"speaker": "leader",
+					"text": "路还没自己走完。先去看沙漏，路名后钉。"
+				}
+			]
+		},
+		{
+			"id": "hourglass",
+			"title": "两行",
+			"next": "bridge",
+			"lines": [
+				{
+					"id": "cs07_hg_0",
+					"speaker": "旁白",
+					"text": "沙漏多出两行：上行路已选，下行仪典未结。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs07_hg_1",
+					"speaker": "老管事",
+					"text": "路名钉在上行。没站过的那行谁要撕，先把灯油摸一手。"
+				},
+				{
+					"id": "cs07_hg_2",
+					"speaker": "岁吏",
+					"text": "回执在侧室。谱与仪，两本账。"
+				},
+				{
+					"id": "cs07_hg_3",
+					"speaker": "书记官",
+					"text": "议会的摘要只肯留一行路名。灯下的人还站着，一行装不下。"
+				},
+				{
+					"id": "cs07_hg_4",
+					"speaker": "苇原·灯影",
+					"text": "灯花跳的时候更也在换。跳完看谁还没站上路。"
+				},
+				{
+					"id": "cs07_hg_5",
+					"speaker": "槐里·青禾",
+					"text": "孩子来抄仪典，抄还没站上的空步，别只抄路名。"
+				},
+				{
+					"id": "cs07_hourglass_x0",
+					"speaker": "旁白",
+					"text": "上行仪典已挂，下行未选路。细线钉住。"
+				},
+				{
+					"id": "cs07_hourglass_x1",
+					"speaker": "老管事",
+					"text": "撕掉仪典下行的人，先把手按上未冷的印纽再结账。"
+				},
+				{
+					"id": "cs07_hourglass_x2",
+					"speaker": "书记官",
+					"text": "一行路名好念。两行里有未站的人，才像仪典。"
+				},
+				{
+					"id": "cs07_hourglass_x3",
+					"speaker": "岁吏",
+					"text": "回执认并排。并排认路。路不认代选。"
+				},
+				{
+					"id": "cs07_hourglass_x4",
+					"speaker": "苇原·灯影",
+					"text": "香柱还剩半寸。接更的人先看砖上谁的脚还没踩实。"
+				},
+				{
+					"id": "cs07_hourglass_x5",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄未选。抄路的时候，空要在。"
+				},
+				{
+					"id": "cs07_hourglass_x6",
+					"speaker": "石垒·晚担",
+					"text": "间距够脸红。红完再谈钉路。"
+				},
+				{
+					"id": "cs07_hourglass_x7",
+					"speaker": "老旗手",
+					"text": "核旗时仪典两行都要在。少了未站那行，旗角先裂。"
+				},
+				{
+					"id": "cs07_hourglass_x8",
+					"speaker": "旁白",
+					"text": "沙子慢。慢着选，才像仪典该有的速度。"
+				},
+				{
+					"id": "cs07_hourglass_x9",
+					"speaker": "掌柜",
+					"text": "仪典墙牌是硬的。撕掉空步那行的手，会记得疼。"
+				},
+				{
+					"id": "cs0701_ho_d1",
+					"speaker": "槐里·青禾",
+					"text": "双灯都亮才谈。灭一盏，停。"
+				},
+				{
+					"id": "cs0701_ho_d2",
+					"speaker": "石垒·晚担",
+					"text": "门槛四拍。拍齐进棚。"
+				},
+				{
+					"id": "cs0701_ho_d3",
+					"speaker": "苇原·灯影",
+					"text": "假入一夜，宗谱就脏。"
+				},
+				{
+					"id": "cs0701_ho_d4",
+					"speaker": "岁吏",
+					"text": "潮墨慢滤。急盖过不了。"
+				},
+				{
+					"id": "cs0701_ho_d5",
+					"speaker": "书记官",
+					"text": "乳名不进摘要。护到步稳。"
+				},
+				{
+					"id": "cs07_hg_6",
+					"speaker": "leader",
+					"text": "灯下两行都留着。去门廊问路砖。"
+				},
+				{
+					"id": "cs0701_vis_mv1",
+					"speaker": "旁白",
+					"text": "仪典鼓槌靠在沙漏架上，槌头还热。"
+				},
+				{
+					"id": "cs0701_vis_mv2",
+					"speaker": "书记官",
+					"text": "热槌说明催过场。催场不怕，怕代选。"
+				},
+				{
+					"id": "cs0701_vis_mv3",
+					"speaker": "槐里·青禾",
+					"text": "代选前先看月份说话。"
+				},
+				{
+					"id": "cs0701_vst1",
+					"speaker": "岁吏",
+					"text": "月份从仪典香灰里漏出一粒。粒小，却是真月份。"
+				},
+				{
+					"id": "cs0701_vst2",
+					"speaker": "书记官",
+					"text": "仪典册页边，沙漏不敢走快。"
+				},
+				{
+					"id": "cs0701_vst3",
+					"speaker": "leader",
+					"text": "月份漏过。台阶，我一步步上。"
+				},
+				{
+					"id": "cs0701_vis_mv4",
+					"speaker": "leader",
+					"text": "听月份。去。"
+				}
+			],
+			"actions": [
+				{
+					"id": "open_hourglass",
+					"label": "去看月份怎么往前走",
+					"do": [
+						{
+							"op": "visit",
+							"path": "res://scenes/hub/hourglass.tscn"
+						}
+					]
+				},
+				{
+					"id": "continue_after_visit",
+					"label": "继续，去门廊",
+					"do": [
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bridge",
+			"title": "门廊",
+			"next": "tavern",
+			"lines": [
+				{
+					"id": "cs07_br_0",
+					"speaker": "旁白",
+					"text": "门廊问谁入。墙牌两行一起响。",
+					"stage": {
+						"bg": "hall",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs07_br_1",
+					"speaker": "石垒·晚担",
+					"text": "路砖上的牌比路纸硬，路纸又比代选的嘴硬。"
+				},
+				{
+					"id": "cs07_br_2",
+					"speaker": "老旗手",
+					"text": "旗角拿来核有没有自己站过，不拿来卖路名。"
+				},
+				{
+					"id": "cs07_br_3",
+					"speaker": "苇原·灯影",
+					"text": "路砖上还有一只没踩热的脚印。热了再谈谁的路。"
+				},
+				{
+					"id": "cs07_br_4",
+					"speaker": "槐里·青禾",
+					"text": "谎抄进仪典藏不住。孩子会问灯下为什么还空。"
+				},
+				{
+					"id": "cs07_br_5",
+					"speaker": "老管事",
+					"text": "棚外的话比脚印走得快。脚印留在砖上，话留不住。"
+				},
+				{
+					"id": "cs07_br_6",
+					"speaker": "岁吏",
+					"text": "谱很长。仪典很吵。吵是还在选。"
+				},
+				{
+					"id": "cs07_br_7",
+					"speaker": "leader",
+					"text": "牌还在灯下。带去酒馆，别在门廊代选。"
+				},
+				{
+					"id": "cs07_bridge_x0",
+					"speaker": "旁白",
+					"text": "门廊问谁选路。墙牌两行一起响。"
+				},
+				{
+					"id": "cs07_bridge_x1",
+					"speaker": "石垒·晚担",
+					"text": "想绕过路牌的人，先撞上还没踩热的砖。"
+				},
+				{
+					"id": "cs07_bridge_x2",
+					"speaker": "老旗手",
+					"text": "旗角给人核。路给人站。"
+				},
+				{
+					"id": "cs07_bridge_x3",
+					"speaker": "苇原·灯影",
+					"text": "路不清，印先别谈。"
+				},
+				{
+					"id": "cs07_bridge_x4",
+					"speaker": "槐里·青禾",
+					"text": "谎抄不住。孩子会指着空位问。"
+				},
+				{
+					"id": "cs07_bridge_x5",
+					"speaker": "老管事",
+					"text": "闲话快。选路慢。慢的留下。"
+				},
+				{
+					"id": "cs07_bridge_x6",
+					"speaker": "岁吏",
+					"text": "谱很长。仪典很静。静着选。"
+				},
+				{
+					"id": "cs07_bridge_x7",
+					"speaker": "书记官",
+					"text": "记谁催已定、谁短笑、谁想代选。"
+				},
+				{
+					"id": "cs07_bridge_x8",
+					"speaker": "旁白",
+					"text": "墙牌旁的短笑散在香灰里。散了不是仪典收场。"
+				},
+				{
+					"id": "cs07_bridge_x9",
+					"speaker": "掌柜",
+					"text": "路砖还凉。酒馆那个圈不肯用笑声把路捂热。"
+				},
+				{
+					"id": "cs0701_mid_mv1",
+					"speaker": "旁白",
+					"text": "仪典鼓皮松了半寸。有人用指节敲，敲出闷响。"
+				},
+				{
+					"id": "cs0701_mid_mv2",
+					"speaker": "书记官",
+					"text": "闷响提醒：礼未定，人先乱。"
+				},
+				{
+					"id": "cs0701_mid_mv3",
+					"speaker": "石垒·晚担",
+					"text": "乱的人想代选。代选最脏。"
+				},
+				{
+					"id": "cs0701_mid_mv4",
+					"speaker": "槐里·青禾",
+					"text": "脏手碰绶，绶会淡。"
+				},
+				{
+					"id": "cs0701_mid_mv5",
+					"speaker": "掌柜",
+					"text": "墙牌旁那拨，专催你们快点定。"
+				},
+				{
+					"id": "cs0701_mid_mv6",
+					"speaker": "苇原·灯影",
+					"text": "快点定，不如先试清。"
+				},
+				{
+					"id": "cs0701_mid_mv7",
+					"speaker": "leader",
+					"text": "试清再定。锋不问代嘴。"
+				},
+				{
+					"id": "cs0701_win1",
+					"speaker": "旁白",
+					"text": "锋定。仪典问声沉了，墙牌旁催的人退了。",
+					"when": {
+						"flag": "cs07_mid_fought"
+					}
+				},
+				{
+					"id": "cs0701_win2",
+					"speaker": "掌柜",
+					"text": "催不停的，今晚停了。",
+					"when": {
+						"flag": "cs07_mid_fought"
+					}
+				},
+				{
+					"id": "cs0701_win3",
+					"speaker": "苇原·灯影",
+					"text": "定之前试清了。清了，才配上台阶。",
+					"when": {
+						"flag": "cs07_mid_fought"
+					}
+				},
+				{
+					"id": "cs0701_win4",
+					"speaker": "leader",
+					"text": "锋不问代嘴。仪典，我自己应。",
+					"when": {
+						"flag": "cs07_mid_fought"
+					}
+				},
+				{
+					"id": "cs07_mid_lost",
+					"speaker": "旁白",
+					"text": "锋收回来。仪典问声还在。墙牌旁那拨，没散。",
+					"when": {
+						"all": [
+							{
+								"flag": "cs07_mid_lost"
+							},
+							{
+								"not_flag": "cs07_mid_fought"
+							}
+						]
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "open_skirmish",
+					"label": "先试一锋",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs07_mid_fought"
+							},
+							{
+								"not_flag": "cs07_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs07_mid_fought"
+							],
+							"lose_flags": [
+								"cs07_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "仪典上的灯",
+								"outcome": "仪典口试锋得手——问声旁锋镝先亮",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "retry_skirmish",
+					"label": "再试锋镝",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs07_mid_fought"
+							},
+							{
+								"flag": "cs07_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs07_mid_fought"
+							],
+							"lose_flags": [
+								"cs07_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "仪典上的灯",
+								"outcome": "仪典口试锋得手——问声旁锋镝先亮",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "continue_after_battle",
+					"label": "继续，去酒馆",
+					"do": [
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs07_mid_fought"
+									},
+									{
+										"not_flag": "cs07_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs07_01",
+							"choice": "mid_skirmish_skip",
+							"title": "仪典上的灯",
+							"outcome": "未试锋——锋未出鞘，径去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs07_mid_fought"
+									},
+									{
+										"flag": "cs07_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs07_01",
+							"choice": "mid_skirmish_abort",
+							"title": "仪典上的灯",
+							"outcome": "试锋未成——伤还在，先去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tavern",
+			"title": "选题",
+			"lines": [
+				{
+					"id": "cs07_tav_0",
+					"speaker": "旁白",
+					"text": "烽火酒馆。碗沿两圈：仪典并排记，和先钉路名。",
+					"stage": {
+						"bg": "tavern",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs07_tav_1",
+					"speaker": "掌柜",
+					"text": "路名纸被香熏卷了。我压在酒坛底下，压平再让你选。"
+				},
+				{
+					"id": "cs07_tav_2",
+					"speaker": "槐里·青禾",
+					"text": "裁仪典的人，先把剪刀放下。"
+				},
+				{
+					"id": "cs07_tav_3",
+					"speaker": "老管事",
+					"text": "并排钉。谁撕仪典抄本，谁结账。"
+				},
+				{
+					"id": "cs07_tav_4",
+					"speaker": "石垒·晚担",
+					"text": "栏是拿来念的，路砖是拿来站的。仪典两样都要。"
+				},
+				{
+					"id": "cs07_tav_5",
+					"speaker": "苇原·灯影",
+					"text": "沙漏还亮。谁买一行结论，带他去摸印。"
+				},
+				{
+					"id": "cs07_tav_6",
+					"speaker": "旁白",
+					"text": "路名纸发硬，并排记还软。软的在香里。"
+				},
+				{
+					"id": "cs07_tavern_x0",
+					"speaker": "旁白",
+					"text": "碗沿两圈：仪典并排记，先钉路名。"
+				},
+				{
+					"id": "cs07_tavern_x1",
+					"speaker": "掌柜",
+					"text": "选完再喝。空喊路定，酒钱加倍。"
+				},
+				{
+					"id": "cs07_tavern_x2",
+					"speaker": "槐里·青禾",
+					"text": "裁未选路的人，先放下剪刀。"
+				},
+				{
+					"id": "cs07_tavern_x3",
+					"speaker": "老管事",
+					"text": "并排让空可见。可见才逼人来选。"
+				},
+				{
+					"id": "cs07_tavern_x4",
+					"speaker": "石垒·晚担",
+					"text": "栏能念，路能站。少一样厅晃。"
+				},
+				{
+					"id": "cs07_tavern_x5",
+					"speaker": "苇原·灯影",
+					"text": "买一行结论，先去指空位。"
+				},
+				{
+					"id": "cs07_tavern_x6",
+					"speaker": "岁吏",
+					"text": "回执不认吆喝。认路，认灯，认手。"
+				},
+				{
+					"id": "cs07_tavern_x7",
+					"speaker": "书记官",
+					"text": "香把一张纸熏硬，另一张还软。硬软都在，风不做主。"
+				},
+				{
+					"id": "cs07_tavern_x8",
+					"speaker": "老旗手",
+					"text": "路选歪了，旗角会在门槛上抽一下。抽的是针，不是嘴。"
+				},
+				{
+					"id": "cs0701_ta_d1",
+					"speaker": "掌柜",
+					"text": "空壳席：先看四步。"
+				},
+				{
+					"id": "cs0701_ta_d2",
+					"speaker": "老管事",
+					"text": "死结下降，无锣也好。"
+				},
+				{
+					"id": "cs0701_ta_d3",
+					"speaker": "老旗手",
+					"text": "旁注钉活着。可拔才真。"
+				},
+				{
+					"id": "cs0701_ta_d4",
+					"speaker": "岁吏",
+					"text": "禁言解禁只准先问空。"
+				},
+				{
+					"id": "cs07_tavern_x9",
+					"speaker": "旁白",
+					"text": "你还没选。没选时，空位最清楚。"
+				},
+				{
+					"id": "cs0701_ret_mv1",
+					"speaker": "旁白",
+					"text": "仪典人选被起哄成划拳。拳响谱不响。"
+				},
+				{
+					"id": "cs0701_ret_mv2",
+					"speaker": "掌柜",
+					"text": "拳不算数。谱才算。"
+				},
+				{
+					"id": "cs0701_ret_mv3",
+					"speaker": "书记官",
+					"text": "谱回堡钉。"
+				},
+				{
+					"id": "cs0701_tvp1",
+					"speaker": "旁白",
+					"text": "仪典香灰落在挂板槽里，灰里还有未燃尽的芯。"
+				},
+				{
+					"id": "cs0701_tvp2",
+					"speaker": "掌柜",
+					"text": "芯未尽就钉，板会烫。烫板伤字，也伤手。"
+				},
+				{
+					"id": "cs0701_tvp3",
+					"speaker": "槐里·青禾",
+					"text": "仪典的路要走完。走完再挂，挂才像礼。"
+				},
+				{
+					"id": "cs0701_tvp4",
+					"speaker": "老管事",
+					"text": "先钉路名的人，多半自己没走完。"
+				},
+				{
+					"id": "cs0701_tvp5",
+					"speaker": "书记官",
+					"text": "仪典并排记。记的是走过的，不是想过的。"
+				},
+				{
+					"id": "cs0701_tvp6",
+					"speaker": "leader",
+					"text": "路过我验。路名不抢钉。"
+				},
+				{
+					"id": "cs0701_tvn1",
+					"speaker": "掌柜",
+					"text": "仪典那一锋，酒要浅——浅着敬。"
+				},
+				{
+					"id": "cs0701_tvn2",
+					"speaker": "石垒·晚担",
+					"text": "催的人退了。退了才有座位。"
+				},
+				{
+					"id": "cs0701_tvn3",
+					"speaker": "听回",
+					"text": "香灰里那粒月份，有人看见了。"
+				},
+				{
+					"id": "cs0701_tvn4",
+					"speaker": "leader",
+					"text": "应过了。酒浅着。名，不代。"
+				},
+				{
+					"id": "cs0701_ret_mv4",
+					"speaker": "leader",
+					"text": "回堡钉谱。"
+				}
+			],
+			"actions": [
+				{
+					"id": "keep_rite",
+					"label": "仪典并排记",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs07_kept_rite",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs07_01",
+							"choice": "keep_rite",
+							"title": "仪典上的灯",
+							"outcome": "仪典并排记入谱",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				},
+				{
+					"id": "name_path",
+					"label": "先钉路名",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs07_name_path",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs07_01",
+							"choice": "name_path",
+							"title": "仪典上的灯",
+							"outcome": "先钉路名",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ledger",
+			"title": "入册",
+			"lines": [
+				{
+					"id": "cs07_led_0",
+					"speaker": "旁白",
+					"text": "旗册封面四个字：仪典上的灯。末页已厚。柜上两把钥匙。",
+					"stage": {
+						"bg": "hall",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs07_led_par",
+					"speaker": "旁白",
+					"text": "你留下两行。议会仍爱一行。柜子认灯。",
+					"when": {
+						"flag": "cs07_kept_rite"
+					}
+				},
+				{
+					"id": "cs07_led_name",
+					"speaker": "旁白",
+					"text": "你先钉路名。沙漏仍在亮——月会替你写下行。",
+					"when": {
+						"flag": "cs07_name_path"
+					}
+				},
+				{
+					"id": "cs07_led_1",
+					"speaker": "老管事",
+					"text": "存档不刊也行。不丢，就是缝。"
+				},
+				{
+					"id": "cs07_led_2",
+					"speaker": "槐里·青禾",
+					"text": "孩子抄过仪典，才配以后念栏。"
+				},
+				{
+					"id": "cs07_led_3",
+					"speaker": "老旗手",
+					"text": "并排。不要裁。缝在名册与仪典之间。"
+				},
+				{
+					"id": "cs07_led_4",
+					"speaker": "岁吏",
+					"text": "回执在侧室。谱与仪，两本账。"
+				},
+				{
+					"id": "cs07_led_5",
+					"speaker": "苇原·灯影",
+					"text": "更还在交。下次挂嗣，下行先响。"
+				},
+				{
+					"id": "cs07_ledger_x0",
+					"speaker": "旁白",
+					"text": "旗册封面：仪典上的灯。钥匙两把。"
+				},
+				{
+					"id": "cs07_ledger_x1",
+					"speaker": "老管事",
+					"text": "缝在名册与未选路之间。缝要留。"
+				},
+				{
+					"id": "cs07_ledger_x2",
+					"speaker": "槐里·青禾",
+					"text": "抄过空位，才配以后念栏。"
+				},
+				{
+					"id": "cs07_ledger_x3",
+					"speaker": "老旗手",
+					"text": "并排入柜。裁半本的，我不收。"
+				},
+				{
+					"id": "cs07_ledger_x4",
+					"speaker": "岁吏",
+					"text": "侧室回执还在。红脸还诚实。"
+				},
+				{
+					"id": "cs07_ledger_x5",
+					"speaker": "苇原·灯影",
+					"text": "下次挂嗣，下行先响。"
+				},
+				{
+					"id": "cs07_ledger_x6",
+					"speaker": "书记官",
+					"text": "催条再来，封面压得住。"
+				},
+				{
+					"id": "cs07_ledger_x7",
+					"speaker": "石垒·晚担",
+					"text": "桩在，路名才有地方站。"
+				},
+				{
+					"id": "cs07_ledger_x8",
+					"speaker": "掌柜",
+					"text": "擦过急圈的墙，更值钱。"
+				},
+				{
+					"id": "cs07_ledger_x9",
+					"speaker": "旁白",
+					"text": "灯还在。灯在，这一季就还没骗完。"
+				},
+				{
+					"id": "cs07_led_6",
+					"speaker": "leader",
+					"text": "栏与仪，并排。谁来认嗣位，先念完。"
+				},
+				{
+					"id": "cs0701_le_d1",
+					"speaker": "旁白",
+					"text": "栏与仪并排。剪刀封柜。"
+				},
+				{
+					"id": "cs0701_le_d2",
+					"speaker": "书记官",
+					"text": "念完四步，再认嗣位。"
+				},
+				{
+					"id": "cs0701_le_d3",
+					"speaker": "槐里·青禾",
+					"text": "空步光荣。装满可耻。"
+				},
+				{
+					"id": "cs0701_le_d4",
+					"speaker": "leader",
+					"text": "并排。记下。"
+				},
+				{
+					"id": "cs0701_ldg1",
+					"speaker": "岁吏",
+					"text": "仪典路已选——香灰里那粒月份，并进旁注。"
+				},
+				{
+					"id": "cs0701_ldg2",
+					"speaker": "书记官",
+					"text": "代嘴的字，一概不收。"
+				},
+				{
+					"id": "cs0701_ldg3",
+					"speaker": "掌柜",
+					"text": "催的人退了。退了，谱才清。"
+				},
+				{
+					"id": "cs0701_ldg4",
+					"speaker": "leader",
+					"text": "路已选还在。两行之间的空，我守。"
+				},
+				{
+					"id": "cs0701_ldg_end",
+					"speaker": "leader",
+					"text": "台阶上的应，灰旗堡宗谱等自己签。"
+				}
+			],
+			"actions": []
+		}
+	]
 }
