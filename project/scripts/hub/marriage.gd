@@ -19,6 +19,8 @@ var _vow_actions: HBoxContainer
 var _vow_gift: String = "banner"
 var _vow_doctrine: String = "strict"
 var _tabs: HBoxContainer
+var _source_bar: HBoxContainer
+var _source_mode := "court"  ## court | comrade（同袍内婚）
 var _cards: Control
 var _grade: Label
 var _marry_btn: Button
@@ -113,6 +115,13 @@ func _build() -> void:
 	_posts_label = UIKit.mono(Locale.t("ux_marriage_posts", [_nation_name(_post_nation)]), 9, UIKit.TEXT_FAINT)
 	_posts_label.position = Vector2(42, 204)
 	add_child(_posts_label)
+	_source_bar = HBoxContainer.new()
+	_source_bar.name = "SourceModeBar"
+	_source_bar.position = Vector2(42, 178)
+	_source_bar.size = Vector2(420, 28)
+	_source_bar.add_theme_constant_override("separation", 8)
+	add_child(_source_bar)
+	_refresh_source_bar()
 	_list = VBoxContainer.new()   # legacy handle (unused for layout)
 	_list.visible = false
 	add_child(_list)
@@ -246,18 +255,23 @@ func _unhandled_input(e: InputEvent) -> void:
 		else:
 			_back()
 	elif e.is_action_pressed("ui_left") or e.is_action_pressed("ui_right"):
-		if GameState.marriage_candidates.is_empty() or _selected == null or _spouse() != null:
+		var pool := _candidate_pool()
+		if pool.is_empty() or _selected == null or _spouse() != null:
 			return
-		var i := GameState.marriage_candidates.find(_selected)
-		i = (i + (1 if e.is_action_pressed("ui_right") else -1) + GameState.marriage_candidates.size()) % GameState.marriage_candidates.size()
-		_select(GameState.marriage_candidates[i])
+		var i := pool.find(_selected)
+		if i < 0:
+			i = 0
+		i = (i + (1 if e.is_action_pressed("ui_right") else -1) + pool.size()) % pool.size()
+		_select(pool[i])
 
 func _refresh() -> void:
 	for c in _tabs.get_children():
 		c.queue_free()
 	if _posts_label:
 		var su_l := _get_suitor()
-		if su_l != null and CKFamilyState.is_hero_party(su_l) and not CKFamilyState.can_reroll_court(su_l):
+		if _source_mode == "comrade":
+			_posts_label.text = Locale.t("ux_marriage_comrade_posts")
+		elif su_l != null and CKFamilyState.is_hero_party(su_l) and not CKFamilyState.can_reroll_court(su_l):
 			if CKFamilyState.uses_court_posts(su_l):
 				_posts_label.text = Locale.t("ux_posts_hero_teach", [_nation_name(_post_nation)])
 			else:
@@ -268,6 +282,7 @@ func _refresh() -> void:
 	var sp := _spouse()
 	_sync_reroll_btn(reroll, sp == null)
 	_sync_footer_hints(sp != null)
+	_sync_contract_price_label()
 	if sp != null:
 		## Married: no candidate tabs — one clear banner, and the right card is the spouse.
 		var banner := UIKit.body_label(married_banner_text(sp), UIKit.OK, MobilePage.FONT if _mob else 14)
@@ -276,13 +291,18 @@ func _refresh() -> void:
 		_tabs.add_child(banner)
 		_select(sp)
 		return
-	if GameState.marriage_candidates.is_empty():
+	var pool := _candidate_pool()
+	if pool.is_empty():
 		## Y1-B / heir #30: empty posts get why/how + named forward CTAs (tavern / roster).
 		var title := Locale.t("lb_marriage_empty")
 		var why := Locale.t("lb_marriage_empty_why")
 		var how := Locale.t("lb_marriage_empty_how")
 		var su0 := _get_suitor()
-		if su0 != null and CKFamilyState.is_hero_party(su0) and not CKFamilyState.uses_court_posts(su0):
+		if _source_mode == "comrade":
+			title = Locale.t("ux_marriage_comrade_posts")
+			why = Locale.t("ux_internal_bond_short", [0, CKFamilyState.INTERNAL_BOND_NEED])
+			how = Locale.t("lb_marriage_empty_how")
+		elif su0 != null and CKFamilyState.is_hero_party(su0) and not CKFamilyState.uses_court_posts(su0):
 			title = Locale.t("ux_empty_hero_fixed")
 			why = Locale.t("lb_marriage_empty_hero_why")
 			how = Locale.t("lb_marriage_empty_hero_how")
@@ -310,20 +330,21 @@ func _refresh() -> void:
 		return
 	var suitor = _get_suitor()
 	var k := 0
-	for cand in GameState.marriage_candidates:
+	for cand in pool:
 		k += 1
 		var check = Lineage.can_propose(suitor, cand)
 		var mark := "●" if check.get("ok") else "○"
 		if suitor != null and str(suitor.spouse_id) == str(cand.id):
 			mark = Locale.t("ux_spouse_mark")
+		var price := CKFamilyState.bride_price_for(suitor, cand) if suitor != null else CKFamilyState.COURT_BRIDE_PRICE
 		var b := UIKit.ghost_button("%02d  %s · %s  %s" % [k, cand.name, cand.rank_name(), mark], 0, 32)
-		b.tooltip_text = "可表白" if check.get("ok") else str(check.get("msg", "声望不足"))
+		b.tooltip_text = ("%s · %d银" % [str(check.get("msg", "")), price]) if check.get("ok") else str(check.get("msg", "声望不足"))
 		b.toggle_mode = true
 		b.set_meta("cand", cand)
 		var captured = cand
 		b.pressed.connect(func(): _select(captured))
 		_tabs.add_child(b)
-	_select(GameState.marriage_candidates[0])
+	_select(pool[0])
 
 ## Desktop footer: once wed, the first three key hints (contract / re-roll / switch candidate)
 ## no longer apply. footer_bar lays each hint out as keycap, label, gap.
@@ -1259,7 +1280,11 @@ func _show_vow() -> void:
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		3:
 			var rite_line := _vow_rite_copy(suitor)
-			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n聘礼 40 银将入库。家训与嫁妆写入族谱旁注。\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。\n%s" % rite_line
+			var price := CKFamilyState.bride_price_for(suitor, _selected) if suitor != null and _selected != null else CKFamilyState.COURT_BRIDE_PRICE
+			var price_line := Locale.t("ux_vow_bride_price", [price])
+			if CKFamilyState.is_internal_pair(suitor, _selected):
+				price_line += "\n" + Locale.t("ux_vow_internal_note")
+			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n%s\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。\n%s" % [price_line, rite_line]
 			_vow_btn("落成婚约", func(): _finish_marry())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 
@@ -1278,7 +1303,8 @@ func _finish_marry() -> void:
 		return
 	var suitor = _get_suitor()
 	var ids := _accepted_ids()
-	var r = Lineage.marry(suitor, _selected, 40, ids, true)
+	var price := CKFamilyState.bride_price_for(suitor, _selected) if suitor != null else CKFamilyState.COURT_BRIDE_PRICE
+	var r = Lineage.marry(suitor, _selected, price, ids, true)
 	_msg.text = str(r.get("msg", ""))
 	_vow_panel.visible = false
 	if r.get("ok"):
@@ -1314,6 +1340,57 @@ func _finish_marry() -> void:
 		_refresh_suitor_bar()
 		_refresh()
 
+func _candidate_pool() -> Array:
+	if _source_mode == "comrade":
+		return CKFamilyState.internal_marriage_targets(GameState, _get_suitor())
+	return GameState.marriage_candidates
+
+
+func _refresh_source_bar() -> void:
+	if _source_bar == null:
+		return
+	for ch in _source_bar.get_children():
+		_source_bar.remove_child(ch)
+		ch.free()
+	for mode_pair in [["court", Locale.t("ux_source_court")], ["comrade", Locale.t("ux_source_comrade")]]:
+		var mode := str(mode_pair[0])
+		var label := str(mode_pair[1])
+		var b := UIKit.ghost_button(label, 0, 26)
+		b.name = "Source_%s" % mode
+		b.toggle_mode = true
+		b.button_pressed = (_source_mode == mode)
+		b.custom_minimum_size = Vector2(maxi(72, int(b.get_minimum_size().x)), 26)
+		var captured := mode
+		b.pressed.connect(func(): _set_source_mode(captured))
+		_source_bar.add_child(b)
+
+
+func _set_source_mode(mode: String) -> void:
+	if mode != "court" and mode != "comrade":
+		return
+	if _source_mode == mode:
+		return
+	_source_mode = mode
+	_selected = null
+	_refresh_source_bar()
+	_refresh()
+
+
+func _sync_contract_price_label() -> void:
+	if _marry_btn == null:
+		return
+	var suitor := _get_suitor()
+	if suitor != null and str(suitor.spouse_id) != "":
+		return
+	var price := CKFamilyState.COURT_BRIDE_PRICE
+	if suitor != null and _selected != null:
+		price = CKFamilyState.bride_price_for(suitor, _selected)
+	elif _source_mode == "comrade":
+		price = CKFamilyState.INTERNAL_BRIDE_PRICE
+	_marry_idle = "✓ 缔约 · %d 银" % price
+	_marry_btn.text = _marry_idle
+
+
 func _ensure_posts() -> void:
 	var nid := CKFamilyState.active_marriage_nation(GameState)
 	var suitor := _get_suitor()
@@ -1342,6 +1419,9 @@ func _on_reroll_pressed() -> void:
 
 func _sync_reroll_btn(reroll: Button, unmarried: bool) -> void:
 	if reroll == null:
+		return
+	if _source_mode == "comrade":
+		reroll.visible = false
 		return
 	var suitor := _get_suitor()
 	var allow := unmarried and suitor != null and CKFamilyState.can_reroll_court(suitor)

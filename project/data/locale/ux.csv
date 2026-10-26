@@ -520,3 +520,12 @@ ux_settle_hit,命中,Hit
 ux_settle_miss,未中,Miss
 ux_settle_kill,击破,Fell
 ux_settle_crit,暴击,Crit
+ux_source_court,廷帖,Court posts
+ux_source_comrade,同袍,Comrades
+ux_marriage_comrade_posts,同袍内婚 · 花名册可婚对象,Company wedding · roster partners
+ux_internal_not_roster,同袍内婚须双方都在花名册,Both must be on the roster for a company wedding
+ux_internal_same_sex,同袍同性别盟约未开放（设置项为 P2）,Same-sex company vows are not open yet (P2 setting)
+ux_internal_bond_short,羁绊不足（%d/%d）：并肩或结识后再议,Bond too low (%d/%d): fight together or get acquainted first
+ux_internal_ok,可议同袍婚,Company wedding allowed
+ux_vow_bride_price,聘礼 %d 银将入库。家训与嫁妆写入族谱旁注。,Bride price %d silver enters the treasury. Doctrine and dowry notes go beside the genealogy.
+ux_vow_internal_note,同袍内婚礼银低于外姓廷帖。,Company wedding costs less silver than a court post.
