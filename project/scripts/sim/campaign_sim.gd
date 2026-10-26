@@ -121,6 +121,9 @@ static func _january(report: Dictionary, year: int) -> void:
 	b = _book(report, "promote", b)
 	_castle_quests(report)
 	b = _book(report, "quests", b)
+	# Player claim loop: quest clear only unlocks eligibility; sim pays claim cost like estates UI.
+	_claim_holdings(report)
+	b = _book(report, "holdings_claim", b)
 	_skirmish(report, year)
 	b = _book(report, "skirmish", b)
 	_commission(report, year)
@@ -342,6 +345,20 @@ static func _castle_quests(report: Dictionary) -> void:
 			report["commission_gold"] = int(report["commission_gold"]) + maxi(0, GameState.silver - before)
 			report["chapters"] = int(report["chapters"]) + 1
 		return
+
+static func _claim_holdings(report: Dictionary) -> void:
+	## Mirror hub/estates claim_holding after quest gate opens (开垦闭环).
+	var claimed := 0
+	for hid in CKEconomyState.HOLDING_DEFS.keys():
+		var prev: Dictionary = GameState.holding_unlock_preview(str(hid))
+		if not bool(prev.get("claimable", false)):
+			continue
+		var res: Dictionary = GameState.claim_holding(str(hid))
+		if bool(res.get("ok", false)):
+			claimed += 1
+	if claimed > 0:
+		report["holdings_claimed"] = int(report.get("holdings_claimed", 0)) + claimed
+
 
 static func _skirmish(report: Dictionary, year: int) -> void:
 	var themes: Array = UnitModel.enemy_themes().get("themes", {}).keys()
