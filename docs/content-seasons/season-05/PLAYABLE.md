@@ -193,3 +193,9 @@
 - 各章第二主题拍在 `_sec6` 后、离开该拍前加 `_hlp1`–`_hlp6` 厅角停步口头，全库去重；收束非旁白。
 - 验收：`content_season_hall_pause_chain_check` — hub chip → 厅角针口头。
 - 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_bpl`/`_msr`/`_vop`。
+
+## 门内落定口头加厚（open-settle）
+
+- 各章首拍在 `_thm6` 后、离开该拍前加 `_ods1`–`_ods6` 门内落定口头，全库去重；收束非旁白。
+- 验收：`content_season_open_settle_chain_check` — hub chip → 门内针口头。
+- 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`。
