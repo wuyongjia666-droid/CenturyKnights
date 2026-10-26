@@ -1,5 +1,7 @@
 class_name BattleDefeat
 extends RefCounted
+
+const StoryFlagScope = preload("res://scripts/narrative/story_flag_scope.gd")
 ## WS-D #50 / #5: a lost or abandoned battle always goes back to the castle (never chapter 0),
 ## and the company gets an injury settlement written to the castle log.
 ## Chapter-owned mid-cs (`battle_return_chapter`): skip castle log_event — mid_lost owns the trail.
@@ -21,10 +23,14 @@ static func back_path(win: bool, world_enc: bool, battle_return: String) -> Stri
 		if map_id != "":
 			GameState.set_flag(map_id + "_lost")
 		# Chapter-authored lose_flags (csXX_mid_lost) — season owns the retry CTA morph.
+		# Also stamp the launching chapter so a later chapter in the same season
+		# does not inherit this loss and lose its own first-fight entry.
+		var scope := str(GameState.get_meta("battle_return_chapter", ""))
 		for f in GameState.get_meta("battle_lose_flags", []):
 			var fs := str(f)
 			if fs != "":
 				GameState.set_flag(fs)
+				StoryFlagScope.note(scope, fs, true)
 		if GameState.has_meta("battle_lose_flags"):
 			GameState.set_meta("battle_lose_flags", [])
 		return battle_return

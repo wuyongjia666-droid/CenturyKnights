@@ -3,6 +3,8 @@ extends RefCounted
 ## BTL-01: one place for victory flags, purse, and the heir-clash restore.
 ## Map-specific flags and actions live on each map's on_victory field.
 
+const StoryFlagScope = preload("res://scripts/narrative/story_flag_scope.gd")
+
 
 static func spec(map_id: String) -> Dictionary:
 	var m := BattleMaps.get_map(map_id)
@@ -85,8 +87,10 @@ static func describe(map_id: String, mods: Dictionary = {}) -> Dictionary:
 
 static func apply(map_id: String) -> Dictionary:
 	var sp := spec(map_id)
+	var scope := str(GameState.get_meta("battle_return_chapter", ""))
 	for f in sp.flags:
 		GameState.set_flag(str(f))
+		StoryFlagScope.note(scope, str(f), true)
 	for act in sp.actions:
 		if str(act) == "heir_clash_restore":
 			restore_heir_clash()
@@ -97,6 +101,7 @@ static func apply(map_id: String) -> Dictionary:
 		var ls := str(lf)
 		if ls != "":
 			GameState.set_flag(ls, false)
+			StoryFlagScope.note(scope, ls, false)
 	# Same residue class for the shared-map flag Defeat stamps (quest_bandit_lost).
 	# Mid-cs loss→retry→win left map_id+"_lost" lit forever; clear it on win.
 	if map_id != "":

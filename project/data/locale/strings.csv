@@ -87,6 +87,11 @@ pause_settings,设置,Settings
 pause_hub,回到灰旗堡,Castle
 story_back_to_hub,回到灰旗堡,Back to the castle
 story_skip_lines,跳过 ▶▶,Skip ▶▶
+story_continue,继续,Continue
+story_continue_line,继续 ▶,Continue ▶
+story_save,存档,Save
+story_chapter_end,章节结束,Chapter complete
+story_choose_action,（本节对白结束——请选择下方行动）,This passage is done. Choose an action below.
 story_tap_continue,点屏幕继续,Tap to continue
 pause_title,回到标题,Title
 shell_00222e62,可继续第一百二十九章·二十卷席终。,Continue Chapter 129 · Volume 20 closing.
