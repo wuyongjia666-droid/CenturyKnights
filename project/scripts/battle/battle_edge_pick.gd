@@ -122,6 +122,8 @@ static func note_layout(host) -> void:
 		block = Rect2(col.position, col.size)
 	host.set_meta("m_info_block", block)
 	_open_card(host)
+	if col != null:
+		col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 static func _open_card(host) -> void:
@@ -148,12 +150,14 @@ static func _open_card(host) -> void:
 
 
 ## Non-button chrome must not eat a tap meant for the board. Skill buttons stay STOP.
+## T-P24: ScrollContainer itself was left STOP and stole board taps wherever the
+## portrait/info column overlapped the stage — IGNORE the column, keep button children.
 static func _pass_board_taps(n: Node) -> void:
 	if n == null:
 		return
 	if n is BaseButton:
 		return
-	if n is Control and not (n is ScrollContainer):
+	if n is Control:
 		(n as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for ch in n.get_children():
 		_pass_board_taps(ch)
