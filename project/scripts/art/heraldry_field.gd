@@ -1,13 +1,13 @@
 class_name CKHeraldryField
 extends RefCounted
-## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve
-## and 出征编队 muster/slot/focus, battle card / forecast / report, annex serve rows,
-## infirmary heal roster, forge smith slots, shrine heal, estates 属事处 person rows,
+## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve,
+## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal,
 ## city 本城之事 affairs overlay (团徽 + 本城邦徽), genealogy avatar-wall tiles,
 ## castle panorama lineage, castle-home roster row, marriage protocol / succession /
-## heir-trial duel strips, and house-card person arms.
+## heir-trial duel strips, house-card person arms, banner-school train
+## (pupil focus strip + row person arms), and infirmary / deploy / office Field arms.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
-## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling. One shield per person.
+## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
 
 static func _retire(parent: Node, node_name: String) -> void:
@@ -485,6 +485,35 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 	return host
 
 
+## Banner school focus strip: 团徽 + selected pupil 族徽|旗徽. No pupil → 团徽 only.
+static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if pupil != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "TrainFocusStrip", at, Vector2(w, shield.y))
+	var focus: TextureRect = null
+	if pupil != null:
+		focus = CKHeraldryChrome.make_person_arms(pupil, shield)
+		focus.name = "TrainFocusArms"
+	_pair(host, shield, focus)
+	host.set_meta("has_pupil", pupil != null)
+	return host
+
+
+## Pupil / tutor / promo pick row: person 族徽|旗徽. No marshalling with company arms.
+static func attach_train_row_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if host == null or c == null:
+		return null
+	_retire(host, "TrainRowArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "TrainRowArms"
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	host.add_child(arms)
+	return arms
+
 ## Infirmary heal roster row: one person shield (族徽|旗徽). No company pair, no cadency.
 static func attach_infirmary_heal_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
 	if row == null or c == null:
@@ -563,4 +592,3 @@ static func attach_office_field_arms(row: Control, c, arms_sz: Vector2 = Vector2
 	row.add_child(arms)
 	if row is Container:
 		row.move_child(arms, 0)
-	return arms
