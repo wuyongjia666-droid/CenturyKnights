@@ -84,23 +84,19 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 		return
 	var band := float(host.get_meta("m_edge_band", 0.0)) if host.has_meta("m_edge_band") else 0.0
 	var blockers: Array = []
-	if host.has_meta("m_info_block"):
-		var block = host.get_meta("m_info_block")
-		if block is Rect2:
-			blockers.append(block)
-	# Prefer live side-col geometry over a stale/empty meta stamp.
 	var col := host.get_node_or_null("MobileSideCol") as Control
+	if col == null:
+		col = host.find_child("MobileSideCol", true, false) as Control
+	if col == null:
+		col = host.get_node_or_null("SideCol") as Control
 	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
 		var live := Rect2(col.position, col.size)
-		if blockers.is_empty() or not (blockers[0] as Rect2).intersects(live.grow(2.0)):
-			blockers = [live]
-			host.set_meta("m_info_block", live)
-	elif blockers.is_empty():
-		var col2 := host.get_node_or_null("SideCol") as Control
-		if col2 != null and col2.size.x > 1.0:
-			var live2 := Rect2(col2.position, col2.size)
-			blockers = [live2]
-			host.set_meta("m_info_block", live2)
+		blockers = [live]
+		host.set_meta("m_info_block", live)
+	elif host.has_meta("m_info_block"):
+		var block = host.get_meta("m_info_block")
+		if block is Rect2 and (block as Rect2).size.x > 1.0 and (block as Rect2).size.y > 1.0:
+			blockers.append(block)
 	var inset := readable_inset(stage, blockers, band)
 	var origin: Vector2 = host.ORIGIN
 	var cell_px := float(host.CELL)
@@ -109,7 +105,7 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 	if host.get("_board_zoom") != null:
 		zoom = float(host._board_zoom)
 	var delta := settle_delta(origin, cell_px, actor, also, pan, zoom, inset)
-	host.set_meta("m_action_settle", {"delta": delta, "actor": actor, "inset": inset})
+	host.set_meta("m_action_settle", {"delta": delta, "actor": actor, "inset": inset, "block": blockers[0] if not blockers.is_empty() else Rect2()})
 	if delta.length_squared() < 0.25:
 		BattlePick.cancel_focus_tween(host)
 		return
@@ -120,7 +116,7 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 	var clamped: Vector2 = host._board_pan
 	host._board_pan = saved
 	var applied: Vector2 = clamped - saved
-	host.set_meta("m_action_settle", {"delta": applied, "actor": actor, "inset": inset})
+	host.set_meta("m_action_settle", {"delta": applied, "actor": actor, "inset": inset, "block": blockers[0] if not blockers.is_empty() else Rect2()})
 	if applied.length_squared() < 0.25:
 		BattlePick.cancel_focus_tween(host)
 		return

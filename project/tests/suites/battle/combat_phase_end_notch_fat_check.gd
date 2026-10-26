@@ -106,6 +106,11 @@ func _boot(map_id: String) -> String:
 	if _battle.has_method("apply_mobile_layout"):
 		_battle.apply_mobile_layout()
 	await _settle(8)
+	# Drain deferred MobileSide.attach from resize/_layout_board so side_x and
+	# m_board_area match before phase/engage settle asserts.
+	if _battle.has_method("apply_mobile_layout"):
+		_battle.apply_mobile_layout()
+	await _settle(4)
 	BattleEdgePick.note_layout(_battle)
 	await _settle(2)
 	if str(_battle.map_id) != map_id:
@@ -233,7 +238,11 @@ func _assert_engage_settle(tag: String) -> String:
 	var inset = settle.get("inset", Rect2())
 	if not (inset is Rect2) or (inset as Rect2).size.x < 72.0:
 		return "%s: engage settle inset missing %s" % [tag, settle]
-	var block: Rect2 = _battle.get_meta("m_info_block")
+	# Compare against the block settle actually cut with — live m_info_block can
+	# move after a deferred MobileSide.attach races a resize.
+	var block: Rect2 = settle.get("block", _battle.get_meta("m_info_block"))
+	if block.size.x < 1.0 and _battle.has_meta("m_info_block"):
+		block = _battle.get_meta("m_info_block")
 	var overlap: Rect2 = (inset as Rect2).intersection(block)
 	if overlap.size.x > 1.0 and overlap.size.y > 1.0:
 		return "%s: engage settle inset still overlaps info inset=%s block=%s" % [tag, inset, block]

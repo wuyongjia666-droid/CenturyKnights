@@ -502,6 +502,11 @@ func _root_w() -> float:
 
 func _shift_side_panels(dx: float) -> void:
 	for c in get_children():
+		# MobileSideCol is placed by MobileSide.attach from m_mobile_side_x —
+		# shifting it via m_base_x races deferred attach and slides the column
+		# over a wider m_board_area (engage settle flake).
+		if c is Control and str(c.name) == "MobileSideCol":
+			continue
 		if c is Control and (c.has_meta("m_base_x") or (c.position.x >= 880.0 and c.size.x <= 700.0)):
 			if not c.has_meta("m_base_x"):
 				c.set_meta("m_base_x", c.position.x)
@@ -515,7 +520,10 @@ func _layout_board() -> void:
 		_shift_side_panels(dx)
 		# Side column left of the thumb rail; board owns everything to its left.
 		var side_x := RAIL_X + dx - 8.0
-		MobileSide.attach.call_deferred(self, side_x, RAIL_W + 8.0)
+		var side_w := RAIL_W + 8.0
+		set_meta("m_mobile_side_x", side_x)
+		set_meta("m_mobile_side_w", side_w)
+		MobileSide.attach.call_deferred(self, side_x, side_w)
 		BattleDualLedger.place.call_deferred(self)
 		# Audit P2: fill the left stage (no black letterbox). Top pill ~48, bottom margin 8.
 		var left := 8.0
