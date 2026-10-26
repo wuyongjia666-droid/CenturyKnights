@@ -464,6 +464,36 @@
           "text": "血灯两行都留着。去门廊对巾。"
         },
         {
+          "id": "cs0901_aud1",
+          "speaker": "旁白",
+          "text": "血验的铜腥用井水压过。压过，再握笔。"
+        },
+        {
+          "id": "cs0901_aud2",
+          "speaker": "岁吏",
+          "text": "腥手不进栏。栏要干净人写。"
+        },
+        {
+          "id": "cs0901_aud3",
+          "speaker": "书记官",
+          "text": "干净不是白。是不把自己写进去。"
+        },
+        {
+          "id": "cs0901_aud4",
+          "speaker": "旁白",
+          "text": "灯把浅红照成纸色。纸色上，只准黑。"
+        },
+        {
+          "id": "cs0901_aud5",
+          "speaker": "岁吏",
+          "text": "黑的无，比红的誓更稳。"
+        },
+        {
+          "id": "cs0901_aud6",
+          "speaker": "leader",
+          "text": "我落笔。无——针事收起，字留下。"
+        },
+        {
           "id": "cs0901_vhg1",
           "speaker": "听回",
           "text": "血验册摊开。验栏空，针却先亮。"
@@ -807,6 +837,42 @@
           "when": {
             "flag": "cs09_mid_fought"
           }
+        },
+        {
+          "id": "cs0901_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs09_mid_fought" },
+          "text": "血验问声清了。清处，卖新泼的退到墙外。"
+        },
+        {
+          "id": "cs0901_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs09_mid_fought" },
+          "text": "墙外那拨收摊了。收得比刀还快。"
+        },
+        {
+          "id": "cs0901_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs09_mid_fought" },
+          "text": "谁的血谁的名——分清了，就不肯再混。"
+        },
+        {
+          "id": "cs0901_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs09_mid_fought" },
+          "text": "巾角我晾干。干了，星才像真星。"
+        },
+        {
+          "id": "cs0901_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs09_mid_fought" },
+          "text": "旗不蘸血。蘸了，名和血会缠死。"
+        },
+        {
+          "id": "cs0901_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs09_mid_fought" },
+          "text": "锋问明白。血我认自己的，名我担。"
         },
         {
           "id": "cs09_mid_lost",
@@ -1470,6 +1536,36 @@
           "speaker": "leader",
           "text": "巾角干星旁，灰旗堡验册等合页。"
         },
+      {
+        "id": "cs0901_ink1",
+        "speaker": "旁白",
+        "text": "线缝里没有今天的红。缝旁那笔验墨，干成了深褐。"
+      },
+      {
+        "id": "cs0901_ink2",
+        "speaker": "岁吏",
+        "text": "我按线缝收岁课，不按纸面收。纸面的光干了也不算。"
+      },
+      {
+        "id": "cs0901_ink3",
+        "speaker": "石垒·晚担",
+        "text": "新泼的留在案上。案上的干了，袖里的血才算认过。"
+      },
+      {
+        "id": "cs0901_ink4",
+        "speaker": "旁白",
+        "text": "针影从灯罩上移开。移开，线缝更像一条老实的路。"
+      },
+      {
+        "id": "cs0901_ink5",
+        "speaker": "岁吏",
+        "text": "线缝旁干透，我才收。潮血不当验。"
+      },
+      {
+        "id": "cs0901_ink6",
+        "speaker": "leader",
+        "text": "缝旁干了。自己的血认过；新泼的不带回。"
+      },
         {
           "id": "cs0901_cls1",
           "speaker": "旁白",

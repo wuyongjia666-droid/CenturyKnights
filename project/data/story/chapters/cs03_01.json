@@ -484,6 +484,36 @@
           "text": "功粮两行还亮。门廊上对仓数。"
         },
         {
+          "id": "cs0301_aud1",
+          "speaker": "旁白",
+          "text": "榜墨的气味还在袖。袖外只准笔香。"
+        },
+        {
+          "id": "cs0301_aud2",
+          "speaker": "岁吏",
+          "text": "收成数字归田册。征兆栏归灯。"
+        },
+        {
+          "id": "cs0301_aud3",
+          "speaker": "书记官",
+          "text": "两本册子，不许串行。"
+        },
+        {
+          "id": "cs0301_aud4",
+          "speaker": "旁白",
+          "text": "灯下纸边起毛。起毛处，字要压实。"
+        },
+        {
+          "id": "cs0301_aud5",
+          "speaker": "岁吏",
+          "text": "压实的无，比虚报的穗更重。"
+        },
+        {
+          "id": "cs0301_aud6",
+          "speaker": "leader",
+          "text": "我落笔。无——田里的实数我另记。"
+        },
+        {
           "id": "cs0301_vhg1",
           "speaker": "岁吏",
           "text": "榜上的收成栏等月份盖印。印未落，数还是数。"
@@ -827,6 +857,42 @@
           "when": {
             "flag": "cs03_mid_fought"
           }
+        },
+        {
+          "id": "cs0301_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "桥铃余音收进木梁。梁稳了，拓片才敢出袋。"
+        },
+        {
+          "id": "cs0301_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "坡下没人回望。回望的，只剩风。"
+        },
+        {
+          "id": "cs0301_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "肩上的沉还在。沉着，脚步才不飘。"
+        },
+        {
+          "id": "cs0301_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "拓纸角我抚平。平了，墨才不花。"
+        },
+        {
+          "id": "cs0301_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "旗别扫铃绳。绳一晃，铃又假。"
+        },
+        {
+          "id": "cs0301_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs03_mid_fought" },
+          "text": "锋问过话。拓片归袋，人归桥。"
         },
         {
           "id": "cs03_mid_lost",
@@ -1500,6 +1566,36 @@
           "speaker": "leader",
           "text": "铃还在旁注里。灰旗堡的收成册，等这笔。"
         },
+      {
+        "id": "cs0301_ink1",
+        "speaker": "旁白",
+        "text": "收成册旁注里的铃字渐干。干了，铃声才像记在纸上，不在嘴里。"
+      },
+      {
+        "id": "cs0301_ink2",
+        "speaker": "岁吏",
+        "text": "袋里的粮不进栏。栏只收秤上的实数，等它干。"
+      },
+      {
+        "id": "cs0301_ink3",
+        "speaker": "石垒·晚担",
+        "text": "肩上的袋还沉。沉着，我也不靠案边，怕潮了字。"
+      },
+      {
+        "id": "cs0301_ink4",
+        "speaker": "旁白",
+        "text": "仓门那边传来闩响。响过，西阁只剩笔帽扣上的轻声。"
+      },
+      {
+        "id": "cs0301_ink5",
+        "speaker": "岁吏",
+        "text": "旁注干透再合册。合早了，铃会印到对面的空行。"
+      },
+      {
+        "id": "cs0301_ink6",
+        "speaker": "leader",
+        "text": "铃干了。袋还在肩，功和粮都进册，我回仓门。"
+      },
         {
           "id": "cs0301_cls1",
           "speaker": "旁白",

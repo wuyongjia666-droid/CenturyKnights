@@ -464,6 +464,36 @@
           "text": "香案两行都留着。去门廊对碑。"
         },
         {
+          "id": "cs0801_aud1",
+          "speaker": "旁白",
+          "text": "碑阴的凉意贴着腕。腕稳，字才不偏。"
+        },
+        {
+          "id": "cs0801_aud2",
+          "speaker": "岁吏",
+          "text": "祖词在石。征兆在纸。两处不混。"
+        },
+        {
+          "id": "cs0801_aud3",
+          "speaker": "书记官",
+          "text": "混了就是僭。僭字今晚不写。"
+        },
+        {
+          "id": "cs0801_aud4",
+          "speaker": "旁白",
+          "text": "灯火矮了一寸。矮着写，反而敬。"
+        },
+        {
+          "id": "cs0801_aud5",
+          "speaker": "岁吏",
+          "text": "敬着的无，碑也认。石面不争这一笔。"
+        },
+        {
+          "id": "cs0801_aud6",
+          "speaker": "leader",
+          "text": "我落笔。无——碑过了，栏还在。"
+        },
+        {
           "id": "cs0801_vhg1",
           "speaker": "岁吏",
           "text": "祖祠香案旁是沙漏。碑文要月份来扫，不靠默念。"
@@ -807,6 +837,42 @@
           "when": {
             "flag": "cs08_mid_fought"
           }
+        },
+        {
+          "id": "cs0801_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "祖祠香火稳了。稳处，抢香那拨退到槐影外。"
+        },
+        {
+          "id": "cs0801_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "拜完的香，今晚没人敢吹。吹的，自己先呛。"
+        },
+        {
+          "id": "cs0801_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "刀鞘不响了。香火自己稳，不靠吼。"
+        },
+        {
+          "id": "cs0801_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "烟灰我拭出炉沿。沿净，香才像敬。"
+        },
+        {
+          "id": "cs0801_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "旗不出祠门。门内是拜，门外才是锋。"
+        },
+        {
+          "id": "cs0801_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "锋拦过抢。祖祠我跪得，香我守。"
         },
         {
           "id": "cs08_mid_lost",
@@ -1470,6 +1536,36 @@
           "speaker": "leader",
           "text": "香案前，灰旗堡碑录等这笔拓实。"
         },
+      {
+        "id": "cs0801_ink1",
+        "speaker": "旁白",
+        "text": "香稳那一行的墨干成深灰。深灰里还有一点香灰的味。"
+      },
+      {
+        "id": "cs0801_ink2",
+        "speaker": "岁吏",
+        "text": "不稳的那一行今晚空着。空着的旁边，稳的先干。"
+      },
+      {
+        "id": "cs0801_ink3",
+        "speaker": "老旗手",
+        "text": "祠阶的凉停在靴底。靴底的凉不碰案，案上的墨才稳。"
+      },
+      {
+        "id": "cs0801_ink4",
+        "speaker": "旁白",
+        "text": "碑影从窗纸上淡下去。淡了，纸上的行更清楚。"
+      },
+      {
+        "id": "cs0801_ink5",
+        "speaker": "岁吏",
+        "text": "香稳行干透再收。湿香不当稳。"
+      },
+      {
+        "id": "cs0801_ink6",
+        "speaker": "leader",
+        "text": "香行干了。我离祠阶，碑名不在路上补。"
+      },
         {
           "id": "cs0801_cls1",
           "speaker": "旁白",

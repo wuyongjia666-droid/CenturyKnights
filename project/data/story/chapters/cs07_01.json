@@ -494,6 +494,36 @@
           "text": "灯下两行都留着。去门廊问路砖。"
         },
         {
+          "id": "cs0701_aud1",
+          "speaker": "旁白",
+          "text": "仪典的鼓点还在耳。耳外，只留笔尖一声。"
+        },
+        {
+          "id": "cs0701_aud2",
+          "speaker": "岁吏",
+          "text": "礼成不等于验成。验成在这一笔。"
+        },
+        {
+          "id": "cs0701_aud3",
+          "speaker": "书记官",
+          "text": "礼词华丽。栏词只准老实。"
+        },
+        {
+          "id": "cs0701_aud4",
+          "speaker": "旁白",
+          "text": "香灰落在盏外。盏内不进灰。"
+        },
+        {
+          "id": "cs0701_aud5",
+          "speaker": "岁吏",
+          "text": "灰外写无。无比颂词短，也比颂词真。"
+        },
+        {
+          "id": "cs0701_aud6",
+          "speaker": "leader",
+          "text": "我落笔。无——礼收了，字留下。"
+        },
+        {
           "id": "cs0701_vhg1",
           "speaker": "老管事",
           "text": "仪典簿靠着沙漏。礼序栏空，香却先燃。"
@@ -827,6 +857,42 @@
           "when": {
             "flag": "cs07_mid_fought"
           }
+        },
+        {
+          "id": "cs0701_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "仪典问声沉进石阶。阶冷，催声就热不起来。"
+        },
+        {
+          "id": "cs0701_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "阶下影里空了。空了，台上才像仪典。"
+        },
+        {
+          "id": "cs0701_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "口气我收回半寸。半寸，刚好够上台。"
+        },
+        {
+          "id": "cs0701_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "袖口的礼我理平。平了，上台不绊。"
+        },
+        {
+          "id": "cs0701_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "旗不过代嘴。嘴是你的，旗只站着。"
+        },
+        {
+          "id": "cs0701_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs07_mid_fought" },
+          "text": "锋不问代嘴。仪典我自己应。"
         },
         {
           "id": "cs07_mid_lost",
@@ -1500,6 +1566,36 @@
           "speaker": "leader",
           "text": "台阶上的应，灰旗堡宗谱等自己签。"
         },
+      {
+        "id": "cs0701_ink1",
+        "speaker": "旁白",
+        "text": "礼序末行的墨从顿挫处干起。干过，顿挫还在，人不在场。"
+      },
+      {
+        "id": "cs0701_ink2",
+        "speaker": "岁吏",
+        "text": "路名没验过的不钉栏。钉栏的那几行，先等墨干。"
+      },
+      {
+        "id": "cs0701_ink3",
+        "speaker": "苇原·灯影",
+        "text": "仪典的香不进西阁。阁里只剩纸香，纸香里墨才干得正。"
+      },
+      {
+        "id": "cs0701_ink4",
+        "speaker": "旁白",
+        "text": "门槛外有人脱靴。脱完，西阁的灯才又稳一寸。"
+      },
+      {
+        "id": "cs0701_ink5",
+        "speaker": "岁吏",
+        "text": "礼序干透我按月收。湿礼不当序。"
+      },
+      {
+        "id": "cs0701_ink6",
+        "speaker": "leader",
+        "text": "序干了。路走到门槛为止，名字不在灯下抢。"
+      },
         {
           "id": "cs0701_cls1",
           "speaker": "旁白",
