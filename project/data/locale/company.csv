@@ -563,3 +563,14 @@ atlas_contest_resolved,「%s」拉锯落幕 · %s 得手,"%s" contest ends · %s
 atlas_contest_summary,拉锯中：%s,Contested: %s
 atlas_contest_gone,拉锯已散。,Contest already settled.
 atlas_contest_factions,争夺方：%s,Factions: %s
+atlas_gate_leave,出城,Leave the gate
+atlas_gate_in,进城 · %s · %s · 余粮 %d 日,Entered %s · %s · %d days of food
+atlas_gate_out,出城 · %s · %s · 余粮 %d 日,Left %s · %s · %d days of food
+atlas_gate_warn,粮草见底，先补再走。,Rations are thin. Resupply before the next march.
+atlas_hold_line,停军 · 续行至 %s · %d 日 · 耗粮 %d · 余 %d 日,Halted · resume to %s · %d days · need %d · %d days of food left
+atlas_resume_chip,续行至 %s · %s · 还要 %d 日 · 粮 %d,Resuming to %s · %s · %d days left · food %d
+atlas_resume_go,续行,Resume march
+atlas_resume_go_named,续行至 %s,Resume to %s
+atlas_resume_fail,还不能续行,Cannot resume yet
+atlas_camp_halt,粮草告急，在此停军,Rations low — halt here
+atlas_camp_halted,已在 %s 停军，补给后续行。,Halted at %s. Resupply then resume.
