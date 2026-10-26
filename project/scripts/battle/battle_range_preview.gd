@@ -288,6 +288,9 @@ static func _clip_notch(host, inset: Rect2) -> Rect2:
 	var item := host as CanvasItem
 	if not item.is_inside_tree():
 		return inset
+	# Headless CI can keep a stale global transform after position/mobile_origin
+	# were intentionally moved; refresh before any origin / xform read.
+	item.force_update_transform()
 	var vp := item.get_viewport().get_visible_rect().size
 	var win := Vector2(DisplayServer.window_get_size())
 	# CK_SAFE_INSETS is authored in the sized-root (viewport) space. Suites and
@@ -306,7 +309,7 @@ static func _clip_notch(host, inset: Rect2) -> Rect2:
 	var sx := vp.x / win.x
 	var sy := vp.y / win.y
 	var safe_vp := Rect2(safe.position.x * sx, safe.position.y * sy, safe.size.x * sx, safe.size.y * sy)
-	var xform := item.get_global_transform()
+	var xform := _host_xform_for_clip(host, item)
 	var shown := _norm_rect(xform * inset.position, xform * inset.end)
 	var clipped := shown.intersection(safe_vp)
 	if clipped.size.x < 64.0 or clipped.size.y < 64.0:
@@ -332,10 +335,12 @@ static func _clip_notch_sim(host, inset: Rect2) -> Rect2:
 		return inset
 	if not (host is CanvasItem) or not (host as CanvasItem).is_inside_tree():
 		return inset
-	var origin_g: Vector2 = (host as CanvasItem).get_global_transform() * Vector2.ZERO
+	var item := host as CanvasItem
+	item.force_update_transform()
+	var origin_g: Vector2 = _host_origin_for_clip(host, item)
 	var left := maxf(0.0, float(parts[0]) - origin_g.x)
 	var top := maxf(0.0, float(parts[1]) - origin_g.y)
-	var vp := (host as CanvasItem).get_viewport().get_visible_rect().size
+	var vp := item.get_viewport().get_visible_rect().size
 	var right_limit := vp.x - float(parts[2]) - origin_g.x
 	var bottom_limit := vp.y - float(parts[3]) - origin_g.y
 	var out := inset
@@ -352,6 +357,51 @@ static func _clip_notch_sim(host, inset: Rect2) -> Rect2:
 	if out.size.x < 64.0 or out.size.y < 64.0:
 		return inset
 	return out
+
+
+## Authored local offset for notch math. Prefer position when it agrees with
+## mobile_origin; otherwise the meta (battle _process pins position to it).
+static func _host_local_origin(host) -> Vector2:
+	var local := Vector2.ZERO
+	if host is Control:
+		local = (host as Control).position
+	elif host is Node2D:
+		local = (host as Node2D).position
+	if not host.has_meta("mobile_origin"):
+		return local
+	var meta = host.get_meta("mobile_origin")
+	if not (meta is Vector2):
+		return local
+	var meta_o: Vector2 = meta
+	# Suite / layout intentionally moved both; trust that pair.
+	if local.distance_to(meta_o) <= 8.0:
+		return local
+	# _process may not have re-pinned position yet — meta is the source of truth.
+	return meta_o
+
+
+## Global origin used by algebraic sim. After force_update_transform, fall back
+## to position / mobile_origin when global still shows a prior mobile shift
+## (CI FAIL: left = notch - stale_400 → 0 → bare==raw).
+static func _host_origin_for_clip(host, item: CanvasItem) -> Vector2:
+	var origin_g: Vector2 = item.get_global_transform() * Vector2.ZERO
+	var local := _host_local_origin(host)
+	if origin_g.distance_to(local) > 8.0:
+		return local
+	return origin_g
+
+
+## Transform for safe-area intersection. Same stale-global fallback as the sim:
+## rebuild a translation from the authored local origin when global lags.
+static func _host_xform_for_clip(host, item: CanvasItem) -> Transform2D:
+	var xform := item.get_global_transform()
+	var origin_g: Vector2 = xform * Vector2.ZERO
+	var local := _host_local_origin(host)
+	if origin_g.distance_to(local) <= 8.0:
+		return xform
+	var fixed := xform
+	fixed.origin = local
+	return fixed
 
 
 static func _norm_rect(a: Vector2, b: Vector2) -> Rect2:
