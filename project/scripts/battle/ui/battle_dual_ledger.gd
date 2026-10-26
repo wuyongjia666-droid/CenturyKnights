@@ -236,7 +236,7 @@ static func refresh(host: Node) -> void:
 		if turn == "player":
 			ready.visible = true
 			ready.text = BattleObjectives.text("dual_ledger_ready") % ready_n
-			var pulse := BattleTurnBridge.pulse_alpha(host)
+			var pulse := _ready_pulse_alpha(host)
 			var col := UIKit.ACCENT if ready_n > 0 else UIKit.TEXT
 			if pulse > 0.0 and ready_n > 0:
 				col = Color(minf(1.0, col.r + 0.25 * pulse), minf(1.0, col.g + 0.2 * pulse), minf(1.0, col.b + 0.1 * pulse), 1.0)
@@ -273,6 +273,33 @@ static func draw_injured_marks(host, overlay: CanvasItem) -> void:
 		var r := cpx * INJURED_FOOT_R
 		overlay.draw_circle(foot, r, tone)
 		overlay.draw_arc(foot, r, 0.0, TAU, 28, Color(UIKit.DANGER.r, UIKit.DANGER.g, UIKit.DANGER.b, 0.85), 1.5)
+
+
+
+static func _ready_pulse_alpha(host) -> float:
+	# Same meta as turn-bridge pulse — avoid class_name cycle.
+	const META := "m_turn_bridge_pulse_msec"
+	const MS := 1400
+	if host == null or not host.has_meta(META):
+		return 0.0
+	var age_ms := Time.get_ticks_msec() - int(host.get_meta(META))
+	if age_ms < 0 or age_ms >= MS:
+		return 0.0
+	return clampf(1.0 - float(age_ms) / float(MS), 0.0, 1.0)
+
+
+static func _on_ready_input(host, ev: InputEvent) -> void:
+	if host == null or ev == null:
+		return
+	if not (ev is InputEventMouseButton):
+		return
+	var mb := ev as InputEventMouseButton
+	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if str(host.turn_team) != "player":
+		return
+	BattleFormationCycle.apply_next(host)
+	refresh(host)
 
 
 static func _insets(host: Node) -> Dictionary:

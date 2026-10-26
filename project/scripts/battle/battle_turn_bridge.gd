@@ -26,6 +26,10 @@ static func note_player_return(host) -> void:
 static func _auto_select_first_ready(host) -> void:
 	if int(host.selected) >= 0:
 		return
+	# Skip boot turn (round 1): keep empty select so mobile shots / bar stay collapsed.
+	var round_no := int(host.get("_round_no")) if host.get("_round_no") != null else 0
+	if round_no <= 1:
+		return
 	var n: int = BattleFormationCycle.next_idx(host.units, -1, true)
 	if n < 0:
 		return

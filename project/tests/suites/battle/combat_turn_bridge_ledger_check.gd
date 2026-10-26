@@ -171,6 +171,7 @@ func _arrange() -> String:
 
 
 func _scene_a_return_and_tap() -> String:
+	_battle._round_no = maxi(2, int(_battle._round_no))
 	BattleTurnBridge.note_player_return(_battle)
 	await _settle(3)
 	if int(_battle.selected) != _player_i and int(_battle.selected) != _buddy_i:
@@ -253,6 +254,7 @@ class _HostStub extends Node:
 	var turn_team := "player"
 	var battle_over := false
 	var selected := -1
+	var _round_no := 2
 	var units: Array = []
 	var overlay = null
 
