@@ -442,7 +442,7 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 		plate = Rect2(10, 34, 72, maxf(56.0, footer_y - 42.0))
 	UIKit.portrait_plate(p, plate, c, "FROST")
 	var arms_sz := Vector2(24, 28) if compact else Vector2(32, 38)
-	CKHeraldryChrome.attach_house_card_chrome(p, c, plate, arms_sz)
+	CKHeraldryField.attach_house_card_arms(p, c, plate, arms_sz)
 	if not compact:
 		var nm := UIKit.title_label(c.name, 15)
 		nm.name = "CardName"
@@ -671,7 +671,7 @@ func _place_marriage_crests() -> void:
 		at = Vector2(maxf(8.0, vp.x - strip_w - 8.0), 8.0)
 	elif vp.x >= 1280.0:
 		at = Vector2(vp.x - strip_w - 42.0, 168.0)
-	CKHeraldryChrome.place_marriage_crest_strip(self, _get_suitor(), _selected, at, shield)
+	CKHeraldryField.place_marriage_crest_strip(self, _get_suitor(), _selected, at, shield)
 
 func _render_cards() -> void:
 	for c in _cards.get_children():
@@ -1486,7 +1486,7 @@ func _m_house_card(c: CKCharacter, side_tag: String, col: Color) -> Control:
 	pr.size = Vector2(84, 112)
 	pr.custom_minimum_size = Vector2(84, 112)
 	holder.add_child(pr)
-	CKHeraldryChrome.attach_house_card_chrome(holder, c, Rect2(0, 0, 84, 112), Vector2(28, 34))
+	CKHeraldryField.attach_house_card_arms(holder, c, Rect2(0, 0, 84, 112), Vector2(28, 34))
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info.add_theme_constant_override("separation", 2)

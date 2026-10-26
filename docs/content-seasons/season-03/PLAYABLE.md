@@ -82,7 +82,23 @@
 - 各章 `tavern` 拍入谱选择前加 `_tvp1`–`_tvp6` 季题名著口头，全库去重；收束非旁白。
 - 验收：`content_season_tavern_plate_chain_check` — hub chip → 酒馆针口头 → 挂板选择 → ledger。
 
+## 第二主题拍口头加厚（second-beat）
+
+- 各章第二主题拍加 `_sec1`–`_sec6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_second_beat_chain_check` — hub chip → 二拍针口头 →（非中途战）继续。
 ## 开场主题口头加厚（theme-open）
 
 - 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
 - 验收：`content_season_theme_open_chain_check` — hub chip → 首拍针口头 → 下一拍。
+
+## 章末收束口头（close-oral）
+
+- 各章 `ledger` 拍末 `_cls1`–`_cls8`：战后回家、把这一季的东西放进柜、季尾灯影。全库去重；末句不是旁白。
+- 跨章复读的入谱套话改成该季自己的句子。不新开内容季，不写 EmptyHost，不加 month_echo。
+- 不碰开场 `_thm`、二拍 `_sec`、访月 `_vhg`/`_msr`、战拍 `_bpl`、酒馆 `_tvp`、入谱回程 `_ldg`。
+- 验收：`content_season_close_oral_chain_check` — hub 芯片 → 章末收束口头 → 回到灰旗堡。
+## 访月整装口头加厚（muster-plate）
+
+- 各章 visit 拍（hourglass/audit/birth）在 `_vhg` 后加 `_msr1`–`_msr6` 季题整装口头，全库去重；收束非旁白。
+- 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
+- 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。
