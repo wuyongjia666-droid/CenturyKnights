@@ -530,3 +530,20 @@ atlas_muster_ration,口粮：%s,Rations: %s
 atlas_muster_on_march,行军中已并入编制，确认后继续赶路。,Joined on the march — continue after confirm.
 atlas_muster_in_camp,已并入灰旗编制。,Joined the Ash Banner muster.
 atlas_muster_continue,确认编成,Confirm muster
+atlas_contest_en,CONTEST // 拉锯,CONTEST // TUG
+atlas_contest_title,中立领地拉锯,Neutral site contested
+atlas_contest_body,「%s」（锚地 %s）正被多方争夺：%s。%s,"%s" (anchor %s) is contested by: %s. %s
+atlas_contest_phase_declared,争夺初起，尚有一月可截击。,Race just started — about one month to intervene.
+atlas_contest_phase_imminent,胜负在即，再不截击将由强势一方吞并。,Decision imminent — strongest faction claims if unanswered.
+atlas_contest_seize,驰援截击,March to seize
+atlas_contest_seize_now,就地强攻,Assault now
+atlas_contest_seize_go,启程截击「%s」,Marching to seize "%s"
+atlas_contest_watch,观望,Stand aside
+atlas_contest_watch_ok,观望「%s」拉锯，容后再决。,Watching the race for "%s".
+atlas_contest_later,稍后,Later
+atlas_contest_bandit,%s流寇,Bandits of %s
+atlas_contest_log,中立「%s」拉锯起：%s,Neutral "%s" contested: %s
+atlas_contest_resolved,「%s」拉锯落幕 · %s 得手,"%s" contest ends · %s claims it
+atlas_contest_summary,拉锯中：%s,Contested: %s
+atlas_contest_gone,拉锯已散。,Contest already settled.
+atlas_contest_factions,争夺方：%s,Factions: %s

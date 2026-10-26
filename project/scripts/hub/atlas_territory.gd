@@ -43,6 +43,15 @@ static func add_markers(layer: Control, nation: String, map_size: Vector2, busy:
 			b.add_child(ring)
 			b.move_child(ring, 0)
 			UIFX.breathe(ring, 0.25, 0.9)
+		elif bool(mk.get("contest", false)):
+			var cring := ColorRect.new()
+			cring.name = "ContestRing"
+			cring.color = Color(UIKit.EMBER, 0.4)
+			cring.size = b.size
+			cring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			b.add_child(cring)
+			b.move_child(cring, 0)
+			UIFX.breathe(cring, 0.3, 0.85)
 		_owner_chip(b, own, int(mk.get("garrison", 0)))
 		var sid := str(mk.id)
 		b.pressed.connect(func(): on_press.call(sid))
