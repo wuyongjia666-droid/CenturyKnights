@@ -32,8 +32,13 @@
 test -f scripts/build_android.sh
 test -f scripts/build_windows.sh
 test -f .github/workflows/release.yml
+python3 tools/ci/export_size_report.py
+python3 tools/ci/store_packaging_dry_check.py
+python3 tools/ci/store_verify_records_check.py
 python3 tools/ci/store_prep_check.py
 ```
+
+干跑证据与 `EXPORT CAP_STATUS` / `medium_only` 合同见 [`export-paths-verification-record.md`](./export-paths-verification-record.md)。Android CAP OVER 时预算仍可通过；闭合 CAP 见 `docs/art/export-cap-400.md`（H/I 用户拍板）。
 
 ## 正式提审包（人工，不缴费自动化）
 
