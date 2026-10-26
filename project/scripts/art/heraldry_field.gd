@@ -1,10 +1,11 @@
 class_name CKHeraldryField
 extends RefCounted
-## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve,
-## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal,
+## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve
+## and 出征编队 muster/slot/focus, battle card / forecast / report, annex serve rows,
+## infirmary heal roster, forge smith slots, shrine heal, estates 属事处 person rows,
 ## and city 本城之事 affairs overlay (团徽 + 本城邦徽).
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
-## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
+## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling. One shield per person.
 
 
 static func _retire(parent: Node, node_name: String) -> void:
@@ -252,5 +253,86 @@ static func attach_affairs_seal_arms(row: Control, c, arms_sz: Vector2 = Vector2
 		row.move_child(arms, 0)
 	else:
 		arms.position = Vector2(4, 8)
+	return arms
+
+
+## Infirmary heal roster row: one person shield (族徽|旗徽). No company pair, no cadency.
+static func attach_infirmary_heal_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "InnHealArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "InnHealArms"
+	arms.set_meta("field_route", "infirmary_heal")
+	row.add_child(arms)
+	if row is Container:
+		row.move_child(arms, 0)
+	return arms
+
+
+## Deploy muster strip: 团徽 + one leader shield. No leader → 团徽 only.
+static func place_deploy_muster_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if leader != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "MusterCrestStrip", at, Vector2(w, shield.y))
+	var extra: TextureRect = null
+	if leader != null:
+		extra = CKHeraldryChrome.make_person_arms(leader, shield)
+		extra.name = "LeaderArms"
+	_pair(host, shield, extra)
+	host.set_meta("field_route", "deploy_muster")
+	host.set_meta("has_leader", leader != null)
+	return host
+
+
+## Deploy slot card: one person shield. Position matches the legacy plate inset.
+static func attach_deploy_slot_arms(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	var at := Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
+	return place_deploy_slot_arms(parent, c, at, arms_sz)
+
+
+static func place_deploy_slot_arms(parent: Control, c, at: Vector2, arms_sz: Vector2 = Vector2(36, 44)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "DeployArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "DeployArms"
+	arms.position = at
+	arms.set_meta("field_route", "deploy_slot")
+	parent.add_child(arms)
+	return arms
+
+
+## Focused deploy metrics: one person shield for the selected knight.
+static func attach_deploy_focus_arms(parent: Control, c, at: Vector2, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "FocusArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "FocusArms"
+	arms.position = at
+	arms.set_meta("field_route", "deploy_focus")
+	parent.add_child(arms)
+	if parent is Container:
+		parent.move_child(arms, 0)
+	return arms
+
+
+## Estates field-book / 属事处 row: one person shield. No marshalling with the office strip.
+static func attach_office_field_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "FieldRowArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "FieldRowArms"
+	arms.set_meta("field_route", "office_field")
+	row.add_child(arms)
+	if row is Container:
+		row.move_child(arms, 0)
 	return arms
 
