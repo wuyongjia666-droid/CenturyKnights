@@ -1074,6 +1074,9 @@ func holding_patrol_boost(hid: String) -> int:
 func holding_patrol_cd(hid: String) -> int:
 	return CKEconomyState.holding_patrol_cd(self, hid)
 
+func holding_patrol_preview(hid: String) -> Dictionary:
+	return CKEconomyState.holding_patrol_preview(self, hid)
+
 func patrol_holding(hid: String) -> Dictionary:
 	return CKEconomyState.patrol_holding(self, hid)
 
