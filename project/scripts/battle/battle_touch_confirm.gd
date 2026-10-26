@@ -139,6 +139,7 @@ static func drag_commit_enabled() -> bool:
 
 static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
+	BattleGhostStrike.after_preview(host)
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
@@ -339,6 +340,7 @@ static func _clear_stale_preview(host) -> void:
 	if host.preview_move_cell.x < 0 and int(host.preview_attack_ui) < 0:
 		return
 	host.preview_move_cell = Vector2i(-1, -1)
+	BattleGhostStrike.after_preview(host)
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
@@ -367,6 +369,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 		if host._can_attack_from(su, cell):
 			host.preview_attack_ui = ui
 			host.preview_move_cell = Vector2i(-1, -1)
+			BattleGhostStrike.after_preview(host)
 			if DeviceProfile.is_mobile():
 				BattleMobileBar.rebuild(host)
 			if host.overlay:
@@ -381,6 +384,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 		if host.preview_move_cell == cell:
 			return
 		host.preview_move_cell = cell
+		BattleGhostStrike.after_preview(host)
 		host.preview_attack_ui = -1
 		if DeviceProfile.is_mobile():
 			BattleMobileBar.rebuild(host)
@@ -417,6 +421,7 @@ static func on_drag_end(host, screen_pos: Vector2) -> bool:
 		return false
 	if ui < 0 and not host.moved_this_select and host.move_cells.has(cell):
 		host.preview_move_cell = cell
+		BattleGhostStrike.after_preview(host)
 		confirm_move(host)
 		return true
 	# Illegal release: clear ghost so the bar does not keep a dead Confirm.
