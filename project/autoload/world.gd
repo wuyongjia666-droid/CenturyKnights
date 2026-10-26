@@ -1975,7 +1975,37 @@ func buy_item(city: String, iid: String) -> Dictionary:
 	world_changed.emit()
 	return {"ok": true, "msg": "购入「%s」（-%d 银）" % [items[iid].name, cost]}
 
-func forge_item(city: String, iid: String) -> Dictionary:
+## Preview missing forge mats + local market buy cost to top them up.
+func forge_mats_preview(city: String, iid: String) -> Dictionary:
+	var it: Dictionary = items.get(iid, {})
+	if it.is_empty():
+		return {"ok": false, "miss": {}, "mat_silver": 0, "forge_silver": 0, "total": 0, "can_buy": false}
+	var miss := mats_ok(it)
+	var mat_silver := 0
+	var can_buy := true
+	var lines: Array = []
+	for g in miss.keys():
+		var need := int(miss[g])
+		var unit := price(city, str(g), "buy")
+		var stock_n := stock(city, str(g))
+		var line_cost := unit * need
+		mat_silver += line_cost
+		if stock_n < need:
+			can_buy = false
+		lines.append({"good": str(g), "need": need, "unit": unit, "cost": line_cost, "stock": stock_n})
+	var forge_silver := int(it.get("forge_silver", 0))
+	return {
+		"ok": true,
+		"miss": miss,
+		"lines": lines,
+		"mat_silver": mat_silver,
+		"forge_silver": forge_silver,
+		"total": mat_silver + forge_silver,
+		"can_buy": can_buy and not miss.is_empty(),
+		"short_silver": GameState.silver < (mat_silver + forge_silver),
+	}
+
+func forge_item(city: String, iid: String, buy_mats: bool = false) -> Dictionary:
 	if city != pos:
 		return {"ok": false, "msg": "须身在此城"}
 	var e := _stock_entry(city, iid)
@@ -1983,11 +2013,27 @@ func forge_item(city: String, iid: String) -> Dictionary:
 		return {"ok": false, "msg": str(e.get("reason", "此铺不能打造"))}
 	var it: Dictionary = items[iid]
 	var miss := mats_ok(it)
+	var mat_spent := 0
 	if not miss.is_empty():
-		var parts: Array = []
+		if not buy_mats:
+			var parts: Array = []
+			for g in miss.keys():
+				parts.append("%s×%d" % [good_name(str(g)), int(miss[g])])
+			return {"ok": false, "msg": Locale.t("smith_forge_short_mats") % "、".join(parts), "miss": miss}
+		var prev: Dictionary = forge_mats_preview(city, iid)
+		if not bool(prev.get("can_buy", false)):
+			return {"ok": false, "msg": Locale.t("smith_forge_mats_unstocked"), "preview": prev}
+		if bool(prev.get("short_silver", false)):
+			return {"ok": false, "msg": Locale.t("smith_forge_short_silver") % int(prev.get("total", 0)), "preview": prev}
 		for g in miss.keys():
-			parts.append("%s×%d" % [good_name(str(g)), int(miss[g])])
-		return {"ok": false, "msg": "缺材料：" + "、".join(parts)}
+			var need := int(miss[g])
+			var bought: Dictionary = market_buy(city, str(g), need)
+			if not bool(bought.get("ok", false)):
+				return bought
+			mat_spent += int(bought.get("cost", 0))
+		miss = mats_ok(it)
+		if not miss.is_empty():
+			return {"ok": false, "msg": Locale.t("smith_forge_short_mats") % "购料后", "miss": miss}
 	var cost := int(it.get("forge_silver", 0))
 	if GameState.silver < cost:
 		return {"ok": false, "msg": "工钱不足（需 %d 银）" % cost}
@@ -1999,7 +2045,10 @@ func forge_item(city: String, iid: String) -> Dictionary:
 	GameState.log_event("%s铁匠为灰旗打造「%s」" % [node(city).get("name", ""), it.name])
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": "打造完成：「%s」（工钱 %d 银 + 材料）" % [it.name, cost]}
+	var msg := "打造完成：「%s」（工钱 %d 银 + 材料）" % [it.name, cost]
+	if mat_spent > 0:
+		msg = Locale.t("smith_forge_bought_mats_done") % [it.name, cost, mat_spent]
+	return {"ok": true, "msg": msg, "forge_silver": cost, "mat_silver": mat_spent}
 
 func item(iid: String) -> Dictionary:
 	return items.get(iid, {})
@@ -2872,8 +2921,32 @@ func take_rival_thefts() -> Array:
 func peek_rival_thefts() -> Array:
 	return rival_thefts.duplicate(true)
 
+## Seal-aware days/food for the armed (or proposed) arbitrage sell march.
+func arbitrage_march_preview(sell_city: String = "") -> Dictionary:
+	var dest := str(sell_city)
+	if dest == "" and not arbitrage.is_empty():
+		dest = str(arbitrage.get("sell_city", ""))
+	if dest == "" or dest == pos:
+		return {"days": 0, "food": 0, "short_food": false, "seal_bypass": false, "dest": dest, "here": dest == pos and dest != ""}
+	var pv: Dictionary = seal_aware_travel_preview(dest)
+	if not bool(pv.get("ok", false)):
+		var raw: Dictionary = route(pos, dest)
+		var days := int(raw.get("days", 0))
+		var food := food_per_day() * days
+		return {"days": days, "food": food, "short_food": GameState.food < food, "seal_bypass": false, "dest": dest, "here": false, "ok": not raw.is_empty()}
+	return {
+		"ok": true,
+		"dest": dest,
+		"days": int(pv.get("days", 0)),
+		"food": int(pv.get("food", 0)),
+		"short_food": bool(pv.get("short_food", false)),
+		"seal_bypass": bool(pv.get("seal_bypass", false)),
+		"here": false,
+	}
+
+
 ## Buy local produce and arm a sell-at destination for atlas arbitrage E2E.
-func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dictionary:
+func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "", require_food: bool = false) -> Dictionary:
 	if not arbitrage.is_empty():
 		return {"ok": false, "msg": Locale.t("atlas_arb_busy")}
 	var g := str(good)
@@ -2885,6 +2958,16 @@ func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dict
 		dest = str(best.get("city", ""))
 	if dest == "" or dest == pos:
 		return {"ok": false, "msg": Locale.t("atlas_arb_no_dest")}
+	var march: Dictionary = arbitrage_march_preview(dest)
+	if require_food and bool(march.get("short_food", false)):
+		return {"ok": false, "msg": Locale.t("atlas_arb_short_food") % int(march.get("food", 0)), "march": march}
+	# Local produce soft-lock: top up market stock so one-tap run is not blocked by empty stall.
+	if g in node(pos).get("produce", []) and stock(pos, g) < qty:
+		if not market.has(pos):
+			_init_market(pos)
+		var m: Dictionary = market[pos]
+		m[g] = maxi(int(m.get(g, 0)), maxi(qty, _target_stock(pos, g)))
+		market[pos] = m
 	var bought: Dictionary = market_buy(pos, g, qty)
 	if not bool(bought.get("ok", false)):
 		return bought
@@ -2894,9 +2977,17 @@ func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dict
 		"buy_city": pos,
 		"sell_city": dest,
 		"cost": int(bought.get("cost", 0)),
+		"march_days": int(march.get("days", 0)),
+		"march_food": int(march.get("food", 0)),
+		"seal_bypass": bool(march.get("seal_bypass", false)),
 	}
 	world_changed.emit()
-	return {"ok": true, "msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))], "plan": arbitrage.duplicate(true)}
+	return {
+		"ok": true,
+		"msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))],
+		"plan": arbitrage.duplicate(true),
+		"march": march,
+	}
 
 func clear_arbitrage() -> void:
 	arbitrage = {}

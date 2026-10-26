@@ -12,7 +12,7 @@ var _msg: Label
 func _ready() -> void:
 	_leader = GameState.get_leader()
 	CKPageKit.shell(self, Locale.t("lb_title_ctx"), "TITLE LADDER", Locale.t("lb_title_title"), Locale.t("lb_title_desc"))
-	CKHeraldryChrome.place_muster_crest_strip(self, _leader, Vector2(980, 8), Vector2(40, 48))
+	CKHeraldryField.place_muster_crest_strip(self, _leader, Vector2(980, 8), Vector2(40, 48))
 	_msg = CKPageKit.feedback(self)
 	_paint()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "TITLE LADDER · FROST")
@@ -24,7 +24,7 @@ func apply_mobile_layout() -> void:
 	set_meta("m_center_ok", true)
 	var vp := get_viewport().get_visible_rect().size
 	var strip_w := 40.0 * 2.0 + 8.0
-	CKHeraldryChrome.place_muster_crest_strip(self, _leader, Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
+	CKHeraldryField.place_muster_crest_strip(self, _leader, Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
 	_paint()
 	MobilePage.upsize(self)
 
@@ -73,10 +73,10 @@ func _paint_desktop() -> void:
 	go.position = Vector2(42, CKPageKit.TOP + 442)
 	_host.add_child(go)
 	if _leader != null:
-		var la := CKHeraldryChrome.make_person_arms(_leader, Vector2(44, 52))
-		la.name = "LeaderArms"
-		la.position = Vector2(go.position.x + go.custom_minimum_size.x + 16.0, go.position.y)
-		_host.add_child(la)
+		CKHeraldryField.attach_title_leader_arms(
+			_host, _leader,
+			Vector2(go.position.x + go.custom_minimum_size.x + 16.0, go.position.y),
+			Vector2(44, 52))
 	UIFX.wire_tree(_host)
 	UIFX.stagger_children(step, 0.05, 0.2)
 
@@ -148,10 +148,9 @@ func _paint_mobile() -> void:
 	var go := _promote_btn(true, content_w)
 	inner.add_child(go)
 	if _leader != null:
-		var la := CKHeraldryChrome.make_person_arms(_leader, Vector2(40, 48))
-		la.name = "LeaderArms"
-		la.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		inner.add_child(la)
+		var la := CKHeraldryField.attach_title_leader_arms(inner, _leader, Vector2.ZERO, Vector2(40, 48))
+		if la:
+			la.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	UIFX.wire_tree(_host)
 	UIFX.stagger_children(step, 0.05, 0.2)
 
@@ -181,10 +180,7 @@ func _ladder_chip(id: String, i: int, ni: int, mob: bool, step_w: float) -> Cont
 	var v := VBoxContainer.new()
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	p.add_child(v)
-	var badge := CKHeraldryChrome.make_rank_badge(id, 22 if mob else 26)
-	badge.name = "LadderBadge"
-	badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	v.add_child(badge)
+	var badge := CKHeraldryField.attach_ladder_badge(v, id, 22 if mob else 26)
 	var fs := MobilePage.FONT if mob else 18
 	var t := UIKit.title_label(CKCourt.ladder_zh(id, CKCourt._sex(_leader)), fs, UIKit.TEXT)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

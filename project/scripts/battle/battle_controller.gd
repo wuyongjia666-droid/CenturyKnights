@@ -255,6 +255,7 @@ func _process(delta: float) -> void:
 		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
 		or BattlePhaseFeel.end_alpha(self) > 0.0
 		or BattleEngageCutscene.bridge_alpha(self) > 0.0
+		or BattleTurnBridge.pulse_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
 	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
@@ -479,7 +480,7 @@ func _build_ui() -> void:
 	_build_mobile_bar()
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 	ForecastPanel.attach(self)
 	RewindBar.attach(self)
 	BattleDualLedger.attach(self)
@@ -674,6 +675,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	selected = -1
 	Sfx.confirm()
 	_log("%s 释放「%s」，治疗 %d 人" % [u.char.name, sk.get("name", ""), healed])
+	BattleTurnBridge.after_unit_done(self)
 	map_draw.queue_redraw()
 	_refresh_info()
 	_check_end()
@@ -767,7 +769,7 @@ func _init_map() -> void:
 	_layout_board()
 	if phase_label:
 		phase_label.text = Locale.t("shell_a63e5b28") % map_name
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 
 func _load_terrain_fx(m: Dictionary) -> void:
 	height_grid.clear()
@@ -1193,6 +1195,7 @@ func _draw_overlay() -> void:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
+		BattleSkillHealPreview.draw(self, overlay)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1224,8 +1227,10 @@ func _draw_overlay() -> void:
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleGhostStrike.draw(self, overlay)
 	BattleAttackAim.draw(self, overlay)
+	BattleSkillHealPreview.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleLandStrike.draw(self, overlay)
+	BattleTurnBridge.draw_ready_pulse(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	BattleLinkTelegraph.draw(self, overlay)
@@ -1369,8 +1374,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Y1-A T-P25: in attack mode cycle in-reach foes; else T-P12 formation.
-				if attack_mode:
+				# Heal preview → attack cycle (T-P25) → formation (T-P12).
+				if BattleSkillHealPreview.latched(self):
+					if event.shift_pressed:
+						BattleSkillHealPreview.apply_prev(self)
+					else:
+						BattleSkillHealPreview.apply_next(self)
+				elif attack_mode:
 					if event.shift_pressed:
 						BattleAttackCycle.apply_prev(self)
 					else:
@@ -1403,7 +1413,7 @@ func apply_mobile_layout() -> void:
 	BattleEdgePick.note_layout(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 
 func _screen_to_local(screen_pos: Vector2) -> Vector2:
 	## Viewport pixels → this control. Identity on the desktop 1280×720 root.
@@ -1838,6 +1848,8 @@ func _do_attack(ai: int, di: int) -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	if not canto and str(atk.team) == "player":
+		BattleTurnBridge.after_unit_done(self)
 	_refresh_info()
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
@@ -2198,6 +2210,7 @@ func _wait_selected() -> void:
 	attack_mode = false
 	moved_this_select = false
 	_log("%s 待命" % u.char.name)
+	BattleTurnBridge.after_unit_done(self)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_refresh_info()
@@ -2237,6 +2250,7 @@ func _start_player_turn() -> void:
 	moved_this_select = false
 	_theme_banter("turn")
 	BattleStory.on_player_turn(self, map_id)
+	BattleTurnBridge.note_player_return(self)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()

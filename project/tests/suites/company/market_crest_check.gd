@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: market crest (desk + mobile).
+## Fat heraldry E2E: market via CKHeraldryField (MarketCrestStrip + field_route).
 
 const SCN := preload("res://scenes/hub/market.tscn")
 var _fails: Array = []
@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("MARKET FIELD CREST PASS")
 		print("MARKET CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -41,8 +42,11 @@ func _assert_page(page: Node, where: String) -> void:
 	var mkt = page.find_child("MarketCrestStrip", true, false)
 	_ok(mkt != null, "%s MarketCrestStrip" % where)
 	if mkt != null:
+		_ok(str(mkt.get_meta("field_route", "")) == "market_strip", "%s field_route" % where)
 		var bn = mkt.find_child("MarketBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_market_arms", "%s MarketBanner" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/market.gd")
+	_ok(src.find("CKHeraldryField.place_market_crest_strip") >= 0, "%s hub calls Field" % where)
 
 
 func _run_desktop() -> void:
