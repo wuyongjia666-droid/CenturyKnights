@@ -258,6 +258,8 @@ func _begin(mode: String, dest: String, path: Array) -> void:
 	_launched = false
 	_clear_choice()
 	_cmp = {}
+	if mode == "detour" and path.size() >= 2:
+		World.note_seal_detour(dest, path)
 	_paint_march()
 
 func _tick_detour() -> void:
@@ -327,6 +329,8 @@ func _paint_march() -> void:
 func _show_arrive() -> void:
 	if _mode == "arrived":
 		return
+	if World.pos == _final:
+		World.clear_seal_detour()
 	var why := Locale.t("seal_arrive_detour")
 	if _reason == "force":
 		why = Locale.t("seal_arrive_force")
