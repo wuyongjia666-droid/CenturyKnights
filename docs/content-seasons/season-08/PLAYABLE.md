@@ -149,6 +149,12 @@
 - 验收：`content_season_ink_dry_chain_check` — hub chip → 墨干针口头。
 - 不碰 `_lop`/`_ldg`/`_cls`/`_bpl`/`_aud`/`_vex`/`_msr`/`_opn`。
 
+## 访月落笔口头加厚（audit-pen）
+
+- 各章 visit 拍（audit/birth/hourglass）在 `_vhg` 前加 `_aud1`–`_aud6` 落笔口头，全库去重；收束非旁白。
+- 验收：`content_season_audit_pen_chain_check` — hub chip → 落笔针口头。
+- 不碰 `_vop`/`_vhg`/`_msr`/`_bpl`/`_lop`/`_cls`/`_sec`/`_tvp`/`_wex`/`_opn`/`_vex`。
+
 ## 战后收锋口头加厚（battle-settle）
 - 各章试锋胜后 `_win4` 后、`mid_lost`（若有）前加 `_wex1`–`_wex6` 收锋口头，全库去重；收束非旁白。
 - 验收：`content_season_battle_settle_chain_check` — hub chip → 收锋针口头。
