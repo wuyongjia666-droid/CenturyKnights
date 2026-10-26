@@ -48,6 +48,8 @@ static func _host(parent: Node, node_name: String, at: Vector2, size: Vector2, f
 static func _pair(host: Control, shield: Vector2, second: TextureRect) -> void:
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
+	if not co.has_meta("field_route"):
+		co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	if second != null:
 		second.position = Vector2(shield.x + 8.0, 0)
@@ -66,6 +68,7 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 	if candidate != null:
 		focus = CKHeraldryChrome.make_person_arms(candidate, shield)
 		focus.name = "HireFocusArms"
+		focus.set_meta("field_route", "tavern_focus")
 	_pair(host, shield, focus)
 	host.set_meta("has_candidate", candidate != null)
 	return host
@@ -83,6 +86,7 @@ static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shie
 	if reserve_c != null:
 		extra = CKHeraldryChrome.make_person_arms(reserve_c, shield)
 		extra.name = "ReserveArms"
+		extra.set_meta("field_route", "reserve_focus")
 	_pair(host, shield, extra)
 	host.set_meta("has_reserve", reserve_c != null)
 	return host
@@ -148,6 +152,8 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 	var extra: TextureRect = null
 	if nid != "":
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
+		extra.name = "ReportFoeArms"
+		extra.set_meta("field_route", "report_foe")
 	_pair(host, shield, extra)
 	host.set_meta("has_foe", nid != "")
 	return host
@@ -201,6 +207,7 @@ static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Ve
 	if smith != null:
 		focus = CKHeraldryChrome.make_person_arms(smith, shield)
 		focus.name = "ForgeFocusArms"
+		focus.set_meta("field_route", "forge_focus_arms")
 	_pair(host, shield, focus)
 	host.set_meta("has_smith", smith != null)
 	return host
@@ -232,6 +239,7 @@ static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shiel
 	if focus_hurt != null:
 		focus = CKHeraldryChrome.make_person_arms(focus_hurt, shield)
 		focus.name = "HealFocusArms"
+		focus.set_meta("field_route", "shrine_heal_focus")
 	_pair(host, shield, focus)
 	host.set_meta("has_hurt", focus_hurt != null)
 	return host
@@ -250,9 +258,12 @@ static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2
 	var host := _host(parent, "AffairCrestStrip", at, Vector2(w, shield.y), "affairs_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
+	co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	if nid != "":
 		var nat := CKHeraldryChrome.make_city_nation_arms(nid, shield)
+		nat.name = "AffairNationArms"
+		nat.set_meta("field_route", "affairs_nation")
 		nat.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(nat)
 	host.set_meta("nation_id", nid)
@@ -308,6 +319,7 @@ static func _lineage_host(parent: Node, node_name: String, people: Array, at: Ve
 	var host := _host(parent, node_name, at, Vector2(w, shield.y))
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
+	co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	var i := 0
 	for c in people:
@@ -334,6 +346,7 @@ static func place_panorama_lineage_strip(parent: Node, people: Array, at: Vector
 			continue
 		var arms: TextureRect = host.get_meta("slot_%d" % i)
 		arms.name = "PanoramaPerson_%s" % str(c.id)
+		arms.set_meta("field_route", "panorama_person")
 		i += 1
 	return host
 
@@ -350,6 +363,7 @@ static func place_home_lineage_row(parent: Node, people: Array, at: Vector2, shi
 			continue
 		var arms: TextureRect = host.get_meta("slot_%d" % i)
 		arms.name = "HomeLeaderArms" if c.is_leader else "HomeKin_%s" % str(c.id)
+		arms.set_meta("field_route", "home_leader" if c.is_leader else "home_kin")
 		i += 1
 	return host
 
@@ -428,17 +442,20 @@ static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector
 	var host := _host(parent, "MarriageCrestStrip", at, Vector2(w, shield.y), "marriage_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2(x, 0)
+	co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	x += shield.x + gap
 	if left_c != null:
 		var la := CKHeraldryChrome.make_person_arms(left_c, shield)
 		la.name = "LeftArms"
+		la.set_meta("field_route", "marriage_left")
 		la.position = Vector2(x, 0)
 		host.add_child(la)
 		x += shield.x + gap
 	if right_c != null:
 		var ra := CKHeraldryChrome.make_person_arms(right_c, shield)
 		ra.name = "RightArms"
+		ra.set_meta("field_route", "marriage_right")
 		ra.position = Vector2(x, 0)
 		host.add_child(ra)
 	host.set_meta("has_left", left_c != null)
@@ -472,6 +489,7 @@ static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield
 	if heir != null:
 		focus = CKHeraldryChrome.make_person_arms(heir, shield)
 		focus.name = "LeaderArms"
+		focus.set_meta("field_route", "succession_heir")
 	_pair(host, shield, focus)
 	host.set_meta("has_heir", heir != null)
 	return host
@@ -491,17 +509,20 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 	var host := _host(parent, "DuelCrestStrip", at, Vector2(w, shield.y), "duel_strip")
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2(x, 0)
+	co.set_meta("field_route", "strip_company")
 	host.add_child(co)
 	x += shield.x + gap
 	if left_c != null:
 		var la := CKHeraldryChrome.make_person_arms(left_c, shield)
 		la.name = "LeftArms"
+		la.set_meta("field_route", "duel_left")
 		la.position = Vector2(x, 0)
 		host.add_child(la)
 		x += shield.x + gap
 	if right_c != null:
 		var ra := CKHeraldryChrome.make_person_arms(right_c, shield)
 		ra.name = "RightArms"
+		ra.set_meta("field_route", "duel_right")
 		ra.position = Vector2(x, 0)
 		host.add_child(ra)
 	host.set_meta("has_left", left_c != null)
@@ -521,6 +542,7 @@ static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Ve
 	if pupil != null:
 		focus = CKHeraldryChrome.make_person_arms(pupil, shield)
 		focus.name = "TrainFocusArms"
+		focus.set_meta("field_route", "train_focus_arms")
 	_pair(host, shield, focus)
 	host.set_meta("has_pupil", pupil != null)
 	return host
@@ -930,6 +952,7 @@ static func place_deploy_muster_strip(parent: Node, leader, at: Vector2, shield:
 	if leader != null:
 		extra = CKHeraldryChrome.make_person_arms(leader, shield)
 		extra.name = "LeaderArms"
+		extra.set_meta("field_route", "deploy_muster_leader")
 	_pair(host, shield, extra)
 	host.set_meta("field_route", "deploy_muster")
 	host.set_meta("has_leader", leader != null)
@@ -1021,11 +1044,13 @@ static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vec
 	host.set_meta("field_route", "castle_view_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
 	bn.name = "CastleViewBanner"
 	bn.tooltip_text = Locale.t("lb_castle_view_arms")
 	bn.set_meta("arms_kind", "lb_castle_view_arms")
+	bn.set_meta("field_route", "castle_view_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
