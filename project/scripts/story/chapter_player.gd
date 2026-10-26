@@ -6,6 +6,7 @@ const DEFAULT_PATH := "res://data/story/chapters/ch0.json"
 const BATTLE_SCENE := "res://scenes/battle/battle.tscn"
 const HUB_SCENE := "res://scenes/hub/castle_hub.tscn"
 const MENU_SCENE := "res://scenes/ui/main_menu.tscn"
+const StoryFlagScope = preload("res://scripts/narrative/story_flag_scope.gd")
 
 @export var chapter_path: String = DEFAULT_PATH
 @export var lock_path: bool = false
@@ -103,9 +104,17 @@ func _open(path: String) -> void:
 	if not _has_beat(beat_id):
 		var beats: Array = _chapter.get("beats", [])
 		beat_id = str(beats[0].get("id", "")) if not beats.is_empty() else ""
+	_bind_flag_scope()
 	_resuming = true
 	_load_beat(beat_id)
 	_resuming = false
+
+func _bind_flag_scope() -> void:
+	var cid := str(_chapter.get("id", ""))
+	if StoryCatalog.is_content_season_id(cid):
+		GameState.set_meta("story_flag_chapter", cid)
+	else:
+		GameState.set_meta("story_flag_chapter", "")
 
 func _has_beat(beat_id: String) -> bool:
 	if beat_id == "":
@@ -194,7 +203,7 @@ func _build() -> void:
 	_build_month_report()
 	var top := HBoxContainer.new()
 	top.name = "StoryTopButtons"
-	top.position = Vector2(1280 - 48 - 112 - 100 - 8, 12)
+	top.position = Vector2(836, 12)
 	top.add_theme_constant_override("separation", 8)
 	add_child(top)
 	var skip_btn = UIKit.make_button(Locale.t("story_skip_lines"), 112)
@@ -208,14 +217,23 @@ func _build() -> void:
 		leave.custom_minimum_size = Vector2(112, TOUCH)
 		leave.pressed.connect(func(): _go_scene(MENU_SCENE))
 		top.add_child(leave)
+		_place_top_buttons()
 		return
-	var save_btn = UIKit.make_button("存档", 100)
+	var save_btn = UIKit.make_button(Locale.t("story_save"), 100)
+	save_btn.name = "StorySave"
 	save_btn.custom_minimum_size = Vector2(100, TOUCH)
 	save_btn.pressed.connect(func():
 		GameState.save_game()
 		_hint.text = Locale.t("save_ok")
 	)
 	top.add_child(save_btn)
+	# Mid-chapter exit. The ledger beat still grows its own「回到灰旗堡」action.
+	var leave_hub := UIKit.make_button(Locale.t("story_back_to_hub"), 168)
+	leave_hub.name = "StoryLeaveHub"
+	leave_hub.custom_minimum_size = Vector2(168, TOUCH)
+	leave_hub.pressed.connect(_return_to_hub)
+	top.add_child(leave_hub)
+	_place_top_buttons()
 
 
 func _place_dialogue_crests() -> void:
@@ -232,18 +250,23 @@ func _load_beat(beat_id: String) -> void:
 			_beat = b
 			break
 	if _beat.is_empty():
-		_hint.text = "章节结束"
-		_speaker.text = ""
-		_set_body("")
-		for c in _actions.get_children():
-			c.queue_free()
-		_add_action(Locale.t("story_back_to_hub"), func(): _return_to_hub())
+		_beat_skip_guard.clear()
+		_offer_hub_exit(Locale.t("story_chapter_end"))
 		return
 	if not StoryConditions.met(_beat.get("when", {})):
+		# A gated beat with no usable next used to return here and leave the
+		# transcript blank: no continue, no hub button.
+		if _beat_skip_guard.has(beat_id):
+			_offer_hub_exit(Locale.t("story_chapter_end"))
+			return
+		_beat_skip_guard[beat_id] = true
 		var skipped = _beat.get("next")
 		if skipped != null and str(skipped) != "" and str(skipped) != beat_id:
 			_load_beat(str(skipped))
+			return
+		_offer_hub_exit(Locale.t("story_chapter_end"))
 		return
+	_beat_skip_guard.clear()
 	_remember_beat(beat_id)
 	# Opening review A-05: kept-lease path posts a paid herb escort on the gatehouse board.
 	if beat_id == "0.32" and GameState.flag("pro_lease_kept"):
@@ -284,6 +307,27 @@ func _beat_progress_caption(beat_id: String) -> String:
 
 ## C-11: a mid-beat save resumes on the line it was made on, not the beat's first line.
 var _resuming := false
+var _beat_skip_guard: Dictionary = {}
+
+func _offer_hub_exit(hint: String) -> void:
+	_hint.text = hint
+	_speaker.text = ""
+	_set_body("")
+	for c in _actions.get_children():
+		_actions.remove_child(c)
+		c.queue_free()
+	_add_action(Locale.t("story_back_to_hub"), func(): _return_to_hub())
+
+func _place_top_buttons() -> void:
+	var top := get_node_or_null("StoryTopButtons") as Control
+	if top == null:
+		return
+	var cluster := top.get_combined_minimum_size().x
+	if cluster < 8.0:
+		var n := top.get_child_count()
+		cluster = 120.0 * float(maxi(n, 1))
+	top.position.x = 1280.0 - 48.0 - cluster
+	top.position.y = 12.0
 
 func _resume_line(beat_id: String) -> int:
 	var mark = GameState.house_mods.get("story_line", {})
@@ -313,7 +357,7 @@ func _show_line() -> void:
 	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size():
 		_speaker.text = ""
-		_set_body("（本节对白结束——请选择下方行动）")
+		_set_body(Locale.t("story_choose_action"))
 		_speaker_portrait("旁白")
 		return
 	var line = lines[_line_idx]
@@ -509,7 +553,7 @@ func _refresh_actions() -> void:
 		for step in _beat.get("prepare", []):
 			_run_op(step)
 	if _line_idx < lines.size() - 1:
-		_add_action("继续 ▶", func():
+		_add_action(Locale.t("story_continue_line"), func():
 			_line_idx += 1
 			_show_line()
 			_refresh_actions()
@@ -528,7 +572,7 @@ func _refresh_actions() -> void:
 		var cost_hint := str(row.get("cost_hint", row.get("hint", "")))
 		_add_action(str(row.get("label", "")), _on_action.bind(steps), disabled, false, cost_hint)
 	if shown == 0 and _beat.get("next") != null and str(_beat.get("next", "")) != "":
-		_add_action("继续", func(): _goto_next(), false, true)
+		_add_action(Locale.t("story_continue"), func(): _goto_next(), false, true)
 	elif shown == 0:
 		# Chapter end protocol: a last beat with no actions still has a way out.
 		# The beat is already remembered, so the mainline / season cursor stays put.
@@ -582,7 +626,10 @@ func _run_op(step) -> String:
 				_load_beat(target)
 			return "stop"
 		"set_flag":
-			GameState.set_flag(str(row.get("flag", "")), bool(row.get("value", true)))
+			var flag_name := str(row.get("flag", ""))
+			var flag_val := bool(row.get("value", true))
+			GameState.set_flag(flag_name, flag_val)
+			StoryFlagScope.note(str(_chapter.get("id", "")), flag_name, flag_val)
 		"set_beat":
 			GameState.story.set_beat(int(row.get("chapter", 0)), str(row.get("beat", "")))
 			GameState.mark_dirty()

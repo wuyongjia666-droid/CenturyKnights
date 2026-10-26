@@ -83,10 +83,13 @@ static func refresh(host: Node) -> void:
 	var info := BattleObjectives.summary(BattleMaps.get_map(str(map_id)), units, int(round_no))
 	var title := hud.get_node_or_null("Row/Title") as Label
 	var detail := hud.get_node_or_null("Row/Detail") as Label
+	var armed: bool = BattleRetreatObjective.is_armed(host)
 	if title:
 		title.text = str(info.get("title", ""))
 	if detail:
-		detail.text = str(info.get("detail", ""))
+		detail.text = BattleRetreatObjective.compose_detail(str(info.get("detail", "")), armed)
+		detail.add_theme_color_override("font_color", BattleRetreatObjective.detail_color(armed))
+	hud.set_meta("retreat_armed", armed)
 
 
 static func _insets(host: Node) -> Dictionary:
