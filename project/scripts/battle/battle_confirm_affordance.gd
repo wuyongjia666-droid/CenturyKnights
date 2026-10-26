@@ -168,7 +168,18 @@ static func _hand_to_tp15(host, actor: Vector2i, also: Array) -> bool:
 	var cb := Callable(scr, "apply")
 	if not cb.is_valid():
 		return false
+	# T-P15 apply is mobile-only. A desktop no-op must not swallow confirm settle.
 	cb.call(host, actor, also)
+	if not host.has_meta("m_action_settle"):
+		return false
+	var info = host.get_meta("m_action_settle")
+	if not (info is Dictionary):
+		return false
+	if (info as Dictionary).get("actor", Vector2i(-999, -999)) != actor:
+		return false
+	# Mirror the T-P15 stamp so confirm E2E can assert readability without a
+	# second tween. Existing m_action_settle still owns the camera.
+	host.set_meta("m_confirm_settle", info)
 	return true
 
 
