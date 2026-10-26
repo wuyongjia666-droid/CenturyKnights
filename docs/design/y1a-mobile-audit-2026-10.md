@@ -277,6 +277,10 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ---
 
 
+## 5u. 阶段/终局/交战刘海信息栏肥刀
+
+**DONE（本 PR）**。阶段横幅 + 终局横幅钳入可读 inset（信息栏 `m_info_block` + 刘海 edge band 裁出）；交战桥 / 阶段领先跟焦后 `BattleActionSettle` 保住行动者身框不进侧栏/唇缘。`combat_phase_end_notch_fat_check` 双图真 E2E。禁瞄准预告碎刀。
+
 ## 5r. 回合回场桥 + 双账待动可点
 
 **DONE（本 PR）**。玩家回合开始：`BattleTurnBridge.note_player_return` 拉起待动脚底脉冲、自动选中第一名待动、双账 Ready 条可点循环 `FormationCycle`（仅 Ready STOP，面板 IGNORE，不抢棋盘）。`combat_turn_bridge_ledger_check` 双图真 E2E。禁瞄准预告碎刀。
