@@ -1456,6 +1456,33 @@ static func place_field_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	return host
 
 
+## Pure layout for 双方纹章条 — player left, enemy right; inset-aware.
+## Returns {player_at, enemy_at, shield, gap}. Field owns BattleHud layout algebra.
+static func battle_hud_crest_layout(
+	vp: Vector2,
+	insets: Dictionary = {},
+	mobile: bool = false,
+	landscape: bool = false,
+	shield: Vector2 = Vector2.ZERO,
+) -> Dictionary:
+	var sh: Vector2 = shield
+	if sh == Vector2.ZERO:
+		if mobile and landscape:
+			sh = Vector2(40, 48)
+		elif mobile:
+			sh = Vector2(36, 44)
+		else:
+			sh = Vector2(36, 44)
+	var top := float(insets.get("top", 0.0))
+	var left := float(insets.get("left", 0.0))
+	var right := float(insets.get("right", 0.0))
+	var y := top + (10.0 if mobile else 8.0)
+	var pad := 12.0 if mobile else 16.0
+	var p_at := Vector2(left + pad, y)
+	var e_at := Vector2(maxf(p_at.x + sh.x + 24.0, vp.x - right - pad - sh.x), y)
+	return {"player_at": p_at, "enemy_at": e_at, "shield": sh, "gap": 8.0}
+
+
 ## Battle HUD crest strips (left/right). Field owns BattleHud strips.
 static func place_battle_hud_crest_strips(
 	parent: Node,
@@ -1477,7 +1504,7 @@ static func place_battle_hud_crest_strips(
 		size_vp = (parent as Control).get_viewport().get_visible_rect().size
 	if size_vp == Vector2.ZERO:
 		size_vp = Vector2(1280, 720)
-	var lay: Dictionary = CKHeraldryChrome.battle_hud_crest_layout(size_vp, insets, mobile, landscape, shield)
+	var lay: Dictionary = CKHeraldryField.battle_hud_crest_layout(size_vp, insets, mobile, landscape, shield)
 	var sh: Vector2 = lay["shield"]
 	var host := Control.new()
 	host.name = "BattleHudCrestStrip"
@@ -1551,7 +1578,7 @@ static func battle_foe_nation_for(host) -> String:
 	return n
 
 ## Battle host sync: resolve foe + device/insets and (re)place the HUD strip + order crests.
-## Field owns BattleHudCrestStrip lifecycle + foe resolve; Chrome keeps layout helpers + thin shims.
+## Field owns BattleHudCrestStrip lifecycle + foe resolve + layout algebra; Chrome keeps thin shims.
 static func sync_battle_hud_crests(host) -> void:
 	if host == null:
 		return

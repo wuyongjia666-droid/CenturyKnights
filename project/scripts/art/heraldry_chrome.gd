@@ -361,7 +361,7 @@ static func battle_foe_nation_for(host) -> String:
 	return CKHeraldryField.battle_foe_nation_for(host)
 
 
-## Pure layout for 双方纹章条 — player left, enemy right; inset-aware.
+## Battle HUD crest layout algebra — Field owns; Chrome thin shim.
 ## Returns {player_at, enemy_at, shield, gap}.
 static func battle_hud_crest_layout(
 	vp: Vector2,
@@ -370,22 +370,7 @@ static func battle_hud_crest_layout(
 	landscape: bool = false,
 	shield: Vector2 = Vector2.ZERO,
 ) -> Dictionary:
-	var sh: Vector2 = shield
-	if sh == Vector2.ZERO:
-		if mobile and landscape:
-			sh = Vector2(40, 48)
-		elif mobile:
-			sh = Vector2(36, 44)
-		else:
-			sh = Vector2(36, 44)
-	var top := float(insets.get("top", 0.0))
-	var left := float(insets.get("left", 0.0))
-	var right := float(insets.get("right", 0.0))
-	var y := top + (10.0 if mobile else 8.0)
-	var pad := 12.0 if mobile else 16.0
-	var p_at := Vector2(left + pad, y)
-	var e_at := Vector2(maxf(p_at.x + sh.x + 24.0, vp.x - right - pad - sh.x), y)
-	return {"player_at": p_at, "enemy_at": e_at, "shield": sh, "gap": 8.0}
+	return CKHeraldryField.battle_hud_crest_layout(vp, insets, mobile, landscape, shield)
 
 
 ## Battle HUD crest strips. Field owns BattleHud strips.
