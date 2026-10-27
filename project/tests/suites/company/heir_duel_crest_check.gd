@@ -58,8 +58,13 @@ func _assert_page(page: Node, where: String) -> void:
 		var la := strip.find_child("LeftArms", true, false)
 		var ra := strip.find_child("RightArms", true, false)
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
+		_ok(ca != null and str(ca.get_meta("field_route", "")) == "strip_company", "%s strip_company" % where)
 		_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeftArms" % where)
+		_ok(la != null and str(la.get_meta("field_route", "")) == "duel_left", "%s duel_left" % where)
 		_ok(ra != null and str(ra.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s RightArms" % where)
+		_ok(ra != null and str(ra.get_meta("field_route", "")) == "duel_right", "%s duel_right" % where)
+		var bn := strip.find_child("DuelBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "duel_banner", "%s duel_banner" % where)
 		if ca != null and la != null:
 			_ok(str(ca.get_meta("arms_core", "")) != str(la.get_meta("arms_core", "")), "%s 团徽!=A" % where)
 		if ca != null and ra != null:
