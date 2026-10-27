@@ -98,7 +98,7 @@ func _hub() -> void:
 		return
 	var labels: Array = hub.panel_button_labels()
 	# #148/#385 eleven doors (+岁课) + castle view + territory ledger (P1-UX-04); locked entries stay visible
-	_ok(labels.size() <= 13, "year-one buttons %s" % str(labels))
+	_ok(labels.size() <= 14, "year-one buttons %s" % str(labels))  # +旗饰 P1-BNR-02
 	_ok(labels.size() >= 6, "buttons %s" % str(labels))
 	_ok(hub.find_child("Locked_forge", true, false) != null, "locked forge hidden")
 	_ok(hub.find_child("Locked_estates", true, false) != null, "locked estates hidden")

@@ -96,6 +96,14 @@ func _ready() -> void:
 		_refresh_palette()
 	)
 	view.add_child(modes)
+	var banner_btn := UIKit.make_button(Locale.t("ux_entry_banner_reedit"), 280)
+	banner_btn.name = "BannerReeditBtn"
+	banner_btn.custom_minimum_size = Vector2(240, 48)
+	banner_btn.pressed.connect(func():
+		Sfx.click()
+		CKNav.go("res://scenes/story/naming.tscn", {"reedit": true})
+	)
+	view.add_child(banner_btn)
 	view.add_child(_check(_line("ux_contrast", Locale.t("shell_f7c782f3")), Frost.high_contrast(), func(on):
 		GameState.settings["high_contrast"] = on
 		_refresh_palette()

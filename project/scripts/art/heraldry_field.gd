@@ -2133,6 +2133,51 @@ static func blit_token_shield(img: Image, c, team: String = "player") -> void:
 	var oy := img.get_height() - sh - 2
 	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))
 
+## Castle-view hang flag beside the main hall — 6-frame wave via UnitArt._banner_frame.
+## field_route castle_view_hang on host; HangCloth carries castle_view_hang_cloth.
+static func place_castle_hang_banner(parent: Node, at: Vector2, size: Vector2 = Vector2(56, 78)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "CastleHangBanner")
+	var host := Control.new()
+	host.name = "CastleHangBanner"
+	host.position = at
+	host.size = size
+	host.custom_minimum_size = size
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "castle_view_hang")
+	host.set_meta("hang_frames", 6)
+	var tr := TextureRect.new()
+	tr.name = "HangCloth"
+	tr.position = Vector2.ZERO
+	tr.size = size
+	tr.custom_minimum_size = size
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = Locale.t("lb_castle_hang_arms")
+	tr.set_meta("field_route", "castle_view_hang_cloth")
+	tr.set_meta("arms_kind", "lb_castle_hang_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.company_spec()))
+	var w := maxi(24, int(size.x))
+	var h := maxi(32, int(size.y))
+	tr.texture = UnitArt.banner_layers({}, w, h)
+	host.add_child(tr)
+	var timer := Timer.new()
+	timer.name = "HangWaveTimer"
+	timer.wait_time = 0.08
+	timer.autostart = true
+	timer.timeout.connect(func() -> void:
+		if not is_instance_valid(tr):
+			return
+		UnitArt.tick(0.08)
+		tr.texture = UnitArt.banner_layers({}, w, h)
+	)
+	host.add_child(timer)
+	parent.add_child(host)
+	return host
+
+
 ## Cached company 团徽 banner cloth — atlas map flags + idle battle portrait.
 ## Callers (Territory, battle info) must not hit Chrome.company_banner directly.
 static func company_banner_texture(w: int = 28, h: int = 38) -> Texture2D:

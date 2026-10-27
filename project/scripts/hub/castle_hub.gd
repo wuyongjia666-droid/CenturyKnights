@@ -83,6 +83,7 @@ func _build() -> void:
 		{"id": "home", "title": Locale.t("ux_hub_home"), "items": [
 			[Locale.t("btn_hourglass"), Locale.t("shell_05820eaa"), "res://scenes/hub/hourglass.tscn", Locale.t("btn_hourglass"), "hourglass"],
 			[Locale.t("ux_entry_castle_view"), Locale.t("ux_entry_castle_view"), "res://scenes/hub/castle_view.tscn", "", "castle_view"],
+			[Locale.t("ux_entry_banner_reedit"), Locale.t("ux_entry_banner_reedit_sub"), "res://scenes/story/naming.tscn", Locale.t("ux_entry_banner_reedit"), "banner"],
 			[Locale.t("shell_7debf9cb"), Locale.t("shell_2155ceaf"), "res://scenes/ui/settings.tscn", Locale.t("shell_7debf9cb"), "settings"],
 		]},
 		{"id": "military", "title": Locale.t("ux_hub_military"), "items": [
@@ -149,6 +150,9 @@ func _build() -> void:
 				b.set_meta("hub_entry", entry)
 				if entry == "sui_ke":
 					b.name = "ToSuiYear"
+				if entry == "banner":
+					b.name = "ToBannerReedit"
+					b.set_meta("nav_params", {"reedit": true})
 				b.pressed.connect(_go_nav.bind(b, path))
 				box.add_child(b)
 			else:
@@ -391,7 +395,10 @@ func _go_nav(btn: Button, dest: String) -> void:
 		mark_seen(str(btn.get_meta("hub_entry")))
 	UIFX.press_feedback(btn)
 	Sfx.click()
-	CKNav.go(dest)
+	var nav_p: Dictionary = {}
+	if btn.has_meta("nav_params") and typeof(btn.get_meta("nav_params")) == TYPE_DICTIONARY:
+		nav_p = btn.get_meta("nav_params")
+	CKNav.go(dest, nav_p)
 
 func _fit_narrow() -> void:
 	var vp := get_viewport().get_visible_rect().size
@@ -816,7 +823,7 @@ const _IC := "res://assets/art/ui/v86/"
 const _IE := "res://assets/art/estates/"
 ## Frost line icons (cyan stroke set) per hub entry; reused where the set has no exact glyph.
 const M_ICONS := {
-	"hourglass": _IC + "kpi_grain.png", "castle_view": _IC + "kpi_fortify.png", "settings": _IC + "mk_iron.png",
+	"hourglass": _IC + "kpi_grain.png", "castle_view": _IC + "kpi_fortify.png", "banner": _IC + "kpi_fortify.png", "settings": _IC + "mk_iron.png",
 	"deploy": _IE + "stone_slope.png", "roster": _IC + "kpi_fortify.png", "tavern": _IC + "mk_herb.png",
 	"train": _IC + "mk_iron.png", "skills": _IE + "stone_slope.png",
 	"atlas": _IE + "tide_bridge.png", "territory": _IE + "tide_bridge.png", "quests": _IE + "stone_slope.png", "court_news": _IE + "reed_ford.png",
