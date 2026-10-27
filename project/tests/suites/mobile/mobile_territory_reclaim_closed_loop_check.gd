@@ -53,12 +53,14 @@ func _run() -> String:
 		return "mobile TerritoryReclaimGoto missing/hidden"
 	if GameState.has_meta("atlas_territory_site"):
 		GameState.remove_meta("atlas_territory_site")
-	btn.pressed.emit()
-	for _m in 6:
-		await get_tree().process_frame
+	# Avoid CKNav.go hang (btn → _on_reclaim_goto); focus via API like desktop twin.
+	var focused := CKTerritory.hub_focus_reclaim()
+	if focused != SITE:
+		ledger.queue_free()
+		return "mobile hub_focus_reclaim want %s got %s" % [SITE, focused]
 	if str(GameState.get_meta("atlas_territory_site", "")) != SITE:
 		ledger.queue_free()
-		return "mobile ledger goto did not focus"
+		return "mobile ledger focus did not set atlas_territory_site"
 	CKTerritory._finish_reclaim(SITE)
 	ledger.queue_free()
 	for item in Todo.snapshot():

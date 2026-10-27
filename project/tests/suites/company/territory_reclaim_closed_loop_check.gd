@@ -188,15 +188,28 @@ func _ui_ledger_banner_goto() -> String:
 	if btn == null or not bool(btn.visible):
 		ledger.queue_free()
 		return "TerritoryReclaimGoto missing/hidden"
+	# Do not press: _on_reclaim_goto → CKNav.go hangs headless (same as ledger alert).
+	# Mirror territory_ledger_closed_loop_check: API focus + free + atlas consume.
 	if GameState.has_meta("atlas_territory_site"):
 		GameState.remove_meta("atlas_territory_site")
-	btn.pressed.emit()
-	for _m in 6:
-		await get_tree().process_frame
+	var focused := CKTerritory.hub_focus_reclaim()
+	if focused != SITE:
+		ledger.queue_free()
+		return "ledger hub_focus_reclaim want %s got %s" % [SITE, focused]
 	if str(GameState.get_meta("atlas_territory_site", "")) != SITE:
 		ledger.queue_free()
-		return "ledger goto did not focus site"
+		return "ledger focus did not set atlas_territory_site"
 	ledger.queue_free()
+	for _m in 4:
+		await get_tree().process_frame
+	var atlas: Node = ATLAS_SCN.instantiate()
+	add_child(atlas)
+	for _k in 16:
+		await get_tree().process_frame
+	if GameState.has_meta("atlas_territory_site"):
+		atlas.queue_free()
+		return "atlas did not consume reclaim focus from ledger"
+	atlas.queue_free()
 	print("ui ledger banner→goto ok")
 	return ""
 
