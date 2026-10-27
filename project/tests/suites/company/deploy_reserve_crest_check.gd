@@ -68,7 +68,9 @@ func _assert_appointed(page: Node, where: String, bench: CKCharacter) -> void:
 		_ok(str(ca.get_meta("arms_core", "")) == ban, "%s company core" % where)
 		_ok(str(ra.get_meta("arms_core", "")) == fam, "%s reserve family core" % where)
 		_ok(str(ra.get_meta("arms_core", "")) != ban, "%s 族徽!=团徽" % where)
-	_ok(strip.get_child_count() == 2, "%s two shields, no marshalling" % where)
+	_ok(strip.get_child_count() == 3, "%s two shields + cloth banner" % where)
+	var rbn := strip.find_child("ReserveBanner", true, false)
+	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "reserve_banner", "%s reserve_banner" % where)
 	_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s ignores mouse" % where)
 	_ok(page.find_child("ReserveBtn", true, false) != null, "%s ReserveBtn" % where)
 
@@ -79,7 +81,8 @@ func _assert_cleared(page: Node, where: String) -> void:
 		return
 	_ok(strip.find_child("CastleArms", true, false) != null, "%s 团徽 remains" % where)
 	_ok(strip.find_child("ReserveArms", true, false) == null, "%s ReserveArms cleared" % where)
-	_ok(strip.get_child_count() == 1, "%s company only" % where)
+	_ok(strip.get_child_count() == 2, "%s company + cloth banner" % where)
+	_ok(strip.find_child("ReserveBanner", true, false) != null, "%s ReserveBanner remains" % where)
 
 func _open() -> Control:
 	var page: Control = SCN.instantiate()
