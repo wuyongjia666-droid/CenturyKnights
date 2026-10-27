@@ -3,6 +3,8 @@ extends RefCounted
 ## Y1-A T-P19 — danger focus feel: settle the board pan on the focused foe and
 ## the player cells they threaten; paint stands softer than strike so the
 ## wash reads like a threat ring rather than a flat blob.
+## BoardInset: refresh m_info_block from MobileSideCol before follow_cells
+## so danger settle shares notch+info+edge (same as ActionSettle / land/ghost).
 
 const SETTLE_PAD := 1
 const STRIKE_A := 0.38
@@ -30,7 +32,22 @@ static func after_set(host) -> void:
 	if cells.size() == 1:
 		for d in [Vector2i(SETTLE_PAD, 0), Vector2i(-SETTLE_PAD, 0), Vector2i(0, SETTLE_PAD), Vector2i(0, -SETTLE_PAD)]:
 			cells.append(foe.pos + d)
+	# Refresh live info column so BoardInset cuts the same chrome as
+	# ActionSettle / land-ghost follow (stale m_info_block left figures under the side col).
+	_refresh_info_block(host)
 	BattleCombatFrame.follow_cells(host, cells, 0.0)
+
+
+static func _refresh_info_block(host) -> void:
+	if host == null:
+		return
+	var col := host.get_node_or_null("MobileSideCol") as Control
+	if col == null:
+		col = host.find_child("MobileSideCol", true, false) as Control
+	if col == null:
+		col = host.get_node_or_null("SideCol") as Control
+	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
+		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 
 ## Layered wash: stands faint, strike brighter. Colorblind keeps the hatch.
