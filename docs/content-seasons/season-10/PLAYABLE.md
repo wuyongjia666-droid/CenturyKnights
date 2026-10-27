@@ -267,3 +267,14 @@
 - 验收：`content_season_yield_soft_chain_check` — hub chip → 门扇微让针口头。
 - 不碰既有 `_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
 
+## 缝风一过口头加厚（draft-slip）
+
+- 各章首拍在 `_yld6` 后、离开该拍前加 `_drf1`–`_drf6` 缝风一过口头，全库去重；收束非旁白。
+- 验收：`content_season_draft_slip_chain_check` — hub chip → 缝风一过针口头。
+- 不碰既有 `_yld`/`_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 灯影一沉口头加厚（lamp-settle）
+
+- 各章首拍在 `_drf6` 后、离开该拍前加 `_lmp1`–`_lmp6` 灯影一沉口头，全库去重；收束非旁白。
+- 验收：`content_season_lamp_settle_chain_check` — hub chip → 灯影一沉针口头。
+- 不碰既有 `_drf`/`_yld`/`_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
