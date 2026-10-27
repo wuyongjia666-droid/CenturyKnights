@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry wave-7 E2E: city 本城之事 AffairCrestStrip, lineage_rite RiteCrestStrip,
+## Fat heraldry E2E: city 本城之事 AffairCrestStrip, lineage_rite RiteCrestStrip,
 ## title_promote MusterCrestStrip — strip_company + cloth banner child field_route ownership —
 ## desk + mobile. Real scenes; no EmptyHost.
 
@@ -121,6 +121,8 @@ func _assert_affairs(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/affairs strip_company" % tag)
 		_ok(_route(strip.find_child("CityNationArms", true, false), "affairs_nation"), "%s/affairs affairs_nation" % tag)
 		_ok(_route(strip.find_child("AffairsBanner", true, false), "affairs_banner"), "%s/affairs affairs_banner" % tag)
+		var abn := strip.find_child("AffairsBanner", true, false)
+		_ok(abn != null and str(abn.get_meta("arms_kind", "")) == "lb_affairs_arms", "%s/affairs AffairsBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -141,6 +143,8 @@ func _assert_rite(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/rite strip_company" % tag)
 		_ok(_route(strip.find_child("LeaderArms", true, false), "rite_leader"), "%s/rite rite_leader" % tag)
 		_ok(_route(strip.find_child("RiteBanner", true, false), "rite_banner"), "%s/rite rite_banner" % tag)
+		var rtbn := strip.find_child("RiteBanner", true, false)
+		_ok(rtbn != null and str(rtbn.get_meta("arms_kind", "")) == "lb_rite_arms", "%s/rite RiteBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -158,6 +162,8 @@ func _assert_muster(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/title strip_company" % tag)
 		_ok(_route(strip.find_child("LeaderArms", true, false), "muster_leader"), "%s/title muster_leader" % tag)
 		_ok(_route(strip.find_child("MusterBanner", true, false), "muster_banner"), "%s/title muster_banner" % tag)
+		var mubn := strip.find_child("MusterBanner", true, false)
+		_ok(mubn != null and str(mubn.get_meta("arms_kind", "")) == "lb_muster_arms", "%s/title MusterBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -199,3 +205,10 @@ func _source_contracts() -> void:
 	for hub in hubs.keys():
 		var src := FileAccess.get_file_as_string(hubs[hub])
 		_ok(src.find("CKHeraldryField.") >= 0, "%s wires Field" % hub)
+	_ok(field.find('"lb_affairs_arms"') >= 0, "field lb_affairs_arms")
+	_ok(field.find('"lb_rite_arms"') >= 0, "field lb_rite_arms")
+	_ok(field.find('"lb_muster_arms"') >= 0, "field lb_muster_arms")
+	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
+	_ok(loc.find("lb_affairs_arms,") >= 0, "locale lb_affairs_arms")
+	_ok(loc.find("lb_rite_arms,") >= 0, "locale lb_rite_arms")
+	_ok(loc.find("lb_muster_arms,") >= 0, "locale lb_muster_arms")
