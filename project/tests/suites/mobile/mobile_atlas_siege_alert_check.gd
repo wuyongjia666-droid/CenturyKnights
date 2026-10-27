@@ -48,9 +48,13 @@ func _run() -> String:
 	bribe.pressed.emit()
 	for _k in 8:
 		await get_tree().process_frame
-	if page.find_child("SiegeAlertModal", true, false) != null:
+	modal = page.find_child("SiegeAlertModal", true, false)
+	if modal == null:
 		page.queue_free()
-		return "modal not cleared after bribe"
+		return "modal closed after bribe (want EchoLine)"
+	if modal.find_child("EchoLine_bribe", true, false) == null:
+		page.queue_free()
+		return "EchoLine_bribe missing after bribe"
 	if not bool(CKTerritory.state(SITE).threat.get("bribed", false)):
 		page.queue_free()
 		return "threat not bribed"

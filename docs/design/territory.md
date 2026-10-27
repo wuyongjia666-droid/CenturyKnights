@@ -151,4 +151,13 @@ E2E：`atlas_contest_resolve_check` + `mobile_atlas_contest_resolve_check`。
 
 E2E：`atlas_threat_resolve_check` + `mobile_atlas_threat_resolve_check`。
 
+## 16. 收买 / 斥候与月回读（Territory fat）
+
+围城悬临期间的 Improve-plan #1 对策：`bribe_threat` / `scout_threat` 得手写入月回读，`SiegeAlertModal` 留模态贴 `EchoLine_*`（对齐 muster / sister，不再收买后立刻关窗）。
+
+1. **收买**：一次性；扣银；`months → 0`；写入 `month_echo.bribe`（locale `terr_echo_bribe`：地名·银）。
+2. **斥候**：首次扣银写入 `scouted` + intel 与 `month_echo.scout`（locale `terr_echo_scout`：地名·银·守成%）；再探只回读已有 intel，不重写回读。
+3. **UI**：`SiegeBribe` / `SiegeScout` 成功后禁用按钮、贴 `EchoLine_bribe` / `EchoLine_scout`；领地面板 `_echo_strip` 与 `month_echo_lines` 收录 bribe/scout。
+
+E2E：`territory_siege_bribe_scout_echo_check` + mobile twin。
 

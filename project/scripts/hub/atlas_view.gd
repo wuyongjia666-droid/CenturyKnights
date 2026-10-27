@@ -2954,11 +2954,28 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	bribe.pressed.connect(func():
 		var r2: Dictionary = CKTerritory.bribe_threat(site_id)
 		_show_toast(str(r2.get("msg", "")), UIKit.OK if bool(r2.get("ok", false)) else UIKit.DANGER)
-		_clear_modal()
-		_refresh_top()
-		_build_nodes()
-		if World.is_traveling():
-			call_deferred("_resume_travel_after_siege"))
+		if bool(r2.get("ok", false)):
+			alert["bribed"] = true
+			alert["months"] = 0
+			bribe.disabled = true
+			var bl_b: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+			if bl_b != null:
+				var pl_b := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+				if stockade and cache_n > 0:
+					pl_b = pl_b + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+				var hp_b := int(alert.get("hold_pct", -1))
+				var il_b := Locale.t("atlas_siege_intel") % hp_b if bool(alert.get("scouted", false)) and hp_b >= 0 else Locale.t("atlas_siege_intel_unknown")
+				bl_b.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, int(alert.get("garrison", garrison)), pl_b, il_b]
+			# Territory fat: bribe → month_echo.bribe → EchoLine_bribe on siege panel.
+			var echo_b := str(CKEconomyState.month_echo_snapshot().get("bribe", ""))
+			if echo_b != "" and panel.get_node_or_null("EchoLine_bribe") == null:
+				var echo_br := UIKit.body_label(echo_b, UIKit.OK, 12)
+				echo_br.name = "EchoLine_bribe"
+				echo_br.position = Vector2(24, h - 96)
+				echo_br.size = Vector2(452, 20)
+				panel.add_child(echo_br)
+			_refresh_top()
+			_build_nodes())
 	panel.add_child(bribe)
 	y += 44.0
 	var scout := UIKit.ghost_button(Locale.t("atlas_siege_scout") % scout_c, 452, 36)
@@ -2978,6 +2995,14 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 				var il := Locale.t("atlas_siege_intel") % int(alert["hold_pct"])
 				bl.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, int(alert["garrison"]), pl, il]
 			scout.disabled = true
+			# Territory fat: scout → month_echo.scout → EchoLine_scout on siege panel.
+			var echo_s := str(CKEconomyState.month_echo_snapshot().get("scout", ""))
+			if echo_s != "" and panel.get_node_or_null("EchoLine_scout") == null:
+				var echo_sc := UIKit.body_label(echo_s, UIKit.OK, 12)
+				echo_sc.name = "EchoLine_scout"
+				echo_sc.position = Vector2(24, h - 116)
+				echo_sc.size = Vector2(452, 20)
+				panel.add_child(echo_sc)
 		else:
 			pass)
 	panel.add_child(scout)
