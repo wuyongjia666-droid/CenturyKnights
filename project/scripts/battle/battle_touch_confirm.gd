@@ -13,6 +13,7 @@ extends RefCounted
 ## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan!=drag);
 ## attack ghost gets aim line + pulse juice.
 ## Y1-A T-P6: confirm_attack stamps m_attack_confirm_msec for settle juice path.
+## 战棋手感整块: confirm_move/attack hand camera+info to BattleFeelLoop.
 ## Y1-A T-P13: confirm does not refocus the attacker (that yanked the preview
 ## camera). Strike ring + ribbon live here; pair framing is BattleCombatFrame.
 ## ck_unit_drag is set before the hover refresh so a unit drag does not pan.
@@ -173,16 +174,8 @@ static func confirm_move(host) -> void:
 	BattlePick.focus_follow_preview(host)
 	clear(host, false)
 	commit_move(host, cell)
-	# T-P22: post-land strike peek — body chrome on in-reach foes + frame them.
-	BattleLandStrike.after_land(host)
-	# T-P16: one camera into the readable inset. Desktop still uses T-P13 follow.
-	if BattleConfirmAffordance.yields_post_camera(host):
-		BattleConfirmAffordance.settle_camera(host, cell, [])
-		return
-	BattlePick.focus_cell(host, cell)
-	BattleCombatFrame.follow_cells(host, [cell], 0.0)
-	# T-P15: keep the mover's figure out of the notch lip and the info column.
-	BattleActionSettle.apply(host, cell, [])
+	# 战棋手感整块: land peek + settle with threatened foes (not mover-only).
+	BattleFeelLoop.after_move(host, cell)
 
 
 static func confirm_attack(host) -> void:
@@ -211,20 +204,19 @@ static func confirm_attack(host) -> void:
 	if ui < host.units.size() and host.units[ui].char.hp > 0:
 		landed = host.units[ui].pos
 	# T-P16: framing only the defender slides the actor out of the settle region.
+	var also: Array = []
+	if landed.x >= 0 and landed != actor:
+		also.append(landed)
 	if BattleConfirmAffordance.yields_post_camera(host):
-		var also: Array = []
-		if landed.x >= 0 and landed != actor:
-			also.append(landed)
 		BattleConfirmAffordance.settle_camera(host, actor, also)
+		BattleFeelLoop.after_attack_confirm(host, actor, also)
 		return
 	if landed.x >= 0:
 		BattlePick.focus_cell(host, landed)
 		BattleCombatFrame.follow_cells(host, [landed], 0.0)
 	# T-P15: the actor stays readable even when the pair does not fit.
-	var also: Array = []
-	if landed.x >= 0 and landed != actor:
-		also.append(landed)
 	BattleActionSettle.apply(host, actor, also)
+	BattleFeelLoop.after_attack_confirm(host, actor, also)
 
 
 static func overflow_menu(host) -> void:

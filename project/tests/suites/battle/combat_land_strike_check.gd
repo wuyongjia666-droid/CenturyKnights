@@ -48,8 +48,12 @@ func _source_contracts() -> String:
 	var land := FileAccess.get_file_as_string("res://scripts/battle/battle_land_strike.gd")
 	if ctrl.find("BattleLandStrike.draw(self, overlay)") < 0:
 		return "controller overlay does not paint land strike"
-	if touch.find("BattleLandStrike.after_land(host)") < 0:
+	# 战棋手感整块: confirm_move → BattleFeelLoop.after_move → LandStrike.after_land
+	var feel := FileAccess.get_file_as_string("res://scripts/battle/battle_feel_loop.gd")
+	if touch.find("BattleFeelLoop.after_move") < 0:
 		return "confirm_move does not settle land strike"
+	if feel.find("BattleLandStrike.after_land") < 0:
+		return "FeelLoop.after_move missing land strike"
 	if land.find("BattleRules.in_weapon_range") < 0:
 		return "land strike must use BattleRules.in_weapon_range"
 	if land.find("BattleCombatFrame.follow_cells") < 0:
