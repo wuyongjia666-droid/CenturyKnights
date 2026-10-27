@@ -103,8 +103,8 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 	return host
 
 
-## Deploy reserve chip: 团徽 + appointed reserve 族徽|旗徽. Unset → 团徽 only.
-static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+## Deploy reserve chip: 团徽 + appointed reserve 族徽|旗徽 via _cloth_beside. Unset → 团徽 only.
+static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var w := shield.x
@@ -117,8 +117,8 @@ static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shie
 		extra.name = "ReserveArms"
 		extra.set_meta("field_route", "reserve_focus")
 	_pair(host, shield, extra)
-	# Cloth plate beside the reserve pair — Field ownership on 预备.
-	_cloth_beside(host, shield, "ReserveBanner", "reserve_banner")
+	# Cloth plate beside the reserve pair — real reserve arms_kind.
+	_cloth_beside(host, shield, "ReserveBanner", "reserve_banner", "lb_reserve_arms", banner)
 	host.set_meta("has_reserve", reserve_c != null)
 	return host
 
@@ -173,8 +173,8 @@ static func pin_forecast_arms(panel: Control, atk_char, atk_team: String, foe_na
 	panel.set_meta("forecast_has_foe", str(foe_nation) != "" and str(atk_team) == "player")
 
 
-## Post-action report header: 团徽 + optional 敌徽.
-static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: String, shield: Vector2 = Vector2(36, 44)) -> Control:
+## Post-action report header: 团徽 + optional 敌徽 via _cloth_beside.
+static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: String, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var nid := str(foe_nation)
@@ -185,8 +185,8 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
 		extra.set_meta("field_route", "report_foe")
 	_pair(host, shield, extra)
-	# Cloth plate beside the report pair — Field ownership on 战报.
-	_cloth_beside(host, shield, "ReportBanner", "report_banner")
+	# Cloth plate beside the report pair — real report arms_kind.
+	_cloth_beside(host, shield, "ReportBanner", "report_banner", "lb_report_arms", banner)
 	host.set_meta("has_foe", nid != "")
 	return host
 
@@ -1479,8 +1479,8 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	return host
 
 
-## Aftermath strip: 团徽 + optional foe (AftermathCrestStrip).
-static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+## Aftermath strip: 团徽 + optional foe (AftermathCrestStrip) via _cloth_beside.
+static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	_retire(parent, "AftermathCrestStrip")
@@ -1502,8 +1502,8 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
-	# Cloth plate beside the aftermath pair — Field ownership on 战后.
-	_cloth_beside(host, shield, "AftermathBanner", "aftermath_banner")
+	# Cloth plate beside the aftermath pair — real aftermath arms_kind.
+	_cloth_beside(host, shield, "AftermathBanner", "aftermath_banner", "lb_aftermath_arms", banner)
 	parent.add_child(host)
 	return host
 

@@ -101,6 +101,7 @@ func _report_annex_forge(leader) -> void:
 	_ok(rfoe != null and str(rfoe.get_meta("field_route", "")) == "report_foe", "report_foe route")
 	var rbn := report.find_child("ReportBanner", true, false) if report != null else null
 	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "report_banner", "report_banner route")
+	_ok(rbn != null and str(rbn.get_meta("arms_kind", "")) == "lb_report_arms", "report_banner kind")
 	var annex := Control.new()
 	annex.name = "AnnexRow"
 	root.add_child(annex)
@@ -280,6 +281,7 @@ func _place_major_strips(leader) -> void:
 	_ok(rf != null and str(rf.get_meta("field_route", "")) == "reserve_focus", "place reserve_focus")
 	var rsvbn := reserve.find_child("ReserveBanner", true, false) if reserve != null else null
 	_ok(rsvbn != null and str(rsvbn.get_meta("field_route", "")) == "reserve_banner", "place reserve_banner")
+	_ok(rsvbn != null and str(rsvbn.get_meta("arms_kind", "")) == "lb_reserve_arms", "place reserve_banner kind")
 
 	var trainf := CKHeraldryField.place_train_focus_strip(root, leader, Vector2(360, 160))
 	_ok(trainf != null and str(trainf.get_meta("field_route", "")) == "train_focus", "place train_focus")
@@ -342,6 +344,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(afoe != null and str(afoe.get_meta("field_route", "")) == "aftermath_foe", "aftermath_foe")
 	var aftbn := aft.find_child("AftermathBanner", true, false) if aft != null else null
 	_ok(aftbn != null and str(aftbn.get_meta("field_route", "")) == "aftermath_banner", "aftermath_banner")
+	_ok(aftbn != null and str(aftbn.get_meta("arms_kind", "")) == "lb_aftermath_arms", "aftermath_banner kind")
 
 	var city := CKHeraldryField.place_city_crest_strip(root, "ash_capital", Vector2(8, 80))
 	_ok(city != null and str(city.get_meta("field_route", "")) == "city_strip", "city_strip route")

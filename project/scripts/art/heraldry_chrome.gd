@@ -234,8 +234,8 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	return CKHeraldryField.place_city_crest_strip(parent, city_id, at, shield)
 
 ## Aftermath crest strip. Field owns AftermathCrestStrip.
-static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_aftermath_crest_strip(parent, at, foe_nation, shield)
+static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_aftermath_crest_strip(parent, at, foe_nation, shield, banner)
 
 ## Nation crest strip. Field owns NationCrestStrip.
 static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
