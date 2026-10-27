@@ -45,6 +45,12 @@ const CHAINS := [
 		"needle": "榜阴贴着正榜。阴面的空，比阳面更刺眼。",
 	},
 	{
+		"cid": "cs03_03",
+		"beat": "hourglass",
+		"after": "bridge",
+		"needle": "工账贴着功面。工面的空，比功面更刺眼。",
+	},
+	{
 		"cid": "cs04_01",
 		"beat": "hourglass",
 		"after": "bridge",

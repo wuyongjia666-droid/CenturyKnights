@@ -4,7 +4,7 @@ extends Node
 
 const Todo := preload("res://scripts/ui/widgets/todo_center.gd")
 const EXPECTED := [
-	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs04_01", "cs04_02",
+	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs03_03", "cs04_01", "cs04_02",
 	"cs05_01", "cs05_02", "cs06_01", "cs06_02", "cs07_01", "cs07_02",
 	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]

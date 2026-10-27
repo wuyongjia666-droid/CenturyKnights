@@ -54,6 +54,23 @@
 - **功粮仍并** → flag `cs03_back_parallel`，进 `ledger`。
 - 验收：`content_season_playable_s03_02_check`。
 
+
+
+## 第三可玩章 · 工账上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs03_03` |
+| 标题 | 工账上的灯 |
+| legacy_index | 421 |
+| 文件 | `project/data/story/chapters/cs03_03.json` |
+
+工账室夜灯对照：拍 lab（工账）→ wheel（水车）→ hourglass visit → bridge 试锋 → tavern 选题 → ledger。
+
+- **工粮仍并** → flag `cs03_lab_parallel`，进 `ledger`。
+- **先催工栏** → flag `cs03_lab_push`。
+- 验收：`content_season_playable_s03_03_check`；同档门禁 `content_season_playable_gate_s03_check`（cs03_01+02+03）。
+
 ## 中章口头去套话（mid-oral）
 
 - 访/战/酒馆回程里跨章复读的套话改成该拍自己的句子；入谱拍不动。
