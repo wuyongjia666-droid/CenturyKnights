@@ -1,629 +1,630 @@
 {
- "version": "v9.3-territory-1",
- "kinds": {
-  "village": {
-   "zh": "村寨"
+  "version": "v9.3-territory-1",
+  "kinds": {
+    "village": {
+      "zh": "村寨"
+    },
+    "mine": {
+      "zh": "矿坑"
+    },
+    "ferry": {
+      "zh": "渡口"
+    },
+    "lodge": {
+      "zh": "林舍"
+    },
+    "watchtower": {
+      "zh": "烽台"
+    },
+    "saltpan": {
+      "zh": "盐场"
+    }
   },
-  "mine": {
-   "zh": "矿坑"
+  "rules": {
+    "garrison_max": 3,
+    "garrison_cost": 40,
+    "garrison_upkeep": 4,
+    "contest_base": 0.05,
+    "contest_per_danger": 0.02,
+    "contest_per_garrison": 0.02,
+    "contest_watchtower": 0.03,
+    "contest_rival_near": 0.04,
+    "contest_cap": 0.2,
+    "threat_days": 30,
+    "hold_per_garrison": 0.25,
+    "hold_base": 0.1,
+    "unrest_months": 2,
+    "req_nation_rep": 10,
+    "req_nation_rep_hostile": 30,
+    "max_sites": 8,
+    "sell_rate": 0.7,
+    "stockade_cost": 120,
+    "stockade_silver": 12,
+    "stockade_food": 6,
+    "contract_silver": 6,
+    "contract_food": 6,
+    "bribe_cost": 50,
+    "scout_cost": 20,
+    "neutral_contest_base": 0.04,
+    "neutral_contest_cap": 0.18,
+    "contest_stake_cost": 40
   },
-  "ferry": {
-   "zh": "渡口"
-  },
-  "lodge": {
-   "zh": "林舍"
-  },
-  "watchtower": {
-   "zh": "烽台"
-  },
-  "saltpan": {
-   "zh": "盐场"
-  }
- },
- "rules": {
-  "garrison_max": 3,
-  "garrison_cost": 40,
-  "garrison_upkeep": 4,
-  "contest_base": 0.05,
-  "contest_per_danger": 0.02,
-  "contest_per_garrison": 0.02,
-  "contest_watchtower": 0.03,
-  "contest_rival_near": 0.04,
-  "contest_cap": 0.2,
-  "threat_days": 30,
-  "hold_per_garrison": 0.25,
-  "hold_base": 0.1,
-  "unrest_months": 2,
-  "req_nation_rep": 10,
-  "req_nation_rep_hostile": 30,
-  "max_sites": 8,
-  "sell_rate": 0.7,
-  "stockade_cost": 120,
-  "stockade_silver": 12,
-  "stockade_food": 6,
-  "contract_silver": 6,
-  "contract_food": 6,
-  "bribe_cost": 50,
-  "scout_cost": 20,
-  "neutral_contest_base": 0.04,
-  "neutral_contest_cap": 0.18
- },
- "sites": [
-  {
-   "id": "t_ash_millrun",
-   "name": "磨坊溪村",
-   "nation": "ashbanner",
-   "kind": "village",
-   "anchor": "reed_ford",
-   "pos": [
-    0.44,
-    0.27
-   ],
-   "biome": "ford",
-   "good": "grain",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "苇原渡上游的水磨村，磨盘夜里也在转。谁守得住溪口，谁就吃得上白面。"
-  },
-  {
-   "id": "t_ash_cinderpit",
-   "name": "烬坑",
-   "nation": "ashbanner",
-   "kind": "mine",
-   "anchor": "stone_slope",
-   "pos": [
-    0.68,
-    0.69
-   ],
-   "biome": "hill",
-   "good": "ashsteel",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 2,
-   "lore": "石垒坡背后的老烬钢坑。军械署弃了它，坑里的夹芯矿脉还没挖完。"
-  },
-  {
-   "id": "t_ash_beacon",
-   "name": "灰烽台",
-   "nation": "ashbanner",
-   "kind": "watchtower",
-   "anchor": "fog_vale",
-   "pos": [
-    0.24,
-    0.3
-   ],
-   "biome": "fog",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 2,
-   "lore": "雾谷口的旧烽台。点起火来，整条发光河脉都看得见。"
-  },
-  {
-   "id": "t_sy_furtrap",
-   "name": "貂径猎舍",
-   "nation": "shuoying",
-   "kind": "lodge",
-   "anchor": "sy_ridge",
-   "pos": [
-    0.26,
-    0.74
-   ],
-   "biome": "snow",
-   "good": "fur",
-   "yield_qty": 3,
-   "yield_silver": 8,
-   "upkeep": 4,
-   "danger": 3,
-   "lore": "霜脊下的猎户木屋群。朔影宫廷的貂皮一半出自这里。"
-  },
-  {
-   "id": "t_sy_blackvein",
-   "name": "黑脉矿口",
-   "nation": "shuoying",
-   "kind": "mine",
-   "anchor": "sy_spire",
-   "pos": [
-    0.33,
-    0.52
-   ],
-   "biome": "pass",
-   "good": "obsidian",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 3,
-   "lore": "影曜石露头的矿口，白天看去只是一道裂缝。"
-  },
-  {
-   "id": "t_sy_icetower",
-   "name": "冰哨",
-   "nation": "shuoying",
-   "kind": "watchtower",
-   "anchor": "sy_frostfort",
-   "pos": [
-    0.26,
-    0.28
-   ],
-   "biome": "snow",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 3,
-   "lore": "霜堡外的孤哨。朔影的巡骑会来盘问每一面陌生旗。"
-  },
-  {
-   "id": "t_qh_teaterrace",
-   "name": "云阶茶寨",
-   "nation": "qinghe",
-   "kind": "village",
-   "anchor": "qh_mist",
-   "pos": [
-    0.26,
-    0.25
-   ],
-   "biome": "fog",
-   "good": "tea",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "雾里一层层的茶田，寨民只认守得住山道的人。"
-  },
-  {
-   "id": "t_qh_jadepool",
-   "name": "碧潭采玉场",
-   "nation": "qinghe",
-   "kind": "mine",
-   "anchor": "qh_south",
-   "pos": [
-    0.68,
-    0.64
-   ],
-   "biome": "ford",
-   "good": "jade",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 2,
-   "lore": "河玉潭的浅滩采场，潜工靠绳子下潭。"
-  },
-  {
-   "id": "t_qh_reedferry",
-   "name": "芦笙渡",
-   "nation": "qinghe",
-   "kind": "ferry",
-   "anchor": "qh_ford",
-   "pos": [
-    0.33,
-    0.83
-   ],
-   "biome": "ford",
-   "good": "silk",
-   "yield_qty": 1,
-   "yield_silver": 22,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "运丝船在这里换缆。渡口收的过船钱足够养一队人。"
-  },
-  {
-   "id": "t_lt_glasskiln",
-   "name": "吹琉璃坊",
-   "nation": "lantern",
-   "kind": "mine",
-   "anchor": "lt_hill",
-   "pos": [
-    0.43,
-    0.26
-   ],
-   "biome": "fort",
-   "good": "lampglass",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 2,
-   "lore": "灯市联城外的琉璃窑，窑火照得整座山发亮。"
-  },
-  {
-   "id": "t_lt_spicewharf",
-   "name": "椒码头",
-   "nation": "lantern",
-   "kind": "ferry",
-   "anchor": "lt_docks",
-   "pos": [
-    0.15,
-    0.74
-   ],
-   "biome": "harbor",
-   "good": "spice",
-   "yield_qty": 1,
-   "yield_silver": 22,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "南椒卸货的小码头，账本比船还多。"
-  },
-  {
-   "id": "t_lt_lighthouse",
-   "name": "雾灯塔",
-   "nation": "lantern",
-   "kind": "watchtower",
-   "anchor": "lt_harbor",
-   "pos": [
-    0.22,
-    0.49
-   ],
-   "biome": "harbor",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 2,
-   "lore": "港外礁上的灯塔，守塔的人能看见每一条进港的船。"
-  },
-  {
-   "id": "t_fc_crystalcut",
-   "name": "霜晶凿场",
-   "nation": "frostcrown",
-   "kind": "mine",
-   "anchor": "fc_spire",
-   "pos": [
-    0.39,
-    0.3
-   ],
-   "biome": "snow",
-   "good": "frostcrystal",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 2,
-   "lore": "冰川断面上的凿场，凿下的霜晶要用皮囊裹着下山。"
-  },
-  {
-   "id": "t_fc_sablelodge",
-   "name": "雪貂林舍",
-   "nation": "frostcrown",
-   "kind": "lodge",
-   "anchor": "fc_plateau",
-   "pos": [
-    0.26,
-    0.77
-   ],
-   "biome": "snow",
-   "good": "fur",
-   "yield_qty": 3,
-   "yield_silver": 8,
-   "upkeep": 4,
-   "danger": 2,
-   "lore": "高原林缘的猎舍，冬天封路三个月。"
-  },
-  {
-   "id": "t_fc_bellpost",
-   "name": "钟岭哨",
-   "nation": "frostcrown",
-   "kind": "watchtower",
-   "anchor": "fc_peak",
-   "pos": [
-    0.82,
-    0.61
-   ],
-   "biome": "pass",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 2,
-   "lore": "挂着铜钟的山哨，钟响一次，霜冕廷就知道有人越岭。"
-  },
-  {
-   "id": "t_eo_slagfield",
-   "name": "熔渣坡",
-   "nation": "emberold",
-   "kind": "mine",
-   "anchor": "eo_crack",
-   "pos": [
-    0.37,
-    0.67
-   ],
-   "biome": "pass",
-   "good": "magmaglass",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 2,
-   "lore": "地裂旁的熔渣坡，熔曜玻像黑冰一样嵌在渣里。"
-  },
-  {
-   "id": "t_eo_incensevill",
-   "name": "香灰村",
-   "nation": "emberold",
-   "kind": "village",
-   "anchor": "eo_shrine",
-   "pos": [
-    0.23,
-    0.43
-   ],
-   "biome": "shrine",
-   "good": "herb",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "神庙下的制香村，村里人靠药草和香灰过活。"
-  },
-  {
-   "id": "t_eo_kilnferry",
-   "name": "窑口渡",
-   "nation": "emberold",
-   "kind": "ferry",
-   "anchor": "eo_glass",
-   "pos": [
-    0.65,
-    0.73
-   ],
-   "biome": "forge",
-   "good": "magmaglass",
-   "yield_qty": 1,
-   "yield_silver": 22,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "运玻璃的平底船在这里过河，船工最怕碰。"
-  },
-  {
-   "id": "t_sm_saltflat",
-   "name": "白滩盐场",
-   "nation": "saltmarsh",
-   "kind": "saltpan",
-   "anchor": "sm_west",
-   "pos": [
-    0.28,
-    0.34
-   ],
-   "biome": "marsh",
-   "good": "saltcrystal",
-   "yield_qty": 3,
-   "yield_silver": 12,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "潮退后的白滩，晒盐的人踩着高跷走路。"
-  },
-  {
-   "id": "t_sm_reedvill",
-   "name": "苇荡村",
-   "nation": "saltmarsh",
-   "kind": "village",
-   "anchor": "sm_mid",
-   "pos": [
-    0.56,
-    0.34
-   ],
-   "biome": "plain",
-   "good": "grain",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "芦苇荡里的高脚村，稻子种在浮田上。"
-  },
-  {
-   "id": "t_sm_tideferry",
-   "name": "潮信渡",
-   "nation": "saltmarsh",
-   "kind": "ferry",
-   "anchor": "sm_shoal",
-   "pos": [
-    0.38,
-    0.7
-   ],
-   "biome": "marsh",
-   "good": "saltcrystal",
-   "yield_qty": 1,
-   "yield_silver": 22,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "看潮信开船的渡口，渡钱随潮水涨落。"
-  },
-  {
-   "id": "t_ig_deepshaft",
-   "name": "深井矿",
-   "nation": "irongorge",
-   "kind": "mine",
-   "anchor": "ig_mine",
-   "pos": [
-    0.23,
-    0.57
-   ],
-   "biome": "pass",
-   "good": "gorgesteel",
-   "yield_qty": 3,
-   "yield_silver": 6,
-   "upkeep": 6,
-   "danger": 2,
-   "lore": "铁峡最深的竖井，下井的人要先在井口挂名牌。"
-  },
-  {
-   "id": "t_ig_drumtower",
-   "name": "鼓楼哨",
-   "nation": "irongorge",
-   "kind": "watchtower",
-   "anchor": "ig_plateau",
-   "pos": [
-    0.3,
-    0.28
-   ],
-   "biome": "pass",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 2,
-   "lore": "峡口的鼓楼，鼓声顺着峡壁能传二十里。"
-  },
-  {
-   "id": "t_ig_forgevill",
-   "name": "炉边村",
-   "nation": "irongorge",
-   "kind": "village",
-   "anchor": "ig_lower",
-   "pos": [
-    0.71,
-    0.79
-   ],
-   "biome": "forge",
-   "good": "iron",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "围着公炉住的锻工村，孩子们学会走路就学拉风箱。"
-  },
-  {
-   "id": "t_sr_stargrove",
-   "name": "星砂河湾",
-   "nation": "starriver",
-   "kind": "saltpan",
-   "anchor": "sr_west",
-   "pos": [
-    0.23,
-    0.46
-   ],
-   "biome": "ford",
-   "good": "stardust",
-   "yield_qty": 3,
-   "yield_silver": 12,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "河湾的淘砂场，夜里星砂在水下发光。"
-  },
-  {
-   "id": "t_sr_fluteferry",
-   "name": "笛声渡",
-   "nation": "starriver",
-   "kind": "ferry",
-   "anchor": "sr_sw",
-   "pos": [
-    0.37,
-    0.68
-   ],
-   "biome": "plain",
-   "good": "grain",
-   "yield_qty": 1,
-   "yield_silver": 22,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "摆渡人吹笛报船，粮船从这里北上。"
-  },
-  {
-   "id": "t_sr_pagodawatch",
-   "name": "塔影哨",
-   "nation": "starriver",
-   "kind": "watchtower",
-   "anchor": "sr_nw",
-   "pos": [
-    0.13,
-    0.3
-   ],
-   "biome": "shrine",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 2,
-   "lore": "古塔改成的哨所，塔顶能望见陆桥。"
-  },
-  {
-   "id": "t_sz_hardwood",
-   "name": "铁木林场",
-   "nation": "southzephyr",
-   "kind": "lodge",
-   "anchor": "sz_vine",
-   "pos": [
-    0.24,
-    0.57
-   ],
-   "biome": "fog",
-   "good": "hardwood",
-   "yield_qty": 3,
-   "yield_silver": 8,
-   "upkeep": 4,
-   "danger": 2,
-   "lore": "南泽硬木的伐场，一棵树要三年才能运出林子。"
-  },
-  {
-   "id": "t_sz_hivevill",
-   "name": "蜂巢村",
-   "nation": "southzephyr",
-   "kind": "village",
-   "anchor": "sz_temple",
-   "pos": [
-    0.29,
-    0.28
-   ],
-   "biome": "shrine",
-   "good": "herb",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "庙后山坡上养蜂的村子，蜜和药材一起卖。"
-  },
-  {
-   "id": "t_sz_bambooferry",
-   "name": "竹筏渡",
-   "nation": "southzephyr",
-   "kind": "ferry",
-   "anchor": "sz_isle",
-   "pos": [
-    0.58,
-    0.76
-   ],
-   "biome": "marsh",
-   "good": "spice",
-   "yield_qty": 1,
-   "yield_silver": 22,
-   "upkeep": 5,
-   "danger": 1,
-   "lore": "竹筏连成的浮渡，椒商最爱走这条水路。"
-  },
-  {
-   "id": "t_lb_waystation",
-   "name": "断碑驿",
-   "nation": "landbridge",
-   "kind": "village",
-   "anchor": "lb_mid",
-   "pos": [
-    0.61,
-    0.5
-   ],
-   "biome": "pass",
-   "good": "grain",
-   "yield_qty": 6,
-   "yield_silver": 10,
-   "upkeep": 4,
-   "danger": 1,
-   "lore": "陆桥中段的废驿，修好了就是商队的歇脚处。"
-  },
-  {
-   "id": "t_lb_bridgetower",
-   "name": "桥心烽",
-   "nation": "landbridge",
-   "kind": "watchtower",
-   "anchor": "lb_south",
-   "pos": [
-    0.37,
-    0.67
-   ],
-   "biome": "urban",
-   "good": "",
-   "yield_qty": 0,
-   "yield_silver": 4,
-   "upkeep": 5,
-   "danger": 2,
-   "lore": "陆桥南岸的烽台。谁的旗挂在这里，桥上的商队就认谁。"
-  }
- ]
+  "sites": [
+    {
+      "id": "t_ash_millrun",
+      "name": "磨坊溪村",
+      "nation": "ashbanner",
+      "kind": "village",
+      "anchor": "reed_ford",
+      "pos": [
+        0.44,
+        0.27
+      ],
+      "biome": "ford",
+      "good": "grain",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "苇原渡上游的水磨村，磨盘夜里也在转。谁守得住溪口，谁就吃得上白面。"
+    },
+    {
+      "id": "t_ash_cinderpit",
+      "name": "烬坑",
+      "nation": "ashbanner",
+      "kind": "mine",
+      "anchor": "stone_slope",
+      "pos": [
+        0.68,
+        0.69
+      ],
+      "biome": "hill",
+      "good": "ashsteel",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 2,
+      "lore": "石垒坡背后的老烬钢坑。军械署弃了它，坑里的夹芯矿脉还没挖完。"
+    },
+    {
+      "id": "t_ash_beacon",
+      "name": "灰烽台",
+      "nation": "ashbanner",
+      "kind": "watchtower",
+      "anchor": "fog_vale",
+      "pos": [
+        0.24,
+        0.3
+      ],
+      "biome": "fog",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 2,
+      "lore": "雾谷口的旧烽台。点起火来，整条发光河脉都看得见。"
+    },
+    {
+      "id": "t_sy_furtrap",
+      "name": "貂径猎舍",
+      "nation": "shuoying",
+      "kind": "lodge",
+      "anchor": "sy_ridge",
+      "pos": [
+        0.26,
+        0.74
+      ],
+      "biome": "snow",
+      "good": "fur",
+      "yield_qty": 3,
+      "yield_silver": 8,
+      "upkeep": 4,
+      "danger": 3,
+      "lore": "霜脊下的猎户木屋群。朔影宫廷的貂皮一半出自这里。"
+    },
+    {
+      "id": "t_sy_blackvein",
+      "name": "黑脉矿口",
+      "nation": "shuoying",
+      "kind": "mine",
+      "anchor": "sy_spire",
+      "pos": [
+        0.33,
+        0.52
+      ],
+      "biome": "pass",
+      "good": "obsidian",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 3,
+      "lore": "影曜石露头的矿口，白天看去只是一道裂缝。"
+    },
+    {
+      "id": "t_sy_icetower",
+      "name": "冰哨",
+      "nation": "shuoying",
+      "kind": "watchtower",
+      "anchor": "sy_frostfort",
+      "pos": [
+        0.26,
+        0.28
+      ],
+      "biome": "snow",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 3,
+      "lore": "霜堡外的孤哨。朔影的巡骑会来盘问每一面陌生旗。"
+    },
+    {
+      "id": "t_qh_teaterrace",
+      "name": "云阶茶寨",
+      "nation": "qinghe",
+      "kind": "village",
+      "anchor": "qh_mist",
+      "pos": [
+        0.26,
+        0.25
+      ],
+      "biome": "fog",
+      "good": "tea",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "雾里一层层的茶田，寨民只认守得住山道的人。"
+    },
+    {
+      "id": "t_qh_jadepool",
+      "name": "碧潭采玉场",
+      "nation": "qinghe",
+      "kind": "mine",
+      "anchor": "qh_south",
+      "pos": [
+        0.68,
+        0.64
+      ],
+      "biome": "ford",
+      "good": "jade",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 2,
+      "lore": "河玉潭的浅滩采场，潜工靠绳子下潭。"
+    },
+    {
+      "id": "t_qh_reedferry",
+      "name": "芦笙渡",
+      "nation": "qinghe",
+      "kind": "ferry",
+      "anchor": "qh_ford",
+      "pos": [
+        0.33,
+        0.83
+      ],
+      "biome": "ford",
+      "good": "silk",
+      "yield_qty": 1,
+      "yield_silver": 22,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "运丝船在这里换缆。渡口收的过船钱足够养一队人。"
+    },
+    {
+      "id": "t_lt_glasskiln",
+      "name": "吹琉璃坊",
+      "nation": "lantern",
+      "kind": "mine",
+      "anchor": "lt_hill",
+      "pos": [
+        0.43,
+        0.26
+      ],
+      "biome": "fort",
+      "good": "lampglass",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 2,
+      "lore": "灯市联城外的琉璃窑，窑火照得整座山发亮。"
+    },
+    {
+      "id": "t_lt_spicewharf",
+      "name": "椒码头",
+      "nation": "lantern",
+      "kind": "ferry",
+      "anchor": "lt_docks",
+      "pos": [
+        0.15,
+        0.74
+      ],
+      "biome": "harbor",
+      "good": "spice",
+      "yield_qty": 1,
+      "yield_silver": 22,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "南椒卸货的小码头，账本比船还多。"
+    },
+    {
+      "id": "t_lt_lighthouse",
+      "name": "雾灯塔",
+      "nation": "lantern",
+      "kind": "watchtower",
+      "anchor": "lt_harbor",
+      "pos": [
+        0.22,
+        0.49
+      ],
+      "biome": "harbor",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 2,
+      "lore": "港外礁上的灯塔，守塔的人能看见每一条进港的船。"
+    },
+    {
+      "id": "t_fc_crystalcut",
+      "name": "霜晶凿场",
+      "nation": "frostcrown",
+      "kind": "mine",
+      "anchor": "fc_spire",
+      "pos": [
+        0.39,
+        0.3
+      ],
+      "biome": "snow",
+      "good": "frostcrystal",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 2,
+      "lore": "冰川断面上的凿场，凿下的霜晶要用皮囊裹着下山。"
+    },
+    {
+      "id": "t_fc_sablelodge",
+      "name": "雪貂林舍",
+      "nation": "frostcrown",
+      "kind": "lodge",
+      "anchor": "fc_plateau",
+      "pos": [
+        0.26,
+        0.77
+      ],
+      "biome": "snow",
+      "good": "fur",
+      "yield_qty": 3,
+      "yield_silver": 8,
+      "upkeep": 4,
+      "danger": 2,
+      "lore": "高原林缘的猎舍，冬天封路三个月。"
+    },
+    {
+      "id": "t_fc_bellpost",
+      "name": "钟岭哨",
+      "nation": "frostcrown",
+      "kind": "watchtower",
+      "anchor": "fc_peak",
+      "pos": [
+        0.82,
+        0.61
+      ],
+      "biome": "pass",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 2,
+      "lore": "挂着铜钟的山哨，钟响一次，霜冕廷就知道有人越岭。"
+    },
+    {
+      "id": "t_eo_slagfield",
+      "name": "熔渣坡",
+      "nation": "emberold",
+      "kind": "mine",
+      "anchor": "eo_crack",
+      "pos": [
+        0.37,
+        0.67
+      ],
+      "biome": "pass",
+      "good": "magmaglass",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 2,
+      "lore": "地裂旁的熔渣坡，熔曜玻像黑冰一样嵌在渣里。"
+    },
+    {
+      "id": "t_eo_incensevill",
+      "name": "香灰村",
+      "nation": "emberold",
+      "kind": "village",
+      "anchor": "eo_shrine",
+      "pos": [
+        0.23,
+        0.43
+      ],
+      "biome": "shrine",
+      "good": "herb",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "神庙下的制香村，村里人靠药草和香灰过活。"
+    },
+    {
+      "id": "t_eo_kilnferry",
+      "name": "窑口渡",
+      "nation": "emberold",
+      "kind": "ferry",
+      "anchor": "eo_glass",
+      "pos": [
+        0.65,
+        0.73
+      ],
+      "biome": "forge",
+      "good": "magmaglass",
+      "yield_qty": 1,
+      "yield_silver": 22,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "运玻璃的平底船在这里过河，船工最怕碰。"
+    },
+    {
+      "id": "t_sm_saltflat",
+      "name": "白滩盐场",
+      "nation": "saltmarsh",
+      "kind": "saltpan",
+      "anchor": "sm_west",
+      "pos": [
+        0.28,
+        0.34
+      ],
+      "biome": "marsh",
+      "good": "saltcrystal",
+      "yield_qty": 3,
+      "yield_silver": 12,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "潮退后的白滩，晒盐的人踩着高跷走路。"
+    },
+    {
+      "id": "t_sm_reedvill",
+      "name": "苇荡村",
+      "nation": "saltmarsh",
+      "kind": "village",
+      "anchor": "sm_mid",
+      "pos": [
+        0.56,
+        0.34
+      ],
+      "biome": "plain",
+      "good": "grain",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "芦苇荡里的高脚村，稻子种在浮田上。"
+    },
+    {
+      "id": "t_sm_tideferry",
+      "name": "潮信渡",
+      "nation": "saltmarsh",
+      "kind": "ferry",
+      "anchor": "sm_shoal",
+      "pos": [
+        0.38,
+        0.7
+      ],
+      "biome": "marsh",
+      "good": "saltcrystal",
+      "yield_qty": 1,
+      "yield_silver": 22,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "看潮信开船的渡口，渡钱随潮水涨落。"
+    },
+    {
+      "id": "t_ig_deepshaft",
+      "name": "深井矿",
+      "nation": "irongorge",
+      "kind": "mine",
+      "anchor": "ig_mine",
+      "pos": [
+        0.23,
+        0.57
+      ],
+      "biome": "pass",
+      "good": "gorgesteel",
+      "yield_qty": 3,
+      "yield_silver": 6,
+      "upkeep": 6,
+      "danger": 2,
+      "lore": "铁峡最深的竖井，下井的人要先在井口挂名牌。"
+    },
+    {
+      "id": "t_ig_drumtower",
+      "name": "鼓楼哨",
+      "nation": "irongorge",
+      "kind": "watchtower",
+      "anchor": "ig_plateau",
+      "pos": [
+        0.3,
+        0.28
+      ],
+      "biome": "pass",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 2,
+      "lore": "峡口的鼓楼，鼓声顺着峡壁能传二十里。"
+    },
+    {
+      "id": "t_ig_forgevill",
+      "name": "炉边村",
+      "nation": "irongorge",
+      "kind": "village",
+      "anchor": "ig_lower",
+      "pos": [
+        0.71,
+        0.79
+      ],
+      "biome": "forge",
+      "good": "iron",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "围着公炉住的锻工村，孩子们学会走路就学拉风箱。"
+    },
+    {
+      "id": "t_sr_stargrove",
+      "name": "星砂河湾",
+      "nation": "starriver",
+      "kind": "saltpan",
+      "anchor": "sr_west",
+      "pos": [
+        0.23,
+        0.46
+      ],
+      "biome": "ford",
+      "good": "stardust",
+      "yield_qty": 3,
+      "yield_silver": 12,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "河湾的淘砂场，夜里星砂在水下发光。"
+    },
+    {
+      "id": "t_sr_fluteferry",
+      "name": "笛声渡",
+      "nation": "starriver",
+      "kind": "ferry",
+      "anchor": "sr_sw",
+      "pos": [
+        0.37,
+        0.68
+      ],
+      "biome": "plain",
+      "good": "grain",
+      "yield_qty": 1,
+      "yield_silver": 22,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "摆渡人吹笛报船，粮船从这里北上。"
+    },
+    {
+      "id": "t_sr_pagodawatch",
+      "name": "塔影哨",
+      "nation": "starriver",
+      "kind": "watchtower",
+      "anchor": "sr_nw",
+      "pos": [
+        0.13,
+        0.3
+      ],
+      "biome": "shrine",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 2,
+      "lore": "古塔改成的哨所，塔顶能望见陆桥。"
+    },
+    {
+      "id": "t_sz_hardwood",
+      "name": "铁木林场",
+      "nation": "southzephyr",
+      "kind": "lodge",
+      "anchor": "sz_vine",
+      "pos": [
+        0.24,
+        0.57
+      ],
+      "biome": "fog",
+      "good": "hardwood",
+      "yield_qty": 3,
+      "yield_silver": 8,
+      "upkeep": 4,
+      "danger": 2,
+      "lore": "南泽硬木的伐场，一棵树要三年才能运出林子。"
+    },
+    {
+      "id": "t_sz_hivevill",
+      "name": "蜂巢村",
+      "nation": "southzephyr",
+      "kind": "village",
+      "anchor": "sz_temple",
+      "pos": [
+        0.29,
+        0.28
+      ],
+      "biome": "shrine",
+      "good": "herb",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "庙后山坡上养蜂的村子，蜜和药材一起卖。"
+    },
+    {
+      "id": "t_sz_bambooferry",
+      "name": "竹筏渡",
+      "nation": "southzephyr",
+      "kind": "ferry",
+      "anchor": "sz_isle",
+      "pos": [
+        0.58,
+        0.76
+      ],
+      "biome": "marsh",
+      "good": "spice",
+      "yield_qty": 1,
+      "yield_silver": 22,
+      "upkeep": 5,
+      "danger": 1,
+      "lore": "竹筏连成的浮渡，椒商最爱走这条水路。"
+    },
+    {
+      "id": "t_lb_waystation",
+      "name": "断碑驿",
+      "nation": "landbridge",
+      "kind": "village",
+      "anchor": "lb_mid",
+      "pos": [
+        0.61,
+        0.5
+      ],
+      "biome": "pass",
+      "good": "grain",
+      "yield_qty": 6,
+      "yield_silver": 10,
+      "upkeep": 4,
+      "danger": 1,
+      "lore": "陆桥中段的废驿，修好了就是商队的歇脚处。"
+    },
+    {
+      "id": "t_lb_bridgetower",
+      "name": "桥心烽",
+      "nation": "landbridge",
+      "kind": "watchtower",
+      "anchor": "lb_south",
+      "pos": [
+        0.37,
+        0.67
+      ],
+      "biome": "urban",
+      "good": "",
+      "yield_qty": 0,
+      "yield_silver": 4,
+      "upkeep": 5,
+      "danger": 2,
+      "lore": "陆桥南岸的烽台。谁的旗挂在这里，桥上的商队就认谁。"
+    }
+  ]
 }

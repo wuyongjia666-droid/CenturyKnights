@@ -244,13 +244,13 @@ static func run(kind: String, id: String) -> Dictionary:
 			return CKTerritory.scout_threat(id)
 	return {"ok": false, "msg": ""}
 
-## Territory fat: month echo strip for garrison/stockade/sister/muster/convoy E2E (EchoLine_*).
+## Territory fat: month echo strip for garrison/stockade/sister/muster/convoy/contest E2E (EchoLine_*).
 static func _echo_strip(parent: Node, pos: Vector2, width: float) -> void:
 	var rows := CKEconomyState.month_echo_lines()
 	var terr_rows: Array = []
 	for row in rows:
 		var k := str(row.get("kind", ""))
-		if k == "garrison" or k == "stockade" or k == "sister" or k == "muster" or k == "convoy":
+		if k == "garrison" or k == "stockade" or k == "sister" or k == "muster" or k == "convoy" or k == "contest":
 			terr_rows.append(row)
 	if terr_rows.is_empty():
 		return

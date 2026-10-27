@@ -716,3 +716,15 @@ terr_echo_head,领地月回读 // TERRITORY ECHO,Territory month echo
 terr_echo_sister,姊妹驰援·%s→%s（驻%d/源%d）,Sister relief · %s→%s (garrison %d / source %d)
 terr_echo_muster,开仓募卒·%s（−%d粮·驻%d）,Muster · %s (−%d food · garrison %d)
 terr_echo_convoy,围城疏仓·%s→%s（达%d/耗%d）,Siege convoy · %s→%s (delivered %d / spoil %d)
+atlas_contest_company,%s佣兵团,%s company
+atlas_contest_stake,加码截夺（%d银）,Stake claim (%d silver)
+atlas_contest_stake_ok,「%s」加码成功（−%d银·压%d）。,Stake on %s planted (−%d silver · pressure %d).
+atlas_contest_staked,本团已加码此拉锯。,Company already staked this race.
+atlas_contest_stake_need_silver,加码需银 %d。,Stake needs %d silver.
+atlas_terr_month_contest,拉锯落幕：%s,Contest settled: %s
+atlas_terr_month_contest_open,拉锯未决：%s,Contest open: %s
+terr_echo_contest_stake,拉锯加码·%s（−%d银·压%d）,Contest stake · %s (−%d silver · pressure %d)
+terr_echo_contest_seize,拉锯截击·%s（月银%d）,Contest seize · %s (yield %d)
+terr_echo_contest_win,拉锯得手·%s（月银%d·驻%d）,Contest won · %s (yield %d · garrison %d)
+terr_echo_contest_loss,拉锯旁落·%s→%s（月银%d）,Contest lost · %s→%s (yield %d)
+terr_echo_contest_miss,拉锯散场·%s/%s（月银%d）,Contest scattered · %s/%s (yield %d)
