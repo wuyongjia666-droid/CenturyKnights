@@ -11,6 +11,10 @@ extends RefCounted
 ## parked against the raw stage and could cover the notch lip or info column.
 ## Skill buff/heal soft-confirm follow used to reserve the forecast band even
 ## though no ForecastPanel is shown, shrinking the shared BoardInset for free.
+## Blocker cut used to inflate a 72px floor past the info/notch edge (re-bleed);
+## now matches ActionSettle's no-rebleed cut. Pure algebra suites call
+## from_parts (same edge+blocker cuts, no host/notch) so ConfirmAffordance /
+## ActionSettle.readable_inset share one source.
 
 
 static func for_host(host, reserve_top: float = -1.0) -> Rect2:
@@ -24,12 +28,24 @@ static func for_host(host, reserve_top: float = -1.0) -> Rect2:
 		top = 0.0
 		if int(host.get("preview_attack_ui")) >= 0 or bool(host.get("attack_mode")):
 			top = BattleCombatFrame.forecast_band(DeviceProfile.is_mobile())
-	var inset := BattleCombatFrame.play_inset(stage, top, 0.0)
-	inset = _cut_edge(inset, _edge_band(host))
-	for b in _blockers(host):
+	var inset := from_parts(stage, top, _blockers(host), _edge_band(host))
+	return BattleRangePreview.clip_notch(host, inset)
+
+
+## Pure algebra / no-host path: play inset + edge band + info blockers.
+## Same cuts as for_host before clip_notch — ConfirmAffordance / ActionSettle
+## readable_inset delegate here so a 72px floor cannot re-bleed past a block.
+static func from_parts(
+	stage: Rect2, reserve_top: float, blockers: Array, edge_band: float
+) -> Rect2:
+	if stage.size.x < 8.0:
+		return Rect2()
+	var inset := BattleCombatFrame.play_inset(stage, maxf(0.0, reserve_top), 0.0)
+	inset = _cut_edge(inset, edge_band)
+	for b in blockers:
 		if b is Rect2 and (b as Rect2).size.x > 1.0 and (b as Rect2).intersects(inset):
 			inset = _cut_blocker(inset, b)
-	return BattleRangePreview.clip_notch(host, inset)
+	return inset
 
 
 static func _edge_band(host) -> float:
@@ -60,21 +76,27 @@ static func _cut_edge(inset: Rect2, edge_band: float) -> Rect2:
 
 
 static func _cut_blocker(inset: Rect2, block: Rect2) -> Rect2:
+	## Cut inset so it no longer intersects block. Never inflate past the cut
+	## edge (a 72px floor used to re-bleed into the info column / notch).
 	var inter := inset.intersection(block)
 	if inter.size.x < 1.0 or inter.size.y < 1.0:
 		return inset
 	if inter.size.x <= inter.size.y and block.get_center().x >= inset.get_center().x:
-		var right := inter.position.x
-		return Rect2(inset.position, Vector2(maxf(72.0, right - inset.position.x), inset.size.y))
+		var w: float = inter.position.x - inset.position.x
+		if w < 8.0:
+			return inset
+		return Rect2(inset.position, Vector2(w, inset.size.y))
 	if inter.size.x <= inter.size.y:
-		var left := inter.end.x
-		return Rect2(
-			Vector2(left, inset.position.y), Vector2(maxf(72.0, inset.end.x - left), inset.size.y)
-		)
+		var w2: float = inset.end.x - inter.end.x
+		if w2 < 8.0:
+			return inset
+		return Rect2(Vector2(inter.end.x, inset.position.y), Vector2(w2, inset.size.y))
 	if block.get_center().y < inset.get_center().y:
-		var top := inter.end.y
-		return Rect2(
-			Vector2(inset.position.x, top), Vector2(inset.size.x, maxf(72.0, inset.end.y - top))
-		)
-	var bot := inter.position.y
-	return Rect2(inset.position, Vector2(inset.size.x, maxf(72.0, bot - inset.position.y)))
+		var h: float = inset.end.y - inter.end.y
+		if h < 8.0:
+			return inset
+		return Rect2(Vector2(inset.position.x, inter.end.y), Vector2(inset.size.x, h))
+	var h2: float = inter.position.y - inset.position.y
+	if h2 < 8.0:
+		return inset
+	return Rect2(inset.position, Vector2(inset.size.x, h2))
