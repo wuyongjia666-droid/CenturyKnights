@@ -447,6 +447,66 @@
           "text": "门轴一响。空椅外的旗，我先不迈出。"
         },
         {
+          "id": "cs0501_knk1",
+          "speaker": "leader",
+          "text": "门环这一叩，空椅角还沉。沉着，指节先停在那一道旧环。"
+        },
+        {
+          "id": "cs0501_knk2",
+          "speaker": "leader",
+          "text": "空椅试过了。试过，也别催——一叩会晃起旗边的铜屑。"
+        },
+        {
+          "id": "cs0501_knk3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一叩先把空椅门环沉意认清。"
+        },
+        {
+          "id": "cs0501_knk4",
+          "speaker": "leader",
+          "text": "环顿了半息。半息里，没人抢着先把空椅门环叩响。"
+        },
+        {
+          "id": "cs0501_knk5",
+          "speaker": "leader",
+          "text": "旗影别蹭进环锈。蹭了，名会花——先把一叩停稳。"
+        },
+        {
+          "id": "cs0501_knk6",
+          "speaker": "leader",
+          "text": "门环一叩。空椅外的旗，我先不迈出。"
+        },
+        {
+          "id": "cs0501_ans1",
+          "speaker": "leader",
+          "text": "门内这一应，空椅角还沉。沉着，耳先停在那一道旧应。"
+        },
+        {
+          "id": "cs0501_ans2",
+          "speaker": "leader",
+          "text": "空椅试过了。试过，也别催——一应会晃起旗边的木屑。"
+        },
+        {
+          "id": "cs0501_ans3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一应先把空椅门内沉意认清。"
+        },
+        {
+          "id": "cs0501_ans4",
+          "speaker": "leader",
+          "text": "声顿了半息。半息里，没人抢着先把空椅应声揭开。"
+        },
+        {
+          "id": "cs0501_ans5",
+          "speaker": "leader",
+          "text": "旗影别蹭进门缝。蹭了，名会花——先把一应停稳。"
+        },
+        {
+          "id": "cs0501_ans6",
+          "speaker": "leader",
+          "text": "门内应声。空椅外的旗，我先不迈出。"
+        },
+        {
           "id": "cs05_ct_7",
           "speaker": "leader",
           "text": "栏挂上了。去看空椅。"

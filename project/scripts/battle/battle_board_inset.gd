@@ -18,6 +18,8 @@ extends RefCounted
 ## m_info_block follow; now refreshes before follow_cells too.
 ## Skill buff/heal soft-confirm arm/_aim had the same stale m_info_block
 ## follow; now refreshes before follow_cells too.
+## AttackAim after_enter / AttackCycle _aim had the same stale m_info_block
+## follow; now refreshes before follow_cells too (keeps forecast_band).
 ## Blocker cut used to inflate a 72px floor past the info/notch edge (re-bleed);
 ## now matches ActionSettle's no-rebleed cut. Pure algebra suites call
 ## from_parts (same edge+blocker cuts, no host/notch) so ConfirmAffordance /
