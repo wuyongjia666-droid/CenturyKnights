@@ -235,7 +235,16 @@ func _seed_heal(c: CKCharacter) -> void:
 	c.skill_cd[HEAL_SID] = 0
 
 
+## Split for gdlint max-returns.
 func _scene_buff_arm_aim_cast(tag: String) -> String:
+	var err := await _scene_buff_arm_aim(tag)
+	if err != "":
+		return err
+	return await _scene_buff_cast_enemy_clear(tag)
+
+
+## Split for gdlint max-returns.
+func _scene_buff_arm_aim(tag: String) -> String:
 	_battle._select_player(_caster_i)
 	await _settle(3)
 	BattleSkillsUi.arm(_battle, BUFF_SID)
@@ -251,6 +260,11 @@ func _scene_buff_arm_aim_cast(tag: String) -> String:
 	var info = _battle.get_meta(BattleSkillFeelLoop.META)
 	if not (info is Dictionary) or int((info as Dictionary).get("focus", -1)) != first:
 		return "%s: aim stamp focus mismatch" % tag
+	return ""
+
+
+## Split for gdlint max-returns.
+func _scene_buff_cast_enemy_clear(tag: String) -> String:
 	if not BattleSkillBuffPreview.confirm(_battle):
 		return "%s: buff confirm failed" % tag
 	await _settle(3)
@@ -278,10 +292,6 @@ func _scene_buff_arm_aim_cast(tag: String) -> String:
 	BattleTurnCycleFeel.before_enemy_phase(_battle)
 	if BattleSkillBuffPreview.latched(_battle):
 		return "%s: buff latch must clear on enemy phase" % tag
-	if _battle.has_meta(BattleSkillFeelLoop.META):
-		# before_enemy stamps turn_cycle enemy; skill feel META must be gone
-		# Wait - before_enemy calls clear then _stamp turn cycle. SkillFeel.clear removes m_skill_feel.
-		pass
 	if BattleSkillFeelLoop.stage_of(_battle) != "":
 		return "%s: SkillFeel stage must clear on enemy got %s" % [
 			tag, BattleSkillFeelLoop.stage_of(_battle)
