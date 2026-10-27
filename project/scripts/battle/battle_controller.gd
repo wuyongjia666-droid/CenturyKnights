@@ -750,6 +750,8 @@ func _enter_attack_mode() -> void:
 	# that would make the first foe tap confirm under touch_confirm (T-P1-5).
 	# Tab / Shift+Tab still cycle via BattleAttackCycle (T-P25).
 	BattleAttackAim.after_enter(self)
+	# 战棋手感整块: drop land-peek chrome + stamp attack_enter on shared inset.
+	BattleFeelLoop.after_attack_enter(self)
 	move_cells.clear()
 	overlay.queue_redraw()
 	_refresh_info()
@@ -1650,6 +1652,7 @@ func _select_player(ui: int) -> void:
 	_refresh_info()
 	_update_skill_hint()
 	BattlePick.focus_selected(self)
+	BattleFeelLoop.after_select(self)
 	if DeviceProfile.is_mobile():
 		UIFX.haptic(12)
 		BattleMobileBar.rebuild(self)
