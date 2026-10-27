@@ -2,11 +2,13 @@ class_name BattleBoardInset
 extends RefCounted
 ## Y1-A fat knife: one playable/readable inset for select → range →
 ## confirm/cancel → camera → phase/end banners → action settle → select
-## focus / CombatFrame follow. Range keep and confirm settle used to disagree —
-## range clipped the notch lip, confirm chips/settle did not. Action settle /
-## phase banners then rebuilt a third inset without the notch. Select focus_cell
-## / focus_follow and CombatFrame.follow_cells used the raw stage play inset and
-## could slide the figure under the info column or into the notch lip.
+## focus / CombatFrame follow → attack ForecastPanel park. Range keep and
+## confirm settle used to disagree — range clipped the notch lip, confirm
+## chips/settle did not. Action settle / phase banners then rebuilt a third
+## inset without the notch. Select focus_cell / focus_follow and
+## CombatFrame.follow_cells used the raw stage play inset and could slide the
+## figure under the info column or into the notch lip. ForecastPanel._place
+## parked against the raw stage and could cover the notch lip or info column.
 
 
 static func for_host(host, reserve_top: float = -1.0) -> Rect2:
@@ -48,7 +50,8 @@ static func _cut_edge(inset: Rect2, edge_band: float) -> Rect2:
 		return inset
 	var shrunk := Rect2(
 		inset.position + Vector2(edge_band, edge_band),
-		inset.size - Vector2(edge_band, edge_band) * 2.0)
+		inset.size - Vector2(edge_band, edge_band) * 2.0
+	)
 	if shrunk.size.x >= 72.0 and shrunk.size.y >= 72.0:
 		return shrunk
 	return inset
@@ -63,9 +66,13 @@ static func _cut_blocker(inset: Rect2, block: Rect2) -> Rect2:
 		return Rect2(inset.position, Vector2(maxf(72.0, right - inset.position.x), inset.size.y))
 	if inter.size.x <= inter.size.y:
 		var left := inter.end.x
-		return Rect2(Vector2(left, inset.position.y), Vector2(maxf(72.0, inset.end.x - left), inset.size.y))
+		return Rect2(
+			Vector2(left, inset.position.y), Vector2(maxf(72.0, inset.end.x - left), inset.size.y)
+		)
 	if block.get_center().y < inset.get_center().y:
 		var top := inter.end.y
-		return Rect2(Vector2(inset.position.x, top), Vector2(inset.size.x, maxf(72.0, inset.end.y - top)))
+		return Rect2(
+			Vector2(inset.position.x, top), Vector2(inset.size.x, maxf(72.0, inset.end.y - top))
+		)
 	var bot := inter.position.y
 	return Rect2(inset.position, Vector2(inset.size.x, maxf(72.0, bot - inset.position.y)))

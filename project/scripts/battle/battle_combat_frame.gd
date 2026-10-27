@@ -16,10 +16,11 @@ extends RefCounted
 ##
 ## This frames the figure AABB (head through feet) with the smallest pan that
 ## lands it inside the shared BoardInset (notch + info + edge) — same rect as
-## range keep / confirm settle / focus_cell. Already-visible pieces are not
-## recentered. Attack preview reserves the forecast band so the pair sits below
-## the panel. Unit-drag (ck_unit_drag) must not pan — the caller suppresses follow.
-
+## range keep / confirm settle / focus_cell / ForecastPanel park. Already-visible
+## pieces are not recentered. Attack preview reserves the forecast band so the
+## pair sits below the panel. ForecastPanel parks inside BoardInset (reserve_top
+## 0) so the chip stays out of the notch lip and info column. Unit-drag
+## (ck_unit_drag) must not pan — the caller suppresses follow.
 
 const EDGE_FRAC := 0.08
 const FORECAST_BAND_MOBILE := 220.0
@@ -31,7 +32,9 @@ static func forecast_band(mobile: bool) -> float:
 
 
 ## Shown-space figure AABB. Head uses FIG_TOP, feet FIG_FEET, width the desktop contour.
-static func figure_rect(origin: Vector2, cell_px: float, cell: Vector2i, pan: Vector2, zoom: float) -> Rect2:
+static func figure_rect(
+	origin: Vector2, cell_px: float, cell: Vector2i, pan: Vector2, zoom: float
+) -> Rect2:
 	var z := zoom if zoom > 0.001 else 1.0
 	var cpx := cell_px * z
 	var top_left := origin * z + Vector2(cell) * cpx + pan
@@ -65,7 +68,8 @@ static func frame_delta_for_rect(bounds: Rect2, inset: Rect2) -> Vector2:
 		return Vector2.ZERO
 	return Vector2(
 		_axis_delta(bounds.position.x, bounds.end.x, inset.position.x, inset.end.x),
-		_axis_delta(bounds.position.y, bounds.end.y, inset.position.y, inset.end.y))
+		_axis_delta(bounds.position.y, bounds.end.y, inset.position.y, inset.end.y)
+	)
 
 
 static func _axis_delta(lo: float, hi: float, inset_lo: float, inset_hi: float) -> float:
@@ -80,7 +84,9 @@ static func _axis_delta(lo: float, hi: float, inset_lo: float, inset_hi: float) 
 	return 0.0
 
 
-static func frame_delta(origin: Vector2, cell_px: float, cells: Array, pan: Vector2, zoom: float, inset: Rect2) -> Vector2:
+static func frame_delta(
+	origin: Vector2, cell_px: float, cells: Array, pan: Vector2, zoom: float, inset: Rect2
+) -> Vector2:
 	var bounds := Rect2()
 	var any := false
 	for c in cells:
@@ -100,11 +106,38 @@ static func frame_delta(origin: Vector2, cell_px: float, cells: Array, pan: Vect
 	return frame_delta_for_rect(bounds, inset)
 
 
-static func figure_inside(origin: Vector2, cell_px: float, cell: Vector2i, pan: Vector2, zoom: float, inset: Rect2, slop: float = 2.0) -> bool:
+static func figure_inside(
+	origin: Vector2,
+	cell_px: float,
+	cell: Vector2i,
+	pan: Vector2,
+	zoom: float,
+	inset: Rect2,
+	slop: float = 2.0
+) -> bool:
 	return inset.grow(slop).encloses(figure_rect(origin, cell_px, cell, pan, zoom))
 
 
-## Forecast corner farthest from the pair, staying inside the stage.
+## Placement bounds for ForecastPanel: shared BoardInset with reserve_top=0
+## (panel lives in the forecast band; do not push the play inset down). Falls
+## back to the raw board stage when BoardInset is not ready.
+static func forecast_place_bounds(host) -> Rect2:
+	var bi := BattleBoardInset.for_host(host, 0.0)
+	if bi.size.x >= 72.0 and bi.size.y >= 72.0:
+		return bi
+	if host != null and host.has_meta("m_board_area"):
+		var staged = host.get_meta("m_board_area")
+		if staged is Rect2 and (staged as Rect2).size.x >= 32.0:
+			return staged
+	if host != null:
+		var area = host.get("BOARD_AREA")
+		if area is Rect2:
+			return area
+	return Rect2()
+
+
+## Forecast corner farthest from the pair, staying inside the given bounds
+## (BoardInset for live park; raw stage for pure algebra).
 static func forecast_slot(stage: Rect2, panel_size: Vector2, pair_mid: Vector2) -> Vector2:
 	var pad := 8.0
 	var left_x := stage.position.x + pad
@@ -126,10 +159,12 @@ static func forecast_slot(stage: Rect2, panel_size: Vector2, pair_mid: Vector2) 
 static func chip_lines(info: Dictionary) -> PackedStringArray:
 	if info.is_empty() or not info.has("hit"):
 		return PackedStringArray()
-	var lines := PackedStringArray([
-		"%d%%" % int(info.get("hit", 0)),
-		"%d-%d" % [int(info.get("dmg_lo", 0)), int(info.get("dmg_hi", 0))],
-	])
+	var lines := PackedStringArray(
+		[
+			"%d%%" % int(info.get("hit", 0)),
+			"%d-%d" % [int(info.get("dmg_lo", 0)), int(info.get("dmg_hi", 0))],
+		]
+	)
 	if bool(info.get("counter", false)):
 		lines.append("C%d%%" % int(info.get("counter_hit", 0)))
 	return lines
