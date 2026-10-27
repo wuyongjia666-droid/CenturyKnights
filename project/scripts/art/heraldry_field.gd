@@ -1347,6 +1347,8 @@ static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
+	# Cloth plate beside the travel pair — Field ownership on 行路.
+	_cloth_beside(host, shield, "TravelBanner", "travel_banner")
 	parent.add_child(host)
 	return host
 
@@ -1375,6 +1377,8 @@ static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: 
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
+	# Cloth plate beside the camp pair — Field ownership on 夜营.
+	_cloth_beside(host, shield, "CampBanner", "camp_banner")
 	parent.add_child(host)
 	return host
 
@@ -1403,6 +1407,8 @@ static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
+	# Cloth plate beside the encounter pair — Field ownership on 遭遇.
+	_cloth_beside(host, shield, "EncounterBanner", "encounter_banner")
 	parent.add_child(host)
 	return host
 

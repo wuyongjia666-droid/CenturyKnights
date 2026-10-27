@@ -311,16 +311,22 @@ func _atlas_city_battle_strips(leader) -> void:
 	var tter := travel.find_child("TerritoryArms", true, false) if travel != null else null
 	_ok(tco != null and str(tco.get_meta("field_route", "")) == "strip_company", "travel strip_company")
 	_ok(tter != null and str(tter.get_meta("field_route", "")) == "travel_territory", "travel_territory")
+	var tvbn := travel.find_child("TravelBanner", true, false) if travel != null else null
+	_ok(tvbn != null and str(tvbn.get_meta("field_route", "")) == "travel_banner", "travel_banner")
 
 	var camp := CKHeraldryField.place_camp_crest_strip(root, Vector2(200, 8), "ashbanner")
 	_ok(camp != null and str(camp.get_meta("field_route", "")) == "camp_strip", "camp_strip route")
 	var cter := camp.find_child("TerritoryArms", true, false) if camp != null else null
 	_ok(cter != null and str(cter.get_meta("field_route", "")) == "camp_territory", "camp_territory")
+	var cabn := camp.find_child("CampBanner", true, false) if camp != null else null
+	_ok(cabn != null and str(cabn.get_meta("field_route", "")) == "camp_banner", "camp_banner")
 
 	var enc := CKHeraldryField.place_encounter_crest_strip(root, Vector2(400, 8), "ashbanner")
 	_ok(enc != null and str(enc.get_meta("field_route", "")) == "encounter_strip", "encounter_strip route")
 	var efoe := enc.find_child("FoeArms", true, false) if enc != null else null
 	_ok(efoe != null and str(efoe.get_meta("field_route", "")) == "encounter_foe", "encounter_foe")
+	var encbn := enc.find_child("EncounterBanner", true, false) if enc != null else null
+	_ok(encbn != null and str(encbn.get_meta("field_route", "")) == "encounter_banner", "encounter_banner")
 
 	var aft := CKHeraldryField.place_aftermath_crest_strip(root, Vector2(600, 8), "ashbanner")
 	_ok(aft != null and str(aft.get_meta("field_route", "")) == "aftermath_strip", "aftermath_strip route")
@@ -610,10 +616,13 @@ func _source_contracts() -> void:
 		["strip_company", "strip_company"],
 		["travel_strip", "travel_strip"],
 		["travel_territory", "travel_territory"],
+		["travel_banner", "travel_banner"],
 		["camp_strip", "camp_strip"],
 		["camp_territory", "camp_territory"],
+		["camp_banner", "camp_banner"],
 		["encounter_strip", "encounter_strip"],
 		["encounter_foe", "encounter_foe"],
+		["encounter_banner", "encounter_banner"],
 		["aftermath_strip", "aftermath_strip"],
 		["aftermath_foe", "aftermath_foe"],
 		["city_strip", "city_strip"],
