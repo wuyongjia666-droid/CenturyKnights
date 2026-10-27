@@ -7,48 +7,12 @@ extends RefCounted
 ## under the landscape info column or into the notch lip once the forecast band
 ## closes. After the action, the actor's own figure must stay inside the shared
 ## BoardInset (notch + info + edge) — same rect as range keep / confirm settle.
-## Pure `readable_inset(stage, …)` stays for algebra suites without a host.
+## Pure `readable_inset(stage, …)` stays for algebra suites without a host —
+## delegates to BoardInset.from_parts (same no-rebleed cut as live for_host).
 
 
 static func readable_inset(stage: Rect2, blockers: Array, edge_band: float) -> Rect2:
-	var inset := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
-	if edge_band > 1.0:
-		var shrunk := Rect2(
-			inset.position + Vector2(edge_band, edge_band),
-			inset.size - Vector2(edge_band, edge_band) * 2.0)
-		if shrunk.size.x >= 72.0 and shrunk.size.y >= 72.0:
-			inset = shrunk
-	for b in blockers:
-		if b is Rect2 and (b as Rect2).size.x > 1.0 and (b as Rect2).intersects(inset):
-			inset = _cut_blocker(inset, b)
-	return inset
-
-
-static func _cut_blocker(inset: Rect2, block: Rect2) -> Rect2:
-	## Cut inset so it no longer intersects block. Never inflate past the cut
-	## edge (a 72px floor used to re-bleed into the info column / notch).
-	var inter := inset.intersection(block)
-	if inter.size.x < 1.0 or inter.size.y < 1.0:
-		return inset
-	if inter.size.x <= inter.size.y and block.get_center().x >= inset.get_center().x:
-		var w: float = inter.position.x - inset.position.x
-		if w < 8.0:
-			return inset
-		return Rect2(inset.position, Vector2(w, inset.size.y))
-	if inter.size.x <= inter.size.y:
-		var w2: float = inset.end.x - inter.end.x
-		if w2 < 8.0:
-			return inset
-		return Rect2(Vector2(inter.end.x, inset.position.y), Vector2(w2, inset.size.y))
-	if block.get_center().y < inset.get_center().y:
-		var h: float = inset.end.y - inter.end.y
-		if h < 8.0:
-			return inset
-		return Rect2(Vector2(inset.position.x, inter.end.y), Vector2(inset.size.x, h))
-	var h2: float = inter.position.y - inset.position.y
-	if h2 < 8.0:
-		return inset
-	return Rect2(inset.position, Vector2(inset.size.x, h2))
+	return BattleBoardInset.from_parts(stage, 0.0, blockers, edge_band)
 
 
 ## Minimum pan that keeps `actor` readable. `also` is framed with the actor only
