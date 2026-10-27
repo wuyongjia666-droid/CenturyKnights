@@ -9,7 +9,7 @@ extends RefCounted
 ## dialogue / save / battle-order / board / tavern-annex Field plates,
 ## infirmary / deploy / office Field arms,
 ## hourglass / castle-view / blood / market / skill / tavern / works / estates / annex Field strips,
-## shell / dialogue / roster / field-book Field strips via _cloth_beside,
+## shell / dialogue / roster / field-book / travel / camp / encounter Field strips via _cloth_beside,
 ## gazette / yeartrace / purse / yearcard Field plates,
 ## atlas travel / camp / encounter Field strips,
 ## city / aftermath / nation / rite / muster / battle-hud / field-row Field plates,
@@ -1356,8 +1356,8 @@ static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2
 	return arms
 
 
-## Atlas travel strip: 团徽 + territory 领地徽 (TravelCrestStrip). Empty nation → 团徽 only.
-static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+## Atlas travel strip: 团徽 + territory 领地徽 (TravelCrestStrip) via _cloth_beside. Empty nation → 团徽 only.
+static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	_retire(parent, "TravelCrestStrip")
@@ -1380,14 +1380,14 @@ static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
-	# Cloth plate beside the travel pair — Field ownership on 行路.
-	_cloth_beside(host, shield, "TravelBanner", "travel_banner")
+	# Cloth plate beside the travel pair — real travel arms_kind.
+	_cloth_beside(host, shield, "TravelBanner", "travel_banner", "lb_travel_arms", banner)
 	parent.add_child(host)
 	return host
 
 
-## Night-camp / road-event crest strip: 团徽 + 营地所在邦的领地徽 (CampCrestStrip).
-static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+## Night-camp / road-event crest strip: 团徽 + 营地所在邦的领地徽 (CampCrestStrip) via _cloth_beside.
+static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	_retire(parent, "CampCrestStrip")
@@ -1410,14 +1410,14 @@ static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: 
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
-	# Cloth plate beside the camp pair — Field ownership on 夜营.
-	_cloth_beside(host, shield, "CampBanner", "camp_banner")
+	# Cloth plate beside the camp pair — real camp arms_kind.
+	_cloth_beside(host, shield, "CampBanner", "camp_banner", "lb_camp_arms", banner)
 	parent.add_child(host)
 	return host
 
 
-## Road encounter crest strip: 团徽 + 敌徽 (EncounterCrestStrip).
-static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+## Road encounter crest strip: 团徽 + 敌徽 (EncounterCrestStrip) via _cloth_beside.
+static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	_retire(parent, "EncounterCrestStrip")
@@ -1440,8 +1440,8 @@ static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
-	# Cloth plate beside the encounter pair — Field ownership on 遭遇.
-	_cloth_beside(host, shield, "EncounterBanner", "encounter_banner")
+	# Cloth plate beside the encounter pair — real encounter arms_kind.
+	_cloth_beside(host, shield, "EncounterBanner", "encounter_banner", "lb_encounter_arms", banner)
 	parent.add_child(host)
 	return host
 
