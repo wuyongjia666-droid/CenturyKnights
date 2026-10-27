@@ -42,6 +42,8 @@ func _assert_page(page: Node, where: String) -> void:
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s strip CastleArms" % where)
 		var bn = strip.find_child("DialogueBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_dialogue_arms", "%s DialogueBanner" % where)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "dialogue_banner", "%s dialogue_banner route" % where)
+		_ok(strip.get_child_count() == 2, "%s dialogue child_count=2" % where)
 	## Speaker arms appear once a character (or narrator-leader) plate mounts.
 	var speaker = page.find_child("DialogueSpeakerArms", true, false)
 	_ok(speaker != null, "%s DialogueSpeakerArms" % where)

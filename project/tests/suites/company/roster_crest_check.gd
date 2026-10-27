@@ -47,6 +47,8 @@ func _assert_page(page: Node, where: String) -> void:
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s strip CastleArms" % where)
 		var bn = strip.find_child("RosterBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_roster_arms", "%s RosterBanner" % where)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "roster_banner", "%s roster_banner route" % where)
+		_ok(strip.get_child_count() == 2, "%s roster child_count=2" % where)
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms header" % where)
 	var rows: Array = []
 	_collect(page, "RosterRowArms", rows)
