@@ -3,6 +3,8 @@ extends RefCounted
 ## Y1-A skill/heal feel: on mobile touch-confirm, arming a support art latches
 ## a heal preview (green chrome + camera frame) instead of auto-casting.
 ## Confirm consumes; cancel keeps uses. Tab cycles healable allies for focus.
+## BoardInset: refresh m_info_block from MobileSideCol before follow_cells
+## so heal settle shares notch+info+edge (same as ActionSettle / land/ghost / danger).
 
 const META := "m_skill_heal_preview"
 const BODY_FILL_A := 0.24
@@ -108,6 +110,9 @@ static func arm(host, sid: String) -> bool:
 	var cells: Array = [stand]
 	for i in idxs:
 		cells.append(host.units[i].pos)
+	# Refresh live info column so BoardInset cuts the same chrome as
+	# ActionSettle / land-ghost / danger follow (stale m_info_block left figures under the side col).
+	_refresh_info_block(host)
 	var applied := BattleCombatFrame.follow_cells(host, cells, 0.0)
 	(
 		host
@@ -182,6 +187,7 @@ static func _aim(host, ally_i: int) -> int:
 	host.set_meta(META, m)
 	var stand: Vector2i = host.units[int(host.selected)].pos
 	var ally_pos: Vector2i = host.units[ally_i].pos
+	_refresh_info_block(host)
 	BattleCombatFrame.follow_cells(host, [stand, ally_pos], 0.0)
 	if host.has_method("_refresh_info"):
 		host._refresh_info()
@@ -203,6 +209,18 @@ static func apply_prev(host) -> int:
 		return -1
 	return _aim(host, prev_idx(host, preview_ui(host)))
 
+
+
+static func _refresh_info_block(host) -> void:
+	if host == null:
+		return
+	var col := host.get_node_or_null("MobileSideCol") as Control
+	if col == null:
+		col = host.find_child("MobileSideCol", true, false) as Control
+	if col == null:
+		col = host.get_node_or_null("SideCol") as Control
+	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
+		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 static func draw(host, overlay) -> void:
 	if overlay == null or host == null or not latched(host):

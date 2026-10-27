@@ -14,6 +14,10 @@ extends RefCounted
 ## Land/ghost strike follow used to call follow_cells on a stale
 ## m_info_block (pre-layout side col), so figures could sit under the
 ## info column; now refreshes the live MobileSideCol block first.
+## Danger focus settle (BattleDangerFeel.after_set) had the same stale
+## m_info_block follow; now refreshes before follow_cells too.
+## Skill buff/heal soft-confirm arm/_aim had the same stale m_info_block
+## follow; now refreshes before follow_cells too.
 ## Blocker cut used to inflate a 72px floor past the info/notch edge (re-bleed);
 ## now matches ActionSettle's no-rebleed cut. Pure algebra suites call
 ## from_parts (same edge+blocker cuts, no host/notch) so ConfirmAffordance /
