@@ -49,8 +49,8 @@ func _run() -> String:
 func _algebra() -> String:
 	var path := "res://scripts/battle/ui/battle_danger_feel.gd"
 	var body := FileAccess.get_file_as_string(path)
-	if body.find("_refresh_info_block") < 0:
-		return "%s missing _refresh_info_block" % path
+	if body.find("BattleBoardInset.refresh_info_block") < 0:
+		return "%s missing BattleBoardInset.refresh_info_block" % path
 	if body.find("m_info_block") < 0 or body.find("follow_cells") < 0:
 		return "%s missing m_info_block refresh or follow_cells" % path
 	var i := 0
@@ -62,7 +62,7 @@ func _algebra() -> String:
 		if slice.find("0.0") < 0:
 			return "%s follow_cells must pass reserve_top 0.0 got %s" % [path, slice]
 		i = hit + 12
-	var ref_i := body.find("_refresh_info_block(host)")
+	var ref_i := body.find("BattleBoardInset.refresh_info_block(host)")
 	var fol_i := body.find("follow_cells(host, cells, 0.0)")
 	if ref_i < 0 or fol_i < 0 or ref_i > fol_i:
 		return "%s must refresh m_info_block before follow_cells" % path
