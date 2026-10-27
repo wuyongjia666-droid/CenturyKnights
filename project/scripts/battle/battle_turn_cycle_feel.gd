@@ -4,9 +4,9 @@ extends RefCounted
 ##
 ## 玩家看得见的缝：落子窥视（LandStrike）在待命交下一人后仍画在棋盘上；
 ## FeelLoop / AttackAim META 进敌方阶段不清；回场自动选中后信息栏可能仍
-## 停在上一人收尾态。本刀收口：交接前清窥视与瞄准；结束回合清 FeelLoop
-## 与交接 META；回场盖 cycle 戳并刷信息栏。禁瞄准预告碎刀 / telegraph /
-## EmptyHost / BoardInset 单点薄切。
+## 停在上一人收尾态；战技 Buff/Heal 闩进敌方仍画。本刀收口：交接前清窥视
+## 与瞄准与战技闩；结束回合清 FeelLoop / 交接 META / 战技闩；回场盖 cycle
+## 戳并刷信息栏。禁瞄准预告碎刀 / telegraph / EmptyHost / BoardInset 单点薄切。
 
 const META := "m_turn_cycle"
 
@@ -34,12 +34,13 @@ static func _stamp(host, stage: String, extra: Dictionary = {}) -> void:
 	host.set_meta(META, d)
 
 
-## 清跨单位 / 跨阶段会漏的窥视与瞄准 chrome。
+## 清跨单位 / 跨阶段会漏的窥视 / 瞄准 / 战技闩 chrome。
 static func clear_peek_chrome(host) -> void:
 	if host == null:
 		return
 	BattleLandStrike.clear(host)
 	BattleAttackAim.clear(host)
+	BattleSkillFeelLoop.clear_latches(host)
 
 
 ## 待命 / 打击 / 技能收尾交接前：先清上一人窥视，再让 WaitHandoff 选下一人。
@@ -67,6 +68,7 @@ static func before_enemy_phase(host) -> void:
 		return
 	clear_peek_chrome(host)
 	BattleFeelLoop.clear(host)
+	BattleSkillFeelLoop.clear(host)
 	if host.has_meta(BattleWaitHandoff.META):
 		host.remove_meta(BattleWaitHandoff.META)
 	_stamp(host, "enemy", {})
