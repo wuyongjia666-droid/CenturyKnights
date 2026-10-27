@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/suites/battle/combat_skill_refresh_boardinset_fat_check.gd" id="1"]
+
+[node name="CombatSkillRefreshBoardinsetFatCheck" type="Node"]
+script = ExtResource("1")
