@@ -413,7 +413,7 @@ func _build_nation_preset_strip(box: VBoxContainer) -> void:
 	strip.add_theme_constant_override("separation", 6)
 	box.add_child(strip)
 	for nid in _nations:
-		var mark: Dictionary = CKCourtChrome.NATION_MARK.get(str(nid), {"letters": str(nid).substr(0, 2).to_upper(), "ink": "#6ED4FF"})
+		var mark: Dictionary = CKCourtChrome.NATION_MARK.get(str(nid), {"letters": str(nid).substr(0, 2).to_upper()})
 		var btn := Button.new()
 		btn.name = "NationPreset_%s" % str(nid)
 		btn.text = str(mark.get("letters", str(nid).substr(0, 2).to_upper()))
@@ -421,7 +421,8 @@ func _build_nation_preset_strip(box: VBoxContainer) -> void:
 		btn.focus_mode = Control.FOCUS_ALL
 		var st := CKHeraldry.nation_style(str(nid))
 		btn.tooltip_text = Locale.t("ux_nation_preset_tip", [str(st.get("zh", nid))])
-		var ink := Color(str(mark.get("ink", "#6ED4FF")))
+		var ink_s := str(mark.get("ink", "")).strip_edges()
+		var ink := Color(ink_s) if ink_s != "" else Color(0.431, 0.831, 1.0)
 		btn.add_theme_color_override("font_color", ink)
 		btn.add_theme_color_override("font_hover_color", ink.lightened(0.15))
 		var captured := str(nid)
