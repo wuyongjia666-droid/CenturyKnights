@@ -314,6 +314,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 > | 选中/范围/确认取消/镜头肥刀 | **DONE（本 PR）**：`BattleBoardInset` 统一刘海+信息栏 inset；范围 keep / 确认 chips·settle / 取消 mode-exit 共用；`combat_select_range_confirm_camera_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 阶段/终局/行动落定 BoardInset 肥刀 | **DONE（本 PR）**：`ActionSettle.apply` + `PhaseFeel` 横幅 live 路径接到 `BattleBoardInset`；`combat_phase_settle_boardinset_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 选中跟焦/CombatFrame BoardInset 肥刀 | **DONE（本 PR）**：`BattlePick.focus_cell` / `focus_follow` + `CombatFrame.follow_cells` 接到共享 `BattleBoardInset`（刘海+信息栏+edge）；`combat_select_focus_boardinset_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
+> | 攻击预告/ForecastPanel BoardInset 肥刀 | **DONE（本 PR）**：`ForecastPanel._place` 经 `CombatFrame.forecast_place_bounds` 接到共享 `BattleBoardInset`（reserve_top 0，刘海+信息栏+edge）；`combat_forecast_boardinset_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 打击/危险/循环肥刀 | **DONE（本 PR）**：合入 T-P18 撤退确认、T-P19 危险手感、T-P20 幽灵可打、T-P23 攻击瞄准、T-P25 Tab 循环；`combat_strike_danger_cycle_fat_check` 双图真 E2E；禁瞄准预告碎刀复活 |
 
 ### 5v · 战技/Buff 手感肥刀（chart_rally 双图 E2E）
