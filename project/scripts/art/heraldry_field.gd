@@ -108,6 +108,8 @@ static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shie
 		extra.name = "ReserveArms"
 		extra.set_meta("field_route", "reserve_focus")
 	_pair(host, shield, extra)
+	# Cloth plate beside the reserve pair — Field ownership on 预备.
+	_cloth_beside(host, shield, "ReserveBanner", "reserve_banner")
 	host.set_meta("has_reserve", reserve_c != null)
 	return host
 
@@ -174,6 +176,8 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
 		extra.set_meta("field_route", "report_foe")
 	_pair(host, shield, extra)
+	# Cloth plate beside the report pair — Field ownership on 战报.
+	_cloth_beside(host, shield, "ReportBanner", "report_banner")
 	host.set_meta("has_foe", nid != "")
 	return host
 
@@ -720,6 +724,9 @@ static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "ShellBanner"
+	bn.tooltip_text = Locale.t("lb_shell_arms")
+	bn.set_meta("arms_kind", "lb_shell_arms")
 	bn.set_meta("field_route", "shell_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
@@ -810,7 +817,7 @@ static func place_banner_plate(parent: Node, at: Vector2, shield: Vector2 = Vect
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
-	# Keep CastleBanner name — surface/shell crest E2E contract; route deepens ownership.
+	# Keep CastleBanner name — castle hub / annex crest E2E contract; route deepens ownership.
 	bn.set_meta("field_route", "castle_hub_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
@@ -1471,6 +1478,8 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
+	# Cloth plate beside the aftermath pair — Field ownership on 战后.
+	_cloth_beside(host, shield, "AftermathBanner", "aftermath_banner")
 	parent.add_child(host)
 	return host
 
