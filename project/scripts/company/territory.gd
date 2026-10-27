@@ -368,47 +368,103 @@ static func _reclaim_quest(id: String, who: String) -> Dictionary:
 static func garrison_cost(id: String) -> int:
 	return int(rule("garrison_cost", 40)) * (int(state(id).garrison) + 1)
 
-static func reinforce(id: String) -> Dictionary:
-	if not owned(id):
-		return {"ok": false, "msg": Locale.t("terr_25")}
-	var st := state(id)
-	if int(st.garrison) >= garrison_max(id):
-		return {"ok": false, "msg": Locale.t("terr_26")}
-	var cost := garrison_cost(id)
-	if GameState.silver < cost:
-		return {"ok": false, "msg": Locale.t("terr_27") % cost}
-	GameState.silver -= cost
-	st.garrison = int(st.garrison) + 1
-	_put(id, st)
-	GameState.mark_dirty()
-	World.world_changed.emit()
-	return {"ok": true, "msg": Locale.t("terr_28") % [site(id).name, int(st.garrison), cost]}
-
 static func garrison_max(id: String) -> int:
 	return int(rule("garrison_max", 3)) + (1 if bool(state(id).stockade) else 0)
 
 static func stockade_cost() -> int:
 	return 0 if int(_st().get("stockade_credit", 0)) > 0 else int(rule("stockade_cost", 120))
 
+## Territory fat: cost / gate readout for reinforce (UI + E2E).
+static func reinforce_preview(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "owned": false, "cost": 0, "short": false, "full": false, "garrison": 0, "max": 0, "reason": "owned"}
+	var g := int(state(id).garrison)
+	var mx := garrison_max(id)
+	var cost := garrison_cost(id)
+	var full := g >= mx
+	var short := (not full) and GameState.silver < cost
+	var reason := ""
+	if full:
+		reason = "full"
+	elif short:
+		reason = "short"
+	return {
+		"ok": true,
+		"owned": true,
+		"cost": cost,
+		"short": short,
+		"full": full,
+		"garrison": g,
+		"max": mx,
+		"craftable": (not full) and (not short),
+		"reason": reason,
+	}
+
+static func reinforce(id: String) -> Dictionary:
+	var prev: Dictionary = reinforce_preview(id)
+	if not bool(prev.get("owned", false)):
+		return {"ok": false, "msg": Locale.t("terr_25"), "preview": prev}
+	if bool(prev.get("full", false)):
+		return {"ok": false, "msg": Locale.t("terr_26"), "preview": prev}
+	var cost := int(prev.get("cost", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("terr_27") % cost, "preview": prev}
+	var st := state(id)
+	GameState.silver -= cost
+	st.garrison = int(st.garrison) + 1
+	_put(id, st)
+	var nm := str(site(id).name)
+	CKEconomyState.month_echo_note("garrison", Locale.t("terr_echo_garrison", [nm, int(st.garrison), cost]))
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "msg": Locale.t("terr_28") % [nm, int(st.garrison), cost], "preview": prev}
+
+## Territory fat: cost / gate readout for stockade (UI + E2E).
+static func stockade_preview(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "owned": false, "cost": 0, "short": false, "have": false, "credit": false, "reason": "owned"}
+	var have := bool(state(id).stockade)
+	var cost := stockade_cost()
+	var credit := cost == 0
+	var short := (not have) and (not credit) and GameState.silver < cost
+	var reason := ""
+	if have:
+		reason = "have"
+	elif short:
+		reason = "short"
+	return {
+		"ok": true,
+		"owned": true,
+		"cost": cost,
+		"short": short,
+		"have": have,
+		"credit": credit,
+		"craftable": (not have) and (not short),
+		"reason": reason,
+	}
+
 ## Stockade (屯营): the second seat's value as a site upgrade. +12 silver, +6 food, garrison cap +1.
 static func build_stockade(id: String) -> Dictionary:
-	if not owned(id):
-		return {"ok": false, "msg": Locale.t("terr_st_owned")}
+	var prev: Dictionary = stockade_preview(id)
+	if not bool(prev.get("owned", false)):
+		return {"ok": false, "msg": Locale.t("terr_st_owned"), "preview": prev}
+	if bool(prev.get("have", false)):
+		return {"ok": false, "msg": Locale.t("terr_st_have"), "preview": prev}
+	var cost := int(prev.get("cost", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("terr_27") % cost, "preview": prev}
 	var st := state(id)
-	if bool(st.stockade):
-		return {"ok": false, "msg": Locale.t("terr_st_have")}
-	var cost := stockade_cost()
-	if GameState.silver < cost:
-		return {"ok": false, "msg": Locale.t("terr_27") % cost}
 	GameState.silver -= cost
 	if cost == 0:
 		_st().stockade_credit = int(_st().stockade_credit) - 1
 	st.stockade = true
 	_put(id, st)
-	_log(Locale.t("terr_st_done") % [site(id).name, cost])
+	var nm := str(site(id).name)
+	_log(Locale.t("terr_st_done") % [nm, cost])
+	CKEconomyState.month_echo_note("stockade", Locale.t("terr_echo_stockade", [nm, cost]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
-	return {"ok": true, "msg": Locale.t("terr_st_done") % [site(id).name, cost]}
+	return {"ok": true, "msg": Locale.t("terr_st_done") % [nm, cost], "preview": prev}
 
 ## A finished scripted nation chain used to offer a second seat. Now it pays for one stockade.
 static func grant_stockade_credit(chain_id: String) -> void:
