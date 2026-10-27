@@ -281,3 +281,19 @@
 - 各章首拍在 `_drf6` 后、离开该拍前加 `_lmp1`–`_lmp6` 灯影一沉口头，全库去重；收束非旁白。
 - 验收：`content_season_lamp_settle_chain_check` — hub chip → 灯影一沉针口头。
 - 不碰既有 `_drf`/`_yld`/`_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+
+## 第三可玩章 · 盖印上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs07_03` |
+| 标题 | 盖印上的灯 |
+| legacy_index | 425 |
+| 文件 | `project/data/story/chapters/cs07_03.json` |
+
+盖印与空印对照；栏仪并排可读。拍：盖印 → 空印 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **栏仪仍并** → flag `cs07_seal_parallel`，进 `ledger`。
+- **先催路名** → flag `cs07_seal_push`，仍进收束。
+- 验收：`content_season_playable_s07_03_check`；同档门禁 `content_season_playable_gate_s07_check`（cs07_01+02+03）。
