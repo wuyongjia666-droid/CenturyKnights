@@ -70,6 +70,17 @@ func _own(id: String) -> void:
 
 
 func _api_grant_echo() -> String:
+	var err := _api_grant_chip()
+	if err != "":
+		return err
+	err = _api_spend_free()
+	if err != "":
+		return err
+	print("api grant/spend echo ok")
+	return ""
+
+
+func _api_grant_chip() -> String:
 	_setup()
 	if CKTerritory.stockade_credit_count() != 0:
 		return "credit want 0 before grant"
@@ -89,6 +100,10 @@ func _api_grant_echo() -> String:
 				return "chip link not ledger"
 	if not found:
 		return "stockade_credit chip missing after grant"
+	return ""
+
+
+func _api_spend_free() -> String:
 	# Spend path at API: free build with silver too low for paid stockade.
 	_own(SITE)
 	GameState.silver = 10
@@ -115,7 +130,6 @@ func _api_grant_echo() -> String:
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "stockade_credit" and int(item.get("count", 0)) > 0:
 			return "chip still up after spend"
-	print("api grant/spend echo ok")
 	return ""
 
 
