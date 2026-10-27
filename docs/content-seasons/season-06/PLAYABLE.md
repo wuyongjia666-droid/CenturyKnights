@@ -227,3 +227,9 @@
 - 各章首拍在 `_slv6` 后、离开该拍前加 `_gln1`–`_gln6` 缝光一瞥口头，全库去重；收束非旁白。
 - 验收：`content_season_seam_glimpse_chain_check` — hub chip → 缝光针口头。
 - 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`/`_rim`/`_crn`/`_slv`。
+
+## 门槛半步口头加厚（threshold-halfstep）
+
+- 各章首拍在 `_gln6` 后、离开该拍前加 `_hst1`–`_hst6` 门槛半步口头，全库去重；收束非旁白。
+- 验收：`content_season_threshold_halfstep_chain_check` — hub chip → 门槛半步针口头。
+- 不碰既有 `_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
