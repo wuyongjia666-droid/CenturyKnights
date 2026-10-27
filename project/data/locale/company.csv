@@ -719,6 +719,8 @@ terr_echo_stockade,屯营·%s筑成（-%d银）,Stockade · %s raised (-%d silve
 terr_echo_head,领地月回读 // TERRITORY ECHO,Territory month echo
 terr_echo_sister,姊妹驰援·%s→%s（驻%d/源%d）,Sister relief · %s→%s (garrison %d / source %d)
 terr_echo_muster,开仓募卒·%s（−%d粮·驻%d）,Muster · %s (−%d food · garrison %d)
+terr_echo_bribe,收买缓兵·%s（−%d银）,Bribe delay · %s (−%d silver)
+terr_echo_scout,斥候探明·%s（−%d银·守成%d%%）,Scout · %s (−%d silver · hold %d%%)
 terr_echo_convoy,围城疏仓·%s→%s（达%d/耗%d）,Siege convoy · %s→%s (delivered %d / spoil %d)
 atlas_contest_company,%s佣兵团,%s company
 atlas_contest_stake,加码截夺（%d银）,Stake claim (%d silver)
