@@ -118,6 +118,10 @@ func _assert_marriage(tag: String) -> void:
 	_ok(houses.size() >= 1, "%s/marriage house_card count>=1 got %d" % [tag, houses.size()])
 	var vow := page.find_child("VowCompanyArms", true, false)
 	_ok(_route(vow, "marriage_vow"), "%s/marriage marriage_vow" % tag)
+	var vstrip := page.find_child("VowCrestStrip", true, false)
+	_ok(_route(vstrip, "vow_strip"), "%s/marriage vow_strip" % tag)
+	var vbn := page.find_child("VowBanner", true, false)
+	_ok(vbn != null and str(vbn.get_meta("arms_kind", "")) == "lb_vow_arms", "%s/marriage VowBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 

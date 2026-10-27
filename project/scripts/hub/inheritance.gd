@@ -92,6 +92,7 @@ func _show() -> void:
 		p.custom_minimum_size = Vector2(372, 320 if DeviceProfile.is_mobile() else 300)
 		p.name = "Answer_" + k
 		var v: VBoxContainer = r[1]
+		CKHeraldryField.attach_succession_answer_arms(v, _heir, Vector2(28, 34))
 		v.add_child(UIKit.title_label(Locale.t("lb_inh_%s" % k), 18))
 		v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_story" % k), UIKit.TEXT_DIM, 13, 340))
 		v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_fx" % k), UIKit.OK, 13, 340))

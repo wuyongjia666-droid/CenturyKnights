@@ -86,6 +86,9 @@ func _run_live_uniqueness() -> void:
 		CKHeraldryField.place_muster_crest_strip(root, leader, Vector2(400, 320)),
 		CKHeraldryField.place_field_crest_strip(root, Vector2(600, 320)),
 		CKHeraldryField.place_skill_crest_strip(root, Vector2(800, 320)),
+		CKHeraldryField.place_dynasty_end_crest_strip(root, leader, leader, Vector2(1000, 320)),
+		CKHeraldryField.place_banner_handoff_crest_strip(root, leader, leader, Vector2(8, 400)),
+		CKHeraldryField.place_vow_crest_strip(root, leader, leader, Vector2(240, 400)),
 	]
 	await _settle(4)
 
