@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry wave-5 E2E: marriage vow strip + house/vow arms, succession
+## Fat heraldry E2E: marriage vow strip + house/vow arms, succession
 ## heir strip, heir-trial duel strip — strip_company + cloth banner child
 ## field_route ownership — desk + mobile. Real scenes; no EmptyHost.
 
@@ -109,6 +109,8 @@ func _assert_marriage(tag: String) -> void:
 		_ok(_route(strip.find_child("LeftArms", true, false), "marriage_left"), "%s/marriage marriage_left" % tag)
 		_ok(_route(strip.find_child("RightArms", true, false), "marriage_right"), "%s/marriage marriage_right" % tag)
 		_ok(_route(strip.find_child("MarriageBanner", true, false), "marriage_banner"), "%s/marriage marriage_banner" % tag)
+		var mbn := strip.find_child("MarriageBanner", true, false)
+		_ok(mbn != null and str(mbn.get_meta("arms_kind", "")) == "lb_marriage_arms", "%s/marriage MarriageBanner kind" % tag)
 	var houses: Array = []
 	for n in page.find_children("HouseArms", "", true, false):
 		if str(n.get_meta("field_route", "")) == "house_card":
@@ -133,6 +135,8 @@ func _assert_succession(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/succession strip_company" % tag)
 		_ok(_route(strip.find_child("LeaderArms", true, false), "succession_heir"), "%s/succession succession_heir" % tag)
 		_ok(_route(strip.find_child("SuccessionBanner", true, false), "succession_banner"), "%s/succession succession_banner" % tag)
+		var sbn := strip.find_child("SuccessionBanner", true, false)
+		_ok(sbn != null and str(sbn.get_meta("arms_kind", "")) == "lb_succession_arms", "%s/succession SuccessionBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -151,6 +155,8 @@ func _assert_duel(tag: String) -> void:
 		_ok(_route(strip.find_child("LeftArms", true, false), "duel_left"), "%s/duel duel_left" % tag)
 		_ok(_route(strip.find_child("RightArms", true, false), "duel_right"), "%s/duel duel_right" % tag)
 		_ok(_route(strip.find_child("DuelBanner", true, false), "duel_banner"), "%s/duel duel_banner" % tag)
+		var dbn := strip.find_child("DuelBanner", true, false)
+		_ok(dbn != null and str(dbn.get_meta("arms_kind", "")) == "lb_duel_arms", "%s/duel DuelBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -193,3 +199,10 @@ func _source_contracts() -> void:
 	for hub in hubs.keys():
 		var src := FileAccess.get_file_as_string(hubs[hub])
 		_ok(src.find("CKHeraldryField.") >= 0, "%s wires Field" % hub)
+	_ok(field.find('"lb_marriage_arms"') >= 0, "field lb_marriage_arms")
+	_ok(field.find('"lb_succession_arms"') >= 0, "field lb_succession_arms")
+	_ok(field.find('"lb_duel_arms"') >= 0, "field lb_duel_arms")
+	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
+	_ok(loc.find("lb_marriage_arms,") >= 0, "locale lb_marriage_arms")
+	_ok(loc.find("lb_succession_arms,") >= 0, "locale lb_succession_arms")
+	_ok(loc.find("lb_duel_arms,") >= 0, "locale lb_duel_arms")

@@ -119,6 +119,7 @@ func _report_annex_forge(leader) -> void:
 	_ok(ff != null and str(ff.get_meta("field_route", "")) == "forge_focus_arms", "forge_focus_arms route")
 	var fbn := fstrip.find_child("ForgeBanner", true, false) if fstrip != null else null
 	_ok(fbn != null and str(fbn.get_meta("field_route", "")) == "forge_banner", "forge_banner route")
+	_ok(fbn != null and str(fbn.get_meta("arms_kind", "")) == "lb_forge_arms", "forge_banner kind")
 	var fco := fstrip.find_child("CastleArms", true, false) if fstrip != null else null
 	_ok(fco != null and str(fco.get_meta("field_route", "")) == "strip_company", "forge strip_company")
 	var seal := Control.new()
@@ -242,6 +243,7 @@ func _place_major_strips(leader) -> void:
 	_ok(ml != null and str(ml.get_meta("field_route", "")) == "marriage_left", "place marriage_left")
 	_ok(mr != null and str(mr.get_meta("field_route", "")) == "marriage_right", "place marriage_right")
 	_ok(mbn != null and str(mbn.get_meta("field_route", "")) == "marriage_banner", "place marriage_banner")
+	_ok(mbn != null and str(mbn.get_meta("arms_kind", "")) == "lb_marriage_arms", "place marriage_banner kind")
 
 	var succ := CKHeraldryField.place_succession_crest_strip(root, leader, Vector2(280, 80))
 	_ok(succ != null and str(succ.get_meta("field_route", "")) == "succession_strip", "place succession_strip")
@@ -251,6 +253,7 @@ func _place_major_strips(leader) -> void:
 	_ok(sco != null and str(sco.get_meta("field_route", "")) == "strip_company", "place succession strip_company")
 	_ok(sh != null and str(sh.get_meta("field_route", "")) == "succession_heir", "place succession_heir")
 	_ok(sbn != null and str(sbn.get_meta("field_route", "")) == "succession_banner", "place succession_banner")
+	_ok(sbn != null and str(sbn.get_meta("arms_kind", "")) == "lb_succession_arms", "place succession_banner kind")
 
 	var duel := CKHeraldryField.place_duel_crest_strip(root, leader, leader, Vector2(420, 80))
 	_ok(duel != null and str(duel.get_meta("field_route", "")) == "duel_strip", "place duel_strip")
@@ -262,6 +265,7 @@ func _place_major_strips(leader) -> void:
 	_ok(dl != null and str(dl.get_meta("field_route", "")) == "duel_left", "place duel_left")
 	_ok(dr != null and str(dr.get_meta("field_route", "")) == "duel_right", "place duel_right")
 	_ok(dbn != null and str(dbn.get_meta("field_route", "")) == "duel_banner", "place duel_banner")
+	_ok(dbn != null and str(dbn.get_meta("arms_kind", "")) == "lb_duel_arms", "place duel_banner kind")
 
 	var muster := CKHeraldryField.place_deploy_muster_strip(root, leader, Vector2(8, 160))
 	_ok(muster != null and str(muster.get_meta("field_route", "")) == "deploy_muster", "place deploy_muster")
@@ -289,6 +293,7 @@ func _place_major_strips(leader) -> void:
 	_ok(tfa != null and str(tfa.get_meta("field_route", "")) == "train_focus_arms", "place train_focus_arms")
 	var trbn := trainf.find_child("TrainBanner", true, false) if trainf != null else null
 	_ok(trbn != null and str(trbn.get_meta("field_route", "")) == "train_banner", "place train_banner")
+	_ok(trbn != null and str(trbn.get_meta("arms_kind", "")) == "lb_train_arms", "place train_banner kind")
 	var trco := trainf.find_child("CastleArms", true, false) if trainf != null else null
 	_ok(trco != null and str(trco.get_meta("field_route", "")) == "strip_company", "place train strip_company")
 
@@ -298,6 +303,7 @@ func _place_major_strips(leader) -> void:
 	_ok(hf != null and str(hf.get_meta("field_route", "")) == "shrine_heal_focus", "place shrine_heal_focus")
 	var shbn := shrine.find_child("ShrineBanner", true, false) if shrine != null else null
 	_ok(shbn != null and str(shbn.get_meta("field_route", "")) == "shrine_banner", "place shrine_banner")
+	_ok(shbn != null and str(shbn.get_meta("arms_kind", "")) == "lb_shrine_arms", "place shrine_banner kind")
 	var shco := shrine.find_child("CastleArms", true, false) if shrine != null else null
 	_ok(shco != null and str(shco.get_meta("field_route", "")) == "strip_company", "place shrine strip_company")
 
@@ -359,6 +365,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(nn != null and str(nn.get_meta("field_route", "")) == "nation_arms", "nation_arms")
 	var natbn := nat.find_child("NationBanner", true, false) if nat != null else null
 	_ok(natbn != null and str(natbn.get_meta("field_route", "")) == "nation_banner", "nation_banner")
+	_ok(natbn != null and str(natbn.get_meta("arms_kind", "")) == "lb_nation_arms", "nation_banner kind")
 
 	var affairs := CKHeraldryField.place_affairs_crest_strip(root, "ash_capital", Vector2(800, 80))
 	_ok(affairs != null and str(affairs.get_meta("field_route", "")) == "affairs_strip", "affairs_strip route")
@@ -366,6 +373,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(an != null and str(an.get_meta("field_route", "")) == "affairs_nation", "affairs_nation")
 	var abn := affairs.find_child("AffairsBanner", true, false) if affairs != null else null
 	_ok(abn != null and str(abn.get_meta("field_route", "")) == "affairs_banner", "affairs_banner")
+	_ok(abn != null and str(abn.get_meta("arms_kind", "")) == "lb_affairs_arms", "affairs_banner kind")
 	var aco := affairs.find_child("CastleArms", true, false) if affairs != null else null
 	_ok(aco != null and str(aco.get_meta("field_route", "")) == "strip_company", "affairs strip_company")
 
@@ -375,6 +383,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(rl != null and str(rl.get_meta("field_route", "")) == "rite_leader", "rite_leader")
 	var rtbn := rite.find_child("RiteBanner", true, false) if rite != null else null
 	_ok(rtbn != null and str(rtbn.get_meta("field_route", "")) == "rite_banner", "rite_banner")
+	_ok(rtbn != null and str(rtbn.get_meta("arms_kind", "")) == "lb_rite_arms", "rite_banner kind")
 	var rtco := rite.find_child("CastleArms", true, false) if rite != null else null
 	_ok(rtco != null and str(rtco.get_meta("field_route", "")) == "strip_company", "rite strip_company")
 
@@ -384,6 +393,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(ml != null and str(ml.get_meta("field_route", "")) == "muster_leader", "muster_leader")
 	var mubn := muster.find_child("MusterBanner", true, false) if muster != null else null
 	_ok(mubn != null and str(mubn.get_meta("field_route", "")) == "muster_banner", "muster_banner")
+	_ok(mubn != null and str(mubn.get_meta("arms_kind", "")) == "lb_muster_arms", "muster_banner kind")
 	var muco := muster.find_child("CastleArms", true, false) if muster != null else null
 	_ok(muco != null and str(muco.get_meta("field_route", "")) == "strip_company", "muster strip_company")
 
