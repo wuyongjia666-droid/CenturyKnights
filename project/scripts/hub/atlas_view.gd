@@ -163,6 +163,7 @@ func _build_frame() -> void:
 	tg.size = Vector2(26, 26)
 	_token.add_child(tg)
 	_map_content.add_child(_token)
+	CKHeraldryField.attach_party_token_arms(_token)
 	UIFX.breathe(_token, 0.05, 1.8)
 	_toast = UIKit.body_label("", UIKit.TEXT, 12)
 	_toast.name = "Toast"
@@ -295,9 +296,11 @@ func _mobile_frame(mp: Control) -> void:
 	_token.size = Vector2(ts, ts)
 	_token.pivot_offset = _token.size * 0.5
 	var tg := _token.get_child(0) as Label
-	tg.size = _token.size
+	if tg:
+		tg.size = _token.size
+		tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
+	CKHeraldryField.attach_party_token_arms(_token)
 	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 10.0
-	tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
 	_set_sheet_tab("place")
 	_refresh_top()
 	_apply_map_xform()
@@ -372,6 +375,7 @@ func _reflow_mobile(mp: Control) -> void:
 	if tg:
 		tg.size = _token.size
 		tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
+	CKHeraldryField.attach_party_token_arms(_token)
 	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 10.0
 	_refresh_top()
 	_mobile_nodes()
