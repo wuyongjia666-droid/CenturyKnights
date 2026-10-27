@@ -1,0 +1,2793 @@
+{
+  "id": "cs04_03",
+  "title": "训堂上的灯",
+  "legacy_index": 422,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-04/NOVEL.md",
+  "beats": [
+    {
+      "id": "hall",
+      "title": "训堂",
+      "lines": [
+        {
+          "id": "cs0403_opn1",
+          "speaker": "旁白",
+          "text": "帖卷插在袖筒。筒口朝下，墨不滴门。"
+        },
+        {
+          "id": "cs0403_opn2",
+          "speaker": "岁吏",
+          "text": "帖印朝掌心。掌心捂，风吹不冷。"
+        },
+        {
+          "id": "cs0403_opn3",
+          "speaker": "书记官",
+          "text": "训堂页夹好。夹好，翻时不散。"
+        },
+        {
+          "id": "cs0403_opn4",
+          "speaker": "苇原·灯影",
+          "text": "门缝灯先认。认过，再侧身。堂碑守。"
+        },
+        {
+          "id": "cs0403_opn5",
+          "speaker": "槐里·青禾",
+          "text": "碑空指节松着。松着，不提前按。"
+        },
+        {
+          "id": "cs0403_opn6",
+          "speaker": "leader",
+          "text": "我进门。帖在袖，再进训堂。"
+        },
+        {
+          "id": "cs04_03_back_0",
+          "speaker": "旁白",
+          "text": "训堂。上回家训已入柜。训堂还空着碑廊。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_1",
+          "speaker": "书记官",
+          "text": "正面训写过了。训堂要能念，不能只剩绣线。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_2",
+          "speaker": "leader",
+          "text": "我要听碑廊。空着也得说得出。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_3",
+          "speaker": "旁白",
+          "text": "柜门一响。家训与训堂堂碑放上长桌。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_4",
+          "speaker": "老管事",
+          "text": "催训的人嗓门大。碑廊的人说再等等。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_5",
+          "speaker": "岁吏",
+          "text": "堂迹旁多了一行「训堂夜」。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁挂训。问今夜谁还空着行。碑廊认。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_7",
+          "speaker": "旁白",
+          "text": "两行字第一次对视。训面亮，训堂暗。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_8",
+          "speaker": "书记官",
+          "text": "能念的字在训面。坐得住的行在训堂等。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_9",
+          "speaker": "leader",
+          "text": "把碑廊念给我听。别念催训。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_10",
+          "speaker": "老管事",
+          "text": "催训可以喊。训堂撕不得。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_11",
+          "speaker": "旁白",
+          "text": "灯矮了一寸。碑廊反而更清楚。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_12",
+          "speaker": "岁吏",
+          "text": "家训已记账。训堂记账才算整幅。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_13",
+          "speaker": "书记官",
+          "text": "堂碑不是拖。是让碑廊也有灯。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_14",
+          "speaker": "leader",
+          "text": "我听懂了。空着，也要堂碑·家训。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_15",
+          "speaker": "旁白",
+          "text": "风从窗缝进来。训角动，字不动。训堂留。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_16",
+          "speaker": "老管事",
+          "text": "催训的锣在门外。锣响不进训堂。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_back_y17",
+          "speaker": "旁白",
+          "text": "训堂页贴着墙，墙皮壳落在「行」字上。"
+        },
+        {
+          "id": "cs04_03_back_y18",
+          "speaker": "石垒·晚担",
+          "text": "壳落在行上。行还在，训才算没白贴。帖边按。"
+        },
+        {
+          "id": "cs04_03_back_y19",
+          "speaker": "leader",
+          "text": "训堂与碑堂碑。壳掉了也并着。"
+        },
+        {
+          "id": "cs0403_thm1",
+          "speaker": "旁白",
+          "text": "轴背写着训堂。背着的字要翻过来才见。"
+        },
+        {
+          "id": "cs0403_thm2",
+          "speaker": "岁吏",
+          "text": "翻得慢一点，字才不糊，栏才齐。堂灯验。"
+        },
+        {
+          "id": "cs0403_thm3",
+          "speaker": "石垒·晚担",
+          "text": "背字浅。浅处更见碑空。"
+        },
+        {
+          "id": "cs0403_thm4",
+          "speaker": "槐里·青禾",
+          "text": "训堂不绣花。绣花的训，挂不住夜。"
+        },
+        {
+          "id": "cs0403_thm5",
+          "speaker": "老旗手",
+          "text": "旗穗别缠轴绳。缠了，翻不开。碑空守。"
+        },
+        {
+          "id": "cs0403_thm6",
+          "speaker": "leader",
+          "text": "训堂我翻。碑空我留。留完再往下。"
+        },
+        {
+          "id": "cs0403_ods1",
+          "speaker": "旁白",
+          "text": "门内这一息，训堂碑空还平。平着，人先不迈出门楣。"
+        },
+        {
+          "id": "cs0403_ods2",
+          "speaker": "岁吏",
+          "text": "训堂翻过了。翻过，别急出——门风会把碑空吹皱。"
+        },
+        {
+          "id": "cs0403_ods3",
+          "speaker": "槐里·青禾",
+          "text": "训堂在袖。在袖，就让腕再停一息门影。"
+        },
+        {
+          "id": "cs0403_ods4",
+          "speaker": "旁白",
+          "text": "门缝静了半寸。半寸时，没人抢着先跨槛。堂帖按。"
+        },
+        {
+          "id": "cs0403_ods5",
+          "speaker": "老旗手",
+          "text": "旗角别扫训堂灰。扫了，碑空会花——先把门内站稳。"
+        },
+        {
+          "id": "cs0403_ods6",
+          "speaker": "leader",
+          "text": "门内落定。训堂碑空在，我先不迈。"
+        },
+        {
+          "id": "cs0403_rim1",
+          "speaker": "旁白",
+          "text": "门槛这一望，阴行还空着。空着，人先不把脚迈向契角。廊风止。"
+        },
+        {
+          "id": "cs0403_rim2",
+          "speaker": "岁吏",
+          "text": "碑空留过了。留过，别急迈——门外契会压歪字。"
+        },
+        {
+          "id": "cs0403_rim3",
+          "speaker": "石垒·晚担",
+          "text": "训堂在怀。在怀，就让目光先停在门槛外那一角压平处。"
+        },
+        {
+          "id": "cs0403_rim4",
+          "speaker": "旁白",
+          "text": "契缝风歇了半寸。半寸里，没人抢着先掀帘。堂碑守。"
+        },
+        {
+          "id": "cs0403_rim5",
+          "speaker": "老旗手",
+          "text": "袖角别带出门灰。带了，契会花——先把门外望清。碑廊认。"
+        },
+        {
+          "id": "cs0403_rim6",
+          "speaker": "leader",
+          "text": "门槛外望。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_crn1",
+          "speaker": "leader",
+          "text": "帘边这一停，训堂角还涩。涩着，指尖先别掀那道契帘。"
+        },
+        {
+          "id": "cs0403_crn2",
+          "speaker": "leader",
+          "text": "训堂验过了。验过，也别急——帘外契会糊印口。"
+        },
+        {
+          "id": "cs0403_crn3",
+          "speaker": "leader",
+          "text": "训堂在袖。在袖，目光先停在帘边那一线契影。"
+        },
+        {
+          "id": "cs0403_crn4",
+          "speaker": "leader",
+          "text": "帘绳顿了半息。半息里，没人抢着先把契帘掀满。训堂留。"
+        },
+        {
+          "id": "cs0403_crn5",
+          "speaker": "leader",
+          "text": "契角别拖进门灰。拖了，印会花——先把帘外契认清。帖边按。"
+        },
+        {
+          "id": "cs0403_crn6",
+          "speaker": "leader",
+          "text": "帘边驻足。训堂外的帖，我先不掀。"
+        },
+        {
+          "id": "cs0403_slv1",
+          "speaker": "leader",
+          "text": "门风这一过，训堂角先涩。涩着，指尖还压契——先让风把契影吹直。"
+        },
+        {
+          "id": "cs0403_slv2",
+          "speaker": "leader",
+          "text": "训堂验过了。验过，袖里别抖——门风会糊印口。"
+        },
+        {
+          "id": "cs0403_slv3",
+          "speaker": "leader",
+          "text": "训堂在袖。在袖，就让这一阵门风先从袖口走干净。"
+        },
+        {
+          "id": "cs0403_slv4",
+          "speaker": "leader",
+          "text": "风顿了半息。半息里，没人抢着先把契袖按死。堂灯验。"
+        },
+        {
+          "id": "cs0403_slv5",
+          "speaker": "leader",
+          "text": "契角别灌进袖灰。灌了，印会花——先把门风过完。碑空守。"
+        },
+        {
+          "id": "cs0403_slv6",
+          "speaker": "leader",
+          "text": "门风过袖。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_gln1",
+          "speaker": "leader",
+          "text": "缝光这一瞥，训堂角还涩。涩着，目光先停在那一线契缝。"
+        },
+        {
+          "id": "cs0403_gln2",
+          "speaker": "leader",
+          "text": "训堂验过了。验过，也别急——缝里契会糊印口。"
+        },
+        {
+          "id": "cs0403_gln3",
+          "speaker": "leader",
+          "text": "训堂在袖。在袖，就让这一瞥先把缝外契影认清。"
+        },
+        {
+          "id": "cs0403_gln4",
+          "speaker": "leader",
+          "text": "光顿了半息。半息里，没人抢着先把契缝撕宽。堂帖按。"
+        },
+        {
+          "id": "cs0403_gln5",
+          "speaker": "leader",
+          "text": "契缝别拖进门灰。拖了，印会花——先把缝光瞥完。廊风止。"
+        },
+        {
+          "id": "cs0403_gln6",
+          "speaker": "leader",
+          "text": "缝光一瞥。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_hst1",
+          "speaker": "leader",
+          "text": "门槛这一半步，训堂角还潮。潮着，脚尖先停在那一道门坎。"
+        },
+        {
+          "id": "cs0403_hst2",
+          "speaker": "leader",
+          "text": "训堂验过了。验过，也别急——半步会抖契上的印。"
+        },
+        {
+          "id": "cs0403_hst3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一半步先把门外契认清。堂碑守。"
+        },
+        {
+          "id": "cs0403_hst4",
+          "speaker": "leader",
+          "text": "步顿了半息。半息里，没人抢着先把训堂门坎跨尽。"
+        },
+        {
+          "id": "cs0403_hst5",
+          "speaker": "leader",
+          "text": "契影别扫进门灰。扫了，名会花——先把半步停稳。碑廊认。"
+        },
+        {
+          "id": "cs0403_hst6",
+          "speaker": "leader",
+          "text": "门槛半步。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_blt1",
+          "speaker": "leader",
+          "text": "门闩这一触，训堂角还潮。潮着，指尖先停在那一道冷闩。"
+        },
+        {
+          "id": "cs0403_blt2",
+          "speaker": "leader",
+          "text": "训堂验过了。验过，也别急——一触会抖契上的印。"
+        },
+        {
+          "id": "cs0403_blt3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一触先把训堂门闩凉意认清。"
+        },
+        {
+          "id": "cs0403_blt4",
+          "speaker": "leader",
+          "text": "闩顿了半息。半息里，没人抢着先把训堂门闩推开。"
+        },
+        {
+          "id": "cs0403_blt5",
+          "speaker": "leader",
+          "text": "契影别扫进闩灰。扫了，名会花——先把一触停稳。训堂留。"
+        },
+        {
+          "id": "cs0403_blt6",
+          "speaker": "leader",
+          "text": "门闩一触。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_hng1",
+          "speaker": "leader",
+          "text": "门枢这一转，训堂角还涩。涩着，指尖先试那一道旧枢。"
+        },
+        {
+          "id": "cs0403_hng2",
+          "speaker": "leader",
+          "text": "训堂验过了。验过，也别急——一转会抖起契上的印。"
+        },
+        {
+          "id": "cs0403_hng3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一转先把训堂门枢涩意认清。"
+        },
+        {
+          "id": "cs0403_hng4",
+          "speaker": "leader",
+          "text": "枢顿了半息。半息里，没人抢着先把训堂门枢拧开。"
+        },
+        {
+          "id": "cs0403_hng5",
+          "speaker": "leader",
+          "text": "契影别扫进枢灰。扫了，名会花——先把一转停稳。帖边按。"
+        },
+        {
+          "id": "cs0403_hng6",
+          "speaker": "leader",
+          "text": "门枢一转。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_axl1",
+          "speaker": "leader",
+          "text": "门轴这一响，训堂角还哑。哑着，掌缘先贴那一道旧轴。"
+        },
+        {
+          "id": "cs0403_axl2",
+          "speaker": "leader",
+          "text": "训堂听过了。听过，也别催——一响会抖起契边的锈。"
+        },
+        {
+          "id": "cs0403_axl3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一响先把训堂门轴哑意认清。"
+        },
+        {
+          "id": "cs0403_axl4",
+          "speaker": "leader",
+          "text": "轴顿了半息。半息里，没人抢着先把训堂门轴轧响。"
+        },
+        {
+          "id": "cs0403_axl5",
+          "speaker": "leader",
+          "text": "契影别蹭进轴锈。蹭了，名会花——先把一响停稳。堂灯验。"
+        },
+        {
+          "id": "cs0403_axl6",
+          "speaker": "leader",
+          "text": "门轴一响。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_knk1",
+          "speaker": "leader",
+          "text": "门环这一叩，训堂角还沉。沉着，指节先停在那一道旧环。"
+        },
+        {
+          "id": "cs0403_knk2",
+          "speaker": "leader",
+          "text": "训堂试过了。试过，也别催——一叩会抖起契边的铜屑。"
+        },
+        {
+          "id": "cs0403_knk3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一叩先把训堂门环沉意认清。"
+        },
+        {
+          "id": "cs0403_knk4",
+          "speaker": "leader",
+          "text": "环顿了半息。半息里，没人抢着先把训堂门环叩响。"
+        },
+        {
+          "id": "cs0403_knk5",
+          "speaker": "leader",
+          "text": "契影别蹭进环锈。蹭了，名会花——先把一叩停稳。碑空守。"
+        },
+        {
+          "id": "cs0403_knk6",
+          "speaker": "leader",
+          "text": "门环一叩。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_ans1",
+          "speaker": "leader",
+          "text": "门内这一应，训堂角还沉。沉着，耳先停在那一道旧应。"
+        },
+        {
+          "id": "cs0403_ans2",
+          "speaker": "leader",
+          "text": "训堂试过了。试过，也别催——一应会抖起契边的木屑。"
+        },
+        {
+          "id": "cs0403_ans3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一应先把训堂门内沉意认清。"
+        },
+        {
+          "id": "cs0403_ans4",
+          "speaker": "leader",
+          "text": "声顿了半息。半息里，没人抢着先把训堂应声揭开。"
+        },
+        {
+          "id": "cs0403_ans5",
+          "speaker": "leader",
+          "text": "契影别蹭进门缝。蹭了，名会花——先把一应停稳。堂帖按。"
+        },
+        {
+          "id": "cs0403_ans6",
+          "speaker": "leader",
+          "text": "门内应声。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_yld1",
+          "speaker": "leader",
+          "text": "门扇这一让，训堂角还沉。沉着，掌先停在那一道旧让。"
+        },
+        {
+          "id": "cs0403_yld2",
+          "speaker": "leader",
+          "text": "训堂试过了。试过，也别催——一让会抖起契边的尘屑。"
+        },
+        {
+          "id": "cs0403_yld3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一让先把训堂门扇沉意认清。"
+        },
+        {
+          "id": "cs0403_yld4",
+          "speaker": "leader",
+          "text": "扇顿了半息。半息里，没人抢着先把训堂门扇推开。"
+        },
+        {
+          "id": "cs0403_yld5",
+          "speaker": "leader",
+          "text": "契影别蹭进扇缝。蹭了，名会花——先把一让停稳。廊风止。"
+        },
+        {
+          "id": "cs0403_yld6",
+          "speaker": "leader",
+          "text": "门扇微让。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_drf1",
+          "speaker": "leader",
+          "text": "缝风这一过，训堂角还沉。沉着，腕先停在那一道旧风。"
+        },
+        {
+          "id": "cs0403_drf2",
+          "speaker": "leader",
+          "text": "训堂试过了。试过，也别催——一风会抖起契边的灰屑。"
+        },
+        {
+          "id": "cs0403_drf3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一风先把训堂门缝沉意认清。"
+        },
+        {
+          "id": "cs0403_drf4",
+          "speaker": "leader",
+          "text": "风顿了半息。半息里，没人抢着先把训堂门缝堵严。"
+        },
+        {
+          "id": "cs0403_drf5",
+          "speaker": "leader",
+          "text": "契影别蹭进风缝。蹭了，名会花——先把一风停稳。堂碑守。"
+        },
+        {
+          "id": "cs0403_drf6",
+          "speaker": "leader",
+          "text": "缝风一过。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs0403_lmp1",
+          "speaker": "leader",
+          "text": "灯影这一沉，训堂角还沉。沉着，胸先停在那一道旧影。"
+        },
+        {
+          "id": "cs0403_lmp2",
+          "speaker": "leader",
+          "text": "训堂试过了。试过，也别催——一影会带起纸边的帖屑。"
+        },
+        {
+          "id": "cs0403_lmp3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一影先把训堂灯影沉意认清。"
+        },
+        {
+          "id": "cs0403_lmp4",
+          "speaker": "leader",
+          "text": "影顿了半息。半息里，没人抢着先把训堂灯影捂死。"
+        },
+        {
+          "id": "cs0403_lmp5",
+          "speaker": "leader",
+          "text": "风缝别漫进灯影。沾了，名会花——先把一影停稳。碑廊认。"
+        },
+        {
+          "id": "cs0403_lmp6",
+          "speaker": "leader",
+          "text": "灯影一沉。训堂外的帖，我先不迈。"
+        },
+        {
+          "id": "cs04_03_back_17",
+          "speaker": "槐里·青禾",
+          "text": "训堂比训面薄。薄的反而难装。",
+          "stage": {
+            "card": "一　训堂",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        }
+      ],
+      "next": "aisle"
+    },
+    {
+      "id": "aisle",
+      "title": "碑廊",
+      "lines": [
+        {
+          "id": "cs04_03_deed_0",
+          "speaker": "旁白",
+          "text": "碑廊摊开。做过的那格亮着，旁格还空。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_1",
+          "speaker": "老管事",
+          "text": "上回留堂碑的，碑廊亮着空。只留训的，栏上有字、行仍空。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_2",
+          "speaker": "旁白",
+          "text": "两行字第二次吵架。回读逼它们对视·家训。训堂留。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁训条。问今夜谁还空着行。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_4",
+          "speaker": "书记官",
+          "text": "有字的格能念。碑廊要人敢看。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_5",
+          "speaker": "leader",
+          "text": "行空不是错。催满才是错。帖边按。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_6",
+          "speaker": "岁吏",
+          "text": "堂迹不改行。只记你敢不敢对空。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_7",
+          "speaker": "旁白",
+          "text": "绣线干了。碑廊的边还潮。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_8",
+          "speaker": "老管事",
+          "text": "催训锣又响。响在门外，进不了行。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_9",
+          "speaker": "书记官",
+          "text": "堂碑留行，比硬填假堂干净。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_10",
+          "speaker": "leader",
+          "text": "假堂我不要。碑廊我要听。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_11",
+          "speaker": "旁白",
+          "text": "灯把碑廊照成浅坑。坑里没有字。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_12",
+          "speaker": "岁吏",
+          "text": "家训上的字还在。训堂上的空也在。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_13",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写训堂，不写催。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_14",
+          "speaker": "老管事",
+          "text": "催训条叠得高。碑廊叠不住。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_15",
+          "speaker": "书记官",
+          "text": "能念的在训面。敢留的在训堂。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_16",
+          "speaker": "旁白",
+          "text": "训角又动。碑廊仍空。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_deed_y17",
+          "speaker": "旁白",
+          "text": "碑廊页上脚步声压过刻出来的口号。"
+        },
+        {
+          "id": "cs04_03_deed_y18",
+          "speaker": "石垒·晚担",
+          "text": "压过去的是走出来的。刻出来的，碑纹会谎。"
+        },
+        {
+          "id": "cs04_03_deed_y19",
+          "speaker": "leader",
+          "text": "我按走出来的步填碑廊。训条靠后。"
+        },
+        {
+          "id": "cs0403_sec1",
+          "speaker": "旁白",
+          "text": "帖纸压在石下。石凉，纸不凉。"
+        },
+        {
+          "id": "cs0403_sec2",
+          "speaker": "岁吏",
+          "text": "契阴写着未尽。未尽不是毁约。堂灯验。"
+        },
+        {
+          "id": "cs0403_sec3",
+          "speaker": "石垒·晚担",
+          "text": "石移开再读。压着读，字会折。碑空守。"
+        },
+        {
+          "id": "cs0403_sec4",
+          "speaker": "槐里·青禾",
+          "text": "未尽要堂碑留。催尽的，先看自己行。"
+        },
+        {
+          "id": "cs0403_sec5",
+          "speaker": "老旗手",
+          "text": "旗穗别缠石绳。缠了，纸抽不出。堂帖按。"
+        },
+        {
+          "id": "cs0403_sec6",
+          "speaker": "leader",
+          "text": "帖我验。未尽碑留。留完再往下。"
+        },
+        {
+          "id": "cs0403_hlp1",
+          "speaker": "旁白",
+          "text": "厅角帖纸角压死。压死，墨味还在指缝。"
+        },
+        {
+          "id": "cs0403_hlp2",
+          "speaker": "书记官",
+          "text": "碑纹验过了。验过，别急掀帘——角上墨再干一息。"
+        },
+        {
+          "id": "cs0403_hlp3",
+          "speaker": "石垒·晚担",
+          "text": "未尽留着。留着，椅子再压一息堂迹。"
+        },
+        {
+          "id": "cs0403_hlp4",
+          "speaker": "旁白",
+          "text": "催训声远了。远了，杯沿才肯离开唇，人还在角。"
+        },
+        {
+          "id": "cs0403_hlp5",
+          "speaker": "老旗手",
+          "text": "堂迹在钉。在钉，出厅也别让风掀角上的帖。"
+        },
+        {
+          "id": "cs0403_hlp6",
+          "speaker": "leader",
+          "text": "厅角验碑纹。帖在，我先不迈。"
+        },
+        {
+          "id": "cs04_03_deed_17",
+          "speaker": "老旗手",
+          "text": "碑廊灯还亮。亮着，才敢回读。",
+          "stage": {
+            "card": "二　碑廊",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs0403_vop1",
+          "speaker": "旁白",
+          "text": "帖纸卷着不摊。摊开会抢沙漏的光。"
+        },
+        {
+          "id": "cs0403_vop2",
+          "speaker": "岁吏",
+          "text": "契上的名今晚用不上。用得上的是漏上的月。廊风止。"
+        },
+        {
+          "id": "cs0403_vop3",
+          "speaker": "书记官",
+          "text": "帖印朝下扣。扣着，人不拿它当漏具。"
+        },
+        {
+          "id": "cs0403_vop4",
+          "speaker": "苇原·灯影",
+          "text": "廊风止一息。一息够看清沙腰。堂碑守。"
+        },
+        {
+          "id": "cs0403_vop5",
+          "speaker": "槐里·青禾",
+          "text": "袖契角按平。平了，不扫漏座。碑廊认。"
+        },
+        {
+          "id": "cs0403_vop6",
+          "speaker": "leader",
+          "text": "我到漏前。帖在袖，再看月份。"
+        },
+        {
+          "id": "cs04_03_hourglass_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行家训、下行训堂。回读把两行按住。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_1",
+          "speaker": "老管事",
+          "text": "沙漏边上，回读只问一句：你敢不敢对行。训堂留。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_2",
+          "speaker": "岁吏",
+          "text": "堂迹旁多了一行「训堂回读」。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_3",
+          "speaker": "书记官",
+          "text": "能念的字在上行。空得住的行还在下行等。帖边按。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_4",
+          "speaker": "leader",
+          "text": "两行都打开。我要听对看·家训。堂灯验。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_5",
+          "speaker": "旁白",
+          "text": "沙响。上行亮，下行仍暗·家训。碑空守。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防牌上写训堂。不写急锣。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_7",
+          "speaker": "老管事",
+          "text": "催训的人在门外跺脚。跺不进沙漏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_8",
+          "speaker": "书记官",
+          "text": "堂碑不是拖月。是让碑廊跟月份堂碑走。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_9",
+          "speaker": "岁吏",
+          "text": "月结不抹行。行也要入迹。堂帖按。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_10",
+          "speaker": "leader",
+          "text": "我听碑廊。不听跺脚。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_11",
+          "speaker": "旁白",
+          "text": "沙又落一层。下行多了一点亮·家训。廊风止。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_12",
+          "speaker": "老管事",
+          "text": "锣停了。碑廊还在。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_13",
+          "speaker": "书记官",
+          "text": "回读夜的字，比催训长命。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_14",
+          "speaker": "岁吏",
+          "text": "带牌出去。沙漏还转·家训。堂碑守。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_15",
+          "speaker": "旁白",
+          "text": "两行对准了。一对上，假填就站不住·家训。碑廊认。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_16",
+          "speaker": "老管事",
+          "text": "假堂进不了沙漏。碑廊能。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_hourglass_y17",
+          "speaker": "旁白",
+          "text": "沙漏旁边训堂起壳，壳里夹着一条没干的碑纹。"
+        },
+        {
+          "id": "cs04_03_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "碑纹没干，说明训还在被走过，不是被念过。"
+        },
+        {
+          "id": "cs04_03_hourglass_y19",
+          "speaker": "leader",
+          "text": "走过的训与行并着。念过的放下。训堂留。"
+        },
+        {
+          "id": "cs04_03_hourglass_17",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写训堂，不写急。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs0403_aud1",
+          "speaker": "旁白",
+          "text": "帖纸折痕压平。压平了，再碰征兆栏。"
+        },
+        {
+          "id": "cs0403_aud2",
+          "speaker": "岁吏",
+          "text": "契是给人守的。无是给灯认的。帖边按。"
+        },
+        {
+          "id": "cs0403_aud3",
+          "speaker": "书记官",
+          "text": "守契的人，更要写得干净。堂灯验。"
+        },
+        {
+          "id": "cs0403_aud4",
+          "speaker": "旁白",
+          "text": "窗外虫鸣一阵。鸣过，笔尖更稳。碑空守。"
+        },
+        {
+          "id": "cs0403_aud5",
+          "speaker": "岁吏",
+          "text": "稳的无，比花哨的吉签耐翻。堂帖按。"
+        },
+        {
+          "id": "cs0403_aud6",
+          "speaker": "leader",
+          "text": "我写无。帖在袖，字在栏。"
+        },
+        {
+          "id": "cs0403_vhg1",
+          "speaker": "书记官",
+          "text": "训堂写在轴背。背着的字，要翻过来才见。"
+        },
+        {
+          "id": "cs0403_vhg2",
+          "speaker": "书记官",
+          "text": "翻轴前先听沙。沙停，阴训才准你念。廊风止。"
+        },
+        {
+          "id": "cs0403_vhg3",
+          "speaker": "leader",
+          "text": "训堂空着一行。我翻过来念，不装没看见。"
+        },
+        {
+          "id": "cs0403_vhg4",
+          "speaker": "石垒·晚担",
+          "text": "轴背沾了沙。沙在，假补更显眼。堂碑守。"
+        },
+        {
+          "id": "cs0403_msr1",
+          "speaker": "旁白",
+          "text": "帖纸边压平。压平进袖，袖不鼓。"
+        },
+        {
+          "id": "cs0403_msr2",
+          "speaker": "老管事",
+          "text": "未尽碑行念过。念过勒腰带，带不松。"
+        },
+        {
+          "id": "cs0403_msr3",
+          "speaker": "岁吏",
+          "text": "月份从训旁走开。走开，整装归人。碑廊认。"
+        },
+        {
+          "id": "cs0403_msr4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓不催训。催的是你自己起身。训堂留。"
+        },
+        {
+          "id": "cs0403_msr5",
+          "speaker": "石垒·晚担",
+          "text": "泥印盒盖严。严了，桥上不掉泥印。帖边按。"
+        },
+        {
+          "id": "cs0403_msr6",
+          "speaker": "leader",
+          "text": "帖我验过。整装完，上桥。"
+        },
+        {
+          "id": "cs0403_vis_mv1",
+          "speaker": "旁白",
+          "text": "时漏里沙色偏深。深沙走得更慢。堂灯验。"
+        },
+        {
+          "id": "cs0403_vis_mv2",
+          "speaker": "岁吏",
+          "text": "慢正好。训堂不怕慢。"
+        },
+        {
+          "id": "cs0403_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "慢着看，折痕藏不住。碑空守。"
+        },
+        {
+          "id": "cs0403_vst1",
+          "speaker": "岁吏",
+          "text": "月份从契缝里挤进一丝。丝细，却把年月钉住。堂帖按。"
+        },
+        {
+          "id": "cs0403_vst2",
+          "speaker": "书记官",
+          "text": "契录旁沙漏，最怕风掀。廊风止。"
+        },
+        {
+          "id": "cs0403_vst3",
+          "speaker": "leader",
+          "text": "月份钉过。帖，我压。堂碑守。"
+        },
+        {
+          "id": "cs0403_vex1",
+          "speaker": "旁白",
+          "text": "训堂合页。堂面的批注，歇进夹层。"
+        },
+        {
+          "id": "cs0403_vex2",
+          "speaker": "岁吏",
+          "text": "契角按平。平了，出门不卷边。碑廊认。"
+        },
+        {
+          "id": "cs0403_vex3",
+          "speaker": "书记官",
+          "text": "墨瓶盖严。严处，廊风灌不进。训堂留。"
+        },
+        {
+          "id": "cs0403_vex4",
+          "speaker": "老管事",
+          "text": "阴签插回木槽。槽满，门槛才放行。帖边按。"
+        },
+        {
+          "id": "cs0403_vex5",
+          "speaker": "苇原·灯影",
+          "text": "灯芯拨短。短了，影不拖出门外。堂灯验。"
+        },
+        {
+          "id": "cs0403_vex6",
+          "speaker": "leader",
+          "text": "契收好。我离厅，字在袖去酒馆。碑空守。"
+        },
+        {
+          "id": "cs0403_vis_mv4",
+          "speaker": "leader",
+          "text": "慢看。去月份。堂帖按。"
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs04_03_bridge_0",
+          "speaker": "旁白",
+          "text": "门廊柱上钉着训堂，灯从纸背照来，刻出来的词是浮的，脚印是凹的。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_1",
+          "speaker": "岁吏",
+          "text": "碑廊这一栏不许刀去描。我只看你的步还是不是自己的。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_2",
+          "speaker": "leader",
+          "text": "步还在，再出锋。赢了也不把口号绣进还没走过的月。廊风止。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_3",
+          "speaker": "老旗手",
+          "text": "锋先别急。碑廊不是刀背能踩出来的路。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_4",
+          "speaker": "旁白",
+          "text": "家训的灯很小，只照到鞋底的泥，照不到对岸谁在敲锣。堂碑守。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_5",
+          "speaker": "书记官",
+          "text": "催训尽管喊。训堂这一本，线脚在纸背，撕开会抽丝。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_6",
+          "speaker": "苇原·灯影",
+          "text": "我守桥侧。不问胜负，问你还肯不肯回去对那一行脚。碑廊认。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_7",
+          "speaker": "老管事",
+          "text": "城门的锣归仪式。桥上该听见的是鞋底，不是训条。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_8",
+          "speaker": "leader",
+          "text": "碑廊写在训堂上。锣怎么敲，它都不改口。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_9",
+          "speaker": "岁吏",
+          "text": "锋放低了才许翻下一行。最好听的那句训，先别当碑廊。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_10",
+          "speaker": "旁白",
+          "text": "水声把锣切碎。碎掉的是催训，不是泥里那只还深的印。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_11",
+          "speaker": "老旗手",
+          "text": "脚上有伤也先去酒馆。选题谈的是走过没有，不是把伤说成仁。训堂留。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_12",
+          "speaker": "书记官",
+          "text": "先选题。假堂排在后头，后头的绣我拒收。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_13",
+          "speaker": "苇原·灯影",
+          "text": "牌扣在你手里。牌面还是训堂，没有换成锦旗上的词。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_14",
+          "speaker": "老管事",
+          "text": "催训的人针已经穿好了。你要等碑廊，就让针空着。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_15",
+          "speaker": "leader",
+          "text": "我等这一行脚印被看见。锣不必等我。帖边按。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_16",
+          "speaker": "旁白",
+          "text": "桥板颤了一下。训堂的灯没灭，浮词晃了，凹印没晃。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_17",
+          "speaker": "岁吏",
+          "text": "不拔也行，酒馆的门开着。碑廊不会因为你绕开刀就多出一步。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_18",
+          "speaker": "老旗手",
+          "text": "泥还在鞋上，人先去酒馆。别在桥上把没走完的步说成训已完成。堂灯验。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_bridge_y20",
+          "speaker": "旁白",
+          "text": "门廊石上脚步比训堂里的口号更清楚。"
+        },
+        {
+          "id": "cs04_03_bridge_y21",
+          "speaker": "石垒·晚担",
+          "text": "清楚的是鞋底。口号在风里，站不住。碑空守。"
+        },
+        {
+          "id": "cs04_03_bridge_y22",
+          "speaker": "leader",
+          "text": "鞋底算数。门廊不收口号。堂帖按。"
+        },
+        {
+          "id": "cs04_03_bridge_19",
+          "speaker": "岁吏",
+          "text": "催训可以喊。训堂这一本，喊不绣进去。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs0403_mid_mv1",
+          "speaker": "旁白",
+          "text": "训堂纸上有新折痕。折痕像被人当枕头枕过。"
+        },
+        {
+          "id": "cs0403_mid_mv2",
+          "speaker": "岁吏",
+          "text": "枕过的纸，边毛。边毛要验。廊风止。"
+        },
+        {
+          "id": "cs0403_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "边毛的人，碑廊里爱插队。"
+        },
+        {
+          "id": "cs0403_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "插队的，锋一横就老实。堂碑守。"
+        },
+        {
+          "id": "cs0403_mid_mv5",
+          "speaker": "老旗手",
+          "text": "老实不是吓出来的。是试出来的。碑廊认。"
+        },
+        {
+          "id": "cs0403_mid_mv6",
+          "speaker": "leader",
+          "text": "试。步实锋实。训堂留。"
+        },
+        {
+          "id": "cs0403_bpl1",
+          "speaker": "旁白",
+          "text": "训堂边角被折成一个小三角，三角里藏着半句没写完的「已行」。"
+        },
+        {
+          "id": "cs0403_bpl2",
+          "speaker": "岁吏",
+          "text": "「已行」两个字是后塞的。塞进去的，边不齐。帖边按。"
+        },
+        {
+          "id": "cs0403_bpl3",
+          "speaker": "石垒·晚担",
+          "text": "边不齐的人，最爱在别人的脚印上描。堂灯验。"
+        },
+        {
+          "id": "cs0403_bpl4",
+          "speaker": "苇原·灯影",
+          "text": "描上去的印，雨一来就漂。漂的别算碑廊。"
+        },
+        {
+          "id": "cs0403_bpl5",
+          "speaker": "老旗手",
+          "text": "真印凹着。凹着的，锋护着。碑空守。"
+        },
+        {
+          "id": "cs0403_bpl6",
+          "speaker": "leader",
+          "text": "三角我揭开。这一锋只认凹下去的步。堂帖按。"
+        },
+        {
+          "id": "cs0403_win1",
+          "speaker": "旁白",
+          "text": "锋再定。帖纸角压住，抢契那拨退到廊外。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0403_win2",
+          "speaker": "掌柜",
+          "text": "契要压。压住，才不像飞的。廊风止。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0403_win3",
+          "speaker": "槐里·青禾",
+          "text": "墨干了。干了，字才是自己的。堂碑守。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0403_win4",
+          "speaker": "leader",
+          "text": "锋护过帖。字，我签得。碑廊认。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0403_wex1",
+          "speaker": "旁白",
+          "when": {
+            "flag": "cs04_mid_fought"
+          },
+          "text": "帖纸角压住。压处，抢契那拨退到廊外。"
+        },
+        {
+          "id": "cs0403_wex2",
+          "speaker": "石垒·晚担",
+          "when": {
+            "flag": "cs04_mid_fought"
+          },
+          "text": "契要压。压住，才不像风里的叶子。训堂留。"
+        },
+        {
+          "id": "cs0403_wex3",
+          "speaker": "槐里·青禾",
+          "when": {
+            "flag": "cs04_mid_fought"
+          },
+          "text": "墨干了。干了，字才是自己的，不是借的。帖边按。"
+        },
+        {
+          "id": "cs0403_wex4",
+          "speaker": "苇原·灯影",
+          "when": {
+            "flag": "cs04_mid_fought"
+          },
+          "text": "印泥边我捺净。净了，签才不糊。堂灯验。"
+        },
+        {
+          "id": "cs0403_wex5",
+          "speaker": "老旗手",
+          "when": {
+            "flag": "cs04_mid_fought"
+          },
+          "text": "旗杆压纸角。一杆之力，胜过十句嚷。碑空守。"
+        },
+        {
+          "id": "cs0403_wex6",
+          "speaker": "leader",
+          "when": {
+            "flag": "cs04_mid_fought"
+          },
+          "text": "锋护过帖。字我签得，廊外不理。堂帖按。"
+        },
+        {
+          "speaker": "旁白",
+          "text": "锋收回来。训堂纸还钉着。碑廊旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs04_mid_lost"
+              },
+              {
+                "not_flag": "cs04_mid_fought"
+              }
+            ]
+          },
+          "id": "cs0403_br_lost"
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs04_mid_fought"
+              },
+              {
+                "not_flag": "cs04_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs04_mid_fought"
+              ],
+              "lose_flags": [
+                "cs04_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "训堂上的灯",
+                "outcome": "训堂旁试锋得手——锋镝压下，堂碑纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs04_mid_fought"
+              },
+              {
+                "flag": "cs04_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs04_mid_fought"
+              ],
+              "lose_flags": [
+                "cs04_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "训堂上的灯",
+                "outcome": "训堂旁试锋得手——锋镝压下，堂碑纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs04_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs04_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs04_03",
+              "choice": "mid_skirmish_skip",
+              "title": "训堂上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs04_mid_fought"
+                  },
+                  {
+                    "flag": "cs04_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs04_03",
+              "choice": "mid_skirmish_abort",
+              "title": "训堂上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs0403_arr1",
+          "speaker": "旁白",
+          "text": "帖纸边压在袖底。袖底不鼓，进店不惹眼。"
+        },
+        {
+          "id": "cs0403_arr2",
+          "speaker": "掌柜",
+          "text": "先喝半口温的。温了，手不抖着钉。廊风止。"
+        },
+        {
+          "id": "cs0403_arr3",
+          "speaker": "岁吏",
+          "text": "未尽碑行先别念出声。出声留给板。"
+        },
+        {
+          "id": "cs0403_arr4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓按在门外。门外催，店里不催。堂碑守。"
+        },
+        {
+          "id": "cs0403_arr5",
+          "speaker": "石垒·晚担",
+          "text": "泥印盒不打开。打开是谱里的事。碑廊认。"
+        },
+        {
+          "id": "cs0403_arr6",
+          "speaker": "leader",
+          "text": "我到店。帖在袖，再看挂板。"
+        },
+        {
+          "id": "cs04_03_tavern_0",
+          "speaker": "旁白",
+          "text": "酒馆。板上两道题。手按上去·家训。训堂留。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_1",
+          "speaker": "掌柜",
+          "text": "一道堂碑仍并。一道先催训条。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_2",
+          "speaker": "leader",
+          "text": "我看题。不看谁嗓门大·家训。帖边按。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_3",
+          "speaker": "老管事",
+          "text": "堂碑留真。催训快。快的未必真。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_4",
+          "speaker": "书记官",
+          "text": "碑廊进谱，才算整幅家训。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_5",
+          "speaker": "岁吏",
+          "text": "堂迹听选择。不听锣·家训。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_6",
+          "speaker": "旁白",
+          "text": "酒气里训更白。白得能看见行。堂灯验。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_7",
+          "speaker": "掌柜",
+          "text": "选完入柜。训堂柜门会响。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_8",
+          "speaker": "苇原·灯影",
+          "text": "巡防在门外。门内只选题·家训。碑空守。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_9",
+          "speaker": "leader",
+          "text": "堂碑仍并——我手按这道。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_10",
+          "speaker": "老管事",
+          "text": "按实了。别悬着·家训。堂帖按。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_11",
+          "speaker": "书记官",
+          "text": "假堂那道我划掉。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_12",
+          "speaker": "旁白",
+          "text": "板面一热。字进手心·家训。廊风止。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_13",
+          "speaker": "岁吏",
+          "text": "选择入账。训堂夜可结。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_14",
+          "speaker": "掌柜",
+          "text": "另一道也在。你不选它·家训。堂碑守。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_15",
+          "speaker": "老管事",
+          "text": "催训的锣远了。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_16",
+          "speaker": "旁白",
+          "text": "两道题还在板上。只一道进柜·家训。碑廊认。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_03_tavern_y17",
+          "speaker": "旁白",
+          "text": "酒旗后训堂墙皮又壳了一块，块下字还全。"
+        },
+        {
+          "id": "cs04_03_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "字全，壳掉也没关系。字缺了，酒也不配喝。训堂留。"
+        },
+        {
+          "id": "cs04_03_tavern_y19",
+          "speaker": "leader",
+          "text": "字全的训堂带回。缺的留下补走。"
+        },
+        {
+          "id": "cs04_03_tavern_17",
+          "speaker": "老管事",
+          "text": "选完入柜。训堂柜门会响·家训。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs0403_ret_mv1",
+          "speaker": "旁白",
+          "text": "训堂笑话停在半句。半句比整句危险。"
+        },
+        {
+          "id": "cs0403_ret_mv2",
+          "speaker": "掌柜",
+          "text": "半句补全再挂。帖边按。"
+        },
+        {
+          "id": "cs0403_ret_mv3",
+          "speaker": "岁吏",
+          "text": "挂完回。堂灯验。"
+        },
+        {
+          "id": "cs0403_brd1",
+          "speaker": "旁白",
+          "text": "帖纸在袖里温着。板钉一凉，温意就有了去处。"
+        },
+        {
+          "id": "cs0403_brd2",
+          "speaker": "掌柜",
+          "text": "堂迹要自己的字。借来的墨，钉子不认。"
+        },
+        {
+          "id": "cs0403_brd3",
+          "speaker": "听回",
+          "text": "盏沿墨点擦净再近。净了，契缝才清楚。碑空守。"
+        },
+        {
+          "id": "cs0403_brd4",
+          "speaker": "旁白",
+          "text": "风从后门进来，又被帘子挡回。板前只剩纸声。堂帖按。"
+        },
+        {
+          "id": "cs0403_brd5",
+          "speaker": "书记官",
+          "text": "契缝对训堂。抢契的风，掀不进钉孔。"
+        },
+        {
+          "id": "cs0403_brd6",
+          "speaker": "leader",
+          "text": "袖里契还温。我近板，把堂迹交给钉。"
+        },
+        {
+          "id": "cs0403_tvp1",
+          "speaker": "旁白",
+          "text": "训堂写在绢背，迎灯才见碑纹似的细字。"
+        },
+        {
+          "id": "cs0403_tvp2",
+          "speaker": "掌柜",
+          "text": "细字也要钉牢。钉不牢，绢一抖字就逃。廊风止。"
+        },
+        {
+          "id": "cs0403_tvp3",
+          "speaker": "苇原·灯影",
+          "text": "逃字的训，听着像劝别人。堂碑守。"
+        },
+        {
+          "id": "cs0403_tvp4",
+          "speaker": "石垒·晚担",
+          "text": "训条催得急，碑纹必乱。乱了明年拆。"
+        },
+        {
+          "id": "cs0403_tvp5",
+          "speaker": "老旗手",
+          "text": "旗边别刮绢。刮毛了，堂面更糊。碑廊认。"
+        },
+        {
+          "id": "cs0403_tvp6",
+          "speaker": "leader",
+          "text": "堂碑仍并。催训条的，先看自己碑纹。"
+        },
+        {
+          "id": "cs0403_aft1",
+          "speaker": "旁白",
+          "text": "堂迹交钉后，碑纹的影还留在板纹里。"
+        },
+        {
+          "id": "cs0403_aft2",
+          "speaker": "掌柜",
+          "text": "训条催不得。板后先看碑纹，再听人教你绣。"
+        },
+        {
+          "id": "cs0403_aft3",
+          "speaker": "老旗手",
+          "text": "护契那锋要稳。稳着配字，板后更要稳。训堂留。"
+        },
+        {
+          "id": "cs0403_aft4",
+          "speaker": "旁白",
+          "text": "线头在袖里动了一下。动过，又自己静下。帖边按。"
+        },
+        {
+          "id": "cs0403_aft5",
+          "speaker": "岁吏",
+          "text": "堂碑仍并。并着，就让堂迹多咬一息木。"
+        },
+        {
+          "id": "cs0403_aft6",
+          "speaker": "leader",
+          "text": "堂迹在钉。板后这一息，我验碑纹，不接催训。"
+        },
+        {
+          "id": "cs0403_tvn1",
+          "speaker": "掌柜",
+          "text": "护契那一锋，酒要稳——稳着配字。堂灯验。"
+        },
+        {
+          "id": "cs0403_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "廊外那拨退了。退了，墨才干得成。碑空守。"
+        },
+        {
+          "id": "cs0403_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在帖案旁立过。立过，字有根。"
+        },
+        {
+          "id": "cs0403_tvn4",
+          "speaker": "leader",
+          "text": "帖在。墨干。酒，稳着。"
+        },
+        {
+          "id": "cs0403_sth1",
+          "speaker": "旁白",
+          "text": "席末帖纸角压死。压死，墨味还在指缝里。"
+        },
+        {
+          "id": "cs0403_sth2",
+          "speaker": "掌柜",
+          "text": "墨干了别急掀。席末先让碑纹再验一眼。"
+        },
+        {
+          "id": "cs0403_sth3",
+          "speaker": "老旗手",
+          "text": "帖在墨干。干了，椅子再压一息堂迹。"
+        },
+        {
+          "id": "cs0403_sth4",
+          "speaker": "旁白",
+          "text": "催训声远了。远了，杯沿才肯离开唇。"
+        },
+        {
+          "id": "cs0403_sth5",
+          "speaker": "岁吏",
+          "text": "堂迹在钉。在钉，离席也别让风掀角。"
+        },
+        {
+          "id": "cs0403_sth6",
+          "speaker": "leader",
+          "text": "席末验碑纹。帖在，我先不起。"
+        },
+        {
+          "id": "cs0403_tvx1",
+          "speaker": "旁白",
+          "text": "帖纸角压死。压死，风掀不开袖。"
+        },
+        {
+          "id": "cs0403_tvx2",
+          "speaker": "掌柜",
+          "text": "未尽碑的墨盖严。盖严，夜不洇。"
+        },
+        {
+          "id": "cs0403_tvx3",
+          "speaker": "岁吏",
+          "text": "月份从帘缝里探头。探头，催人离座。堂帖按。"
+        },
+        {
+          "id": "cs0403_tvx4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓把店门敲薄。敲薄，人该让路。廊风止。"
+        },
+        {
+          "id": "cs0403_tvx5",
+          "speaker": "石垒·晚担",
+          "text": "泥印盒不打开。打开是回堡后的事。堂碑守。"
+        },
+        {
+          "id": "cs0403_tvx6",
+          "speaker": "leader",
+          "text": "契收好。我出店，字回堡。碑廊认。"
+        },
+        {
+          "id": "cs0403_rtn1",
+          "speaker": "旁白",
+          "text": "契角在袖里压平。压着走，折缝不重新翘。训堂留。"
+        },
+        {
+          "id": "cs0403_rtn2",
+          "speaker": "书记官",
+          "text": "签字的墨气还在。在袖里散尽，再碰西阁的案。帖边按。"
+        },
+        {
+          "id": "cs0403_rtn3",
+          "speaker": "石垒·晚担",
+          "text": "巷石干着。干着踩，契角才不沾潮。堂灯验。"
+        },
+        {
+          "id": "cs0403_rtn4",
+          "speaker": "旁白",
+          "text": "催契的话停在店里。店里的催，跟不出帘。碑空守。"
+        },
+        {
+          "id": "cs0403_rtn5",
+          "speaker": "老管事",
+          "text": "堡门认人。认人，不认袖里未干的慌。堂帖按。"
+        },
+        {
+          "id": "cs0403_rtn6",
+          "speaker": "leader",
+          "text": "帖在袖。我入堡，角交柜。"
+        },
+        {
+          "id": "cs0403_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡入训堂。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_hall",
+          "label": "堂碑仍并",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs04_hall_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs04_03",
+              "choice": "keep_hall",
+              "title": "训堂上的灯",
+              "outcome": "训堂回读后堂碑仍并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "push_hall",
+          "label": "先催训条",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs04_hall_push",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs04_03",
+              "choice": "push_hall",
+              "title": "训堂上的灯",
+              "outcome": "训堂回读后先催训条",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs0403_lop1",
+          "speaker": "旁白",
+          "text": "帖纸边压袖底。袖不鼓，进阁不惹眼。"
+        },
+        {
+          "id": "cs0403_lop2",
+          "speaker": "岁吏",
+          "text": "未尽碑先按住。按住，再开柜锁。"
+        },
+        {
+          "id": "cs0403_lop3",
+          "speaker": "苇原·灯影",
+          "text": "鼓声压在廊外。廊外催，阁里不催。廊风止。"
+        },
+        {
+          "id": "cs0403_lop4",
+          "speaker": "老旗手",
+          "text": "旗靠廊柱。靠稳，再听锁一响。堂碑守。"
+        },
+        {
+          "id": "cs0403_lop5",
+          "speaker": "听回",
+          "text": "盏沿墨点擦净。净了，好对栏。碑廊认。"
+        },
+        {
+          "id": "cs0403_lop6",
+          "speaker": "leader",
+          "text": "我到柜前。帖在袖，再看堂迹。"
+        },
+        {
+          "id": "cs04_03_ledger_0",
+          "speaker": "旁白",
+          "text": "入册。训堂与家训堂碑进柜。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_1",
+          "speaker": "书记官",
+          "text": "碑廊有灯。灯不灭。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_2",
+          "speaker": "leader",
+          "text": "我看见空了。空也在谱里·家训。训堂留。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_3",
+          "speaker": "岁吏",
+          "text": "堂迹末行写：训堂堂碑留。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_4",
+          "speaker": "老管事",
+          "text": "催训锣再响，也撕不开柜门。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_5",
+          "speaker": "旁白",
+          "text": "柜门一合。灯还在缝里·家训。帖边按。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防收牌。牌上训堂两字还热。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_7",
+          "speaker": "书记官",
+          "text": "整幅家训，才算训。堂灯验。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_8",
+          "speaker": "leader",
+          "text": "假堂没进来。好。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_9",
+          "speaker": "岁吏",
+          "text": "月结旁多一笔碑廊。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_10",
+          "speaker": "老管事",
+          "text": "催条叠在门外。谱在门内·家训。碑空守。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_11",
+          "speaker": "旁白",
+          "text": "绣线干。碑廊的边也干了。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_12",
+          "speaker": "书记官",
+          "text": "下次打开，碑廊还在——带着灯。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_13",
+          "speaker": "leader",
+          "text": "够了。去灰旗堡·家训。堂帖按。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_14",
+          "speaker": "苇原·灯影",
+          "text": "堡门亮着。训堂灯跟着。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_15",
+          "speaker": "岁吏",
+          "text": "堂迹合上。字还在·家训。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_16",
+          "speaker": "老管事",
+          "text": "训堂可歇。谱不可假。廊风止。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_17",
+          "speaker": "旁白",
+          "text": "风停。训平。堂碑守。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_18",
+          "speaker": "书记官",
+          "text": "堂碑不是拖。是完整·家训。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_03_ledger_y19",
+          "speaker": "旁白",
+          "text": "帖案底下的脚步，比门外的训条近。"
+        },
+        {
+          "id": "cs04_03_ledger_y20",
+          "speaker": "石垒·晚担",
+          "text": "纸上那一声轻响是笔尖，不是门外的口号。碑廊认。"
+        },
+        {
+          "id": "cs04_03_ledger_y21",
+          "speaker": "leader",
+          "text": "碑廊我按今天的鞋印填。刻好的词，填不进这一格。"
+        },
+        {
+          "id": "cs0403_ldg1",
+          "speaker": "岁吏",
+          "text": "契缝与训堂堂碑，墨干才算自己的字。"
+        },
+        {
+          "id": "cs0403_ldg2",
+          "speaker": "书记官",
+          "text": "抢契的风，掀不进录。训堂留。"
+        },
+        {
+          "id": "cs0403_ldg3",
+          "speaker": "老旗手",
+          "text": "旗在帖案立过——字有根。"
+        },
+        {
+          "id": "cs0403_ldg4",
+          "speaker": "leader",
+          "text": "契压住。灯不灭，训堂在柜。"
+        },
+        {
+          "id": "cs0403_ldg_end",
+          "speaker": "leader",
+          "text": "契角压平处，灰旗堡训堂柜等签字。"
+        },
+        {
+          "id": "cs0403_ink1",
+          "speaker": "旁白",
+          "text": "契角签字的墨边先收。收完，角才压得下去，不粘对面。帖边按。"
+        },
+        {
+          "id": "cs0403_ink2",
+          "speaker": "岁吏",
+          "text": "再往下是下月岁课。今晚签字停在该停的栏，等干。堂灯验。"
+        },
+        {
+          "id": "cs0403_ink3",
+          "speaker": "书记官",
+          "text": "契角我按住。风一来，潮墨最爱往折缝里躲。碑空守。"
+        },
+        {
+          "id": "cs0403_ink4",
+          "speaker": "旁白",
+          "text": "西阁的砂钟停过一声。停过，墨像听见了，才肯干。堂帖按。"
+        },
+        {
+          "id": "cs0403_ink5",
+          "speaker": "岁吏",
+          "text": "干了才压角。压早了，字花，契就不算签完。廊风止。"
+        },
+        {
+          "id": "cs0403_ink6",
+          "speaker": "leader",
+          "text": "墨干了。契角压平，人走，不用守着看。堂碑守。"
+        },
+        {
+          "id": "cs0403_cls1",
+          "speaker": "旁白",
+          "text": "契上的墨干了。干了的字，才跟着人离开门廊。碑廊认。"
+        },
+        {
+          "id": "cs0403_cls2",
+          "speaker": "老旗手",
+          "text": "旗在帖案旁立过，现在收回来。穗上没有墨。"
+        },
+        {
+          "id": "cs0403_cls3",
+          "speaker": "石垒·晚担",
+          "text": "从门廊走回柜前，鞋印比口号深。训堂留。"
+        },
+        {
+          "id": "cs0403_cls4",
+          "speaker": "槐里·青禾",
+          "text": "训堂的碑空留着。走出来的步填进碑廊，训条靠后。"
+        },
+        {
+          "id": "cs0403_cls5",
+          "speaker": "老管事",
+          "text": "契角压平不是藏。是怕风再把今天的字掀开。帖边按。"
+        },
+        {
+          "id": "cs0403_cls6",
+          "speaker": "岁吏",
+          "text": "签字停在该停的栏。再往下是下个月的岁课，不是今晚。堂灯验。"
+        },
+        {
+          "id": "cs0403_cls7",
+          "speaker": "苇原·灯影",
+          "text": "灯贴着训堂的薄页。薄页亮着，厚话就进不来。"
+        },
+        {
+          "id": "cs0403_cls8",
+          "speaker": "leader",
+          "text": "契角压平，人就走。墨干了，不用守着看。碑空守。"
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "title_en": "Lamp in the Doctrine Hall"
+}

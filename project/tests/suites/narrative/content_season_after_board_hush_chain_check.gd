@@ -16,6 +16,8 @@ const ROWS := [
 	{"cid": "cs03_03", "beat": "tavern", "needle": "工面留着。板后这一息，我守空格，不接催工。"},
 	{"cid": "cs04_01", "beat": "tavern", "needle": "训行钉齐。板后我踏实靴，先不接空庙话。"},
 	{"cid": "cs04_02", "beat": "tavern", "needle": "年迹在钉。板后这一息，我验针脚，不接催绣。"},
+	{"cid": "cs04_03", "beat": "tavern", "needle": "堂迹在钉。板后这一息，我验碑纹，不接催训。"},
+
 	{"cid": "cs05_01", "beat": "tavern", "needle": "空椅过了。板后我认格，先不抢名。"},
 	{"cid": "cs05_02", "beat": "tavern", "needle": "回读贴平。板后这一息，我守链，不接催坐。"},
 	{"cid": "cs06_01", "beat": "tavern", "needle": "胜名在钉。板后我拍净袖土，先不接哄声。"},
