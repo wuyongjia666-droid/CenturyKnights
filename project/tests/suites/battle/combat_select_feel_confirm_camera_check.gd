@@ -75,8 +75,12 @@ func _algebra_wiring_controller() -> String:
 			return str(need[needle])
 	if touch.find("BattleConfirmAffordance.settle_camera") < 0:
 		return "touch confirm missing post-confirm settle"
-	if touch.find("BattleLandStrike.after_land") < 0:
+	# 战棋手感整块: land peek owned by FeelLoop.after_move
+	var feel := FileAccess.get_file_as_string("res://scripts/battle/battle_feel_loop.gd")
+	if touch.find("BattleFeelLoop.after_move") < 0:
 		return "touch confirm missing land-strike after_land"
+	if feel.find("BattleLandStrike.after_land") < 0:
+		return "FeelLoop missing land-strike after_land"
 	if bar.find("BattleAttackCancelDepth.step") < 0:
 		return "mobile bar cancel not depth-aware"
 	if pick.find("func resolve_board_tap") < 0:
