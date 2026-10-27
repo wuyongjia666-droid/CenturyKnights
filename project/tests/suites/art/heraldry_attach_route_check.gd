@@ -202,7 +202,8 @@ func _place_major_strips(leader) -> void:
 	_ok(bn != null and str(bn.get_meta("field_route", "")) == "castle_view_banner", "place castle_view_banner")
 	var hang := CKHeraldryField.place_castle_hang_banner(root, Vector2(280, 8))
 	_ok(hang != null and str(hang.get_meta("field_route", "")) == "castle_view_hang", "place castle_view_hang")
-	_ok(hang.find_child("HangCloth", true, false) != null and str(hang.find_child("HangCloth", true, false).get_meta("field_route", "")) == "castle_view_hang_cloth", "place castle_view_hang_cloth")
+	var hang_cloth := hang.find_child("HangCloth", true, false)
+	_ok(hang_cloth != null and str(hang_cloth.get_meta("field_route", "")) == "castle_view_hang_cloth", "place castle_view_hang_cloth")
 
 	var pan := CKHeraldryField.place_panorama_lineage_strip(root, [leader], Vector2(320, 8))
 	_ok(pan != null and str(pan.get_meta("field_route", "")) == "panorama_lineage", "place panorama_lineage")
