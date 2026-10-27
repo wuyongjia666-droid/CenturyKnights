@@ -216,10 +216,13 @@ func _render_mid() -> void:
 	hb.add_child(_delta("基础物攻 ATK", atk0, atk1))
 	hb.add_child(_delta("命中 HIT", _sel.derived_hit(), _sel.derived_hit()))
 	hb.add_child(_delta("暴击 CRIT", _sel.derived_crit(), _sel.derived_crit()))
-	# success / material check
-	var cost: Dictionary = GameState.forge_craft_cost()
-	var ok_iron := GameState.iron >= int(cost.iron)
-	var ok_silver := GameState.silver >= int(cost.silver)
+	# success / material check — craft_weapon_preview drives cost/short/same gates
+	var prev: Dictionary = GameState.craft_weapon_preview(_sel.id)
+	same = bool(prev.get("same", false))
+	var cost_iron := int(prev.get("cost_iron", 0))
+	var cost_silver := int(prev.get("cost_silver", 0))
+	var ok_iron := GameState.iron >= cost_iron
+	var ok_silver := GameState.silver >= cost_silver
 	var sh := HBoxContainer.new()
 	sh.position = Vector2(414, 374)
 	sh.add_theme_constant_override("separation", 10)
@@ -229,8 +232,8 @@ func _render_mid() -> void:
 	var bar := UIKit.slim_bar(100, 100, UIKit.ACCENT, 452, 3)
 	bar.position = Vector2(414, 402)
 	_mid.add_child(bar)
-	_mat(Rect2(414, 418, 220, 56), "铁 IRON", "需求 %d / 持有 %d" % [cost.iron, GameState.iron], ok_iron)
-	_mat(Rect2(646, 418, 220, 56), "银币 SILVER", "需求 %d / 持有 %d" % [cost.silver, GameState.silver], ok_silver)
+	_mat(Rect2(414, 418, 220, 56), "铁 IRON", "需求 %d / 持有 %d" % [cost_iron, GameState.iron], ok_iron)
+	_mat(Rect2(646, 418, 220, 56), "银币 SILVER", "需求 %d / 持有 %d" % [cost_silver, GameState.silver], ok_silver)
 	var hint := UIKit.body_label("工坊 Lv4 起打造「灰刃·精」(+3)。三柄精刃满匣可达成堡志。" if GameState.building_level("forge") < 4 else "工坊已达 Lv4：打造「灰刃·精」(+3)。三柄精刃满匣可达成堡志。", UIKit.TEXT_DIM, 12)
 	hint.position = Vector2(414, 490)
 	hint.size = Vector2(452, 40)
@@ -253,7 +256,7 @@ func _render_mid() -> void:
 	var go := UIKit.cta_button("确认打造", "A", 220, 44)
 	go.name = "ForgeCraft"
 	go.position = Vector2(646, 620)
-	go.disabled = not (ok_iron and ok_silver) or same
+	go.disabled = not bool(prev.get("craftable", false))
 	go.tooltip_text = "已装备同阶武器" if same else ("材料不足" if go.disabled else "为 %s 打造 %s" % [_sel.name, _weapon_name(nxt)])
 	var cid := _sel.id
 	go.pressed.connect(func():
@@ -384,6 +387,7 @@ func _render_right() -> void:
 	var foot := UIKit.mono("工坊等级 LV %d · 上限随议事厅" % GameState.building_level("forge"), 9, UIKit.TEXT_FAINT, false)
 	foot.position = Vector2(912, 644)
 	_right.add_child(foot)
+	_forge_echo_strip(_right, Vector2(912, 662), 328)
 
 
 ## ── Phone landscape: knights (left) · reforge preview + craft (centre) · depot + heirloom (right) ──
@@ -479,12 +483,15 @@ func _m_render_all() -> void:
 		tv.add_child(MobilePage.label(str(spec[0]), UIKit.TEXT_FAINT, MobilePage.FONT, false))
 		tv.add_child(MobilePage.label("%s  %s" % [spec[1], spec[2]], col, 30, false))
 		tv.add_child(MobilePage.label(str(spec[3]), UIKit.TEXT_DIM, MobilePage.FONT, false))
-	var cost: Dictionary = GameState.forge_craft_cost()
-	var ok_iron := GameState.iron >= int(cost.iron)
-	var ok_silver := GameState.silver >= int(cost.silver)
+	var prev: Dictionary = GameState.craft_weapon_preview(_sel.id)
+	same = bool(prev.get("same", false))
+	var cost_iron := int(prev.get("cost_iron", 0))
+	var cost_silver := int(prev.get("cost_silver", 0))
+	var ok_iron := GameState.iron >= cost_iron
+	var ok_silver := GameState.silver >= cost_silver
 	mv.add_child(MobilePage.label(Locale.t("mw_382b1167") % [atk0, atk1, _sel.derived_hit(), _sel.derived_crit()], UIKit.OK if atk1 > atk0 else UIKit.TEXT_DIM,
 			MobilePage.FONT, true))
-	mv.add_child(MobilePage.label(Locale.t("mw_e0de40ca") % [cost.iron, GameState.iron, "✓" if ok_iron else "!", cost.silver, GameState.silver,
+	mv.add_child(MobilePage.label(Locale.t("mw_e0de40ca") % [cost_iron, GameState.iron, "✓" if ok_iron else "!", cost_silver, GameState.silver,
 			"✓" if ok_silver else "!"], UIKit.TEXT if ok_iron and ok_silver else UIKit.DANGER, MobilePage.FONT, true))
 	mv.add_child(MobilePage.label(Locale.t("mw_0ddf557e") if flv < 4 else Locale.t("mw_2f47eea1"), UIKit.TEXT_FAINT, MobilePage.FONT, true))
 	_msg = MobilePage.label("", UIKit.OK, MobilePage.FONT, true)
@@ -507,10 +514,11 @@ func _m_render_all() -> void:
 		_msg.text = m
 		_msg.add_theme_color_override("font_color", UIKit.OK if bool(r.get("ok")) else UIKit.DANGER))
 	go.name = "ForgeCraft"
-	go.disabled = not (ok_iron and ok_silver) or same
+	go.disabled = not bool(prev.get("craftable", false))
 	row.add_child(go)
 	if not go.disabled:
 		go.call_deferred("grab_focus")
+	_forge_echo_strip(mv, Vector2.ZERO, 0.0)
 	_m_right(rw, w, top, bh)
 
 func _m_right(rw: float, w: float, top: float, bh: float) -> void:
@@ -543,3 +551,28 @@ func _m_right(rw: float, w: float, top: float, bh: float) -> void:
 		var r: Dictionary = CKHeirloom.store(GameState, _sel.id)
 		_m_render_all()
 		_msg.text = str(r.get("msg", ""))))
+
+func _forge_echo_strip(parent: Node, pos: Vector2, width: float) -> void:
+	## Shop fat: forge page month echo for craft loop E2E (EchoLine_forge).
+	var rows := CKEconomyState.month_echo_lines()
+	var forge_rows: Array = []
+	for row in rows:
+		if str(row.get("kind", "")) == "forge":
+			forge_rows.append(row)
+	if forge_rows.is_empty():
+		return
+	var stacked := parent is BoxContainer or parent is ScrollContainer
+	var y := pos.y
+	var head := UIKit.mono(Locale.t("forge_echo_head"), 9, UIKit.ACCENT, false)
+	if not stacked:
+		head.position = pos
+	parent.add_child(head)
+	y += 16.0
+	for row in forge_rows:
+		var line := UIKit.body_label(str(row.get("text", "")), UIKit.OK, 12)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		if not stacked:
+			line.position = Vector2(pos.x, y)
+			line.size = Vector2(width, 20)
+		parent.add_child(line)
+		y += 18.0
