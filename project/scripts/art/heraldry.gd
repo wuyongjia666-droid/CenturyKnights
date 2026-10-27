@@ -328,6 +328,66 @@ static func randomize_for_nation(nid: String, rng: RandomNumberGenerator = null)
 	base["emblem_color"] = ct
 	return normalize(base)
 
+## Map a nation-table charge id onto a company DIY emblem slot (BannerSpec.EMBLEMS).
+static func company_emblem_id(raw: String) -> String:
+	var id := str(raw).strip_edges()
+	if id in ["ring", "arc", "wave", "leaf", "chevron", "spark", "filament", "tide", "notch", "bars", "bend", "hollow"]:
+		return id
+	const MAP := {
+		"ash_plume": "bars", "plume": "bars", "tower": "bars", "bridge": "bend",
+		"shadow_arc": "arc", "crescent": "arc", "jade_wave": "wave", "reed": "wave",
+		"glass_lantern": "filament", "lantern": "filament", "ice_crown": "ring", "annulet": "ring",
+		"ember_notch": "notch", "anvil": "notch", "salt_crystal": "spark", "mullet": "spark",
+		"flake": "spark", "constellation": "spark", "starbridge": "spark",
+		"iron_chevron": "chevron", "chevron_mark": "chevron", "fog_leaf": "leaf",
+		"zephyr": "leaf", "lozenge": "leaf", "bend_mark": "bend", "tide": "tide",
+	}
+	return str(MAP.get(id, "ring"))
+
+
+## Company 团徽 preset: ash cloth (B-09) + nation division/ordinary/emblem + heart tincture.
+## heart_hex empty → nation ordinary_tincture (or argent).
+static func company_preset_from_nation(nid: String, heart_hex: String = "") -> Dictionary:
+	var base := from_nation(nid)
+	var field := tincture_hex("ash")
+	var pair := tincture_hex("ash_deep")
+	var heart := str(heart_hex).strip_edges()
+	if heart == "":
+		heart = str(base.get("ordinary_tincture", ""))
+	if heart == "":
+		heart = tincture_hex("argent")
+	if not heart.begins_with("#") and heart != "":
+		heart = "#" + heart
+	var raw_eid := "ring"
+	var chs: Array = base.get("charges", [])
+	if not chs.is_empty() and typeof(chs[0]) == TYPE_DICTIONARY:
+		raw_eid = str((chs[0] as Dictionary).get("id", "ring"))
+	elif str(base.get("emblem", "")) != "":
+		raw_eid = str(base.get("emblem", "ring"))
+	var eid := company_emblem_id(raw_eid)
+	var ordinary := str(base.get("ordinary", "none"))
+	var division := str(base.get("division", "solid"))
+	return normalize({
+		"schema": SCHEMA,
+		"nation": nid,
+		"shield_shape": str(base.get("shield_shape", "heater")),
+		"division": division,
+		"field": division if division in ["solid", "per_fess", "per_pale"] else "solid",
+		"field_a": field,
+		"field_b": pair,
+		"partition_line": str(base.get("partition_line", "straight")),
+		"ordinary": ordinary,
+		"ordinary_tincture": heart,
+		"charge": ordinary if ordinary in ["none", "fess", "pale", "bend", "chevron", "pale_thin"] else "none",
+		"charge_color": heart,
+		"charges": [{"id": eid, "tincture": heart, "placement": "center"}],
+		"emblem": eid,
+		"emblem_color": heart,
+		"border": str(base.get("border", "line")),
+		"border_color": str(base.get("border_color", tincture_hex("bleu_celeste"))),
+	})
+
+
 static func apply_rank(spec: Dictionary, rank: String) -> Dictionary:
 	var s := normalize(spec)
 	var ach: Dictionary = (s.get("achievement", {}) as Dictionary).duplicate(true)
