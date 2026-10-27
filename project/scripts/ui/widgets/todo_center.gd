@@ -24,6 +24,7 @@ const LINKS := {
 	"injured": "res://scenes/hub/roster.tscn",
 	"sui_ke": "res://scenes/hub/sui_yearcard.tscn",
 	"territory_threat": "res://scenes/hub/atlas_view.tscn",
+	"stockade_credit": "res://scenes/hub/territory_ledger.tscn",
 }
 
 
@@ -70,6 +71,9 @@ static func snapshot() -> Array:
 		var row := _row("territory_threat", "military", Locale.t("ux_todo_territory_threat"), threat_n)
 		row["severity"] = "block"
 		rows.append(row)
+	var credit_n := CKTerritory.stockade_credit_count()
+	if credit_n > 0:
+		rows.append(_row("stockade_credit", "military", Locale.t("ux_todo_stockade_credit"), credit_n))
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)

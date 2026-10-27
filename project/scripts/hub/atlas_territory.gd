@@ -249,7 +249,7 @@ static func _echo_strip(parent: Node, pos: Vector2, width: float) -> void:
 	var rows := CKEconomyState.month_echo_lines()
 	var terr_rows: Array = []
 	var kinds := {
-		"garrison": true, "stockade": true, "sister": true, "muster": true, "convoy": true,
+		"garrison": true, "stockade": true, "stockade_credit": true, "sister": true, "muster": true, "convoy": true,
 		"contest": true, "reclaim": true, "defend": true, "assault": true, "chain": true,
 		"bribe": true, "scout": true, "threat_held": true, "threat_lost": true,
 	}
