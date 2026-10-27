@@ -61,6 +61,8 @@ func _assert_strip(page: Node, where: String, cid: String) -> void:
 	var nid := World.nation_of(cid)
 	_ok(cn != null and str(cn.get_meta("nation_id", "")) == nid, "%s nation_id" % where)
 	_ok(cn != null and str(cn.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s 邦徽!=团徽" % where)
+	var cbn := strip.find_child("CityBanner", true, false)
+	_ok(cbn != null and str(cbn.get_meta("field_route", "")) == "city_banner", "%s city_banner" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")

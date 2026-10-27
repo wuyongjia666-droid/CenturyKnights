@@ -73,6 +73,8 @@ func _assert_page(page: Node, where: String) -> void:
 		if gnat != null:
 			_ok(str(gnat.get_meta("field_route", "")) == "gazette_nation", "%s gazette_nation" % where)
 		_ok(str(gaz.get_meta("nation_id", "")) != "", "%s strip nation_id" % where)
+		var gbn := gaz.find_child("GazetteBanner", true, false)
+		_ok(gbn != null and str(gbn.get_meta("field_route", "")) == "gazette_banner", "%s gazette_banner" % where)
 	var src := FileAccess.get_file_as_string("res://scripts/hub/court_news.gd")
 	_ok(src.find("CKHeraldryField.place_gazette_crest_strip") >= 0, "%s hub calls Field strip" % where)
 	_ok(src.find("CKHeraldryField.attach_news_row_arms") >= 0, "%s hub calls Field row" % where)
