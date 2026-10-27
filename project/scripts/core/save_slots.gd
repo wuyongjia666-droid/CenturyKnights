@@ -78,7 +78,8 @@ func _row(slot: String) -> HBoxContainer:
 	label.custom_minimum_size = Vector2(420, 48)
 	row.add_child(label)
 	var meta := CKSaveService.read_meta(slot)
-	CKHeraldryField.attach_save_row_arms(row, Vector2(36, 44), str(meta.get("crest_color", "")))
+	var bspec: Dictionary = meta.get("banner_spec", {}) if typeof(meta.get("banner_spec", {})) == TYPE_DICTIONARY else {}
+	CKHeraldryField.attach_save_row_arms(row, Vector2(36, 44), str(meta.get("crest_color", "")), bspec)
 	var load := UIKit.make_button(Locale.t("menu_load"))
 	load.name = "Load_%s" % slot
 	load.custom_minimum_size = Vector2(160, maxi(44, int(DeviceProfile.hit_px())))
@@ -142,7 +143,8 @@ func _card(slot: String) -> PanelContainer:
 	load.disabled = not has
 	row.add_child(load)
 	var meta := CKSaveService.read_meta(slot)
-	CKHeraldryField.attach_save_row_arms(card, Vector2(40, 48), str(meta.get("crest_color", "")))
+	var bspec: Dictionary = meta.get("banner_spec", {}) if typeof(meta.get("banner_spec", {})) == TYPE_DICTIONARY else {}
+	CKHeraldryField.attach_save_row_arms(card, Vector2(40, 48), str(meta.get("crest_color", "")), bspec)
 	return card
 
 

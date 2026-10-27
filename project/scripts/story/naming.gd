@@ -317,7 +317,14 @@ func _build() -> void:
 	_border_label = _layer_row(box, Locale.t("ux_name_border"), func(d): _shift_enum("border", d))
 	_emblem_label = _layer_row(box, Locale.t("ux_name_emblem"), func(d): _shift_enum("emblem", d))
 
+	_build_nation_preset_strip(box)
+	var preset_btn = UIKit.make_button(Locale.t("ux_name_nation_preset_btn"), 280)
+	preset_btn.name = "NationPresetBtn"
+	preset_btn.custom_minimum_size = Vector2(240, 48)
+	preset_btn.pressed.connect(func(): _on_apply_nation_preset(""))
+	box.add_child(preset_btn)
 	var rand_btn = UIKit.make_button(Locale.t("ux_name_nation_rand_btn"), 280)
+	rand_btn.name = "NationRandBtn"
 	rand_btn.custom_minimum_size = Vector2(240, 48)
 	rand_btn.pressed.connect(_on_randomize_nation)
 	box.add_child(rand_btn)
@@ -398,31 +405,79 @@ func _shift_enum(which: String, d: int) -> void:
 			_nation_idx = (_nation_idx + d + _nations.size()) % maxi(1, _nations.size())
 	_refresh_preview_art()
 
+func _build_nation_preset_strip(box: VBoxContainer) -> void:
+	## Ten nation chips: tap one to apply that nation's recommended company banner.
+	box.add_child(UIKit.make_label(Locale.t("ux_name_nation_preset_strip")))
+	var strip := HBoxContainer.new()
+	strip.name = "NationPresetStrip"
+	strip.add_theme_constant_override("separation", 6)
+	box.add_child(strip)
+	for nid in _nations:
+		var mark: Dictionary = CKCourtChrome.NATION_MARK.get(str(nid), {"letters": str(nid).substr(0, 2).to_upper(), "ink": "#6ED4FF"})
+		var btn := Button.new()
+		btn.name = "NationPreset_%s" % str(nid)
+		btn.text = str(mark.get("letters", str(nid).substr(0, 2).to_upper()))
+		btn.custom_minimum_size = Vector2(52, 44)
+		btn.focus_mode = Control.FOCUS_ALL
+		var st := CKHeraldry.nation_style(str(nid))
+		btn.tooltip_text = Locale.t("ux_nation_preset_tip", [str(st.get("zh", nid))])
+		var ink := Color(str(mark.get("ink", "#6ED4FF")))
+		btn.add_theme_color_override("font_color", ink)
+		btn.add_theme_color_override("font_hover_color", ink.lightened(0.15))
+		var captured := str(nid)
+		btn.pressed.connect(func(): _on_apply_nation_preset(captured))
+		strip.add_child(btn)
+
+
+func _on_apply_nation_preset(nid: String = "") -> void:
+	## Deterministic nation recommended suit (ash cloth + nation heart/emblem/ordinary).
+	var id := nid.strip_edges()
+	if id == "":
+		id = str(_nations[_nation_idx]) if _nations.size() > 0 else "ashbanner"
+	var nix := _nations.find(id)
+	if nix >= 0:
+		_nation_idx = nix
+	var mark: Dictionary = CKCourtChrome.NATION_MARK.get(id, {})
+	var ink := str(mark.get("ink", "")).strip_edges()
+	var preset := CKHeraldry.company_preset_from_nation(id, ink)
+	_load_from_banner_spec(preset)
+	# Keep nation index even if banner_spec.nation was remapped.
+	if nix >= 0:
+		_nation_idx = nix
+	if _preview:
+		_preview.color = Color(str(_colors[_color_idx]))
+	if _color_name_label:
+		_color_name_label.text = str(_color_names[_color_idx])
+	_refresh_preview_art()
+
+
 func _on_randomize_nation() -> void:
 	var nid := str(_nations[_nation_idx])
-	var spec := CKHeraldry.randomize_for_nation(nid, GameState.rng if GameState.get("rng") else null)
-	# Sync UI indices from randomized spec.
-	var div := str(spec.get("division", "solid"))
-	_field_idx = maxi(0, _divisions.find(div))
-	var part := str(spec.get("partition_line", "straight"))
-	_partition_idx = maxi(0, _partitions.find(part))
-	var ord := str(spec.get("ordinary", "none"))
-	_charge_idx = maxi(0, _ordinaries.find(ord))
-	var fa := str(spec.get("field_a", "")).to_lower()
-	for i in _colors.size():
-		if str(_colors[i]).to_lower() == fa:
-			_color_idx = i
-			break
-	var chs: Array = spec.get("charges", [])
+	var raw := CKHeraldry.randomize_for_nation(nid, GameState.rng if GameState.get("rng") else null)
+	# Remap onto company ash cloth so preview/_current_spec stay honest (B-09).
+	var mark: Dictionary = CKCourtChrome.NATION_MARK.get(nid, {})
+	var ink := str(mark.get("ink", "")).strip_edges()
+	var heart := ink if ink != "" else str(raw.get("ordinary_tincture", ""))
+	var eid := CKHeraldry.company_emblem_id(str(raw.get("emblem", "ring")))
+	var chs: Array = raw.get("charges", [])
 	if not chs.is_empty() and typeof(chs[0]) == TYPE_DICTIONARY:
-		var eid := str((chs[0] as Dictionary).get("id", "ring"))
-		var ix := BannerSpec.EMBLEMS.find(eid)
-		if ix < 0:
-			# Map nation charge to closest emblem slot.
-			ix = BannerSpec.EMBLEMS.find("ring")
-		_emblem_idx = maxi(0, ix)
-	_preview.color = Color(str(_colors[_color_idx]))
-	_color_name_label.text = str(_color_names[_color_idx])
+		eid = CKHeraldry.company_emblem_id(str((chs[0] as Dictionary).get("id", eid)))
+	var preset := CKHeraldry.company_preset_from_nation(nid, heart)
+	# Keep the randomized division/ordinary/partition/emblem (not the deterministic defaults).
+	preset["division"] = str(raw.get("division", preset.get("division", "solid")))
+	preset["field"] = preset["division"] if str(preset["division"]) in ["solid", "per_fess", "per_pale"] else "solid"
+	preset["partition_line"] = str(raw.get("partition_line", "straight"))
+	preset["ordinary"] = str(raw.get("ordinary", "none"))
+	preset["charge"] = preset["ordinary"] if str(preset["ordinary"]) in ["none", "fess", "pale", "bend", "chevron", "pale_thin"] else "none"
+	preset["emblem"] = eid
+	preset["charges"] = [{"id": eid, "tincture": str(preset.get("ordinary_tincture", heart)), "placement": "center"}]
+	preset["emblem_color"] = str(preset.get("ordinary_tincture", heart))
+	preset = BannerSpec.normalize(preset)
+	_load_from_banner_spec(preset)
+	if _preview:
+		_preview.color = Color(str(_colors[_color_idx]))
+	if _color_name_label:
+		_color_name_label.text = str(_color_names[_color_idx])
 	_refresh_preview_art()
 
 func _sync_layer_labels() -> void:
@@ -583,6 +638,28 @@ func _apply_reedit_mode() -> void:
 		_warn.add_theme_color_override("font_color", UIKit.ACCENT)
 
 
+func _nearest_color_idx(hex: String) -> int:
+	var want := hex.strip_edges().to_lower()
+	if want == "":
+		return _color_idx
+	if not want.begins_with("#"):
+		want = "#" + want
+	for i in _colors.size():
+		var c := str(_colors[i]).to_lower()
+		if c == want or c.trim_prefix("#") == want.trim_prefix("#"):
+			return i
+	var target := Color(want)
+	var best := _color_idx
+	var best_d := 999.0
+	for i in _colors.size():
+		var c := Color(str(_colors[i]))
+		var d := absf(c.r - target.r) + absf(c.g - target.g) + absf(c.b - target.b)
+		if d < best_d:
+			best_d = d
+			best = i
+	return best
+
+
 func _load_from_banner_spec(spec: Dictionary) -> void:
 	if spec.is_empty():
 		return
@@ -592,16 +669,10 @@ func _load_from_banner_spec(spec: Dictionary) -> void:
 	_partition_idx = maxi(0, _partitions.find(part))
 	var ord := str(spec.get("ordinary", spec.get("charge", "none")))
 	_charge_idx = maxi(0, _ordinaries.find(ord))
-	var heart := str(spec.get("charge_color", spec.get("ordinary_tincture", spec.get("emblem_color", "")))).to_lower()
-	if heart == "":
-		heart = str(spec.get("field_a", "")).to_lower()
-	for i in _colors.size():
-		if str(_colors[i]).to_lower() == heart or str(_colors[i]).to_lower() == heart.trim_prefix("#"):
-			_color_idx = i
-			break
-		if ("#" + str(_colors[i]).trim_prefix("#").to_lower()) == (heart if heart.begins_with("#") else "#" + heart):
-			_color_idx = i
-			break
+	var heart := str(spec.get("charge_color", spec.get("ordinary_tincture", spec.get("emblem_color", ""))))
+	if heart.strip_edges() == "":
+		heart = str(spec.get("field_a", ""))
+	_color_idx = _nearest_color_idx(heart)
 	var border := str(spec.get("border", "none"))
 	var bix := BannerSpec.BORDERS.find(border)
 	_border_idx = maxi(0, bix)
@@ -609,6 +680,7 @@ func _load_from_banner_spec(spec: Dictionary) -> void:
 	var chs: Array = spec.get("charges", [])
 	if not chs.is_empty() and typeof(chs[0]) == TYPE_DICTIONARY:
 		eid = str((chs[0] as Dictionary).get("id", eid))
+	eid = CKHeraldry.company_emblem_id(eid)
 	var eix := BannerSpec.EMBLEMS.find(eid)
 	_emblem_idx = maxi(0, eix if eix >= 0 else BannerSpec.EMBLEMS.find("ring"))
 	var nid := str(spec.get("nation", ""))
