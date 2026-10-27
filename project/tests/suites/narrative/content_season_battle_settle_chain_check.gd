@@ -13,6 +13,7 @@ const ROWS := [
 	{"cid": "cs02_02", "beat": "bridge", "needle": "锋护过脉。纸我按得，跳我认。"},
 	{"cid": "cs03_01", "beat": "bridge", "needle": "锋问过话。拓片归袋，人归桥。"},
 	{"cid": "cs03_02", "beat": "bridge", "needle": "锋护过粮。袋我背得，埂我过。"},
+	{"cid": "cs03_03", "beat": "bridge", "needle": "锋护过工账。袋我背得，埂我过。"},
 	{"cid": "cs04_01", "beat": "bridge", "needle": "锋跟步走完。训条我背得，廊我过。"},
 	{"cid": "cs04_02", "beat": "bridge", "needle": "锋护过契。字我签得，廊外不理。"},
 	{"cid": "cs05_01", "beat": "bridge", "needle": "锋问过座。空椅我守，纸角我压。"},

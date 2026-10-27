@@ -1,0 +1,2793 @@
+{
+  "id": "cs03_03",
+  "title": "工账上的灯",
+  "legacy_index": 421,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-03/NOVEL.md",
+  "beats": [
+    {
+      "id": "lab",
+      "title": "工账",
+      "lines": [
+        {
+          "id": "cs0303_opn1",
+          "speaker": "旁白",
+          "text": "工面册贴着门板内侧。内侧潮，先离一指。"
+        },
+        {
+          "id": "cs0303_opn2",
+          "speaker": "岁吏",
+          "text": "账钥挂腰后。后挂，推门不磕。"
+        },
+        {
+          "id": "cs0303_opn3",
+          "speaker": "槐里·青禾",
+          "text": "回程尘抖尽。尽了，工面不沾灰。"
+        },
+        {
+          "id": "cs0303_opn4",
+          "speaker": "书记官",
+          "text": "空行记号朝里。朝里，外人看不见，工面认。"
+        },
+        {
+          "id": "cs0303_opn5",
+          "speaker": "苇原·灯影",
+          "text": "弓靠门外柱。柱外放，门内净，册边按。"
+        },
+        {
+          "id": "cs0303_opn6",
+          "speaker": "leader",
+          "text": "我进门。工册离潮，再认空。"
+        },
+        {
+          "id": "cs03_03_lab_0",
+          "speaker": "旁白",
+          "text": "功厅。上回榜文已入柜。工账还空着水车。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_1",
+          "speaker": "书记官",
+          "text": "正面功写过了。工账要能念，不能只剩朱印。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_2",
+          "speaker": "leader",
+          "text": "我要听水车。空着也得说得出。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_3",
+          "speaker": "旁白",
+          "text": "柜门一响。功榜与工账并排放上长桌。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_4",
+          "speaker": "老管事",
+          "text": "催工的人嗓门大。水车的人说再等等。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_5",
+          "speaker": "岁吏",
+          "text": "年迹旁多了一行「工账夜」。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁记功。问今夜谁还空着粮，车响里。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_7",
+          "speaker": "旁白",
+          "text": "两行字第一次对视。功面亮，工账暗。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_8",
+          "speaker": "书记官",
+          "text": "能念的字在功面。坐得住的粮在工账等。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_9",
+          "speaker": "leader",
+          "text": "把水车念给我听。别念催工。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_10",
+          "speaker": "老管事",
+          "text": "催工可以喊。工账撕不得。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_11",
+          "speaker": "旁白",
+          "text": "灯矮了一寸。水车反而更清楚。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_12",
+          "speaker": "岁吏",
+          "text": "功榜已记账。工账记账才算整张。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_13",
+          "speaker": "书记官",
+          "text": "并排不是拖。是让水车也有灯。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_14",
+          "speaker": "leader",
+          "text": "我听懂了。空着，也要并排，泥印在。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_15",
+          "speaker": "旁白",
+          "text": "风从窗缝进来。榜角动，字不动，空行守。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_16",
+          "speaker": "老管事",
+          "text": "催工的锣在门外。锣响不进功厅。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_lab_y17",
+          "speaker": "旁白",
+          "text": "工账工行的墨干得比正面慢，慢在夹页里。"
+        },
+        {
+          "id": "cs03_03_lab_y18",
+          "speaker": "石垒·晚担",
+          "text": "夹页里的沉字，才配回头去对粮，并排留。"
+        },
+        {
+          "id": "cs03_03_lab_y19",
+          "speaker": "leader",
+          "text": "工账工粮并排。正面的空喊不抄。"
+        },
+        {
+          "id": "cs0303_thm1",
+          "speaker": "旁白",
+          "text": "工账贴着功面。工面更凉。"
+        },
+        {
+          "id": "cs0303_thm2",
+          "speaker": "掌柜",
+          "text": "工面的空，比阳面更咬人。"
+        },
+        {
+          "id": "cs0303_thm3",
+          "speaker": "石垒·晚担",
+          "text": "凉处不糊字。糊字的榜，挂不住，下行亮。"
+        },
+        {
+          "id": "cs0303_thm4",
+          "speaker": "槐里·青禾",
+          "text": "工面不催工。催的人，先看自己行。"
+        },
+        {
+          "id": "cs0303_thm5",
+          "speaker": "老旗手",
+          "text": "旗杆离工面一掌。近了，风揭角。"
+        },
+        {
+          "id": "cs0303_thm6",
+          "speaker": "leader",
+          "text": "工面我留。空我认。认完再往水车。"
+        },
+        {
+          "id": "cs0303_ods1",
+          "speaker": "旁白",
+          "text": "门内这一息，工账空格还凉。凉着，人先不迈出门楣。"
+        },
+        {
+          "id": "cs0303_ods2",
+          "speaker": "岁吏",
+          "text": "工面留过了。留过，别急出——门风会掀薄阴。"
+        },
+        {
+          "id": "cs0303_ods3",
+          "speaker": "槐里·青禾",
+          "text": "工面在袖。在袖，就让指再按一息门框。"
+        },
+        {
+          "id": "cs0303_ods4",
+          "speaker": "旁白",
+          "text": "灯影矮了半寸。半寸时，没人抢着先跨槛，对照真。"
+        },
+        {
+          "id": "cs0303_ods5",
+          "speaker": "老旗手",
+          "text": "旗角别扫工账灰。扫了，空会花——先把门内站稳。"
+        },
+        {
+          "id": "cs0303_ods6",
+          "speaker": "leader",
+          "text": "门内落定。工账空在，我先不迈。"
+        },
+        {
+          "id": "cs0303_rim1",
+          "speaker": "旁白",
+          "text": "门槛这一望，工面还凉着。凉着，人先不把脚迈向秤星。"
+        },
+        {
+          "id": "cs0303_rim2",
+          "speaker": "岁吏",
+          "text": "空认过了。认过，别急迈——门外秤会晃假数，账缝里。"
+        },
+        {
+          "id": "cs0303_rim3",
+          "speaker": "石垒·晚担",
+          "text": "工账在怀。在怀，就让目光先停在门槛外那一点秤星。"
+        },
+        {
+          "id": "cs0303_rim4",
+          "speaker": "旁白",
+          "text": "廊阴风歇了半寸。半寸里，没人抢着先掀帘角，漏前认。"
+        },
+        {
+          "id": "cs0303_rim5",
+          "speaker": "老旗手",
+          "text": "袖口别带出门灰。带了，工面会花——先把门外望清。"
+        },
+        {
+          "id": "cs0303_rim6",
+          "speaker": "leader",
+          "text": "门槛外望。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_crn1",
+          "speaker": "leader",
+          "text": "帘边这一停，工账角还冷。冷着，指尖先别掀那道账帘。"
+        },
+        {
+          "id": "cs0303_crn2",
+          "speaker": "leader",
+          "text": "工账验过了。验过，也别急——帘外秤会晃星码。"
+        },
+        {
+          "id": "cs0303_crn3",
+          "speaker": "leader",
+          "text": "工账在袖。在袖，目光先停在帘边那一线秤影。"
+        },
+        {
+          "id": "cs0303_crn4",
+          "speaker": "leader",
+          "text": "帘绳顿了半息。半息里，没人抢着先把账帘掀满。"
+        },
+        {
+          "id": "cs0303_crn5",
+          "speaker": "leader",
+          "text": "秤钩别刮进门灰。刮了，名会花——先把帘外秤认清，工面认。"
+        },
+        {
+          "id": "cs0303_crn6",
+          "speaker": "leader",
+          "text": "帘边驻足。工账外的秤，我先不掀。"
+        },
+        {
+          "id": "cs0303_slv1",
+          "speaker": "leader",
+          "text": "门风这一过，工账角先冷。冷着，指尖还压码——先让风把秤影吹直。"
+        },
+        {
+          "id": "cs0303_slv2",
+          "speaker": "leader",
+          "text": "工账验过了。验过，袖里别抖——门风会晃星码。"
+        },
+        {
+          "id": "cs0303_slv3",
+          "speaker": "leader",
+          "text": "工账在袖。在袖，就让这一阵门风先从袖口走干净。"
+        },
+        {
+          "id": "cs0303_slv4",
+          "speaker": "leader",
+          "text": "风顿了半息。半息里，没人抢着先把阴袖按死，册边按。"
+        },
+        {
+          "id": "cs0303_slv5",
+          "speaker": "leader",
+          "text": "秤钩别刮进袖灰。刮了，名会花——先把门风过完，车响里。"
+        },
+        {
+          "id": "cs0303_slv6",
+          "speaker": "leader",
+          "text": "门风过袖。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_gln1",
+          "speaker": "leader",
+          "text": "缝光这一瞥，工账角还冷。冷着，目光先停在那一线秤缝。"
+        },
+        {
+          "id": "cs0303_gln2",
+          "speaker": "leader",
+          "text": "工账验过了。验过，也别急——缝里秤会晃星码。"
+        },
+        {
+          "id": "cs0303_gln3",
+          "speaker": "leader",
+          "text": "工账在袖。在袖，就让这一瞥先把缝外秤影认清。"
+        },
+        {
+          "id": "cs0303_gln4",
+          "speaker": "leader",
+          "text": "光顿了半息。半息里，没人抢着先把阴缝撕宽，泥印在。"
+        },
+        {
+          "id": "cs0303_gln5",
+          "speaker": "leader",
+          "text": "秤缝别刮进门灰。刮了，名会花——先把缝光瞥完，空行守。"
+        },
+        {
+          "id": "cs0303_gln6",
+          "speaker": "leader",
+          "text": "缝光一瞥。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_hst1",
+          "speaker": "leader",
+          "text": "门槛这一半步，工账角还潮。潮着，脚尖先停在那一道门坎。"
+        },
+        {
+          "id": "cs0303_hst2",
+          "speaker": "leader",
+          "text": "工账验过了。验过，也别急——半步会晃秤上的星。"
+        },
+        {
+          "id": "cs0303_hst3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一半步先把门外秤认清，并排留。"
+        },
+        {
+          "id": "cs0303_hst4",
+          "speaker": "leader",
+          "text": "步顿了半息。半息里，没人抢着先把工账门坎跨尽。"
+        },
+        {
+          "id": "cs0303_hst5",
+          "speaker": "leader",
+          "text": "秤影别扫进门灰。扫了，名会花——先把半步停稳，下行亮。"
+        },
+        {
+          "id": "cs0303_hst6",
+          "speaker": "leader",
+          "text": "门槛半步。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_blt1",
+          "speaker": "leader",
+          "text": "门闩这一触，工账角还潮。潮着，指尖先停在那一道冷闩。"
+        },
+        {
+          "id": "cs0303_blt2",
+          "speaker": "leader",
+          "text": "工账验过了。验过，也别急——一触会晃秤上的星。"
+        },
+        {
+          "id": "cs0303_blt3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一触先把工账门闩凉意认清。"
+        },
+        {
+          "id": "cs0303_blt4",
+          "speaker": "leader",
+          "text": "闩顿了半息。半息里，没人抢着先把工账门闩推开。"
+        },
+        {
+          "id": "cs0303_blt5",
+          "speaker": "leader",
+          "text": "秤影别扫进闩灰。扫了，名会花——先把一触停稳，对照真。"
+        },
+        {
+          "id": "cs0303_blt6",
+          "speaker": "leader",
+          "text": "门闩一触。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_hng1",
+          "speaker": "leader",
+          "text": "门枢这一转，工账角还涩。涩着，指尖先试那一道旧枢。"
+        },
+        {
+          "id": "cs0303_hng2",
+          "speaker": "leader",
+          "text": "工账验过了。验过，也别急——一转会晃起秤上的星。"
+        },
+        {
+          "id": "cs0303_hng3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一转先把工账门枢涩意认清。"
+        },
+        {
+          "id": "cs0303_hng4",
+          "speaker": "leader",
+          "text": "枢顿了半息。半息里，没人抢着先把工账门枢拧开。"
+        },
+        {
+          "id": "cs0303_hng5",
+          "speaker": "leader",
+          "text": "秤影别扫进枢灰。扫了，名会花——先把一转停稳，账缝里。"
+        },
+        {
+          "id": "cs0303_hng6",
+          "speaker": "leader",
+          "text": "门枢一转。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_axl1",
+          "speaker": "leader",
+          "text": "门轴这一响，工账角还哑。哑着，掌缘先贴那一道旧轴。"
+        },
+        {
+          "id": "cs0303_axl2",
+          "speaker": "leader",
+          "text": "工账听过了。听过，也别催——一响会晃起秤边的锈。"
+        },
+        {
+          "id": "cs0303_axl3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一响先把工账门轴哑意认清。"
+        },
+        {
+          "id": "cs0303_axl4",
+          "speaker": "leader",
+          "text": "轴顿了半息。半息里，没人抢着先把工账门轴轧响。"
+        },
+        {
+          "id": "cs0303_axl5",
+          "speaker": "leader",
+          "text": "秤影别蹭进轴锈。蹭了，名会花——先把一响停稳，漏前认。"
+        },
+        {
+          "id": "cs0303_axl6",
+          "speaker": "leader",
+          "text": "门轴一响。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_knk1",
+          "speaker": "leader",
+          "text": "门环这一叩，工账角还沉。沉着，指节先停在那一道旧环。"
+        },
+        {
+          "id": "cs0303_knk2",
+          "speaker": "leader",
+          "text": "工账试过了。试过，也别催——一叩会晃起秤边的铜屑。"
+        },
+        {
+          "id": "cs0303_knk3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一叩先把工账门环沉意认清。"
+        },
+        {
+          "id": "cs0303_knk4",
+          "speaker": "leader",
+          "text": "环顿了半息。半息里，没人抢着先把工账门环叩响。"
+        },
+        {
+          "id": "cs0303_knk5",
+          "speaker": "leader",
+          "text": "秤影别蹭进环锈。蹭了，名会花——先把一叩停稳，工面认。"
+        },
+        {
+          "id": "cs0303_knk6",
+          "speaker": "leader",
+          "text": "门环一叩。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_ans1",
+          "speaker": "leader",
+          "text": "门内这一应，工账角还沉。沉着，耳先停在那一道旧应。"
+        },
+        {
+          "id": "cs0303_ans2",
+          "speaker": "leader",
+          "text": "工账试过了。试过，也别催——一应会晃起秤边的木屑。"
+        },
+        {
+          "id": "cs0303_ans3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一应先把工账门内沉意认清。"
+        },
+        {
+          "id": "cs0303_ans4",
+          "speaker": "leader",
+          "text": "声顿了半息。半息里，没人抢着先把工账应声揭开。"
+        },
+        {
+          "id": "cs0303_ans5",
+          "speaker": "leader",
+          "text": "秤影别蹭进门缝。蹭了，名会花——先把一应停稳，册边按。"
+        },
+        {
+          "id": "cs0303_ans6",
+          "speaker": "leader",
+          "text": "门内应声。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_yld1",
+          "speaker": "leader",
+          "text": "门扇这一让，工账角还沉。沉着，掌先停在那一道旧让。"
+        },
+        {
+          "id": "cs0303_yld2",
+          "speaker": "leader",
+          "text": "工账试过了。试过，也别催——一让会晃起秤边的尘屑。"
+        },
+        {
+          "id": "cs0303_yld3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一让先把工账门扇沉意认清。"
+        },
+        {
+          "id": "cs0303_yld4",
+          "speaker": "leader",
+          "text": "扇顿了半息。半息里，没人抢着先把工账门扇推开。"
+        },
+        {
+          "id": "cs0303_yld5",
+          "speaker": "leader",
+          "text": "秤影别蹭进扇缝。蹭了，名会花——先把一让停稳，车响里。"
+        },
+        {
+          "id": "cs0303_yld6",
+          "speaker": "leader",
+          "text": "门扇微让。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_drf1",
+          "speaker": "leader",
+          "text": "缝风这一过，工账角还沉。沉着，腕先停在那一道旧风。"
+        },
+        {
+          "id": "cs0303_drf2",
+          "speaker": "leader",
+          "text": "工账试过了。试过，也别催——一风会晃起秤边的灰屑。"
+        },
+        {
+          "id": "cs0303_drf3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一风先把工账门缝沉意认清。"
+        },
+        {
+          "id": "cs0303_drf4",
+          "speaker": "leader",
+          "text": "风顿了半息。半息里，没人抢着先把工账门缝堵严。"
+        },
+        {
+          "id": "cs0303_drf5",
+          "speaker": "leader",
+          "text": "秤影别蹭进风缝。蹭了，名会花——先把一风停稳，泥印在。"
+        },
+        {
+          "id": "cs0303_drf6",
+          "speaker": "leader",
+          "text": "缝风一过。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs0303_lmp1",
+          "speaker": "leader",
+          "text": "灯影这一沉，工账角还沉。沉着，睫先停在那一道旧影。"
+        },
+        {
+          "id": "cs0303_lmp2",
+          "speaker": "leader",
+          "text": "工账试过了。试过，也别催——一影会带起纸边的秤尘。"
+        },
+        {
+          "id": "cs0303_lmp3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一影先把工账灯影沉意认清。"
+        },
+        {
+          "id": "cs0303_lmp4",
+          "speaker": "leader",
+          "text": "影顿了半息。半息里，没人抢着先把工账灯影压扁。"
+        },
+        {
+          "id": "cs0303_lmp5",
+          "speaker": "leader",
+          "text": "风缝别钻进灯影。沾了，名会花——先把一影停稳，空行守。"
+        },
+        {
+          "id": "cs0303_lmp6",
+          "speaker": "leader",
+          "text": "灯影一沉。工账外的秤，我先不迈。"
+        },
+        {
+          "id": "cs03_03_lab_17",
+          "speaker": "槐里·青禾",
+          "text": "工账比功面薄。薄的反而难装。",
+          "stage": {
+            "card": "一　工账",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        }
+      ],
+      "next": "wheel"
+    },
+    {
+      "id": "wheel",
+      "title": "水车",
+      "lines": [
+        {
+          "id": "cs03_03_wheel_0",
+          "speaker": "旁白",
+          "text": "水车摊开。收成那格亮着，旁格还空。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_1",
+          "speaker": "老管事",
+          "text": "上回留并排的，水车亮着空。只留功的，栏上有字、粮仍空。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_2",
+          "speaker": "旁白",
+          "text": "两行字第二次吵架。回读逼它们对视，并排留。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁收成。问今夜谁还空着粮，下行亮。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_4",
+          "speaker": "书记官",
+          "text": "有字的格能念。水车要人敢看。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_5",
+          "speaker": "leader",
+          "text": "粮空不是错。催满才是错，对照真。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_6",
+          "speaker": "岁吏",
+          "text": "年迹不改粮。只记你敢不敢对空，账缝里。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_7",
+          "speaker": "旁白",
+          "text": "朱印干了。水车的边还潮。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_8",
+          "speaker": "老管事",
+          "text": "催工锣又响。响在门外，进不了粮。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_9",
+          "speaker": "书记官",
+          "text": "并排留粮，比硬填假工干净。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_10",
+          "speaker": "leader",
+          "text": "假工我不要。水车我要听。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_11",
+          "speaker": "旁白",
+          "text": "灯把水车照成浅坑。坑里没有字。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_12",
+          "speaker": "岁吏",
+          "text": "功榜上的字还在。工账上的空也在。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_13",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写工账，不写催。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_14",
+          "speaker": "老管事",
+          "text": "催工条叠得高。水车叠不住。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_15",
+          "speaker": "书记官",
+          "text": "能念的在功面。敢留的在工账。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_16",
+          "speaker": "旁白",
+          "text": "榜角又动。水车仍空。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_wheel_y17",
+          "speaker": "旁白",
+          "text": "水车账室门的风比工栏大，大风专门找假数。"
+        },
+        {
+          "id": "cs03_03_wheel_y18",
+          "speaker": "石垒·晚担",
+          "text": "假数一进风缝就漏。漏掉的，别再写回来，漏前认。"
+        },
+        {
+          "id": "cs03_03_wheel_y19",
+          "speaker": "leader",
+          "text": "工数过风。过了的才入工账。"
+        },
+        {
+          "id": "cs0303_sec1",
+          "speaker": "旁白",
+          "text": "工囤口敞着。敞处闻得到陈年的灰。"
+        },
+        {
+          "id": "cs0303_sec2",
+          "speaker": "掌柜",
+          "text": "水车空着一格。空格不是漏囤。"
+        },
+        {
+          "id": "cs0303_sec3",
+          "speaker": "石垒·晚担",
+          "text": "灰过了再量。量早了，数会虚，工面认。"
+        },
+        {
+          "id": "cs0303_sec4",
+          "speaker": "槐里·青禾",
+          "text": "粮与功还要对。单量粮，我不挂，册边按。"
+        },
+        {
+          "id": "cs0303_sec5",
+          "speaker": "老旗手",
+          "text": "旗杆离囤一掌。近了，灰落旗，车响里。"
+        },
+        {
+          "id": "cs0303_sec6",
+          "speaker": "leader",
+          "text": "工格我留。灰我认。认完再往沙漏。"
+        },
+        {
+          "id": "cs0303_hlp1",
+          "speaker": "旁白",
+          "text": "厅角泥屑不再往袖钻。钻完的，静静停在砖缝。"
+        },
+        {
+          "id": "cs0303_hlp2",
+          "speaker": "岁吏",
+          "text": "工面留着。留着，别急把空格说满——角上谷香还在。"
+        },
+        {
+          "id": "cs0303_hlp3",
+          "speaker": "槐里·青禾",
+          "text": "工格空着。空着，就让灰再凉一息。"
+        },
+        {
+          "id": "cs0303_hlp4",
+          "speaker": "旁白",
+          "text": "空格还在钉影里。影里，没人催工催迈步。"
+        },
+        {
+          "id": "cs0303_hlp5",
+          "speaker": "老旗手",
+          "text": "灰我认过。认过，出厅把杯底朝里扣在角上，泥印在。"
+        },
+        {
+          "id": "cs0303_hlp6",
+          "speaker": "leader",
+          "text": "厅角守空格。工面在，我先不迈。"
+        },
+        {
+          "id": "cs03_03_wheel_17",
+          "speaker": "老旗手",
+          "text": "水车灯还亮。亮着，才敢回读。",
+          "stage": {
+            "card": "二　水车",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs0303_vop1",
+          "speaker": "旁白",
+          "text": "账钥搁门槛外。钥不碰漏座，沙才像沙。"
+        },
+        {
+          "id": "cs0303_vop2",
+          "speaker": "岁吏",
+          "text": "仓满不满，今晚看漏。漏不认仓，空行守。"
+        },
+        {
+          "id": "cs0303_vop3",
+          "speaker": "槐里·青禾",
+          "text": "仓味散尽再近漏。近早了，油腥抢沙声，并排留。"
+        },
+        {
+          "id": "cs0303_vop4",
+          "speaker": "书记官",
+          "text": "工格底联压平。平了，沙影不花字。"
+        },
+        {
+          "id": "cs0303_vop5",
+          "speaker": "苇原·灯影",
+          "text": "弓弦松半扣。松了，手才不颤，下行亮。"
+        },
+        {
+          "id": "cs0303_vop6",
+          "speaker": "leader",
+          "text": "我到漏前。账事放下，再认月份。"
+        },
+        {
+          "id": "cs03_03_hourglass_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行功榜、下行工账。回读把两行按住。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_1",
+          "speaker": "老管事",
+          "text": "沙漏边上，回读只问一句：你敢不敢对粮，对照真。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_2",
+          "speaker": "岁吏",
+          "text": "年迹旁多了一行「工账回读」。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_3",
+          "speaker": "书记官",
+          "text": "能念的字在上行。空得住的粮还在下行等，账缝里。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_4",
+          "speaker": "leader",
+          "text": "两行都打开。我要听对看，漏前认。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_5",
+          "speaker": "旁白",
+          "text": "沙响。上行亮，下行仍暗，工面认。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防牌上写工账。不写急锣。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_7",
+          "speaker": "老管事",
+          "text": "催工的人在门外跺脚。跺不进沙漏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_8",
+          "speaker": "书记官",
+          "text": "并排不是拖月。是让水车跟月份并排走。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_9",
+          "speaker": "岁吏",
+          "text": "月结不抹粮。粮也要入迹，册边按。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_10",
+          "speaker": "leader",
+          "text": "我听水车。不听跺脚。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_11",
+          "speaker": "旁白",
+          "text": "沙又落一层。下行多了一点亮，车响里。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_12",
+          "speaker": "老管事",
+          "text": "锣停了。水车还在。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_13",
+          "speaker": "书记官",
+          "text": "回读夜的字，比催工长命。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_14",
+          "speaker": "岁吏",
+          "text": "带牌出去。沙漏还转，泥印在。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_15",
+          "speaker": "旁白",
+          "text": "两行对准了。一对上，假填就站不住，空行守。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_16",
+          "speaker": "老管事",
+          "text": "假工进不了沙漏。水车能。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_hourglass_y17",
+          "speaker": "旁白",
+          "text": "沙漏下行贴着工账工册，墨还在慢慢沉。"
+        },
+        {
+          "id": "cs03_03_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "沉到沙里的功，才许跟粮并排，并排留。"
+        },
+        {
+          "id": "cs03_03_hourglass_y19",
+          "speaker": "leader",
+          "text": "月份走之前，工粮先并稳。"
+        },
+        {
+          "id": "cs03_03_hourglass_17",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写工账，不写急。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs0303_aud1",
+          "speaker": "旁白",
+          "text": "工袋靠墙。墙灰不进纸格。"
+        },
+        {
+          "id": "cs0303_aud2",
+          "speaker": "岁吏",
+          "text": "账事搁下。征兆不是斛斗。"
+        },
+        {
+          "id": "cs0303_aud3",
+          "speaker": "书记官",
+          "text": "斛斗会满。无字只会端，下行亮。"
+        },
+        {
+          "id": "cs0303_aud4",
+          "speaker": "旁白",
+          "text": "灯油少了一指。少着写，反而醒，对照真。"
+        },
+        {
+          "id": "cs0303_aud5",
+          "speaker": "岁吏",
+          "text": "醒着的无，比睡里的丰年可靠，账缝里。"
+        },
+        {
+          "id": "cs0303_aud6",
+          "speaker": "leader",
+          "text": "我写空。工在田，字在栏。"
+        },
+        {
+          "id": "cs0303_vhg1",
+          "speaker": "岁吏",
+          "text": "工账贴着功面。工面的空，比功面更刺眼。"
+        },
+        {
+          "id": "cs0303_vhg2",
+          "speaker": "书记官",
+          "text": "朝报不改月份。改的是你敢不敢念工面的缺口。"
+        },
+        {
+          "id": "cs0303_vhg3",
+          "speaker": "leader",
+          "text": "工账空着。我对着缺口，不拿阳面的满去盖。"
+        },
+        {
+          "id": "cs0303_vhg4",
+          "speaker": "苇原·灯影",
+          "text": "工面灯更冷。冷着，字才不糊。"
+        },
+        {
+          "id": "cs0303_msr1",
+          "speaker": "旁白",
+          "text": "工册边的灰拍尽。拍尽再出门，灰不进桥缝。"
+        },
+        {
+          "id": "cs0303_msr2",
+          "speaker": "老管事",
+          "text": "空仓那格念过。念过束甲，甲不空响，漏前认。"
+        },
+        {
+          "id": "cs0303_msr3",
+          "speaker": "岁吏",
+          "text": "沙漏里的穗影淡了。淡了，人该走了，工面认。"
+        },
+        {
+          "id": "cs0303_msr4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓从田埂外传来。传进整装，不传进慌，册边按。"
+        },
+        {
+          "id": "cs0303_msr5",
+          "speaker": "槐里·青禾",
+          "text": "泥屑还粘在袖。袖一抖，壳落，人起。"
+        },
+        {
+          "id": "cs0303_msr6",
+          "speaker": "leader",
+          "text": "工格我留过。整装完，上桥。"
+        },
+        {
+          "id": "cs0303_vis_mv1",
+          "speaker": "旁白",
+          "text": "时漏玻璃上有道指纹，从下往上抹，车响里。"
+        },
+        {
+          "id": "cs0303_vis_mv2",
+          "speaker": "岁吏",
+          "text": "往上抹的，多半想让沙快，泥印在。"
+        },
+        {
+          "id": "cs0303_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "沙不快。人急，空行守。"
+        },
+        {
+          "id": "cs0303_vst1",
+          "speaker": "岁吏",
+          "text": "月份从工秤星上滑过。滑过，才记进册。"
+        },
+        {
+          "id": "cs0303_vst2",
+          "speaker": "书记官",
+          "text": "回工格要等袋口扎紧。"
+        },
+        {
+          "id": "cs0303_vst3",
+          "speaker": "leader",
+          "text": "月份滑过。粮，我秤，并排留。"
+        },
+        {
+          "id": "cs0303_vex1",
+          "speaker": "旁白",
+          "text": "工账翻回正面。正面朝外，工面的字歇着。"
+        },
+        {
+          "id": "cs0303_vex2",
+          "speaker": "岁吏",
+          "text": "账钥挂回腰。挂稳，门才肯开。"
+        },
+        {
+          "id": "cs0303_vex3",
+          "speaker": "老管事",
+          "text": "阴页夹进册脊。夹紧，风翻不动，下行亮。"
+        },
+        {
+          "id": "cs0303_vex4",
+          "speaker": "书记官",
+          "text": "灯油添半指。半指够看路，不够耗夜，对照真。"
+        },
+        {
+          "id": "cs0303_vex5",
+          "speaker": "苇原·灯影",
+          "text": "影贴墙根。贴住，人不被影绊，账缝里。"
+        },
+        {
+          "id": "cs0303_vex6",
+          "speaker": "leader",
+          "text": "账事收好。我离厅，钥在腰去门廊。"
+        },
+        {
+          "id": "cs0303_vis_mv4",
+          "speaker": "leader",
+          "text": "人不跟急走。去看月份，漏前认。"
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs03_03_bridge_0",
+          "speaker": "旁白",
+          "text": "门廊梁上吊着工账，灯从背面照过来，假数在纸上是透的。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_1",
+          "speaker": "岁吏",
+          "text": "水车这一栏我不让刀改。你先把手数清楚。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_2",
+          "speaker": "leader",
+          "text": "手数清了再出锋。赢了也不把功借给没下过田的人，工面认。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_3",
+          "speaker": "老旗手",
+          "text": "不出鞘也行。水车不是刀尖点出来的仓数。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_4",
+          "speaker": "旁白",
+          "text": "朝报被风掀起一角。掀起来的是空话，账缝里的数还贴着。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_5",
+          "speaker": "书记官",
+          "text": "催工尽管喊。工账这一本，墨在纤维里，撕开会留下黑边。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_6",
+          "speaker": "苇原·灯影",
+          "text": "我站桥侧。不问胜负，问你还肯不肯回去对那一行粮，册边按。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_7",
+          "speaker": "老管事",
+          "text": "城门锣是给人听的。桥上该听见的是账室门轴，不是口号。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_8",
+          "speaker": "leader",
+          "text": "水车钉在工账上，跟你出不出锋无关。朝报改不了这一栏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_9",
+          "speaker": "岁吏",
+          "text": "得手就把锋压低。并排的榜还要往下念，别停在上行的功，车响里。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_10",
+          "speaker": "旁白",
+          "text": "水声盖过锣。盖过的是催，盖不过仓里那袋还沉的，泥印在。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_11",
+          "speaker": "老旗手",
+          "text": "肩上有伤也先去酒馆。选题谈的是粮，不是把伤算成功，空行守。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_12",
+          "speaker": "书记官",
+          "text": "先选题。假工排在后头，后头的印我今晚不收。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_13",
+          "speaker": "苇原·灯影",
+          "text": "牌在你掌心。牌面还是工账，没有换成捷报的抬头。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_14",
+          "speaker": "老管事",
+          "text": "催工的人已经把嗓子润过了。你要等水车，就让他们干着。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_15",
+          "speaker": "leader",
+          "text": "我等这一行粮被看见。锣可以先敲，并排留。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_16",
+          "speaker": "旁白",
+          "text": "桥板颤时，工账灯没灭。透光的假数晃了一下，沉的没晃。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_17",
+          "speaker": "岁吏",
+          "text": "你可以不拔刀就去酒馆。水车不会替你把空仓长成满的。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_18",
+          "speaker": "老旗手",
+          "text": "肩上的伤还在。先去选题，别把空袋说成今晚的功，下行亮。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_bridge_y20",
+          "speaker": "旁白",
+          "text": "门廊风钻进工账账缝，缝里没有假数的位置。"
+        },
+        {
+          "id": "cs03_03_bridge_y21",
+          "speaker": "石垒·晚担",
+          "text": "钻得进的是风。钻不进的假数，别硬塞，对照真。"
+        },
+        {
+          "id": "cs03_03_bridge_y22",
+          "speaker": "leader",
+          "text": "门廊上只认钻不进去的真数，账缝里。"
+        },
+        {
+          "id": "cs03_03_bridge_19",
+          "speaker": "岁吏",
+          "text": "催工可以喊到沙哑。工账这一本，哑不掉仓数。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs0303_mid_mv1",
+          "speaker": "旁白",
+          "text": "工账纸角卷着。有人用指甲把卷边摁平，又弹开。"
+        },
+        {
+          "id": "cs0303_mid_mv2",
+          "speaker": "岁吏",
+          "text": "弹开不是风。是手痒，漏前认。"
+        },
+        {
+          "id": "cs0303_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "手痒的人，水车门口最爱站。"
+        },
+        {
+          "id": "cs0303_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "站着看榜，不如上场把话说完，工面认。"
+        },
+        {
+          "id": "cs0303_mid_mv5",
+          "speaker": "老旗手",
+          "text": "话说完要带锋。不然榜上只剩笑，册边按。"
+        },
+        {
+          "id": "cs0303_mid_mv6",
+          "speaker": "leader",
+          "text": "笑我不怕。假工我怕。"
+        },
+        {
+          "id": "cs0303_bpl1",
+          "speaker": "旁白",
+          "text": "工账背面用炭写了半个「满」字，炭末掉在门廊砖上。"
+        },
+        {
+          "id": "cs0303_bpl2",
+          "speaker": "岁吏",
+          "text": "炭字不算数。算数的是仓里那一秤，秤还在，车响里。"
+        },
+        {
+          "id": "cs0303_bpl3",
+          "speaker": "石垒·晚担",
+          "text": "炭末一脚就散。散了还想当功，是手欠，泥印在。"
+        },
+        {
+          "id": "cs0303_bpl4",
+          "speaker": "苇原·灯影",
+          "text": "手欠的人站在榜侧。站够了，该下来，空行守。"
+        },
+        {
+          "id": "cs0303_bpl5",
+          "speaker": "老旗手",
+          "text": "下来用锋说话。笑不算功，并排留。"
+        },
+        {
+          "id": "cs0303_bpl6",
+          "speaker": "leader",
+          "text": "炭字我擦了。这一锋只护工行，不护那个「满」。"
+        },
+        {
+          "id": "cs0303_win1",
+          "speaker": "旁白",
+          "text": "锋再定。工袋口扎紧，抢工那拨退到埂下。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0303_win2",
+          "speaker": "掌柜",
+          "text": "空袋吓人。满袋，今晚不怕，下行亮。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0303_win3",
+          "speaker": "槐里·青禾",
+          "text": "粮沉肩，心反而轻，对照真。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0303_win4",
+          "speaker": "leader",
+          "text": "锋护过粮。袋，我背得，账缝里。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0303_wex1",
+          "speaker": "旁白",
+          "when": {
+            "flag": "cs03_mid_fought"
+          },
+          "text": "工袋口扎紧。紧处，抢工的影退到埂下。"
+        },
+        {
+          "id": "cs0303_wex2",
+          "speaker": "石垒·晚担",
+          "when": {
+            "flag": "cs03_mid_fought"
+          },
+          "text": "空袋吓人。满袋今晚，埂上站得住，漏前认。"
+        },
+        {
+          "id": "cs0303_wex3",
+          "speaker": "槐里·青禾",
+          "when": {
+            "flag": "cs03_mid_fought"
+          },
+          "text": "粮沉肩，心反而轻。轻的是怕，不是粮，工面认。"
+        },
+        {
+          "id": "cs0303_wex4",
+          "speaker": "苇原·灯影",
+          "when": {
+            "flag": "cs03_mid_fought"
+          },
+          "text": "袋角的谷我拍回。一粒也不喂坡下那拨，册边按。"
+        },
+        {
+          "id": "cs0303_wex5",
+          "speaker": "老旗手",
+          "when": {
+            "flag": "cs03_mid_fought"
+          },
+          "text": "旗杆抵着袋。抵住，风也掏不走，车响里。"
+        },
+        {
+          "id": "cs0303_wex6",
+          "speaker": "leader",
+          "when": {
+            "flag": "cs03_mid_fought"
+          },
+          "text": "锋护过工账。袋我背得，埂我过。"
+        },
+        {
+          "speaker": "旁白",
+          "text": "锋收回来。工账纸还钉着。水车旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs03_mid_lost"
+              },
+              {
+                "not_flag": "cs03_mid_fought"
+              }
+            ]
+          },
+          "id": "cs03b_br_lost"
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs03_mid_fought"
+              },
+              {
+                "not_flag": "cs03_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs03_mid_fought"
+              ],
+              "lose_flags": [
+                "cs03_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "工账上的灯",
+                "outcome": "工账旁试锋得手——锋镝压下，并排纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs03_mid_fought"
+              },
+              {
+                "flag": "cs03_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs03_mid_fought"
+              ],
+              "lose_flags": [
+                "cs03_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "工账上的灯",
+                "outcome": "工账旁试锋得手——锋镝压下，并排纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs03_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs03_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs03_03",
+              "choice": "mid_skirmish_skip",
+              "title": "工账上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs03_mid_fought"
+                  },
+                  {
+                    "flag": "cs03_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs03_03",
+              "choice": "mid_skirmish_abort",
+              "title": "工账上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs0303_arr1",
+          "speaker": "旁白",
+          "text": "泥屑从袖口抖落门外。门外落，门内净。"
+        },
+        {
+          "id": "cs0303_arr2",
+          "speaker": "掌柜",
+          "text": "空仓话先别喊。喊完再看板，板会笑你，泥印在。"
+        },
+        {
+          "id": "cs0303_arr3",
+          "speaker": "岁吏",
+          "text": "沙漏影留在身后。身后影，不进酒碗，空行守。"
+        },
+        {
+          "id": "cs0303_arr4",
+          "speaker": "苇原·灯影",
+          "text": "田埂泥磕尽。磕尽，才踏上店板，并排留。"
+        },
+        {
+          "id": "cs0303_arr5",
+          "speaker": "槐里·青禾",
+          "text": "泥香还在指。指净了，再摸绳。"
+        },
+        {
+          "id": "cs0303_arr6",
+          "speaker": "leader",
+          "text": "我到店。账事放下，再认板。"
+        },
+        {
+          "id": "cs03_03_tavern_0",
+          "speaker": "旁白",
+          "text": "酒馆。板上两道题。手按上去，下行亮。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_1",
+          "speaker": "掌柜",
+          "text": "一道工粮仍并。一道先催工栏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_2",
+          "speaker": "leader",
+          "text": "我看题。不看谁嗓门大，对照真。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_3",
+          "speaker": "老管事",
+          "text": "并排留真。催工快。快的未必真。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_4",
+          "speaker": "书记官",
+          "text": "水车进谱，才算整张功榜。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_5",
+          "speaker": "岁吏",
+          "text": "年迹听选择。不听锣，账缝里。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_6",
+          "speaker": "旁白",
+          "text": "酒气里榜更白。白得能看见粮，漏前认。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_7",
+          "speaker": "掌柜",
+          "text": "选完入柜。工账柜门会响。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_8",
+          "speaker": "苇原·灯影",
+          "text": "巡防在门外。门内只选题，工面认。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_9",
+          "speaker": "leader",
+          "text": "工粮仍并——我手按这道。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_10",
+          "speaker": "老管事",
+          "text": "按实了。别悬着，册边按。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_11",
+          "speaker": "书记官",
+          "text": "假工那道我划掉。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_12",
+          "speaker": "旁白",
+          "text": "板面一热。字进手心，车响里。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_13",
+          "speaker": "岁吏",
+          "text": "选择入账。工账夜可结。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_14",
+          "speaker": "掌柜",
+          "text": "另一道也在。你不选它，泥印在。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_15",
+          "speaker": "老管事",
+          "text": "催工的锣远了。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_16",
+          "speaker": "旁白",
+          "text": "两道题还在板上。只一道进柜，空行守。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_03_tavern_y17",
+          "speaker": "旁白",
+          "text": "酒气熏不干工账那行慢墨，熏干的是空话。"
+        },
+        {
+          "id": "cs03_03_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "空话干得快。扛工的字，还黏在纸上。"
+        },
+        {
+          "id": "cs03_03_tavern_y19",
+          "speaker": "leader",
+          "text": "黏着的工粮带回堡。酒账另算。"
+        },
+        {
+          "id": "cs03_03_tavern_17",
+          "speaker": "老管事",
+          "text": "选完入柜。工账柜门会响，工面认。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs0303_ret_mv1",
+          "speaker": "旁白",
+          "text": "工账话题被劝酒按下去，又浮上来。"
+        },
+        {
+          "id": "cs0303_ret_mv2",
+          "speaker": "掌柜",
+          "text": "浮上来就钉。钉不住别喝，并排留。"
+        },
+        {
+          "id": "cs0303_ret_mv3",
+          "speaker": "岁吏",
+          "text": "钉住回堡。工账在臂。"
+        },
+        {
+          "id": "cs0303_brd1",
+          "speaker": "旁白",
+          "text": "回工的灰拍在门外。门内，板面干净得能照见指。"
+        },
+        {
+          "id": "cs0303_brd2",
+          "speaker": "掌柜",
+          "text": "功阴那栏墨深。深着，假数混不进，下行亮。"
+        },
+        {
+          "id": "cs0303_brd3",
+          "speaker": "岁吏",
+          "text": "埂下影别跟着进店。进店的只准袋与数，对照真。"
+        },
+        {
+          "id": "cs0303_brd4",
+          "speaker": "旁白",
+          "text": "挂板绳又紧一扣。紧了，页才不在风里飘，账缝里。"
+        },
+        {
+          "id": "cs0303_brd5",
+          "speaker": "书记官",
+          "text": "回工与功阴并排看。并排了，抢工的影无处站。"
+        },
+        {
+          "id": "cs0303_brd6",
+          "speaker": "leader",
+          "text": "灰拍尽了。我近板，把回工数交钉。"
+        },
+        {
+          "id": "cs0303_tvp1",
+          "speaker": "旁白",
+          "text": "工账拓本反着光，字像从板背透出来。"
+        },
+        {
+          "id": "cs0303_tvp2",
+          "speaker": "掌柜",
+          "text": "工面的字，挂正面也藏不住。藏不住才真。"
+        },
+        {
+          "id": "cs0303_tvp3",
+          "speaker": "岁吏",
+          "text": "真功不怕阴。怕阴的，是只写了阳面的人，漏前认。"
+        },
+        {
+          "id": "cs0303_tvp4",
+          "speaker": "老旗手",
+          "text": "旗在榜下站过。站过，工面也有根。"
+        },
+        {
+          "id": "cs0303_tvp5",
+          "speaker": "石垒·晚担",
+          "text": "根在，并排才稳。稳了再喝酒，工面认。"
+        },
+        {
+          "id": "cs0303_tvp6",
+          "speaker": "leader",
+          "text": "工面我留。催工栏的话，先过我这一盏。"
+        },
+        {
+          "id": "cs0303_aft1",
+          "speaker": "旁白",
+          "text": "工面空着一格。板后泥壳香从酒碗沿上浮起。"
+        },
+        {
+          "id": "cs0303_aft2",
+          "speaker": "掌柜",
+          "text": "回工数刚交钉。板后数要自己认一遍，再听人夸。"
+        },
+        {
+          "id": "cs0303_aft3",
+          "speaker": "老旗手",
+          "text": "护工那锋的壳还在牙缝。剔净了，夜话才不糊。"
+        },
+        {
+          "id": "cs0303_aft4",
+          "speaker": "旁白",
+          "text": "账室门远，可板后仍像有人在量斗。"
+        },
+        {
+          "id": "cs0303_aft5",
+          "speaker": "岁吏",
+          "text": "催工栏我压住。压住，就让工面多空一息。"
+        },
+        {
+          "id": "cs0303_aft6",
+          "speaker": "leader",
+          "text": "工面留着。板后这一息，我守空格，不接催工。"
+        },
+        {
+          "id": "cs0303_tvn1",
+          "speaker": "掌柜",
+          "text": "护工那一锋，酒里有泥壳香。"
+        },
+        {
+          "id": "cs0303_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "埂下那拨退了。退了才敢开坛，册边按。"
+        },
+        {
+          "id": "cs0303_tvn3",
+          "speaker": "听回",
+          "text": "袋口扎紧的事，传得比酒快，车响里。"
+        },
+        {
+          "id": "cs0303_tvn4",
+          "speaker": "leader",
+          "text": "粮在。人在。谷香，我认，泥印在。"
+        },
+        {
+          "id": "cs0303_sth1",
+          "speaker": "旁白",
+          "text": "席末泥屑不再往袖钻。钻完的，静静堆在脚边。"
+        },
+        {
+          "id": "cs0303_sth2",
+          "speaker": "掌柜",
+          "text": "谷香认了。认了，别急着把空格说满，空行守。"
+        },
+        {
+          "id": "cs0303_sth3",
+          "speaker": "老旗手",
+          "text": "粮在人在。在，就让工面字再凉一息。"
+        },
+        {
+          "id": "cs0303_sth4",
+          "speaker": "旁白",
+          "text": "空格还在钉影里。影里，没人催工催起身。"
+        },
+        {
+          "id": "cs0303_sth5",
+          "speaker": "岁吏",
+          "text": "工面留着。留着，离席也把杯底朝里扣。"
+        },
+        {
+          "id": "cs0303_sth6",
+          "speaker": "leader",
+          "text": "席末守空格。工面在，我先坐。"
+        },
+        {
+          "id": "cs0303_tvx1",
+          "speaker": "旁白",
+          "text": "泥屑不再往袖里钻。钻完的抖在门外。"
+        },
+        {
+          "id": "cs0303_tvx2",
+          "speaker": "掌柜",
+          "text": "价签按死。按死，夜风扯不动，并排留。"
+        },
+        {
+          "id": "cs0303_tvx3",
+          "speaker": "岁吏",
+          "text": "沙漏影从店后头追上。追上，人该走了，下行亮。"
+        },
+        {
+          "id": "cs0303_tvx4",
+          "speaker": "苇原·灯影",
+          "text": "田埂泥不追进门槛。门槛外再磕一次，对照真。"
+        },
+        {
+          "id": "cs0303_tvx5",
+          "speaker": "槐里·青禾",
+          "text": "泥香散尽才掀帘。散尽，不惹巷犬。"
+        },
+        {
+          "id": "cs0303_tvx6",
+          "speaker": "leader",
+          "text": "账事挂完。我出店，路回堡。"
+        },
+        {
+          "id": "cs0303_rtn1",
+          "speaker": "旁白",
+          "text": "工账夹在臂弯。夹稳，假数就落在风里追不上。"
+        },
+        {
+          "id": "cs0303_rtn2",
+          "speaker": "石垒·晚担",
+          "text": "回工的数在纸上。纸上的数，不跟靴底的泥混。"
+        },
+        {
+          "id": "cs0303_rtn3",
+          "speaker": "槐里·青禾",
+          "text": "巷口有人问价。问价的话，今晚不答，账缝里。"
+        },
+        {
+          "id": "cs0303_rtn4",
+          "speaker": "旁白",
+          "text": "雪光把册脊照白。白着，干墨的边更硬，漏前认。"
+        },
+        {
+          "id": "cs0303_rtn5",
+          "speaker": "岁吏",
+          "text": "堡里的灯等夹页。夹页的人，别在桥上抖，工面认。"
+        },
+        {
+          "id": "cs0303_rtn6",
+          "speaker": "leader",
+          "text": "工账在臂。我入堡，假数不进门。"
+        },
+        {
+          "id": "cs0303_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡入工账。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_lab",
+          "label": "工粮仍并",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs03_lab_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs03_03",
+              "choice": "keep_lab",
+              "title": "工账上的灯",
+              "outcome": "工账回读后工粮仍并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "push_lab",
+          "label": "先催工栏",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs03_lab_push",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs03_03",
+              "choice": "push_lab",
+              "title": "工账上的灯",
+              "outcome": "工账回读后先催工栏",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs0303_lop1",
+          "speaker": "旁白",
+          "text": "泥香留袖。袖过廊风，再碰册边。"
+        },
+        {
+          "id": "cs0303_lop2",
+          "speaker": "掌柜",
+          "text": "店价不跟进阁。阁里只认岁课格，工面侧。"
+        },
+        {
+          "id": "cs0303_lop3",
+          "speaker": "书记官",
+          "text": "功册折平垫工册下。平了，不抢栏位。"
+        },
+        {
+          "id": "cs0303_lop4",
+          "speaker": "苇原·灯影",
+          "text": "田泥磕尽靴缝。磕尽，脚才上阁板，册脊里。"
+        },
+        {
+          "id": "cs0303_lop5",
+          "speaker": "老管事",
+          "text": "灰拍尽再靠柜。灰进柜，字糊，车轴下。"
+        },
+        {
+          "id": "cs0303_lop6",
+          "speaker": "leader",
+          "text": "我开柜。账事搁下，再认岁课。"
+        },
+        {
+          "id": "cs03_03_ledger_0",
+          "speaker": "旁白",
+          "text": "入册。工账与功榜并排进柜。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_1",
+          "speaker": "书记官",
+          "text": "水车有灯。灯不灭。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_2",
+          "speaker": "leader",
+          "text": "我看见空了。空也在谱里，册边按。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_3",
+          "speaker": "岁吏",
+          "text": "年迹末行写：工账并排留。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_4",
+          "speaker": "老管事",
+          "text": "催工锣再响，也撕不开柜门。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_5",
+          "speaker": "旁白",
+          "text": "柜门一合。灯还在缝里，车响里。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防收牌。牌上工账两字还热。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_7",
+          "speaker": "书记官",
+          "text": "整张功榜，才算功，泥印边。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_8",
+          "speaker": "leader",
+          "text": "假工没进来。好。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_9",
+          "speaker": "岁吏",
+          "text": "月结旁多一笔水车。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_10",
+          "speaker": "老管事",
+          "text": "催条叠在门外。谱在门内，泥印在。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_11",
+          "speaker": "旁白",
+          "text": "朱印干。水车的边也干了。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_12",
+          "speaker": "书记官",
+          "text": "下次打开，水车还在——带着灯。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_13",
+          "speaker": "leader",
+          "text": "够了。去灰旗堡，空行守。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_14",
+          "speaker": "苇原·灯影",
+          "text": "堡门亮着。工账灯跟着。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_15",
+          "speaker": "岁吏",
+          "text": "年迹合上。字还在，并排留。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_16",
+          "speaker": "老管事",
+          "text": "功厅可歇。谱不可假，空格旁。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_17",
+          "speaker": "旁白",
+          "text": "风停。榜平。工账侧。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_18",
+          "speaker": "书记官",
+          "text": "并排不是拖。是完整，下行亮。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_03_ledger_y19",
+          "speaker": "旁白",
+          "text": "工账柜的缝比账室门窄。窄缝里，假数挤不进去。"
+        },
+        {
+          "id": "cs03_03_ledger_y20",
+          "speaker": "石垒·晚担",
+          "text": "风能翻开工账。翻得动的那一行，才许留下来。"
+        },
+        {
+          "id": "cs03_03_ledger_y21",
+          "speaker": "leader",
+          "text": "回工的数我按秤星读。嘴里报上来的数，秤不认。"
+        },
+        {
+          "id": "cs0303_ldg1",
+          "speaker": "岁吏",
+          "text": "回工与功阴并排，袋口扎紧才进册。"
+        },
+        {
+          "id": "cs0303_ldg2",
+          "speaker": "书记官",
+          "text": "抢工的影，只记埂下不记正行。"
+        },
+        {
+          "id": "cs0303_ldg3",
+          "speaker": "石垒·晚担",
+          "text": "泥壳香还在袖里——香在，粮就在。"
+        },
+        {
+          "id": "cs0303_ldg4",
+          "speaker": "leader",
+          "text": "回工并排。灯不灭，工账在柜。"
+        },
+        {
+          "id": "cs0303_ldg_end",
+          "speaker": "leader",
+          "text": "工秤星旁，灰旗堡工账柜等回工数。"
+        },
+        {
+          "id": "cs0303_ink1",
+          "speaker": "旁白",
+          "text": "回工数旁的秤星墨干了半格。半格白着，像星刚熄。"
+        },
+        {
+          "id": "cs0303_ink2",
+          "speaker": "岁吏",
+          "text": "嘴上报的数搁栏外。栏内只留秤上的，等它干透，工栏前。"
+        },
+        {
+          "id": "cs0303_ink3",
+          "speaker": "老管事",
+          "text": "工账那页压平。假数在风里，不进这一格。"
+        },
+        {
+          "id": "cs0303_ink4",
+          "speaker": "旁白",
+          "text": "灯影从册脊滑到页心。滑过，干墨的边更清楚，工面侧。"
+        },
+        {
+          "id": "cs0303_ink5",
+          "speaker": "岁吏",
+          "text": "干了才夹工账。潮着夹，假数会渗回来。"
+        },
+        {
+          "id": "cs0303_ink6",
+          "speaker": "leader",
+          "text": "秤星干了。工账夹好，假数留在风里，人不捡。"
+        },
+        {
+          "id": "cs0303_cls1",
+          "speaker": "旁白",
+          "text": "护工的人散回坡下。袋口扎紧，泥香还在袖里。"
+        },
+        {
+          "id": "cs0303_cls2",
+          "speaker": "老旗手",
+          "text": "旗边没沾假工数。假数留风缝，旗不回头捡。"
+        },
+        {
+          "id": "cs0303_cls3",
+          "speaker": "石垒·晚担",
+          "text": "肩沉步稳。稳着走进放工账的那间屋。"
+        },
+        {
+          "id": "cs0303_cls4",
+          "speaker": "槐里·青禾",
+          "text": "工面回工数并排留着。催工话今晚不进格。"
+        },
+        {
+          "id": "cs0303_cls5",
+          "speaker": "老管事",
+          "text": "柜旁秤星还亮。星在，数不靠谁嘴报。"
+        },
+        {
+          "id": "cs0303_cls6",
+          "speaker": "岁吏",
+          "text": "回工数按秤星写入岁课。嘴报数搁栏外。"
+        },
+        {
+          "id": "cs0303_cls7",
+          "speaker": "苇原·灯影",
+          "text": "灯只照工面空行。空行上没有新写的功。"
+        },
+        {
+          "id": "cs0303_cls8",
+          "speaker": "leader",
+          "text": "工账夹好了。假数留在风里，人不跟去捡。"
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "title_en": "The Lamp in the Labor Book"
+}
