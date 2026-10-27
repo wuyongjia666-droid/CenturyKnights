@@ -8,4 +8,5 @@
 | scaffold_gate | 内容季流水门禁（含 #7） | `content_season_scaffold_check` |
 | playable_dialogue | 可玩章 cs07_01 对白可走 | `content_season_playable_s07_check` |
 | playable_dialogue_02 | 可玩章 cs07_02 对白可走 | `content_season_playable_s07_02_check` |
-
+| playable_dialogue_03 | 可玩章 cs07_03 对白可走 | `content_season_playable_s07_03_check` |
+| playable_gate_s07 | S07 同档门禁 01+02+03 | `content_season_playable_gate_s07_check` |
