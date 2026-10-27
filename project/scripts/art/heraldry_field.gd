@@ -856,8 +856,9 @@ static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	return host
 
 
-## Save-slot / load-card row. crest_hex paints that slot, not the live company.
-static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), crest_hex: String = "") -> TextureRect:
+## Save-slot / load-card row. Prefer full banner_spec (DIY/reedit); crest_hex is legacy fallback.
+## Meta must paint that slot — never the live company.
+static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), crest_hex: String = "", banner_spec: Dictionary = {}) -> TextureRect:
 	if row == null:
 		return null
 	var old := row.get_node_or_null("SlotArms")
@@ -866,7 +867,19 @@ static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), 
 		old.queue_free()
 	var tr: TextureRect
 	var hx := crest_hex.strip_edges()
-	if hx != "":
+	var raw_b: Dictionary = banner_spec if typeof(banner_spec) == TYPE_DICTIONARY else {}
+	if not raw_b.is_empty():
+		var spec := BannerSpec.normalize(raw_b)
+		tr = TextureRect.new()
+		tr.texture = UnitArt.shield_arms(spec, int(size.x), int(size.y))
+		tr.custom_minimum_size = size
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tr.set_meta("arms_kind", "lb_slot_arms")
+		tr.set_meta("arms_core", CKHeraldry.core_key(spec))
+		tr.tooltip_text = Locale.t("lb_slot_arms")
+	elif hx != "":
 		tr = TextureRect.new()
 		tr.texture = UnitArt.shield_arms(CKHeraldry.from_crest(hx), int(size.x), int(size.y))
 		tr.custom_minimum_size = size
