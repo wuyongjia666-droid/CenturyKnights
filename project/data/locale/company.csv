@@ -492,6 +492,7 @@ atlas_terr_month_held,驻军独力守住：%s,Garrison held alone: %s
 atlas_terr_month_threat,新威胁：%s,New threat: %s
 atlas_terr_month_ok,已知晓,Acknowledged
 atlas_terr_month_reclaim,查看反夺委托,View retake commission
+atlas_terr_month_reclaim_line,反夺令·%s待交,Reclaim order · %s pending
 atlas_terr_month_later,稍后,Later
 atlas_terr_month_none,—,—
 atlas_siege_en,SIEGE // 围城,SIEGE // ALERT
@@ -728,3 +729,4 @@ terr_echo_contest_seize,拉锯截击·%s（月银%d）,Contest seize · %s (yiel
 terr_echo_contest_win,拉锯得手·%s（月银%d·驻%d）,Contest won · %s (yield %d · garrison %d)
 terr_echo_contest_loss,拉锯旁落·%s→%s（月银%d）,Contest lost · %s→%s (yield %d)
 terr_echo_contest_miss,拉锯散场·%s/%s（月银%d）,Contest scattered · %s/%s (yield %d)
+terr_echo_reclaim,反夺归旗·%s（月银%d·驻%d）,Reclaim banner · %s (yield %d · garrison %d)
