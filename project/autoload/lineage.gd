@@ -66,6 +66,9 @@ func _mark_widowed(c: CKCharacter, late_id: String) -> void:
 	GameState.mark_dirty()
 
 func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashland") -> Dictionary:
+	## marriage-all-cast A4: roster×roster skips nation-rep gate; bond / 相识 instead.
+	if CKFamilyState.is_internal_pair(suitor, target):
+		return CKFamilyState.can_internal_propose(suitor, target)
 	var need = REP_RANK_NEED.get(target.rank, "known")
 	var have = GameState.get_rep_tier(realm)
 	var need_i = REP_ORDER.find(need)
@@ -96,6 +99,9 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 	var check = can_propose(suitor, target)
 	if not check.get("ok", false):
 		return check
+	## UI / tests that pass the court default still get the cheaper 同袍价.
+	if CKFamilyState.is_internal_pair(suitor, target) and bride_price == CKFamilyState.COURT_BRIDE_PRICE:
+		bride_price = CKFamilyState.INTERNAL_BRIDE_PRICE
 	var rite_cost := 0
 	if accepted_rites is Array:
 		var block := CKCourt.rite_block(suitor, target, accepted_rites)

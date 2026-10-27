@@ -100,6 +100,8 @@ func _couple(tag: String, age: int) -> Array:
 	mo.age = age
 	mo.rank = "knight"
 	mo.blood_mix = {"common_ash": 1.0}
+	## Court-style spouse (not 同袍): default in_roster=true would trip A4 bond gate.
+	mo.in_roster = false
 	GameState.characters[fa.id] = fa
 	GameState.characters[mo.id] = mo
 	return [fa, mo]

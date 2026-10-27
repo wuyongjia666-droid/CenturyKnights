@@ -71,13 +71,14 @@ func _setup_dynasty() -> String:
 	spouse.age = 26
 	spouse.rank = "knight"
 	spouse.alive = true
-	spouse.in_roster = true
+	spouse.in_roster = false  ## court post until wed; A4 bond is 同袍-only
 	spouse.blood_mix = {"common_ash": 1.0}
 	GameState.characters[spouse.id] = spouse
 
 	var wed: Dictionary = Lineage.marry(leader, spouse, 0, [], false)
 	if not bool(wed.get("ok", false)):
 		return "marry: %s" % str(wed.get("msg", ""))
+	spouse.in_roster = true
 	if str(leader.spouse_id) != spouse.id:
 		return "leader spouse_id not set"
 	if str(spouse.spouse_id) != leader.id:
