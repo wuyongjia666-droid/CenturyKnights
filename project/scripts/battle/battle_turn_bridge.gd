@@ -20,6 +20,7 @@ static func note_player_return(host) -> void:
 	host.set_meta(META_PULSE, Time.get_ticks_msec())
 	BattleDualLedger.refresh(host)
 	_auto_select_first_ready(host)
+	BattleTurnCycleFeel.after_player_return(host)
 	_queue_overlay(host)
 
 
