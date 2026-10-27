@@ -494,6 +494,7 @@ atlas_terr_month_ok,已知晓,Acknowledged
 atlas_terr_month_reclaim,查看反夺委托,View retake commission
 atlas_terr_month_reclaim_line,反夺令·%s待交,Reclaim order · %s pending
 atlas_terr_month_defend_line,来犯令·%s待守,Threat order · %s pending defend
+atlas_terr_month_unrest_line,民心未附·%s,Unrest · %s pending settle
 atlas_terr_month_later,稍后,Later
 atlas_terr_month_none,—,—
 atlas_siege_en,SIEGE // 围城,SIEGE // ALERT
@@ -732,3 +733,4 @@ terr_echo_contest_loss,拉锯旁落·%s→%s（月银%d）,Contest lost · %s→
 terr_echo_contest_miss,拉锯散场·%s/%s（月银%d）,Contest scattered · %s/%s (yield %d)
 terr_echo_reclaim,反夺归旗·%s（月银%d·驻%d）,Reclaim banner · %s (yield %d · garrison %d)
 terr_echo_defend,守卫得手·%s（退%s·驻%d）,Defend hold · %s (repel %s · garrison %d)
+terr_echo_assault,强攻得手·%s（月银%d·未附%d月）,Assault seize · %s (yield %d · unrest %d mo)
