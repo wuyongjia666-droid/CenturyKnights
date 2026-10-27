@@ -13,8 +13,11 @@ const ROWS := [
 	{"cid": "cs02_02", "beat": "pulse", "needle": "厅角护着偏。脉在，我先不迈。"},
 	{"cid": "cs03_01", "beat": "estate", "needle": "厅角按住栏。粮在，我先不迈。"},
 	{"cid": "cs03_02", "beat": "grain", "needle": "厅角守空格。阴面在，我先不迈。"},
+	{"cid": "cs03_03", "beat": "wheel", "needle": "厅角守空格。工面在，我先不迈。"},
 	{"cid": "cs04_01", "beat": "echo", "needle": "厅角踏实靴。训在，我先不迈。"},
 	{"cid": "cs04_02", "beat": "deed", "needle": "厅角验针脚。契在，我先不迈。"},
+	{"cid": "cs04_03", "beat": "aisle", "needle": "厅角验碑纹。帖在，我先不迈。"},
+
 	{"cid": "cs05_01", "beat": "chair", "needle": "厅角认格。空椅在，我先不迈。"},
 	{"cid": "cs05_02", "beat": "chain", "needle": "厅角守链。回读在，我先不迈。"},
 	{"cid": "cs06_01", "beat": "spar", "needle": "厅角拍净袖。牌在，我先不迈。"},

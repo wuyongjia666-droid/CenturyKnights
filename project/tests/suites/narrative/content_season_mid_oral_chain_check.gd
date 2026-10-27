@@ -108,6 +108,17 @@ const CHAINS := [
 		"tavern_line": "cs03_02_tavern_y19",
 	},
 	{
+		"cid": "cs03_03",
+		"order": "visit_then_battle",
+		"battle": "bridge",
+		"after_battle": "tavern",
+		"battle_line": "cs03_03_bridge_y21",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+		"visit_line": "cs03_03_hourglass_y18",
+		"tavern_line": "cs03_03_tavern_y19",
+	},
+	{
 		"cid": "cs04_01",
 		"order": "visit_then_battle",
 		"battle": "bridge",
@@ -129,6 +140,18 @@ const CHAINS := [
 		"visit_line": "cs04_02_hourglass_y18",
 		"tavern_line": "cs04_02_tavern_y19",
 	},
+	{
+		"cid": "cs04_03",
+		"order": "visit_then_battle",
+		"battle": "bridge",
+		"after_battle": "tavern",
+		"battle_line": "cs04_03_bridge_y21",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+		"visit_line": "cs04_03_hourglass_y18",
+		"tavern_line": "cs04_03_tavern_y19",
+	},
+
 	{
 		"cid": "cs05_01",
 		"order": "visit_then_battle",

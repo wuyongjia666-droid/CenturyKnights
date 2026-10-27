@@ -13,8 +13,11 @@ const ROWS := [
 	{"cid": "cs02_02", "beat": "slip", "after": "pulse", "needle": "偏我认。并排我守。守完再往下走。"},
 	{"cid": "cs03_01", "beat": "merit", "after": "estate", "needle": "功粮我并验。验完再去对月结。"},
 	{"cid": "cs03_02", "beat": "back", "after": "grain", "needle": "阴面我留。空我认。认完再往回走。"},
+	{"cid": "cs03_03", "beat": "lab", "after": "wheel", "needle": "工面我留。空我认。认完再往水车。"},
 	{"cid": "cs04_01", "beat": "preach", "after": "echo", "needle": "训我验。行我对。对完再去看月份。"},
 	{"cid": "cs04_02", "beat": "back", "after": "deed", "needle": "训阴我翻。空行我留。留完再往下。"},
+	{"cid": "cs04_03", "beat": "hall", "after": "aisle", "needle": "训堂我翻。碑空我留。留完再往下。"},
+
 	{"cid": "cs05_01", "beat": "court", "after": "chair", "needle": "椅我验。链我留。留完再去看月份。"},
 	{"cid": "cs05_02", "beat": "reread", "after": "chain", "needle": "图我按。空我认。认完再往下走。"},
 	{"cid": "cs06_01", "beat": "yard", "after": "spar", "needle": "栏我挂。空我留。留完再去看校场。"},

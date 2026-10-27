@@ -35,8 +35,11 @@ const ROWS := [
 	{"cid": "cs02_02", "battle": "bridge", "after": "tavern"},
 	{"cid": "cs03_01", "battle": "bridge", "after": "tavern"},
 	{"cid": "cs03_02", "battle": "bridge", "after": "tavern"},
+	{"cid": "cs03_03", "battle": "bridge", "after": "tavern"},
 	{"cid": "cs04_01", "battle": "bridge", "after": "tavern"},
 	{"cid": "cs04_02", "battle": "bridge", "after": "tavern"},
+	{"cid": "cs04_03", "battle": "bridge", "after": "tavern"},
+
 	{"cid": "cs05_01", "battle": "bridge", "after": "tavern"},
 	{"cid": "cs05_02", "battle": "bridge", "after": "tavern"},
 	{"cid": "cs06_01", "battle": "bridge", "after": "tavern"},

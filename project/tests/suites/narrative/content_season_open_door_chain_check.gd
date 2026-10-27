@@ -13,8 +13,11 @@ const ROWS := [
 	{"cid": "cs02_02", "beat": "slip", "needle": "我进门。脉案静，再认并排空。"},
 	{"cid": "cs03_01", "beat": "merit", "needle": "我进门。功粮分清，再对榜。"},
 	{"cid": "cs03_02", "beat": "back", "needle": "我进门。阴面离潮，再认空。"},
+	{"cid": "cs03_03", "beat": "lab", "needle": "我进门。工册离潮，再认空。"},
 	{"cid": "cs04_01", "beat": "preach", "needle": "我进门。训在臂，再听讲。"},
 	{"cid": "cs04_02", "beat": "back", "needle": "我进门。契在袖，再翻训阴。"},
+	{"cid": "cs04_03", "beat": "hall", "needle": "我进门。帖在袖，再进训堂。"},
+
 	{"cid": "cs05_01", "beat": "court", "needle": "我进门。空椅影在，人先站定。"},
 	{"cid": "cs05_02", "beat": "reread", "needle": "我进门。图卷齐，再回读。"},
 	{"cid": "cs06_01", "beat": "yard", "needle": "我进门。场沙尽，再挂栏。"},

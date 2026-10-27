@@ -45,6 +45,12 @@ const CHAINS := [
 		"needle": "榜阴贴着正榜。阴面的空，比阳面更刺眼。",
 	},
 	{
+		"cid": "cs03_03",
+		"beat": "hourglass",
+		"after": "bridge",
+		"needle": "工账贴着功面。工面的空，比功面更刺眼。",
+	},
+	{
 		"cid": "cs04_01",
 		"beat": "hourglass",
 		"after": "bridge",
@@ -56,6 +62,13 @@ const CHAINS := [
 		"after": "bridge",
 		"needle": "训阴写在轴背。背着的字，要翻过来才见。",
 	},
+	{
+		"cid": "cs04_03",
+		"beat": "hourglass",
+		"after": "bridge",
+		"needle": "训堂写在轴背。背着的字，要翻过来才见。",
+	},
+
 	{
 		"cid": "cs05_01",
 		"beat": "hourglass",

@@ -13,8 +13,11 @@ const ROWS := [
 	{"cid": "cs02_02", "beat": "ledger", "needle": "偏格干平了。结论不今晚写，人先离开案。"},
 	{"cid": "cs03_01", "beat": "ledger", "needle": "铃干了。袋还在肩，功和粮都进册，我回仓门。"},
 	{"cid": "cs03_02", "beat": "ledger", "needle": "秤星干了。榜阴夹好，假数留在风里，人不捡。"},
+	{"cid": "cs03_03", "beat": "ledger", "needle": "秤星干了。工账夹好，假数留在风里，人不捡。"},
 	{"cid": "cs04_01", "beat": "ledger", "needle": "训干了。绣词门外，步数我带走，字留下。"},
 	{"cid": "cs04_02", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。"},
+	{"cid": "cs04_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。堂碑守。"},
+
 	{"cid": "cs05_01", "beat": "ledger", "needle": "空栏干了。椅子空着我才走，名的事明天对。"},
 	{"cid": "cs05_02", "beat": "ledger", "needle": "页干了。潮着我也回过；干了，我才真离开案。"},
 	{"cid": "cs06_01", "beat": "ledger", "needle": "鼓点干了。胜名没钉，旗我带回旗杆下。"},

@@ -14,8 +14,11 @@ const ROWS := [
 	{"cid": "cs02_02", "beat": "slip", "needle": "缝光一瞥。偏栏外的缝，我先不迈。"},
 	{"cid": "cs03_01", "beat": "merit", "needle": "缝光一瞥。功粮外的铃，我先不迈出。"},
 	{"cid": "cs03_02", "beat": "back", "needle": "缝光一瞥。榜阴外的秤，我先不迈。"},
+	{"cid": "cs03_03", "beat": "lab", "needle": "缝光一瞥。工账外的秤，我先不迈。"},
 	{"cid": "cs04_01", "beat": "preach", "needle": "缝光一瞥。家训外的步，我先不迈出。"},
 	{"cid": "cs04_02", "beat": "back", "needle": "缝光一瞥。训阴外的契，我先不迈。"},
+	{"cid": "cs04_03", "beat": "hall", "needle": "缝光一瞥。训堂外的帖，我先不迈。"},
+
 	{"cid": "cs05_01", "beat": "court", "needle": "缝光一瞥。空椅外的旗，我先不迈出。"},
 	{"cid": "cs05_02", "beat": "reread", "needle": "缝光一瞥。回读外的环，我先不迈。"},
 	{"cid": "cs06_01", "beat": "yard", "needle": "缝光一瞥。校场外的沙，我先不迈出。"},
