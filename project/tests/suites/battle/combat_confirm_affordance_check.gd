@@ -74,11 +74,19 @@ func _algebra_chips() -> String:
 	if moved.position.x < 0.0:
 		return "left-edge cancel stayed off the board %s" % moved
 	var owned := Node.new()
-	owned.set_meta("m_action_settle", {"actor": Vector2i(1, 0), "delta": Vector2(8, 0), "inset": Rect2()})
+	var owned_stamp := {"actor": Vector2i(1, 0), "delta": Vector2(8, 0), "inset": Rect2()}
+	owned.set_meta("m_action_settle", owned_stamp)
 	BattleConfirmAffordance.settle_camera(owned, Vector2i(1, 0), [Vector2i(9, 0)])
-	if owned.has_meta("m_confirm_settle"):
+	# Mirror m_confirm_settle is fine (E2E stamp); fighting means rewriting the
+	# T-P15 camera ownership / delta.
+	if owned.get_meta("m_action_settle") != owned_stamp:
 		owned.free()
 		return "post-confirm camera fought an existing T-P15 settle"
+	if owned.has_meta("m_confirm_settle"):
+		var conf = owned.get_meta("m_confirm_settle")
+		if conf != owned_stamp:
+			owned.free()
+			return "owned-path confirm settle rewrote T-P15 stamp"
 	owned.free()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	var desk := Node.new()
