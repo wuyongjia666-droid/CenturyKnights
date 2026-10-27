@@ -44,6 +44,8 @@ func _assert_page(page: Node, where: String, nid: String) -> void:
 		_ok(cn != null and str(cn.get_meta("arms_kind", "")) == "lb_city_arms", "%s 邦徽" % where)
 		_ok(cn != null and str(cn.get_meta("nation_id", "")) == nid, "%s nation_id" % where)
 		_ok(cn != null and ca != null and str(cn.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s 邦徽!=团徽" % where)
+		var nbn := strip.find_child("NationBanner", true, false)
+		_ok(nbn != null and str(nbn.get_meta("field_route", "")) == "nation_banner", "%s nation_banner" % where)
 	var btn := page.find_child("Nation_%s" % nid, true, false)
 	_ok(btn != null, "%s Nation_%s button" % [where, nid])
 	if btn != null:
@@ -100,4 +102,5 @@ func _run_helpers() -> void:
 	_ok(strip != null and strip.name == "NationCrestStrip", "helper NationCrestStrip")
 	_ok(strip.find_child("CastleArms", true, false) != null, "helper CastleArms")
 	_ok(strip.find_child("CityNationArms", true, false) != null, "helper CityNationArms")
+	_ok(strip.find_child("NationBanner", true, false) != null, "helper NationBanner")
 	host.queue_free()
