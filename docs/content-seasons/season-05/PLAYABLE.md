@@ -205,3 +205,9 @@
 - 各章首拍在 `_ods6` 后、离开该拍前加 `_rim1`–`_rim6` 门槛外望口头，全库去重；收束非旁白。
 - 验收：`content_season_threshold_gaze_chain_check` — hub chip → 门槛针口头。
 - 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`。
+
+## 帘边驻足口头加厚（curtain-halt）
+
+- 各章首拍在 `_rim6` 后、离开该拍前加 `_crn1`–`_crn6` 帘边驻足口头，全库去重；收束非旁白。
+- 验收：`content_season_curtain_halt_chain_check` — hub chip → 帘边针口头。
+- 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`/`_rim`。
