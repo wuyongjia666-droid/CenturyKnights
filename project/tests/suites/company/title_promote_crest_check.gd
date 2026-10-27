@@ -49,6 +49,10 @@ func _assert_page(page: Node, where: String) -> void:
 		var la := strip.find_child("LeaderArms", true, false)
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s strip 团徽" % where)
 		_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s strip LeaderArms" % where)
+		_ok(str(ca.get_meta("field_route", "")) == "strip_company" if ca != null else false, "%s strip_company" % where)
+		_ok(str(la.get_meta("field_route", "")) == "muster_leader" if la != null else false, "%s muster_leader" % where)
+		var bn := strip.find_child("MusterBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "muster_banner", "%s muster_banner" % where)
 	var lead := page.find_child("LeaderArms", true, false)
 	# Prefer the paint-row LeaderArms (field_route title_leader) over strip child.
 	for n in page.find_children("LeaderArms", "", true, false):
