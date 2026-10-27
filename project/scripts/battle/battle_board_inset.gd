@@ -2,13 +2,15 @@ class_name BattleBoardInset
 extends RefCounted
 ## Y1-A fat knife: one playable/readable inset for select → range →
 ## confirm/cancel → camera → phase/end banners → action settle → select
-## focus / CombatFrame follow → attack ForecastPanel park. Range keep and
-## confirm settle used to disagree — range clipped the notch lip, confirm
-## chips/settle did not. Action settle / phase banners then rebuilt a third
-## inset without the notch. Select focus_cell / focus_follow and
-## CombatFrame.follow_cells used the raw stage play inset and could slide the
-## figure under the info column or into the notch lip. ForecastPanel._place
+## focus / CombatFrame follow → attack ForecastPanel park → skill buff/heal
+## follow. Range keep and confirm settle used to disagree — range clipped the
+## notch lip, confirm chips/settle did not. Action settle / phase banners then
+## rebuilt a third inset without the notch. Select focus_cell / focus_follow
+## and CombatFrame.follow_cells used the raw stage play inset and could slide
+## the figure under the info column or into the notch lip. ForecastPanel._place
 ## parked against the raw stage and could cover the notch lip or info column.
+## Skill buff/heal soft-confirm follow used to reserve the forecast band even
+## though no ForecastPanel is shown, shrinking the shared BoardInset for free.
 
 
 static func for_host(host, reserve_top: float = -1.0) -> Rect2:
