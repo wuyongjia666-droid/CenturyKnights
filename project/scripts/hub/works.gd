@@ -25,12 +25,20 @@ func _ready() -> void:
 
 
 func _place_works_crests() -> void:
-	## Castle works chrome: 团徽 header + castle banner strip.
+	## Castle works chrome: 团徽 header + castle banner + WorksCrestStrip cloth.
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
 	var host: Node = _body if _body != null else self
-	CKHeraldryField.place_company_header(host, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
-	CKHeraldryField.place_banner_plate(host, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+	var at_y := 8.0 if not mob else 4.0
+	for n in ["CastleArms", "CastleBannerStrip", "WorksCrestStrip"]:
+		var oldn := host.get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	CKHeraldryField.place_company_header(host, Vector2(1180, at_y), hdr)
+	CKHeraldryField.place_banner_plate(host, Vector2(1120, at_y), hdr, Vector2(28, 38))
+	var wat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 220.0), at_y)
+	CKHeraldryField.place_works_crest_strip(host, wat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):

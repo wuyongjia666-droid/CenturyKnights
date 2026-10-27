@@ -467,6 +467,21 @@ static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 	return CKHeraldryField.place_market_crest_strip(parent, at, shield, banner)
 
 
+## Castle works strip. Field owns WorksCrestStrip.
+static func place_works_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_works_crest_strip(parent, at, shield, banner)
+
+
+## Estates strip. Field owns EstatesCrestStrip.
+static func place_estates_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_estates_crest_strip(parent, at, shield, banner)
+
+
+## Castle annex strip. Field owns AnnexCrestStrip.
+static func place_annex_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_annex_crest_strip(parent, at, shield, banner)
+
+
 ## Skill-tree header: 团徽 + 技徽旗布 (SkillCrestStrip).
 static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	return CKHeraldryField.place_skill_crest_strip(parent, at, shield, banner)

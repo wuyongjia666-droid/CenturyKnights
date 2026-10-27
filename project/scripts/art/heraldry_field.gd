@@ -1182,6 +1182,66 @@ static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 	return host
 
 
+## Castle works strip: 团徽 + 工事旗布 (WorksCrestStrip) via _cloth_beside.
+static func place_works_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "WorksCrestStrip")
+	var host := Control.new()
+	host.name = "WorksCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x, shield.y)
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "works_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
+	host.add_child(arms)
+	_cloth_beside(host, shield, "WorksBanner", "works_banner", "lb_works_arms", banner)
+	parent.add_child(host)
+	return host
+
+
+## Estates strip: 团徽 + 属地旗布 (EstatesCrestStrip) via _cloth_beside.
+static func place_estates_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "EstatesCrestStrip")
+	var host := Control.new()
+	host.name = "EstatesCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x, shield.y)
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "estates_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
+	host.add_child(arms)
+	_cloth_beside(host, shield, "EstatesBanner", "estates_banner", "lb_estates_arms", banner)
+	parent.add_child(host)
+	return host
+
+
+## Castle annex strip: 团徽 + 附楼旗布 (AnnexCrestStrip) via _cloth_beside.
+static func place_annex_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "AnnexCrestStrip")
+	var host := Control.new()
+	host.name = "AnnexCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x, shield.y)
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "annex_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
+	host.add_child(arms)
+	_cloth_beside(host, shield, "AnnexBanner", "annex_banner", "lb_annex_arms", banner)
+	parent.add_child(host)
+	return host
+
+
 ## Yeartrace panel header: person YeartraceArms (岁课年迹). House mount uses company arms.
 ## Shrink-only — never expand in the dossier FamilyTree scroll (court_ui overlap guard).
 static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = Vector2(28, 34)) -> void:
