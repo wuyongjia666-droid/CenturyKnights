@@ -419,31 +419,44 @@ static func _board_local(host, screen_pos: Vector2) -> Vector2:
 	return local_after_pan_zoom(host._screen_to_local(screen_pos), host._board_pan, host._board_zoom)
 
 
+## Live focus frame: shared BoardInset (notch + info + edge). Falls back to the
+## raw stage when the host has no usable stage rect yet (device-free FakeHosts).
+static func _focus_frame_inset(host) -> Rect2:
+	var stage: Rect2 = _stage_rect(host)
+	if stage.size.x < 1.0 or stage.size.y < 1.0:
+		return Rect2()
+	var inset := BattleBoardInset.for_host(host, 0.0)
+	if inset.size.x >= 8.0 and inset.size.y >= 8.0:
+		return inset
+	return stage
+
+
 static func focus_cell(host, cell: Vector2i, smooth: bool = true, force: bool = false) -> void:
 	# T-P6: `force` lets enemy-turn / phase-lead follow work on desktop too.
 	if not force and not DeviceProfile.is_mobile():
 		return
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
-	var stage: Rect2 = _stage_rect(host)
-	if stage.size.x < 1.0 or stage.size.y < 1.0:
+	var inset: Rect2 = _focus_frame_inset(host)
+	if inset.size.x < 1.0 or inset.size.y < 1.0:
 		return
-	var delta: Vector2 = focus_pan_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
+	var delta: Vector2 = focus_pan_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, inset)
 	if delta.length_squared() < 0.25:
 		return
 	_apply_focus_pan(host, host._board_pan + delta, smooth)
 
 
-## Soft-follow a cell so it stays inside the stage inset (preview drag / attack latch).
+## Soft-follow a cell so it stays inside the shared BoardInset (preview drag /
+## attack latch). Same notch + info + edge cut as range keep / confirm settle.
 static func focus_follow_cell(host, cell: Vector2i) -> void:
 	if not DeviceProfile.is_mobile():
 		return
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
-	var stage: Rect2 = _stage_rect(host)
-	if stage.size.x < 1.0 or stage.size.y < 1.0:
+	var inset: Rect2 = _focus_frame_inset(host)
+	if inset.size.x < 1.0 or inset.size.y < 1.0:
 		return
-	var delta: Vector2 = focus_nudge_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
+	var delta: Vector2 = focus_nudge_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, inset)
 	if delta.length_squared() < 0.25:
 		return
 	_apply_focus_pan(host, host._board_pan + delta, true)
@@ -528,10 +541,11 @@ static func focus_selected(host) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
 		return
 	note_select_burst(host)
-	# Mobile still attempts a centre. T-P13 cancels that yank when the figure
-	# (head included) is already inside the play inset, and replaces it with the
-	# minimum nudge when it is not. Desktop focus_cell is a no-op without force
-	# so phase lead stays put; select follow goes through BattleCombatFrame.
+	# Mobile still attempts a BoardInset centre. T-P13 / CombatFrame cancel that
+	# yank when the figure (head included) is already inside the shared inset
+	# (notch + info + edge), and replace it with the minimum nudge when it is
+	# not. Desktop focus_cell is a no-op without force so phase lead stays put;
+	# select follow goes through BattleCombatFrame (also BoardInset).
 	if DeviceProfile.is_mobile():
 		focus_cell(host, host.units[host.selected].pos)
 	BattleCombatFrame.follow_selected(host)
