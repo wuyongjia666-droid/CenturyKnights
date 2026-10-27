@@ -57,11 +57,25 @@ static func _pair(host: Control, shield: Vector2, second: TextureRect) -> void:
 
 
 ## Cloth plate beside a Field strip — keeps surface CastleArms node names; route deepens ownership.
-static func _cloth_beside(host: Control, shield: Vector2, banner_name: String, field_route: String) -> TextureRect:
-	var bn := CKHeraldryChrome.make_company_banner(Vector2(maxf(18.0, shield.x * 0.7), maxf(24.0, shield.y * 0.85)))
+## arms_kind (locale key) stamps tooltip + meta; empty keeps cloth unlabeled (no fake castle_view tip).
+## banner Vector2.ZERO → size from shield; else use the caller's cloth size.
+static func _cloth_beside(
+	host: Control,
+	shield: Vector2,
+	banner_name: String,
+	field_route: String,
+	arms_kind: String = "",
+	banner: Vector2 = Vector2.ZERO,
+) -> TextureRect:
+	var bsz := banner
+	if bsz == Vector2.ZERO:
+		bsz = Vector2(maxf(18.0, shield.x * 0.7), maxf(24.0, shield.y * 0.85))
+	var bn := CKHeraldryChrome.make_company_banner(bsz)
 	bn.name = banner_name
 	bn.set_meta("field_route", field_route)
-	bn.tooltip_text = Locale.t("lb_castle_view_arms")
+	if arms_kind != "":
+		bn.tooltip_text = Locale.t(arms_kind)
+		bn.set_meta("arms_kind", arms_kind)
 	bn.position = Vector2(host.size.x + 8.0, (shield.y - bn.size.y) * 0.5)
 	host.add_child(bn)
 	host.size = Vector2(bn.position.x + bn.size.x, maxf(host.size.y, bn.size.y))
@@ -1079,7 +1093,7 @@ static func attach_office_field_arms(row: Control, c, arms_sz: Vector2 = Vector2
 		row.move_child(arms, 0)
 	return arms
 
-## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip).
+## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip) via _cloth_beside.
 static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -1087,25 +1101,19 @@ static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vecto
 	var host := Control.new()
 	host.name = "HourglassCrestStrip"
 	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.size = Vector2(shield.x, shield.y)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.set_meta("field_route", "hourglass_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
-	var bn := CKHeraldryChrome.make_company_banner(banner)
-	bn.name = "HourglassBanner"
-	bn.tooltip_text = Locale.t("lb_hourglass_arms")
-	bn.set_meta("arms_kind", "lb_hourglass_arms")
-	bn.set_meta("field_route", "hourglass_banner")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
+	_cloth_beside(host, shield, "HourglassBanner", "hourglass_banner", "lb_hourglass_arms", banner)
 	parent.add_child(host)
 	return host
 
 
-## Castle overview strip: 团徽 + 城堡旗布 (CastleViewCrestStrip). Distinct from CastleBannerStrip.
+## Castle overview strip: 团徽 + 城堡旗布 (CastleViewCrestStrip) via _cloth_beside. Distinct from CastleBannerStrip.
 static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -1113,25 +1121,19 @@ static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vec
 	var host := Control.new()
 	host.name = "CastleViewCrestStrip"
 	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.size = Vector2(shield.x, shield.y)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.set_meta("field_route", "castle_view_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
-	var bn := CKHeraldryChrome.make_company_banner(banner)
-	bn.name = "CastleViewBanner"
-	bn.tooltip_text = Locale.t("lb_castle_view_arms")
-	bn.set_meta("arms_kind", "lb_castle_view_arms")
-	bn.set_meta("field_route", "castle_view_banner")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
+	_cloth_beside(host, shield, "CastleViewBanner", "castle_view_banner", "lb_castle_view_arms", banner)
 	parent.add_child(host)
 	return host
 
 
-## Blood-assay strip: 团徽 + 血验旗布 (BloodCrestStrip).
+## Blood-assay strip: 团徽 + 血验旗布 (BloodCrestStrip) via _cloth_beside.
 static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -1139,20 +1141,14 @@ static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	var host := Control.new()
 	host.name = "BloodCrestStrip"
 	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.size = Vector2(shield.x, shield.y)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.set_meta("field_route", "blood_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
-	var bn := CKHeraldryChrome.make_company_banner(banner)
-	bn.name = "BloodBanner"
-	bn.tooltip_text = Locale.t("lb_blood_arms")
-	bn.set_meta("arms_kind", "lb_blood_arms")
-	bn.set_meta("field_route", "blood_banner")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
+	_cloth_beside(host, shield, "BloodBanner", "blood_banner", "lb_blood_arms", banner)
 	parent.add_child(host)
 	return host
 
@@ -1294,7 +1290,7 @@ static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vecto
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
 	# Cloth plate beside the gazette pair — Field ownership on 朝报.
-	_cloth_beside(host, shield, "GazetteBanner", "gazette_banner")
+	_cloth_beside(host, shield, "GazetteBanner", "gazette_banner", "lb_gazette_arms")
 	parent.add_child(host)
 	return host
 
@@ -1450,7 +1446,7 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	host.set_meta("nation_id", nid)
 	host.set_meta("city_id", str(city_id))
 	# Cloth plate beside the city pair — Field ownership on 城关.
-	_cloth_beside(host, shield, "CityBanner", "city_banner")
+	_cloth_beside(host, shield, "CityBanner", "city_banner", "lb_city_arms")
 	parent.add_child(host)
 	return host
 
