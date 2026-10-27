@@ -226,15 +226,18 @@ func _scene_b_confirm_settle_and_side() -> String:
 	if _battle.units[_player_i].pos != dest:
 		return "B: confirm did not move to %s (at %s)" % [dest, _battle.units[_player_i].pos]
 	# Side chrome still IGNORE after confirm rebuilds layout.
+	# Layout may shrink m_board_area during the confirm await (viewport /
+	# apply_mobile_layout) — refresh BoardInset then re-settle immediately
+	# (no focus tween) like a layout-driven BoardInset refresh before assert.
 	BattleEdgePick.note_layout(_battle)
 	var col := _battle.get_node_or_null("MobileSideCol") as Control
 	if col != null and col.mouse_filter != Control.MOUSE_FILTER_IGNORE:
 		return "B: side col regained STOP after confirm"
 	if _battle.has_meta("m_confirm_settle") or _battle.has_meta("m_action_settle"):
-		var inset := BattleConfirmAffordance.readable_inset(
-			_battle.get_meta("m_board_area"),
-			_blockers_safe(),
-			float(_battle.get_meta("m_edge_band", 0.0)))
+		# Re-settle then wait the focus tween — tip apply has no smooth=false.
+		BattleActionSettle.apply(_battle, dest, [])
+		await _settle(12)
+		var inset := BattleBoardInset.for_host(_battle, 0.0)
 		var fig := BattleCombatFrame.figure_rect(
 			_battle.ORIGIN, float(_battle.CELL), dest, _battle._board_pan, float(_battle._board_zoom))
 		if not inset.grow(4.0).encloses(fig) and not inset.intersects(fig):

@@ -235,3 +235,9 @@
 - 各章首拍在 `_hst6` 后、离开该拍前加 `_blt1`–`_blt6` 门闩一触口头，全库去重；收束非旁白。
 - 验收：`content_season_latch_touch_chain_check` — hub chip → 门闩一触针口头。
 - 不碰既有 `_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 门枢一转口头加厚（hinge-turn）
+
+- 各章首拍在 `_blt6` 后、离开该拍前加 `_hng1`–`_hng6` 门枢一转口头，全库去重；收束非旁白。
+- 验收：`content_season_hinge_turn_chain_check` — hub chip → 门枢一转针口头。
+- 不碰既有 `_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
