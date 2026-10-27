@@ -1,6 +1,6 @@
 extends Control
-## Territory Ledger (P1-UX-04 / design §19) — owned sites whole-chain:
-## list · yield/garrison/threat · remote reinforce · siege alert · atlas site jump.
+## Territory Ledger (P1-UX-04 / design §19 + §20) — owned sites whole-chain:
+## list · yield/garrison/threat · remote reinforce · siege alert · atlas site jump · free stockade credit.
 
 const _MAX_LIST := 48
 
@@ -12,6 +12,7 @@ var _btn_atlas: Button
 var _btn_stockade: Button
 var _msg: Label
 var _empty: Label
+var _credit: Label
 var _ids: Array = []
 var _pick := ""
 
@@ -39,21 +40,29 @@ func _build() -> void:
 	var hint := UIKit.body_label(Locale.t("ux_territory_hint"), UIKit.TEXT_DIM, 12)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hint.position = Vector2(42, 118)
-	hint.size = Vector2(1196, 36)
+	hint.size = Vector2(1196, 28)
 	add_child(hint)
+
+	_credit = UIKit.body_label("", UIKit.OK, 13)
+	_credit.name = "TerritoryCreditBanner"
+	_credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_credit.position = Vector2(42, 148)
+	_credit.size = Vector2(1196, 24)
+	_credit.visible = false
+	add_child(_credit)
 
 	_empty = UIKit.body_label(Locale.t("ux_territory_empty"), UIKit.EMBER, 13)
 	_empty.name = "TerritoryEmpty"
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_empty.position = Vector2(42, 160)
-	_empty.size = Vector2(1196, 40)
+	_empty.position = Vector2(42, 176)
+	_empty.size = Vector2(1196, 28)
 	_empty.visible = false
 	add_child(_empty)
 
 	_list = ItemList.new()
 	_list.name = "TerritoryList"
-	_list.position = Vector2(42, 210)
-	_list.size = Vector2(420, 400)
+	_list.position = Vector2(42, 214)
+	_list.size = Vector2(420, 396)
 	_list.item_selected.connect(_on_pick)
 	add_child(_list)
 
@@ -62,8 +71,8 @@ func _build() -> void:
 	_detail.bbcode_enabled = true
 	_detail.fit_content = false
 	_detail.scroll_active = true
-	_detail.position = Vector2(480, 210)
-	_detail.size = Vector2(760, 280)
+	_detail.position = Vector2(480, 214)
+	_detail.size = Vector2(760, 276)
 	add_child(_detail)
 
 	var acts := HBoxContainer.new()
@@ -119,6 +128,13 @@ func _focus_first() -> void:
 func _refresh() -> void:
 	_ids.clear()
 	_list.clear()
+	var credit_n := CKTerritory.stockade_credit_count()
+	if credit_n > 0:
+		_credit.text = Locale.t("ux_territory_credit_banner") % credit_n
+		_credit.visible = true
+	else:
+		_credit.text = ""
+		_credit.visible = false
 	var owned: Array = CKTerritory.owned_ids()
 	owned.sort()
 	for id in owned:
@@ -180,6 +196,12 @@ func _on_pick(idx: int) -> void:
 	else:
 		lines.append(Locale.t("ux_territory_detail_no_stockade"))
 	lines.append(Locale.t("ux_territory_detail_reinforce_cost") % cost)
+	var sprev: Dictionary = CKTerritory.stockade_preview(_pick)
+	if not stockade:
+		if bool(sprev.get("credit", false)):
+			lines.append(Locale.t("ux_territory_detail_stockade_free"))
+		else:
+			lines.append(Locale.t("ux_territory_detail_stockade_cost") % int(sprev.get("cost", 0)))
 	if th.is_empty():
 		lines.append(Locale.t("ux_territory_detail_calm"))
 	else:
@@ -195,7 +217,12 @@ func _on_pick(idx: int) -> void:
 			lines.append(Locale.t("ux_territory_detail_bribed"))
 	_detail.text = "\n".join(lines)
 	_btn_reinforce.disabled = not bool(prev.get("craftable", false))
-	_btn_stockade.disabled = not bool(CKTerritory.stockade_preview(_pick).get("craftable", false))
+	var spick: Dictionary = CKTerritory.stockade_preview(_pick)
+	_btn_stockade.disabled = not bool(spick.get("craftable", false))
+	if bool(spick.get("credit", false)) and not stockade:
+		_btn_stockade.text = Locale.t("ux_territory_stockade_free")
+	else:
+		_btn_stockade.text = Locale.t("ux_territory_stockade")
 	_btn_alert.disabled = th.is_empty()
 	_btn_atlas.disabled = str(s.get("anchor", "")) == ""
 

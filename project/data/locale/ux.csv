@@ -38,6 +38,7 @@ ux_todo_quests,在途委托,Active commissions
 ux_todo_marriage,可议婚事,Marriages to discuss
 ux_todo_injured,伤病,Wounded
 ux_todo_territory_threat,领地受威胁,Sites under threat
+ux_todo_stockade_credit,免费屯营待用,Free stockade ready
 ux_todo_festival,节庆,Festival
 ux_todo_train,可传习,Tutor open
 ux_todo_none,本月无待办,Nothing due this month
@@ -537,10 +538,12 @@ ux_marry_has_spouse,已有配偶（MVP 不可重婚）,Already wed (no remarriag
 ux_territory_title,领地簿,Territory Ledger
 ux_territory_back,返回城堡,Back to castle
 ux_territory_hint,归旗属地一览：月银 · 驻军 · 威胁 · 远程增派 / 屯营 · 告急围城 · 舆图落点。,Owned sites: yield · garrison · threat · remote reinforce / stockade · siege alert · atlas jump.
+ux_territory_credit_banner,免费屯营额度 ×%d — 选一处未建屯营的属地，点「免费建屯营」。,Free stockade credit ×%d — pick a site without one, tap Build stockade (free).
 ux_territory_empty,尚无归旗属地。先在舆图上夺下一处，再回来看簿。,No owned sites yet. Seize one on the atlas, then return.
 ux_territory_empty_detail,空簿。夺地后这里会列出月银、驻军与威胁。,Empty ledger. After a seize, yield / garrison / threat land here.
 ux_territory_reinforce,远程增派,Remote reinforce
 ux_territory_stockade,建屯营,Build stockade
+ux_territory_stockade_free,免费建屯营,Build stockade (free)
 ux_territory_alert,告急围城,Siege alert
 ux_territory_goto_atlas,前往舆图,Open atlas
 ux_territory_alert_fail,该地无威胁，告急未发。,No threat on this site — alert not queued.
@@ -551,6 +554,8 @@ ux_territory_tag_stockade,有屯营,STOCKADE
 ux_territory_detail_meta,国别 %s · 月银 %d · 驻军 %d · 未附 %d 月,Nation %s · yield %d · garrison %d · unrest %d mo
 ux_territory_detail_stockade,已建屯营（驻军上限 +1 · 月产加额）。,Stockade up (garrison cap +1 · yield bump).
 ux_territory_detail_no_stockade,尚未建屯营。,No stockade yet.
+ux_territory_detail_stockade_cost,下次建屯营耗银 %d（可远程）。,Next stockade costs %d silver (remote).
+ux_territory_detail_stockade_free,下次建屯营：免费（委托链额度）。,Next stockade: free (chain credit).
 ux_territory_detail_reinforce_cost,下次增派耗银 %d（可远程，无需亲临）。,Next reinforce costs %d silver (remote — no travel required).
 ux_territory_detail_calm,平静 · 无在途威胁。,Calm · no live threat.
 ux_territory_detail_threat,威胁：%s · 剩余 %d 月 · 阶段 %s,Threat: %s · %d mo left · phase %s
