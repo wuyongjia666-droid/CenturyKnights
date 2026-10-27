@@ -2622,10 +2622,13 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	var extra := " ".join(bits) if not bits.is_empty() else Locale.t("atlas_terr_month_none")
 	var echo_contest := str(CKEconomyState.month_echo_snapshot().get("contest", ""))
 	var echo_reclaim := str(CKEconomyState.month_echo_snapshot().get("reclaim", ""))
+	var echo_defend := str(CKEconomyState.month_echo_snapshot().get("defend", ""))
 	var h := 340.0 if reclaims.is_empty() else 390.0
 	if echo_contest != "" or not contests.is_empty():
 		h += 40.0
 	if echo_reclaim != "" or not reclaims.is_empty():
+		h += 40.0
+	if echo_defend != "" or not threats.is_empty():
 		h += 40.0
 	var panel := _modal_panel(h)
 	panel.name = "TerritoryMonthModal"
@@ -2727,6 +2730,23 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		echo_r.position = Vector2(24, h - 96)
 		echo_r.size = Vector2(452, 20)
 		panel.add_child(echo_r)
+	# Territory fat: DefendLine + EchoLine_defend on month panel.
+	if not threats.is_empty():
+		var dbits: Array = []
+		for tr in threats:
+			if typeof(tr) == TYPE_DICTIONARY:
+				dbits.append("%s·%s" % [str(tr.get("name", "")), str(tr.get("by", ""))])
+		var dl := UIKit.body_label(Locale.t("atlas_terr_month_defend_line") % "、".join(dbits), UIKit.EMBER, 12)
+		dl.name = "DefendLine"
+		dl.position = Vector2(24, (h - 136.0) if echo_defend != "" else (h - 116.0))
+		dl.size = Vector2(452, 20)
+		panel.add_child(dl)
+	if echo_defend != "":
+		var echo_d := UIKit.body_label(echo_defend, UIKit.OK, 12)
+		echo_d.name = "EchoLine_defend"
+		echo_d.position = Vector2(24, h - 96)
+		echo_d.size = Vector2(452, 20)
+		panel.add_child(echo_d)
 	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
 	later.name = "TerritoryMonthLater"
 	later.position = Vector2(24, h - 56)
