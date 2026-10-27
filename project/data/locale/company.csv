@@ -725,6 +725,12 @@ atlas_contest_stake,加码截夺（%d银）,Stake claim (%d silver)
 atlas_contest_stake_ok,「%s」加码成功（−%d银·压%d）。,Stake on %s planted (−%d silver · pressure %d).
 atlas_contest_staked,本团已加码此拉锯。,Company already staked this race.
 atlas_contest_stake_need_silver,加码需银 %d。,Stake needs %d silver.
+atlas_contest_resolve_en,CONTEST // 落幕,CONTEST // RESOLVE
+atlas_contest_resolve_title,拉锯落幕,Contest settled
+atlas_contest_resolve_body_won,「%s」拉锯由本团得手。月银约 %d · 驻军 %d。,"%s" contest won by the company. Yield ~%d · garrison %d.
+atlas_contest_resolve_body_lost,「%s」拉锯旁落 · %s 得手。月银约 %d 落入对手。,"%s" contest lost · %s claims it. Yield ~%d goes to the rival.
+atlas_contest_resolve_body_miss,「%s」拉锯散场 · %s。月银约 %d 仍悬。,"%s" contest scattered · %s. Yield ~%d stays unsettled.
+atlas_contest_resolve_ok,已知晓,Understood
 atlas_terr_month_contest,拉锯落幕：%s,Contest settled: %s
 atlas_terr_month_contest_open,拉锯未决：%s,Contest open: %s
 terr_echo_contest_stake,拉锯加码·%s（−%d银·压%d）,Contest stake · %s (−%d silver · pressure %d)
