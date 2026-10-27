@@ -60,7 +60,25 @@ func _run() -> String:
 		if wq < 1:
 			return "world active not counted (%d)" % wq
 	World.active.clear()
-	# J14 / territory HubTodo: no threat → no chip; planted threat → count + atlas link.
+	var terr_err := _check_territory_todos()
+	if terr_err != "":
+		return terr_err
+	print("OK todo due")
+	return ""
+
+
+## J14 threat + §20 stockade credit + §21 reclaim HubTodo chips.
+func _check_territory_todos() -> String:
+	var err := _check_threat()
+	if err != "":
+		return err
+	err = _check_stockade_credit()
+	if err != "":
+		return err
+	return _check_reclaim()
+
+
+func _check_threat() -> String:
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "territory_threat" and int(item.get("count", 0)) > 0:
 			return "fresh/no-threat still shows territory_threat"
@@ -98,7 +116,10 @@ func _run() -> String:
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "territory_threat" and int(item.get("count", 0)) > 0:
 			return "cleared threat still shows territory_threat"
-	# §20 free stockade credit: grant → chip+ledger link; spend → chip gone.
+	return ""
+
+
+func _check_stockade_credit() -> String:
 	CKTerritory._st().stockade_credit = 0
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "stockade_credit" and int(item.get("count", 0)) > 0:
@@ -116,5 +137,46 @@ func _run() -> String:
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "stockade_credit" and int(item.get("count", 0)) > 0:
 			return "cleared credit still shows stockade_credit"
-	print("OK todo due")
+	return ""
+
+
+## §21 reclaim: lose → chip+atlas focus; finish → chip gone.
+func _check_reclaim() -> String:
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_reclaim" and int(item.get("count", 0)) > 0:
+			return "fresh/no-reclaim still shows territory_reclaim"
+	World.active.clear()
+	var reclaim_site := "t_ash_cinderpit"
+	var rst: Dictionary = CKTerritory.state(reclaim_site)
+	rst.owner = CKTerritory.NEUTRAL
+	rst.garrison = 0
+	rst.threat = {}
+	CKTerritory._put(reclaim_site, rst)
+	var ranchor := str(CKTerritory.site(reclaim_site).get("anchor", ""))
+	World.pos = ranchor
+	World.arrive(ranchor)
+	CKTerritory.capture(reclaim_site, "chain")
+	rst = CKTerritory.state(reclaim_site)
+	rst.garrison = 1
+	CKTerritory._put(reclaim_site, rst)
+	CKTerritory.lose(reclaim_site, "rival:salt_crow")
+	var reclaim_row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_reclaim":
+			reclaim_row = item
+	if int(reclaim_row.get("count", 0)) < 1:
+		return "reclaim chip missing after lose (%s)" % str(reclaim_row)
+	if Todo.link_for(reclaim_row) != "res://scenes/hub/atlas_view.tscn":
+		return "territory_reclaim chip has no atlas link"
+	if GameState.has_meta("atlas_territory_site"):
+		GameState.remove_meta("atlas_territory_site")
+	if GameState.has_meta("atlas_select"):
+		GameState.remove_meta("atlas_select")
+	Todo.prepare_nav(reclaim_row)
+	if not GameState.has_meta("atlas_territory_site") or str(GameState.get_meta("atlas_territory_site")) != reclaim_site:
+		return "prepare_nav did not focus reclaim site"
+	CKTerritory._finish_reclaim(reclaim_site)
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_reclaim" and int(item.get("count", 0)) > 0:
+			return "cleared reclaim still shows territory_reclaim"
 	return ""
