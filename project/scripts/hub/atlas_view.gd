@@ -2830,6 +2830,14 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 				var evac_btn = panel.get_node_or_null("SiegeEvacuate")
 				if evac_btn != null and cache_n <= 0:
 					evac_btn.disabled = true
+				# Territory fat: muster → month_echo.muster → EchoLine_muster on siege panel.
+				var echo_m := str(CKEconomyState.month_echo_snapshot().get("muster", ""))
+				if echo_m != "" and panel.get_node_or_null("EchoLine_muster") == null:
+					var echo_mus := UIKit.body_label(echo_m, UIKit.OK, 12)
+					echo_mus.name = "EchoLine_muster"
+					echo_mus.position = Vector2(24, h - 96)
+					echo_mus.size = Vector2(452, 20)
+					panel.add_child(echo_mus)
 			_refresh_top()
 			_build_nodes())
 		panel.add_child(muster)
