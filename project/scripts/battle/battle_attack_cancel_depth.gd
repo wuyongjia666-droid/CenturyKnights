@@ -56,7 +56,9 @@ static func _exit_modes(host) -> void:
 		if host.has_method("_update_skill_hint"):
 			host._update_skill_hint()
 		BattleRangePreview.publish(host)
-		BattlePick.focus_selected(host)
+		# Shared inset keep — do not yank camera off the notch-safe frame.
+		if BattleRangePreview.keep_selected(host) == Vector2.ZERO:
+			BattlePick.focus_selected(host)
 	else:
 		host.move_cells.clear()
 	if DeviceProfile.is_mobile():
