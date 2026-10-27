@@ -318,6 +318,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(tter != null and str(tter.get_meta("field_route", "")) == "travel_territory", "travel_territory")
 	var tvbn := travel.find_child("TravelBanner", true, false) if travel != null else null
 	_ok(tvbn != null and str(tvbn.get_meta("field_route", "")) == "travel_banner", "travel_banner")
+	_ok(tvbn != null and str(tvbn.get_meta("arms_kind", "")) == "lb_travel_arms", "travel_banner kind")
 
 	var camp := CKHeraldryField.place_camp_crest_strip(root, Vector2(200, 8), "ashbanner")
 	_ok(camp != null and str(camp.get_meta("field_route", "")) == "camp_strip", "camp_strip route")
@@ -325,6 +326,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(cter != null and str(cter.get_meta("field_route", "")) == "camp_territory", "camp_territory")
 	var cabn := camp.find_child("CampBanner", true, false) if camp != null else null
 	_ok(cabn != null and str(cabn.get_meta("field_route", "")) == "camp_banner", "camp_banner")
+	_ok(cabn != null and str(cabn.get_meta("arms_kind", "")) == "lb_camp_arms", "camp_banner kind")
 
 	var enc := CKHeraldryField.place_encounter_crest_strip(root, Vector2(400, 8), "ashbanner")
 	_ok(enc != null and str(enc.get_meta("field_route", "")) == "encounter_strip", "encounter_strip route")
@@ -332,6 +334,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(efoe != null and str(efoe.get_meta("field_route", "")) == "encounter_foe", "encounter_foe")
 	var encbn := enc.find_child("EncounterBanner", true, false) if enc != null else null
 	_ok(encbn != null and str(encbn.get_meta("field_route", "")) == "encounter_banner", "encounter_banner")
+	_ok(encbn != null and str(encbn.get_meta("arms_kind", "")) == "lb_encounter_arms", "encounter_banner kind")
 
 	var aft := CKHeraldryField.place_aftermath_crest_strip(root, Vector2(600, 8), "ashbanner")
 	_ok(aft != null and str(aft.get_meta("field_route", "")) == "aftermath_strip", "aftermath_strip route")
