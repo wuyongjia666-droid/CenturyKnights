@@ -308,6 +308,15 @@ func _source_contracts() -> void:
 		["marriage_left", "LeftArms"],
 		["marriage_right", "RightArms"],
 		["marriage_banner", "MarriageBanner"],
+		["forge_focus", "place_forge_focus_strip"],
+		["forge_focus_arms", "ForgeFocusArms"],
+		["forge_banner", "ForgeBanner"],
+		["shrine_heal", "place_shrine_heal_strip"],
+		["shrine_heal_focus", "HealFocusArms"],
+		["shrine_banner", "ShrineBanner"],
+		["train_focus", "place_train_focus_strip"],
+		["train_focus_arms", "TrainFocusArms"],
+		["train_banner", "TrainBanner"],
 		["succession_strip", "place_succession_crest_strip"],
 		["succession_heir", "succession_heir"],
 		["succession_banner", "SuccessionBanner"],
@@ -326,6 +335,9 @@ func _source_contracts() -> void:
 		"marriage": "res://scripts/hub/marriage.gd",
 		"inheritance": "res://scripts/hub/inheritance.gd",
 		"deploy": "res://scripts/hub/deploy.gd",
+		"forge": "res://scripts/hub/forge.gd",
+		"shrine": "res://scripts/hub/shrine.gd",
+		"train": "res://scripts/hub/train.gd",
 	}
 	for hub in hubs.keys():
 		var src := FileAccess.get_file_as_string(hubs[hub])

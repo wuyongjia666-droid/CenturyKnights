@@ -114,6 +114,10 @@ func _report_annex_forge(leader) -> void:
 	_ok(fstrip != null and str(fstrip.get_meta("field_route", "")) == "forge_focus", "forge_focus route")
 	var ff := fstrip.find_child("ForgeFocusArms", true, false) if fstrip != null else null
 	_ok(ff != null and str(ff.get_meta("field_route", "")) == "forge_focus_arms", "forge_focus_arms route")
+	var fbn := fstrip.find_child("ForgeBanner", true, false) if fstrip != null else null
+	_ok(fbn != null and str(fbn.get_meta("field_route", "")) == "forge_banner", "forge_banner route")
+	var fco := fstrip.find_child("CastleArms", true, false) if fstrip != null else null
+	_ok(fco != null and str(fco.get_meta("field_route", "")) == "strip_company", "forge strip_company")
 	var seal := Control.new()
 	seal.name = "SealRow"
 	root.add_child(seal)
@@ -276,11 +280,19 @@ func _place_major_strips(leader) -> void:
 	_ok(trainf != null and str(trainf.get_meta("field_route", "")) == "train_focus", "place train_focus")
 	var tfa := trainf.find_child("TrainFocusArms", true, false) if trainf != null else null
 	_ok(tfa != null and str(tfa.get_meta("field_route", "")) == "train_focus_arms", "place train_focus_arms")
+	var trbn := trainf.find_child("TrainBanner", true, false) if trainf != null else null
+	_ok(trbn != null and str(trbn.get_meta("field_route", "")) == "train_banner", "place train_banner")
+	var trco := trainf.find_child("CastleArms", true, false) if trainf != null else null
+	_ok(trco != null and str(trco.get_meta("field_route", "")) == "strip_company", "place train strip_company")
 
 	var shrine := CKHeraldryField.place_shrine_heal_strip(root, leader, Vector2(520, 160))
 	_ok(shrine != null and str(shrine.get_meta("field_route", "")) == "shrine_heal", "place shrine_heal")
 	var hf := shrine.find_child("HealFocusArms", true, false) if shrine != null else null
 	_ok(hf != null and str(hf.get_meta("field_route", "")) == "shrine_heal_focus", "place shrine_heal_focus")
+	var shbn := shrine.find_child("ShrineBanner", true, false) if shrine != null else null
+	_ok(shbn != null and str(shbn.get_meta("field_route", "")) == "shrine_banner", "place shrine_banner")
+	var shco := shrine.find_child("CastleArms", true, false) if shrine != null else null
+	_ok(shco != null and str(shco.get_meta("field_route", "")) == "strip_company", "place shrine strip_company")
 
 	root.queue_free()
 	await _settle()
