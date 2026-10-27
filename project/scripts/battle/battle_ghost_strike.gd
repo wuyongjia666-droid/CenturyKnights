@@ -9,6 +9,8 @@ extends RefCounted
 ## - paints mid-ring / body chrome on those figures (tile wash stays elsewhere)
 ## - settles the camera on ghost + nearest threatened foe without fighting a
 ##   unit drag (ck_unit_drag)
+## BoardInset: refresh m_info_block from MobileSideCol before follow_cells
+## so ghost peek shares notch+info+edge (same as ActionSettle / skill follow).
 
 
 const META := "m_ghost_strike"
@@ -78,6 +80,9 @@ static func after_preview(host) -> void:
 	var cells: Array = [stand]
 	for c in foes:
 		cells.append(c)
+	# Refresh live info column so BoardInset cuts the same chrome as
+	# ActionSettle / skill follow (stale m_info_block left figures under the side col).
+	_refresh_info_block(host)
 	var applied := BattleCombatFrame.follow_cells(host, cells, 0.0)
 	host.set_meta(META, {
 		"stand": stand,
@@ -85,6 +90,16 @@ static func after_preview(host) -> void:
 		"delta": applied,
 	})
 
+static func _refresh_info_block(host) -> void:
+	if host == null:
+		return
+	var col := host.get_node_or_null("MobileSideCol") as Control
+	if col == null:
+		col = host.find_child("MobileSideCol", true, false) as Control
+	if col == null:
+		col = host.get_node_or_null("SideCol") as Control
+	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
+		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 static func draw(host, overlay) -> void:
 	if overlay == null or host == null:
