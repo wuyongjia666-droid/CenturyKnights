@@ -878,6 +878,7 @@ func save_meta(slot: String) -> Dictionary:
 		"version": str(ProjectSettings.get_setting("application/config/version", "")),
 		"schema": SAVE_SCHEMA,
 		"crest_color": str(crest_color),
+		"banner_spec": banner_spec.duplicate(true) if typeof(banner_spec) == TYPE_DICTIONARY else {},
 		"surname": str(surname),
 	}
 
