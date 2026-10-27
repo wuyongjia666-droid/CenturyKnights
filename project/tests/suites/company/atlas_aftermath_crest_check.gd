@@ -73,6 +73,8 @@ func _ui_battle_crests() -> void:
 		_ok(foe != null and str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "battle 敌徽")
 		_ok(foe != null and str(foe.get_meta("nation_id", "")) == str(af.get("nation", "")), "battle foe nation_id")
 		_ok(foe != null and str(foe.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "foe != company core")
+		var abn := strip.find_child("AftermathBanner", true, false)
+		_ok(abn != null and str(abn.get_meta("field_route", "")) == "aftermath_banner", "battle aftermath_banner")
 	var cont := page.find_child("BattleAftermathContinue", true, false) as Button
 	if cont:
 		cont.emit_signal("pressed")
@@ -116,6 +118,7 @@ func _ui_danger_aftermath_crests() -> void:
 		var foe := strip.find_child("FoeArms", true, false)
 		_ok(foe != null and str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "danger 敌徽")
 		_ok(foe != null and str(foe.get_meta("nation_id", "")) == nid, "danger foe nation")
+		_ok(strip.find_child("AftermathBanner", true, false) != null, "danger AftermathBanner")
 	## Calm road: company only
 	var calm := af.duplicate()
 	calm["danger"] = false

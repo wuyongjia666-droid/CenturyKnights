@@ -137,7 +137,9 @@ func _report(where: String) -> void:
 			_ok(str(ca.get_meta("arms_core", "")) == ban, "%s report company core" % where)
 			_ok(str(ea.get_meta("arms_core", "")) == foe, "%s report foe core" % where)
 			_ok(str(ea.get_meta("arms_core", "")) != ban, "%s report 敌徽!=团徽" % where)
-		_ok(strip.get_child_count() == 2, "%s report two shields" % where)
+		_ok(strip.get_child_count() == 3, "%s report two shields + cloth banner" % where)
+		var rbn := strip.find_child("ReportBanner", true, false)
+		_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "report_banner", "%s report_banner" % where)
 		_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s report strip ignores mouse" % where)
 	var rows: Array = []
 	_collect(layer, "ReportRowArms", rows)
