@@ -385,6 +385,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(field != null and str(field.get_meta("field_route", "")) == "field_strip", "field_strip route")
 	var fb := field.find_child("FieldBanner", true, false) if field != null else null
 	_ok(fb != null and str(fb.get_meta("field_route", "")) == "field_banner", "field_banner")
+	_ok(fb != null and str(fb.get_meta("arms_kind", "")) == "lb_field_arms", "field_banner kind")
 
 	var hud := CKHeraldryField.place_battle_hud_crest_strips(root, "ashbanner", Vector2(1280, 720), {}, false, false)
 	_ok(hud != null and str(hud.get_meta("field_route", "")) == "battle_hud_strip", "battle_hud_strip route")
@@ -427,6 +428,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	var roster := CKHeraldryField.place_roster_crest_strip(root, Vector2(840, 160))
 	var rbn := roster.find_child("RosterBanner", true, false) if roster != null else null
 	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "roster_banner", "roster_banner")
+	_ok(rbn != null and str(rbn.get_meta("arms_kind", "")) == "lb_roster_arms", "roster_banner kind")
 
 	var gaz := CKHeraldryField.place_gazette_crest_strip(root, "ashbanner", Vector2(8, 240))
 	_ok(gaz != null and str(gaz.get_meta("field_route", "")) == "gazette_strip", "gazette_strip route")
@@ -449,6 +451,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	var dialogue := CKHeraldryField.place_dialogue_crest_strip(root, Vector2(200, 240))
 	var dbn := dialogue.find_child("DialogueBanner", true, false) if dialogue != null else null
 	_ok(dbn != null and str(dbn.get_meta("field_route", "")) == "dialogue_banner", "dialogue_banner")
+	_ok(dbn != null and str(dbn.get_meta("arms_kind", "")) == "lb_dialogue_arms", "dialogue_banner kind")
 
 	var shell := CKHeraldryField.place_shell_crest_strip(root, Vector2(400, 240))
 	var sbn2 := shell.find_child("ShellBanner", true, false) if shell != null else null
