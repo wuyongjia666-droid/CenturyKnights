@@ -2622,10 +2622,22 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	var extra := " ".join(bits) if not bits.is_empty() else Locale.t("atlas_terr_month_none")
 	var echo_contest := str(CKEconomyState.month_echo_snapshot().get("contest", ""))
 	var echo_reclaim := str(CKEconomyState.month_echo_snapshot().get("reclaim", ""))
+	var echo_defend := str(CKEconomyState.month_echo_snapshot().get("defend", ""))
+	var echo_assault := str(CKEconomyState.month_echo_snapshot().get("assault", ""))
+	# UnrestLine: owned sites still under 民心未附 after assault.
+	var unrest_rows: Array = []
+	for uid in CKTerritory.owned_ids():
+		var ust: Dictionary = CKTerritory.state(str(uid))
+		if int(ust.get("unrest", 0)) > 0:
+			unrest_rows.append({"id": str(uid), "name": str(CKTerritory.site(str(uid)).get("name", uid)), "unrest": int(ust.unrest)})
 	var h := 340.0 if reclaims.is_empty() else 390.0
 	if echo_contest != "" or not contests.is_empty():
 		h += 40.0
 	if echo_reclaim != "" or not reclaims.is_empty():
+		h += 40.0
+	if echo_defend != "" or not threats.is_empty():
+		h += 40.0
+	if echo_assault != "" or not unrest_rows.is_empty():
 		h += 40.0
 	var panel := _modal_panel(h)
 	panel.name = "TerritoryMonthModal"
@@ -2727,6 +2739,39 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		echo_r.position = Vector2(24, h - 96)
 		echo_r.size = Vector2(452, 20)
 		panel.add_child(echo_r)
+	# Territory fat: DefendLine + EchoLine_defend on month panel.
+	if not threats.is_empty():
+		var dbits: Array = []
+		for tr in threats:
+			if typeof(tr) == TYPE_DICTIONARY:
+				dbits.append("%s·%s" % [str(tr.get("name", "")), str(tr.get("by", ""))])
+		var dl := UIKit.body_label(Locale.t("atlas_terr_month_defend_line") % "、".join(dbits), UIKit.EMBER, 12)
+		dl.name = "DefendLine"
+		dl.position = Vector2(24, (h - 136.0) if echo_defend != "" else (h - 116.0))
+		dl.size = Vector2(452, 20)
+		panel.add_child(dl)
+	if echo_defend != "":
+		var echo_d := UIKit.body_label(echo_defend, UIKit.OK, 12)
+		echo_d.name = "EchoLine_defend"
+		echo_d.position = Vector2(24, h - 96)
+		echo_d.size = Vector2(452, 20)
+		panel.add_child(echo_d)
+	# Territory fat: UnrestLine + EchoLine_assault on month panel.
+	if not unrest_rows.is_empty():
+		var ubits: Array = []
+		for ur in unrest_rows:
+			ubits.append("%s·%d" % [str(ur.get("name", "")), int(ur.get("unrest", 0))])
+		var ul := UIKit.body_label(Locale.t("atlas_terr_month_unrest_line") % "、".join(ubits), UIKit.EMBER, 12)
+		ul.name = "UnrestLine"
+		ul.position = Vector2(24, (h - 136.0) if echo_assault != "" else (h - 116.0))
+		ul.size = Vector2(452, 20)
+		panel.add_child(ul)
+	if echo_assault != "":
+		var echo_a := UIKit.body_label(echo_assault, UIKit.OK, 12)
+		echo_a.name = "EchoLine_assault"
+		echo_a.position = Vector2(24, h - 96)
+		echo_a.size = Vector2(452, 20)
+		panel.add_child(echo_a)
 	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
 	later.name = "TerritoryMonthLater"
 	later.position = Vector2(24, h - 56)

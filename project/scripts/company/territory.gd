@@ -211,6 +211,10 @@ static func capture(id: String, how: String) -> Dictionary:
 		var ys2 := int(site(id).yield_silver)
 		CKEconomyState.month_echo_note("reclaim", Locale.t("terr_echo_reclaim",
 			[str(site(id).name), ys2, int(st.garrison)]))
+	elif how == "assault":
+		var ys3 := int(site(id).yield_silver)
+		CKEconomyState.month_echo_note("assault", Locale.t("terr_echo_assault",
+			[str(site(id).name), ys3, int(st.unrest)]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_10") % site(id).name}
@@ -1531,10 +1535,13 @@ static func on_battle(enc: Dictionary, win: bool) -> String:
 		"territory_defend":
 			if win:
 				var st := state(id)
+				var by_name := str(st.threat.get("name", ""))
 				st.threat = {}
 				_put(id, st)
 				World.add_city_rep(str(site(id).anchor), 3)
 				_log(Locale.t("terr_36") % site(id).name)
+				CKEconomyState.month_echo_note("defend", Locale.t("terr_echo_defend",
+					[str(site(id).name), by_name, int(st.garrison)]))
 				return Locale.t("terr_37") % site(id).name
 			var by := str(state(id).threat.get("by", NEUTRAL))
 			lose(id, by)
