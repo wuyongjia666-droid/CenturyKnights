@@ -26,6 +26,7 @@ const LINKS := {
 	"territory_threat": "res://scenes/hub/atlas_view.tscn",
 	"stockade_credit": "res://scenes/hub/territory_ledger.tscn",
 	"territory_reclaim": "res://scenes/hub/atlas_view.tscn",
+	"territory_unrest": "res://scenes/hub/territory_ledger.tscn",
 }
 
 
@@ -82,8 +83,14 @@ static func snapshot() -> Array:
 	var reclaim_n := CKTerritory.pending_reclaim_ids().size()
 	if reclaim_n > 0:
 		var rrow := _row("territory_reclaim", "military", Locale.t("ux_todo_territory_reclaim"), reclaim_n)
-		rrow["severity"] = "block"
+		rrow["urgency"] = "block"
 		rows.append(rrow)
+	# §22 民心未附 — castle chip deep-links territory ledger for 安抚.
+	var unrest_n := CKTerritory.unrest_owned_ids().size()
+	if unrest_n > 0:
+		var urow := _row("territory_unrest", "military", Locale.t("ux_todo_territory_unrest"), unrest_n)
+		urow["urgency"] = "block"
+		rows.append(urow)
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)

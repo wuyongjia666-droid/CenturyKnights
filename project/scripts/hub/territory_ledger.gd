@@ -1,6 +1,6 @@
 extends Control
-## Territory Ledger (P1-UX-04 / design §19–§21) — owned sites whole-chain:
-## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim.
+## Territory Ledger (P1-UX-04 / design §19–§22) — owned sites whole-chain:
+## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease.
 
 const _MAX_LIST := 48
 
@@ -15,6 +15,8 @@ var _empty: Label
 var _credit: Label
 var _reclaim: Label
 var _btn_reclaim: Button
+var _unrest: Label
+var _btn_appease: Button
 var _ids: Array = []
 var _pick := ""
 
@@ -69,17 +71,25 @@ func _build() -> void:
 	_btn_reclaim.pressed.connect(_on_reclaim_goto)
 	add_child(_btn_reclaim)
 
+	_unrest = UIKit.body_label("", UIKit.EMBER, 13)
+	_unrest.name = "TerritoryUnrestBanner"
+	_unrest.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_unrest.position = Vector2(42, 196)
+	_unrest.size = Vector2(980, 24)
+	_unrest.visible = false
+	add_child(_unrest)
+
 	_empty = UIKit.body_label(Locale.t("ux_territory_empty"), UIKit.EMBER, 13)
 	_empty.name = "TerritoryEmpty"
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_empty.position = Vector2(42, 200)
+	_empty.position = Vector2(42, 222)
 	_empty.size = Vector2(1196, 28)
 	_empty.visible = false
 	add_child(_empty)
 
 	_list = ItemList.new()
 	_list.name = "TerritoryList"
-	_list.position = Vector2(42, 214)
+	_list.position = Vector2(42, 230)
 	_list.size = Vector2(420, 396)
 	_list.item_selected.connect(_on_pick)
 	add_child(_list)
@@ -89,7 +99,7 @@ func _build() -> void:
 	_detail.bbcode_enabled = true
 	_detail.fit_content = false
 	_detail.scroll_active = true
-	_detail.position = Vector2(480, 214)
+	_detail.position = Vector2(480, 230)
 	_detail.size = Vector2(760, 276)
 	add_child(_detail)
 
@@ -109,6 +119,11 @@ func _build() -> void:
 	_btn_stockade.name = "TerritoryStockade"
 	_btn_stockade.pressed.connect(_on_stockade)
 	acts.add_child(_btn_stockade)
+
+	_btn_appease = UIKit.cta_button(Locale.t("ux_territory_appease"), "U", 140, 40)
+	_btn_appease.name = "TerritoryAppease"
+	_btn_appease.pressed.connect(_on_appease)
+	acts.add_child(_btn_appease)
 
 	_btn_alert = UIKit.cta_button(Locale.t("ux_territory_alert"), "X", 140, 40)
 	_btn_alert.name = "TerritoryAlert"
@@ -163,6 +178,13 @@ func _refresh() -> void:
 		_reclaim.text = ""
 		_reclaim.visible = false
 		_btn_reclaim.visible = false
+	var unrest_n := CKTerritory.unrest_owned_ids().size()
+	if unrest_n > 0:
+		_unrest.text = Locale.t("ux_territory_unrest_banner") % unrest_n
+		_unrest.visible = true
+	else:
+		_unrest.text = ""
+		_unrest.visible = false
 	var owned: Array = CKTerritory.owned_ids()
 	owned.sort()
 	for id in owned:
@@ -176,6 +198,7 @@ func _refresh() -> void:
 		_detail.text = Locale.t("ux_territory_empty_detail")
 		_btn_reinforce.disabled = true
 		_btn_stockade.disabled = true
+		_btn_appease.disabled = true
 		_btn_alert.disabled = true
 		_btn_atlas.disabled = true
 		return
@@ -224,6 +247,8 @@ func _on_pick(idx: int) -> void:
 	else:
 		lines.append(Locale.t("ux_territory_detail_no_stockade"))
 	lines.append(Locale.t("ux_territory_detail_reinforce_cost") % cost)
+	if unrest > 0:
+		lines.append(Locale.t("ux_territory_detail_appease_cost") % [CKTerritory.appease_cost(_pick), unrest])
 	var sprev: Dictionary = CKTerritory.stockade_preview(_pick)
 	if not stockade:
 		if bool(sprev.get("credit", false)):
@@ -251,6 +276,11 @@ func _on_pick(idx: int) -> void:
 		_btn_stockade.text = Locale.t("ux_territory_stockade_free")
 	else:
 		_btn_stockade.text = Locale.t("ux_territory_stockade")
+	_btn_appease.disabled = unrest <= 0
+	if unrest > 0:
+		_btn_appease.text = Locale.t("ux_territory_appease_cost") % CKTerritory.appease_cost(_pick)
+	else:
+		_btn_appease.text = Locale.t("ux_territory_appease")
 	_btn_alert.disabled = th.is_empty()
 	_btn_atlas.disabled = str(s.get("anchor", "")) == ""
 
@@ -312,3 +342,10 @@ func _on_reclaim_goto() -> void:
 		return
 	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": focused})
 
+func _on_appease() -> void:
+	if _pick == "":
+		return
+	var r: Dictionary = CKTerritory.appease(_pick)
+	_msg.add_theme_color_override("font_color", UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	_msg.text = str(r.get("msg", ""))
+	_refresh()

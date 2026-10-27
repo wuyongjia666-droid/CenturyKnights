@@ -2647,6 +2647,7 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	var echo_reclaim := str(CKEconomyState.month_echo_snapshot().get("reclaim", ""))
 	var echo_defend := str(CKEconomyState.month_echo_snapshot().get("defend", ""))
 	var echo_assault := str(CKEconomyState.month_echo_snapshot().get("assault", ""))
+	var echo_appease := str(CKEconomyState.month_echo_snapshot().get("appease", ""))
 	var echo_chain := str(CKEconomyState.month_echo_snapshot().get("chain", ""))
 	# ChainLine: open pledge commissions (board/active, chain, not reclaim).
 	var chain_rows: Array = []
@@ -2689,8 +2690,10 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		h += 40.0
 	if echo_defend != "" or not threats.is_empty():
 		h += 40.0
-	if echo_assault != "" or not unrest_rows.is_empty():
+	if echo_assault != "" or echo_appease != "" or not unrest_rows.is_empty():
 		h += 40.0
+	if echo_assault != "" and echo_appease != "":
+		h += 20.0
 	if echo_chain != "" or not chain_rows.is_empty():
 		h += 40.0
 	var panel := _modal_panel(h)
@@ -2821,7 +2824,7 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 			ubits.append("%s·%d" % [str(ur.get("name", "")), int(ur.get("unrest", 0))])
 		var ul := UIKit.body_label(Locale.t("atlas_terr_month_unrest_line") % "、".join(ubits), UIKit.EMBER, 12)
 		ul.name = "UnrestLine"
-		ul.position = Vector2(24, (h - 136.0) if echo_assault != "" else (h - 116.0))
+		ul.position = Vector2(24, (h - 136.0) if (echo_assault != "" or echo_appease != "") else (h - 116.0))
 		ul.size = Vector2(452, 20)
 		panel.add_child(ul)
 	if echo_assault != "":
@@ -2830,6 +2833,13 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		echo_a.position = Vector2(24, h - 96)
 		echo_a.size = Vector2(452, 20)
 		panel.add_child(echo_a)
+	# Territory fat §22: EchoLine_appease on month panel (pairs with UnrestLine).
+	if echo_appease != "":
+		var echo_ap := UIKit.body_label(echo_appease, UIKit.OK, 12)
+		echo_ap.name = "EchoLine_appease"
+		echo_ap.position = Vector2(24, (h - 116.0) if echo_assault != "" else (h - 96.0))
+		echo_ap.size = Vector2(452, 20)
+		panel.add_child(echo_ap)
 	# Territory fat: ChainLine + EchoLine_chain on month panel.
 	if not chain_rows.is_empty():
 		var cbits2: Array = []

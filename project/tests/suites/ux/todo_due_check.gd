@@ -67,7 +67,7 @@ func _run() -> String:
 	return ""
 
 
-## J14 threat + §20 stockade credit + §21 reclaim HubTodo chips.
+## J14 threat + §20 stockade credit + §21 reclaim + §22 unrest HubTodo chips.
 func _check_territory_todos() -> String:
 	var err := _check_threat()
 	if err != "":
@@ -75,7 +75,10 @@ func _check_territory_todos() -> String:
 	err = _check_stockade_credit()
 	if err != "":
 		return err
-	return _check_reclaim()
+	err = _check_reclaim()
+	if err != "":
+		return err
+	return _check_unrest()
 
 
 func _check_threat() -> String:
@@ -180,3 +183,44 @@ func _check_reclaim() -> String:
 		if str(item.get("category", "")) == "territory_reclaim" and int(item.get("count", 0)) > 0:
 			return "cleared reclaim still shows territory_reclaim"
 	return ""
+
+## §22 unrest: assault capture → chip+ledger link; appease → chip gone.
+func _check_unrest() -> String:
+	# Prior §21 reclaim finish leaves unrest=1 on the site — clear owned unrest first.
+	for oid in CKTerritory.owned_ids():
+		var ost: Dictionary = CKTerritory.state(str(oid))
+		ost.unrest = 0
+		CKTerritory._put(str(oid), ost)
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_unrest" and int(item.get("count", 0)) > 0:
+			return "fresh/no-unrest still shows territory_unrest"
+	var site := "t_ash_cinderpit"
+	var st: Dictionary = CKTerritory.state(site)
+	st.owner = CKTerritory.NEUTRAL
+	st.garrison = 0
+	st.unrest = 0
+	st.threat = {}
+	CKTerritory._put(site, st)
+	var anchor := str(CKTerritory.site(site).get("anchor", ""))
+	World.pos = anchor
+	World.arrive(anchor)
+	CKTerritory.capture(site, "assault")
+	if int(CKTerritory.state(site).unrest) <= 0:
+		return "assault capture did not set unrest"
+	var unrest_row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_unrest":
+			unrest_row = item
+	if int(unrest_row.get("count", 0)) < 1:
+		return "unrest chip missing after assault (%s)" % str(unrest_row)
+	if Todo.link_for(unrest_row) != "res://scenes/hub/territory_ledger.tscn":
+		return "territory_unrest chip has no ledger link"
+	GameState.silver = maxi(GameState.silver, CKTerritory.appease_cost(site) + 10)
+	var r: Dictionary = CKTerritory.appease(site)
+	if not bool(r.get("ok", false)):
+		return "appease failed: %s" % r.get("msg", "")
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_unrest" and int(item.get("count", 0)) > 0:
+			return "cleared unrest still shows territory_unrest"
+	return ""
+

@@ -752,3 +752,6 @@ terr_echo_reclaim,反夺归旗·%s（月银%d·驻%d）,Reclaim banner · %s (yi
 terr_echo_defend,守卫得手·%s（退%s·驻%d）,Defend hold · %s (repel %s · garrison %d)
 terr_echo_assault,强攻得手·%s（月银%d·未附%d月）,Assault seize · %s (yield %d · unrest %d mo)
 terr_echo_chain,归附得手·%s（月银%d·驻%d）,Chain attach · %s (yield %d · garrison %d)
+terr_appease_none,此处民心已附，无需安抚。,This site is already settled — no appease needed.
+terr_appease_ok,安抚·%s（耗银%d·清未附%d月）,Appease · %s (spent %d · cleared %d mo unrest)
+terr_echo_appease,安抚归心·%s（耗银%d·清%d月）,Appease settled · %s (spent %d · cleared %d mo)
