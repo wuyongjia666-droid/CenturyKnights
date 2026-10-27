@@ -12,6 +12,7 @@ const SCREENS := [
 	["lineage_tree", "res://scenes/hub/lineage_tree.tscn"],
 	["rivals", "res://scenes/hub/rival_houses.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
+	["territory", "res://scenes/hub/territory_ledger.tscn"],
 	["city", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
