@@ -81,7 +81,7 @@ static func _aim(host, foe_i: int) -> int:
 	# Refresh live info column so BoardInset cuts the same chrome as
 	# AttackAim / ActionSettle / skill refresh (stale m_info_block left
 	# figures under the side col).
-	_refresh_info_block(host)
+	BattleBoardInset.refresh_info_block(host)
 	BattleCombatFrame.follow_cells(host, [stand, foe_pos], BattleCombatFrame.forecast_band(DeviceProfile.is_mobile()))
 	host.set_meta(META, {"foe": foe_i, "msec": Time.get_ticks_msec()})
 	if host.has_method("_refresh_info"):
@@ -107,18 +107,6 @@ static func apply_prev(host) -> int:
 	var n: int = prev_idx(host, cur)
 	return _aim(host, n)
 
-
-
-static func _refresh_info_block(host) -> void:
-	if host == null:
-		return
-	var col := host.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		col = host.find_child("MobileSideCol", true, false) as Control
-	if col == null:
-		col = host.get_node_or_null("SideCol") as Control
-	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
-		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 
 static func clear(host) -> void:

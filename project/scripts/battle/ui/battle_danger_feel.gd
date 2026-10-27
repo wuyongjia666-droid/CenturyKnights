@@ -34,20 +34,8 @@ static func after_set(host) -> void:
 			cells.append(foe.pos + d)
 	# Refresh live info column so BoardInset cuts the same chrome as
 	# ActionSettle / land-ghost follow (stale m_info_block left figures under the side col).
-	_refresh_info_block(host)
+	BattleBoardInset.refresh_info_block(host)
 	BattleCombatFrame.follow_cells(host, cells, 0.0)
-
-
-static func _refresh_info_block(host) -> void:
-	if host == null:
-		return
-	var col := host.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		col = host.find_child("MobileSideCol", true, false) as Control
-	if col == null:
-		col = host.get_node_or_null("SideCol") as Control
-	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
-		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 
 ## Layered wash: stands faint, strike brighter. Colorblind keeps the hatch.
