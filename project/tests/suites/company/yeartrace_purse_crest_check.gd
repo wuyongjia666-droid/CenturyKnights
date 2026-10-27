@@ -43,17 +43,21 @@ func _assert_page(page: Node, where: String) -> void:
 	var yt = page.find_child("YeartracePanel", true, false)
 	_ok(yt != null, "%s YeartracePanel" % where)
 	if yt != null:
+		var yhead = yt.find_child("YeartraceArmsHead", true, false)
+		_ok(yhead != null and str(yhead.get_meta("field_route", "")) == "yeartrace", "%s YeartraceArmsHead field_route" % where)
 		var ya = yt.find_child("YeartraceArms", true, false)
 		_ok(ya != null, "%s YeartraceArms" % where)
 		if ya != null:
 			_ok(str(ya.get_meta("arms_core", "")) != "", "%s YeartraceArms core" % where)
-			_ok(str(ya.get_meta("field_route", "")) == "yeartrace", "%s YeartraceArms field_route" % where)
+			_ok(str(ya.get_meta("field_route", "")) == "yeartrace_arms", "%s YeartraceArms field_route" % where)
 	var purse = page.find_child("PursePlate", true, false)
 	_ok(purse != null, "%s PursePlate" % where)
 	if purse != null:
-		_ok(str(purse.get_meta("field_route", "")) == "purse", "%s PursePlate field_route" % where)
+		_ok(str(purse.get_meta("field_route", "")) == "purse_plate", "%s PursePlate field_route" % where)
 		var pa = purse.find_child("PurseArms", true, false)
 		_ok(pa != null, "%s PurseArms" % where)
+		if pa != null:
+			_ok(str(pa.get_meta("field_route", "")) == "purse_arms", "%s PurseArms field_route" % where)
 		_ok(int(purse.get_meta("purse_silver", -1)) == 9, "%s purse silver meta" % where)
 		var lab = purse.find_child("PurseSilver", true, false)
 		_ok(lab != null, "%s PurseSilver label" % where)

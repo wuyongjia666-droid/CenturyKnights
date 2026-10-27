@@ -44,8 +44,12 @@ func _assert_page(page: Node, where: String) -> void:
 	_ok(sk != null, "%s SkillCrestStrip" % where)
 	if sk != null:
 		_ok(str(sk.get_meta("field_route", "")) == "skill_strip", "%s strip field_route" % where)
+		var sco = sk.find_child("CastleArms", true, false)
+		_ok(sco != null and str(sco.get_meta("field_route", "")) == "strip_company", "%s strip_company" % where)
 		var bn = sk.find_child("SkillBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_skill_arms", "%s SkillBanner" % where)
+		if bn != null:
+			_ok(str(bn.get_meta("field_route", "")) == "skill_banner", "%s SkillBanner field_route" % where)
 	var spa = page.find_child("SkillPersonArms", true, false)
 	_ok(spa != null, "%s SkillPersonArms" % where)
 	if spa != null:

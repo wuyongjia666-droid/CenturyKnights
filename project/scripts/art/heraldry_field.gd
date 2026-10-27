@@ -1184,7 +1184,8 @@ static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = V
 		arms = CKHeraldryChrome.make_company_arms(arms_sz)
 	arms.name = "YeartraceArms"
 	arms.tooltip_text = Locale.t("lb_yeartrace_arms")
-	arms.set_meta("field_route", "yeartrace")
+	# Keep YeartraceArms node name — dossier crest E2E contract; route deepens ownership.
+	arms.set_meta("field_route", "yeartrace_arms")
 	arms.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(arms)
@@ -1213,11 +1214,12 @@ static func place_purse_plate(parent: Node, c, purse_silver: int = 0, arms_sz: V
 	var host := HBoxContainer.new()
 	host.name = "PursePlate"
 	host.add_theme_constant_override("separation", 8)
-	host.set_meta("field_route", "purse")
+	host.set_meta("field_route", "purse_plate")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "PurseArms"
 	arms.tooltip_text = Locale.t("lb_purse_arms")
-	arms.set_meta("field_route", "purse")
+	# Keep PurseArms node name — dossier crest E2E contract; route deepens ownership.
+	arms.set_meta("field_route", "purse_arms")
 	host.add_child(arms)
 	var lab := UIKit.body_label(Locale.t("lb_dos_purse", [int(purse_silver)]), UIKit.TEXT, 13)
 	lab.name = "PurseSilver"
@@ -1283,10 +1285,11 @@ static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2
 	var head := HBoxContainer.new()
 	head.name = "YearArmsHead"
 	head.add_theme_constant_override("separation", 10)
-	head.set_meta("field_route", "yearcard")
+	head.set_meta("field_route", "yearcard_row")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "YearArms"
-	arms.set_meta("field_route", "yearcard")
+	# Keep YearArms node name — yearcard crest E2E contract; route deepens ownership.
+	arms.set_meta("field_route", "yearcard_arms")
 	head.add_child(arms)
 	box.add_child(head)
 	if box is Container:
