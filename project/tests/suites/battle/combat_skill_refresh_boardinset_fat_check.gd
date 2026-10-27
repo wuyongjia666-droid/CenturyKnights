@@ -66,8 +66,8 @@ func _algebra_sources() -> String:
 
 func _algebra_one_preview(path: String) -> String:
 	var body := FileAccess.get_file_as_string(path)
-	if body.find("_refresh_info_block") < 0:
-		return "%s missing _refresh_info_block" % path
+	if body.find("BattleBoardInset.refresh_info_block") < 0:
+		return "%s missing BattleBoardInset.refresh_info_block" % path
 	if body.find("m_info_block") < 0 or body.find("follow_cells") < 0:
 		return "%s missing m_info_block refresh or follow_cells" % path
 	if body.find("forecast_band(") >= 0:
@@ -82,7 +82,7 @@ func _algebra_one_preview(path: String) -> String:
 			return "%s follow_cells must pass reserve_top 0.0 got %s" % [path, slice]
 		i = hit + 12
 	# Every follow_cells call site must be preceded by a refresh in the same function body.
-	var ref_arm := body.find("_refresh_info_block(host)")
+	var ref_arm := body.find("BattleBoardInset.refresh_info_block(host)")
 	var fol_arm := body.find("follow_cells(host, cells, 0.0)")
 	if ref_arm < 0 or fol_arm < 0 or ref_arm > fol_arm:
 		return "%s arm must refresh m_info_block before follow_cells" % path
@@ -90,7 +90,7 @@ func _algebra_one_preview(path: String) -> String:
 	if aim_slice_start < 0:
 		return "%s missing _aim" % path
 	var aim_body := body.substr(aim_slice_start, 600)
-	var ref_aim := aim_body.find("_refresh_info_block(host)")
+	var ref_aim := aim_body.find("BattleBoardInset.refresh_info_block(host)")
 	var fol_aim := aim_body.find("follow_cells(")
 	if ref_aim < 0 or fol_aim < 0 or ref_aim > fol_aim:
 		return "%s _aim must refresh m_info_block before follow_cells" % path

@@ -89,7 +89,7 @@ static func after_land(host) -> void:
 		cells.append(c)
 	# Refresh live info column so BoardInset cuts the same chrome as
 	# ActionSettle / skill follow (stale m_info_block left figures under the side col).
-	_refresh_info_block(host)
+	BattleBoardInset.refresh_info_block(host)
 	var applied := BattleCombatFrame.follow_cells(host, cells, 0.0)
 	host.set_meta(META, {
 		"stand": stand,
@@ -99,17 +99,6 @@ static func after_land(host) -> void:
 	})
 	if host.overlay:
 		host.overlay.queue_redraw()
-
-static func _refresh_info_block(host) -> void:
-	if host == null:
-		return
-	var col := host.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		col = host.find_child("MobileSideCol", true, false) as Control
-	if col == null:
-		col = host.get_node_or_null("SideCol") as Control
-	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
-		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 static func draw(host, overlay) -> void:
 	if overlay == null or host == null:
