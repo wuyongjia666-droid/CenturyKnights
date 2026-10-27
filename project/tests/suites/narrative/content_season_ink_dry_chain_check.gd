@@ -20,6 +20,7 @@ const ROWS := [
 
 	{"cid": "cs05_01", "beat": "ledger", "needle": "空栏干了。椅子空着我才走，名的事明天对。"},
 	{"cid": "cs05_02", "beat": "ledger", "needle": "页干了。潮着我也回过；干了，我才真离开案。"},
+	{"cid": "cs05_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏椅守。"},
 	{"cid": "cs06_01", "beat": "ledger", "needle": "鼓点干了。胜名没钉，旗我带回旗杆下。"},
 	{"cid": "cs06_02", "beat": "ledger", "needle": "空条还空，可干了。册合上，不在酒醒前填。"},
 	{"cid": "cs07_01", "beat": "ledger", "needle": "序干了。路走到门槛为止，名字不在灯下抢。"},

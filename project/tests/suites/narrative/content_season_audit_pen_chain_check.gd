@@ -20,6 +20,7 @@ const ROWS := [
 
 	{"cid": "cs05_01", "beat": "hourglass", "needle": "我落笔。无——椅空，字不空。"},
 	{"cid": "cs05_02", "beat": "hourglass", "needle": "我写无。链收好，栏认清。"},
+	{"cid": "cs05_03", "beat": "hourglass", "needle": "我写空。栏在袖，字在椅。"},
 	{"cid": "cs06_01", "beat": "hourglass", "needle": "我落笔。无——沙在场，字在纸。"},
 	{"cid": "cs06_02", "beat": "hourglass", "needle": "我写无。鼓歇了，栏也歇实。"},
 	{"cid": "cs07_01", "beat": "hourglass", "needle": "我落笔。无——礼收了，字留下。"},
