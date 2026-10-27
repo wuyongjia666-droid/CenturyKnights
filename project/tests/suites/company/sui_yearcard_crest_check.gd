@@ -50,10 +50,12 @@ func _boot() -> void:
 func _assert_page(page: Node, where: String) -> void:
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms" % where)
 	_ok(page.find_child("CastleBannerStrip", true, false) != null, "%s CastleBannerStrip" % where)
+	var yhead = page.find_child("YearArmsHead", true, false)
+	_ok(yhead != null and str(yhead.get_meta("field_route", "")) == "yearcard_row", "%s YearArmsHead field_route" % where)
 	var ya = page.find_child("YearArms", true, false)
 	_ok(ya != null, "%s YearArms" % where)
 	if ya != null:
-		_ok(str(ya.get_meta("field_route", "")) == "yearcard", "%s YearArms field_route" % where)
+		_ok(str(ya.get_meta("field_route", "")) == "yearcard_arms", "%s YearArms field_route" % where)
 	var src := FileAccess.get_file_as_string("res://scripts/hub/sui_yearcard.gd")
 	_ok(src.find("CKHeraldryField.attach_yearcard_row_arms") >= 0, "%s hub calls Field" % where)
 
