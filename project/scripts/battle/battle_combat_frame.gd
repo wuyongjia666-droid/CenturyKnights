@@ -15,9 +15,10 @@ extends RefCounted
 ##   stage and covered the fight.
 ##
 ## This frames the figure AABB (head through feet) with the smallest pan that
-## lands it inside the play inset. Already-visible pieces are not recentered.
-## Attack preview reserves the forecast band so the pair sits below the panel.
-## Unit-drag (ck_unit_drag) must not pan — the caller suppresses follow.
+## lands it inside the shared BoardInset (notch + info + edge) — same rect as
+## range keep / confirm settle / focus_cell. Already-visible pieces are not
+## recentered. Attack preview reserves the forecast band so the pair sits below
+## the panel. Unit-drag (ck_unit_drag) must not pan — the caller suppresses follow.
 
 
 const EDGE_FRAC := 0.08
@@ -179,7 +180,9 @@ static func follow_cells(host, cells: Array, reserve_top: float) -> Vector2:
 	var cell_px := float(host.CELL)
 	var pan: Vector2 = host._board_pan
 	var zoom := float(host._board_zoom) if host.get("_board_zoom") != null else 1.0
-	var inset := play_inset(stage, reserve_top, 0.0)
+	var inset := BattleBoardInset.for_host(host, reserve_top)
+	if inset.size.x < 8.0 or inset.size.y < 8.0:
+		inset = play_inset(stage, reserve_top, 0.0)
 	var raw := frame_delta(origin, cell_px, cells, pan, zoom, inset)
 	var saved: Vector2 = host._board_pan
 	host._board_pan = pan + raw
