@@ -29,8 +29,8 @@ func _run() -> String:
 			return "interface mismatch " + str(id)
 	## Playtest: atlas / lineage / quests / marriage are reachable from year one.
 	# #148/#385: year-one entries (+岁课 +领地簿 P1-UX-04), settings among them (also "always").
-	if open + UnlockSchedule.load_data().get("always", []).size() != 12:
-		return "year-one doors %d" % open
+	if open + UnlockSchedule.load_data().get("always", []).size() != 13:
+		return "year-one doors %d" % open  # +banner P1-BNR-02
 	if not Todo.is_unlocked("deploy"):
 		return "deploy locked"
 	for must in ["atlas", "lineage", "sui_ke", "quests", "marriage", "territory"]:

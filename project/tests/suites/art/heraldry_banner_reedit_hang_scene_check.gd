@@ -98,7 +98,7 @@ func _run_reedit_save_roundtrip() -> void:
 	_boot("旗饰再编辑")
 	var seed_spec := BannerSpec.normalize(GameState.banner_spec.duplicate(true))
 	seed_spec["emblem"] = "spark"
-	seed_spec["charges"] = [{"id": "spark", "tincture": str(seed_spec.get("charge_color", "#7ec8e3")), "placement": "center"}]
+	seed_spec["charges"] = [{"id": "spark", "tincture": str(seed_spec.get("charge_color", "")), "placement": "center"}]
 	GameState.banner_spec = BannerSpec.normalize(seed_spec)
 	UnitArt.clear_cache()
 
