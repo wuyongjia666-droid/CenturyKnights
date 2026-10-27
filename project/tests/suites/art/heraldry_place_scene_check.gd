@@ -317,6 +317,15 @@ func _source_contracts() -> void:
 		["train_focus", "place_train_focus_strip"],
 		["train_focus_arms", "TrainFocusArms"],
 		["train_banner", "TrainBanner"],
+		["affairs_strip", "place_affairs_crest_strip"],
+		["affairs_nation", "affairs_nation"],
+		["affairs_banner", "AffairsBanner"],
+		["rite_strip", "place_rite_crest_strip"],
+		["rite_leader", "rite_leader"],
+		["rite_banner", "RiteBanner"],
+		["muster_strip", "place_muster_crest_strip"],
+		["muster_leader", "muster_leader"],
+		["muster_banner", "MusterBanner"],
 		["succession_strip", "place_succession_crest_strip"],
 		["succession_heir", "succession_heir"],
 		["succession_banner", "SuccessionBanner"],
@@ -338,6 +347,9 @@ func _source_contracts() -> void:
 		"forge": "res://scripts/hub/forge.gd",
 		"shrine": "res://scripts/hub/shrine.gd",
 		"train": "res://scripts/hub/train.gd",
+		"lineage_rite": "res://scripts/hub/lineage_rite.gd",
+		"title_promote": "res://scripts/hub/title_promote.gd",
+		"city": "res://scripts/hub/city.gd",
 	}
 	for hub in hubs.keys():
 		var src := FileAccess.get_file_as_string(hubs[hub])
