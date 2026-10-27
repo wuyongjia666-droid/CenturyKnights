@@ -1286,6 +1286,8 @@ static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vecto
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
+	# Cloth plate beside the gazette pair — Field ownership on 朝报.
+	_cloth_beside(host, shield, "GazetteBanner", "gazette_banner")
 	parent.add_child(host)
 	return host
 
@@ -1440,6 +1442,8 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
 	host.set_meta("city_id", str(city_id))
+	# Cloth plate beside the city pair — Field ownership on 城关.
+	_cloth_beside(host, shield, "CityBanner", "city_banner")
 	parent.add_child(host)
 	return host
 
@@ -1498,6 +1502,8 @@ static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
+	# Cloth plate beside the nation pair — Field ownership on 邦谱.
+	_cloth_beside(host, shield, "NationBanner", "nation_banner")
 	parent.add_child(host)
 	return host
 
