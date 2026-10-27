@@ -2295,6 +2295,7 @@ func _end_player_turn() -> void:
 		BattleLockTutorial.show_practice_banner(self)
 		Sfx.miss()
 		return
+	BattleTurnCycleFeel.before_enemy_phase(self)
 	turn_team = "enemy"
 	phase_label.text = Locale.t("shell_2a6d5eac") % map_name
 	BattlePhaseFeel.note_phase_switch(self, "enemy")
