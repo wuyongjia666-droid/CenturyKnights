@@ -7,48 +7,12 @@ extends RefCounted
 ## under the landscape info column or into the notch lip once the forecast band
 ## closes. After the action, the actor's own figure must stay inside the shared
 ## BoardInset (notch + info + edge) — same rect as range keep / confirm settle.
-## Pure `readable_inset(stage, …)` stays for algebra suites without a host.
+## Pure `readable_inset(stage, …)` stays for algebra suites without a host —
+## delegates to BoardInset.from_parts (same no-rebleed cut as live for_host).
 
 
 static func readable_inset(stage: Rect2, blockers: Array, edge_band: float) -> Rect2:
-	var inset := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
-	if edge_band > 1.0:
-		var shrunk := Rect2(
-			inset.position + Vector2(edge_band, edge_band),
-			inset.size - Vector2(edge_band, edge_band) * 2.0)
-		if shrunk.size.x >= 72.0 and shrunk.size.y >= 72.0:
-			inset = shrunk
-	for b in blockers:
-		if b is Rect2 and (b as Rect2).size.x > 1.0 and (b as Rect2).intersects(inset):
-			inset = _cut_blocker(inset, b)
-	return inset
-
-
-static func _cut_blocker(inset: Rect2, block: Rect2) -> Rect2:
-	## Cut inset so it no longer intersects block. Never inflate past the cut
-	## edge (a 72px floor used to re-bleed into the info column / notch).
-	var inter := inset.intersection(block)
-	if inter.size.x < 1.0 or inter.size.y < 1.0:
-		return inset
-	if inter.size.x <= inter.size.y and block.get_center().x >= inset.get_center().x:
-		var w: float = inter.position.x - inset.position.x
-		if w < 8.0:
-			return inset
-		return Rect2(inset.position, Vector2(w, inset.size.y))
-	if inter.size.x <= inter.size.y:
-		var w2: float = inset.end.x - inter.end.x
-		if w2 < 8.0:
-			return inset
-		return Rect2(Vector2(inter.end.x, inset.position.y), Vector2(w2, inset.size.y))
-	if block.get_center().y < inset.get_center().y:
-		var h: float = inset.end.y - inter.end.y
-		if h < 8.0:
-			return inset
-		return Rect2(Vector2(inset.position.x, inter.end.y), Vector2(inset.size.x, h))
-	var h2: float = inter.position.y - inset.position.y
-	if h2 < 8.0:
-		return inset
-	return Rect2(inset.position, Vector2(inset.size.x, h2))
+	return BattleBoardInset.from_parts(stage, 0.0, blockers, edge_band)
 
 
 ## Minimum pan that keeps `actor` readable. `also` is framed with the actor only
@@ -73,7 +37,7 @@ static func settle_delta(
 	return actor_delta
 
 
-static func apply(host, actor: Vector2i, also: Array) -> void:
+static func apply(host, actor: Vector2i, also: Array, smooth: bool = true) -> void:
 	if not DeviceProfile.is_mobile():
 		return
 	if host.has_meta("ck_unit_drag"):
@@ -118,4 +82,41 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 	if applied.length_squared() < 0.25:
 		BattlePick.cancel_focus_tween(host)
 		return
-	BattlePick._apply_focus_pan(host, clamped, true)
+	BattlePick._apply_focus_pan(host, clamped, smooth)
+
+
+## Re-frame a prior action settle into the live BoardInset after layout moves
+## the stage or info column (viewport resize / apply_mobile_layout). No-op when
+## nothing was stamped or the actor cell is gone.
+static func refresh_if_stamped(host) -> void:
+	if host == null or not host.has_meta("m_action_settle"):
+		return
+	var info = host.get_meta("m_action_settle")
+	if not (info is Dictionary):
+		return
+	var actor = (info as Dictionary).get("actor", Vector2i(-1, -1))
+	if not (actor is Vector2i) or (actor as Vector2i).x < 0:
+		return
+	# Wait-handoff / formation cycle own the focus tween for the *selected*
+	# unit — do not yank the camera back to a stale post-action stamp.
+	var sel_raw = host.get("selected")
+	var sel := int(sel_raw) if sel_raw != null else -1
+	var units = host.get("units")
+	if sel >= 0 and units != null and sel < units.size():
+		var u = units[sel]
+		if typeof(u) == TYPE_DICTIONARY:
+			var pos = u.get("pos", Vector2i(-1, -1))
+			if pos is Vector2i and (pos as Vector2i) != (actor as Vector2i):
+				return
+	# Drop the action stamp so apply recomputes against current for_host.
+	# Re-mirror m_confirm_settle after apply so a layout refresh mid-await
+	# cannot erase the confirm E2E stamp.
+	var keep_confirm: bool = bool(host.has_meta("m_confirm_settle"))
+	host.remove_meta("m_action_settle")
+	if keep_confirm:
+		host.remove_meta("m_confirm_settle")
+	BattlePick.cancel_focus_tween(host)
+	# Immediate: layout-driven refresh must land before the next frame asserts.
+	apply(host, actor as Vector2i, [], false)
+	if keep_confirm and host.has_meta("m_action_settle"):
+		host.set_meta("m_confirm_settle", host.get_meta("m_action_settle"))

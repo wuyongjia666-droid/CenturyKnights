@@ -201,14 +201,31 @@ func _e2e_wait_handoff() -> String:
 	var sel_pos: Vector2i = _battle.units[int(_battle.selected)].pos
 	if sel_pos == _battle.units[_a].pos:
 		return "still focused on waited unit"
-	# On mobile/desktop CombatFrame.follow_selected may nudge; require any pan change
-	# when the new unit was off to the side.
-	var stage: Rect2 = BattlePick._stage_rect(_battle)
+	# follow_selected frames into BoardInset (same contract as select focus).
+	# CELL is unscaled — figure_inside multiplies by zoom. CI parallel headless
+	# can steal the window mid-tween; retry + re-follow like notch_settle.
 	var origin: Vector2 = _battle.ORIGIN
 	var zoom := float(_battle._board_zoom)
-	var cell_px: float = float(_battle.CELL) * zoom
-	var inset := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
-	if not BattleCombatFrame.figure_inside(origin, cell_px, sel_pos, after, zoom, inset, 12.0):
+	var cell_px := float(_battle.CELL)
+	var inset := BattleBoardInset.for_host(_battle, 0.0)
+	if inset.size.x < 8.0 or inset.size.y < 8.0:
+		inset = BattleCombatFrame.play_inset(BattlePick._stage_rect(_battle), 0.0, 0.0)
+	var inside := false
+	var i := 0
+	while i < 45:
+		if BattleCombatFrame.figure_inside(origin, cell_px, sel_pos, _battle._board_pan, zoom, inset, 12.0):
+			inside = true
+			break
+		if i == 12 or i == 28:
+			BattlePick.cancel_focus_tween(_battle)
+			BattleCombatFrame.follow_selected(_battle)
+			inset = BattleBoardInset.for_host(_battle, 0.0)
+			if inset.size.x < 8.0 or inset.size.y < 8.0:
+				inset = BattleCombatFrame.play_inset(BattlePick._stage_rect(_battle), 0.0, 0.0)
+		await get_tree().process_frame
+		i += 1
+	if not inside:
+		after = _battle._board_pan
 		return "handed unit figure still outside play inset (before %s after %s sel=%s)" % [before, after, sel_pos]
 	# Second wait → hand to remaining or clear if none
 	var cur := int(_battle.selected)

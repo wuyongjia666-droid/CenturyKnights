@@ -234,9 +234,10 @@ func _scene_b_confirm_settle_and_side() -> String:
 	if col != null and col.mouse_filter != Control.MOUSE_FILTER_IGNORE:
 		return "B: side col regained STOP after confirm"
 	if _battle.has_meta("m_confirm_settle") or _battle.has_meta("m_action_settle"):
-		# Re-settle then wait the focus tween — tip apply has no smooth=false.
-		BattleActionSettle.apply(_battle, dest, [])
-		await _settle(12)
+		# Re-settle immediately (no focus tween) like layout-driven BoardInset
+		# refresh — #670 smooth=false; brief await for frame settle.
+		BattleActionSettle.apply(_battle, dest, [], false)
+		await _settle(4)
 		var inset := BattleBoardInset.for_host(_battle, 0.0)
 		var fig := BattleCombatFrame.figure_rect(
 			_battle.ORIGIN, float(_battle.CELL), dest, _battle._board_pan, float(_battle._board_zoom))
@@ -245,6 +246,7 @@ func _scene_b_confirm_settle_and_side() -> String:
 			if not inset.grow(24.0).intersects(fig):
 				return "B: actor left readable region fig=%s inset=%s" % [fig, inset]
 	return ""
+
 
 
 func _blockers_safe() -> Array:
