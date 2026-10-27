@@ -8,6 +8,5 @@
 | scaffold_gate | 内容季流水门禁（含 #6） | `content_season_scaffold_check` |
 | playable_dialogue | 可玩章 cs06_01 对白可走 | `content_season_playable_s06_check` |
 | playable_dialogue_02 | 可玩章 cs06_02 对白可走 | `content_season_playable_s06_02_check` |
-
-- [x] 第三可玩章 `cs06_03`《沙圈上的灯》对白可走（`content_season_playable_s06_03_check`）
-- [x] S06 同档门禁 01+02+03（`content_season_playable_gate_s06_check`）
+| playable_dialogue_03 | 可玩章 cs06_03 对白可走 | `content_season_playable_s06_03_check` |
+| playable_gate_s06 | S06 同档门禁 01+02+03 | `content_season_playable_gate_s06_check` |

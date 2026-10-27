@@ -703,7 +703,7 @@
           }
         }
       ],
-      "next": "rail"
+      "next": "post"
     },
     {
       "id": "post",
