@@ -104,7 +104,7 @@ func _assert_shield_surfaces(want_shape: String, want_core: String, where: Strin
 		heater_spec["shield_shape"] = "heater"
 		var a := BannerSpec.compose_shield(BannerSpec.normalize(GameState.banner_spec), 64, 74)
 		var b := BannerSpec.compose_shield(heater_spec, 64, 74)
-		_ok(_alpha_mask_differs(a, b), "%s silhouette %s ≠ heater" % [where, want_shape])
+		_ok(_alpha_mask_differs(a, b), "%s silhouette %s != heater" % [where, want_shape])
 	root.queue_free()
 
 
