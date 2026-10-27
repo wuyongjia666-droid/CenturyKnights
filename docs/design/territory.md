@@ -76,3 +76,16 @@
 ## 8. 测试
 
 `project/tests/suites/company/territory_check`：数据完整（32 处、每国 ≥3、锚点存在且非本堡/都城、产出货物属于该国资源表）；强攻与委托链两条夺取路径；月度产出/维护/降驻军；争夺→守卫战胜/败/逾期自守；`hq` 永不失守；存档往返与旧档迁移。
+
+## 9. 中立拉锯加码与落幕归属（Territory fat）
+
+中立点可被多方拉锯（`start_neutral_contest`）。玩家三条路：
+
+1. **驰援截击**（原有）：赶到锚点强攻，`intervene_contest` → `assault`。
+2. **加码截夺**（本刀）：`contest_stake` 花银（`contest_stake_cost` = 规则底 + 危险×12）写入 `company` 阵营压力（高于当前最高压），月回读 `month_echo.contest`；落幕时压力最高者得手——本团则 `capture(id, "contest")`（驻军≥1、短民心未附、产出入账）。
+3. **观望**：`watch_contest`，下一月仍可加码/截击。
+
+UI：`ContestTugModal` 增 `ContestStake` + `EchoLine_contest`；`TerritoryMonthModal` 增 `ContestLine`（落幕/未决）+ `EchoLine_contest`。
+
+E2E：`territory_contest_stake_claim_check` + mobile twin。
+

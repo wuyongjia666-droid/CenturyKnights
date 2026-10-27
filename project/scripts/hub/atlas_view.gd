@@ -2603,8 +2603,27 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		for row in threats:
 			tn.append("%s·%s" % [str(row.get("name", "")), str(row.get("by", ""))])
 		bits.append(Locale.t("atlas_terr_month_threat") % "、".join(tn))
+	var contests: Array = rep.get("contests", []) if typeof(rep.get("contests", [])) == TYPE_ARRAY else []
+	var contest_open: Array = rep.get("contest_open", []) if typeof(rep.get("contest_open", [])) == TYPE_ARRAY else []
+	if not contests.is_empty():
+		var cn: Array = []
+		for row3 in contests:
+			if typeof(row3) == TYPE_DICTIONARY:
+				cn.append("%s→%s" % [str(row3.get("name", "")), str(row3.get("winner_name", row3.get("winner", "")))])
+		bits.append(Locale.t("atlas_terr_month_contest") % "、".join(cn))
+	elif not contest_open.is_empty():
+		var on: Array = []
+		for row4 in contest_open:
+			if typeof(row4) == TYPE_DICTIONARY:
+				on.append(str(row4.get("name", row4.get("id", ""))))
+			elif typeof(row4) == TYPE_STRING:
+				on.append(str(CKTerritory.site(str(row4)).get("name", row4)))
+		bits.append(Locale.t("atlas_terr_month_contest_open") % "、".join(on))
 	var extra := " ".join(bits) if not bits.is_empty() else Locale.t("atlas_terr_month_none")
+	var echo_contest := str(CKEconomyState.month_echo_snapshot().get("contest", ""))
 	var h := 340.0 if reclaims.is_empty() else 390.0
+	if echo_contest != "" or not contests.is_empty():
+		h += 40.0
 	var panel := _modal_panel(h)
 	panel.name = "TerritoryMonthModal"
 	var el := UIKit.mono(Locale.t("atlas_terr_month_en"), 9, UIKit.ACCENT)
@@ -2660,6 +2679,35 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 				World.cancel_travel())
 		panel.add_child(reclaim_btn)
 		y += 44.0
+	# Territory fat: ContestLine + EchoLine_contest on month panel.
+	if not contests.is_empty():
+		var cbits: Array = []
+		for rc in contests:
+			if typeof(rc) == TYPE_DICTIONARY:
+				cbits.append("%s→%s" % [str(rc.get("name", "")), str(rc.get("winner_name", rc.get("winner", "")))])
+		var cl := UIKit.body_label(Locale.t("atlas_terr_month_contest") % "、".join(cbits), UIKit.EMBER, 12)
+		cl.name = "ContestLine"
+		cl.position = Vector2(24, h - 116)
+		cl.size = Vector2(452, 20)
+		panel.add_child(cl)
+	elif not contest_open.is_empty():
+		var obits: Array = []
+		for xo in contest_open:
+			if typeof(xo) == TYPE_DICTIONARY:
+				obits.append(str(xo.get("name", xo.get("id", ""))))
+			else:
+				obits.append(str(CKTerritory.site(str(xo)).get("name", xo)))
+		var cl2 := UIKit.body_label(Locale.t("atlas_terr_month_contest_open") % "、".join(obits), UIKit.EMBER, 12)
+		cl2.name = "ContestLine"
+		cl2.position = Vector2(24, h - 116)
+		cl2.size = Vector2(452, 20)
+		panel.add_child(cl2)
+	if echo_contest != "":
+		var echo_m := UIKit.body_label(echo_contest, UIKit.OK, 12)
+		echo_m.name = "EchoLine_contest"
+		echo_m.position = Vector2(24, h - 96)
+		echo_m.size = Vector2(452, 20)
+		panel.add_child(echo_m)
 	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
 	later.name = "TerritoryMonthLater"
 	later.position = Vector2(24, h - 56)
@@ -3000,7 +3048,10 @@ func _show_contest_tug_modal(alert: Dictionary) -> void:
 	var faction_line := " / ".join(names) if not names.is_empty() else "—"
 	var phase_line := Locale.t("atlas_contest_phase_imminent") if phase == "imminent" else Locale.t("atlas_contest_phase_declared")
 	var at_anchor := World.pos == anchor and anchor != ""
-	var h := 380.0
+	var prev: Dictionary = CKTerritory.contest_preview(site_id) if site_id != "" else {}
+	var stake_cost := int(prev.get("stake_cost", CKTerritory.contest_stake_cost(site_id) if site_id != "" else 40))
+	var can_stake := bool(prev.get("can_stake", false))
+	var h := 470.0
 	var panel := _modal_panel(h)
 	panel.name = "ContestTugModal"
 	var el := UIKit.mono(Locale.t("atlas_contest_en"), 9, UIKit.EMBER)
@@ -3051,6 +3102,41 @@ func _show_contest_tug_modal(alert: Dictionary) -> void:
 			_show_contest_tug_modal(alert))
 	panel.add_child(seize)
 	y += 50.0
+	# Territory fat: stake silver → company pressure → claim on resolve.
+	var stake := UIKit.ghost_button(Locale.t("atlas_contest_stake") % stake_cost, 452, 36)
+	stake.name = "ContestStake"
+	stake.position = Vector2(24, y)
+	stake.disabled = not can_stake
+	stake.pressed.connect(func():
+		var r3: Dictionary = CKTerritory.contest_stake(site_id)
+		_show_toast(str(r3.get("msg", "")), UIKit.OK if bool(r3.get("ok", false)) else UIKit.DANGER)
+		if bool(r3.get("ok", false)):
+			alert["factions"] = r3.get("factions", alert.get("factions", []))
+			stake.disabled = true
+			var bl: Label = panel.get_node_or_null("ContestTugBody") as Label
+			if bl != null:
+				var fn: Array = []
+				for f2 in (alert.get("factions", []) as Array):
+					if typeof(f2) == TYPE_DICTIONARY:
+						fn.append("%s(%d)" % [str(f2.get("name", "")), int(f2.get("pressure", 0))])
+				var fl := " / ".join(fn) if not fn.is_empty() else "—"
+				var pl := Locale.t("atlas_contest_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_contest_phase_declared")
+				bl.text = Locale.t("atlas_contest_body") % [site_name, anchor_name, fl, pl]
+			var echo_c := str(CKEconomyState.month_echo_snapshot().get("contest", ""))
+			if echo_c != "" and panel.get_node_or_null("EchoLine_contest") == null:
+				var echo_cv := UIKit.body_label(echo_c, UIKit.OK, 12)
+				echo_cv.name = "EchoLine_contest"
+				echo_cv.position = Vector2(24, h - 96)
+				echo_cv.size = Vector2(452, 20)
+				panel.add_child(echo_cv)
+			elif echo_c != "":
+				var eln: Label = panel.get_node_or_null("EchoLine_contest") as Label
+				if eln:
+					eln.text = echo_c
+		_refresh_top()
+		_build_nodes())
+	panel.add_child(stake)
+	y += 44.0
 	var watch := UIKit.ghost_button(Locale.t("atlas_contest_watch"), 452, 36)
 	watch.name = "ContestWatch"
 	watch.position = Vector2(24, y)
