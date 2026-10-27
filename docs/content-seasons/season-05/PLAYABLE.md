@@ -277,3 +277,9 @@
 - 各章首拍在 `_drf6` 后、离开该拍前加 `_lmp1`–`_lmp6` 灯影一沉口头，全库去重；收束非旁白。
 - 验收：`content_season_lamp_settle_chain_check` — hub chip → 灯影一沉针口头。
 - 不碰既有 `_drf`/`_yld`/`_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 靴尖一探口头加厚（toe-probe）
+
+- 各章首拍在 `_lmp6` 后、离开该拍前加 `_toe1`–`_toe6` 靴尖一探口头，全库去重；收束非旁白。
+- 验收：`content_season_toe_probe_chain_check` — hub chip → 靴尖一探针口头。
+- 不碰既有 `_lmp`/`_drf`/`_yld`/`_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
