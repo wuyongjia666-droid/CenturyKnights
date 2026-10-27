@@ -1633,6 +1633,12 @@ func _unit_at(pos: Vector2i) -> int:
 
 func _select_player(ui: int) -> void:
 	selected = ui
+	# BoardInset: drop post-action settle stamps so layout refresh cannot
+	# re-frame a waited-out unit over wait-handoff / formation focus.
+	if has_meta("m_action_settle"):
+		remove_meta("m_action_settle")
+	if has_meta("m_confirm_settle"):
+		remove_meta("m_confirm_settle")
 	attack_mode = false
 	skill_mode = false
 	active_skill_id = ""

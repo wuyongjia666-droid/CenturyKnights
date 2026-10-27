@@ -97,6 +97,17 @@ static func refresh_if_stamped(host) -> void:
 	var actor = (info as Dictionary).get("actor", Vector2i(-1, -1))
 	if not (actor is Vector2i) or (actor as Vector2i).x < 0:
 		return
+	# Wait-handoff / formation cycle own the focus tween for the *selected*
+	# unit — do not yank the camera back to a stale post-action stamp.
+	var sel_raw = host.get("selected")
+	var sel := int(sel_raw) if sel_raw != null else -1
+	var units = host.get("units")
+	if sel >= 0 and units != null and sel < units.size():
+		var u = units[sel]
+		if typeof(u) == TYPE_DICTIONARY:
+			var pos = u.get("pos", Vector2i(-1, -1))
+			if pos is Vector2i and (pos as Vector2i) != (actor as Vector2i):
+				return
 	# Drop the stamp so apply recomputes against current for_host / blockers.
 	host.remove_meta("m_action_settle")
 	if host.has_meta("m_confirm_settle"):
