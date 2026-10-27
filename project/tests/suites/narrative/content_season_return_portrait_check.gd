@@ -9,6 +9,7 @@ const HUB := "res://scenes/hub/castle_hub.tscn"
 const CHAPTERS := [
 	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs03_03", "cs04_01", "cs04_02", "cs04_03",
 	"cs05_01", "cs05_02", "cs05_03", "cs06_01", "cs06_02", "cs06_03", "cs07_01", "cs07_02",
+	"cs07_03",
 	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]
 ## Choice label → expected flag (first option on tavern beat).
@@ -29,6 +30,7 @@ const CHOICE := {
 	"cs06_01": ["校场并排记", "cs06_kept_yard"],
 	"cs06_02": ["空条并排", "cs06_book_parallel"],
 	"cs06_03": ["栏场仍并", "cs06_circle_parallel"],
+	"cs07_03": ["栏仪仍并", "cs07_seal_parallel"],
 	"cs07_01": ["仪典并排记", "cs07_kept_rite"],
 	"cs07_02": ["空条并排", "cs07_gene_parallel"],
 	"cs08_01": ["祖祠并排记", "cs08_kept_stele"],
