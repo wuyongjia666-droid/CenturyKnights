@@ -1,10 +1,12 @@
 class_name BattleBoardInset
 extends RefCounted
 ## Y1-A fat knife: one playable/readable inset for select → range →
-## confirm/cancel → camera → phase/end banners → action settle. Range keep and
-## confirm settle used to disagree — range clipped the notch lip, confirm
-## chips/settle did not. Action settle / phase banners then rebuilt a third
-## inset without the notch. Cancel mode-exit also refocused without the share.
+## confirm/cancel → camera → phase/end banners → action settle → select
+## focus / CombatFrame follow. Range keep and confirm settle used to disagree —
+## range clipped the notch lip, confirm chips/settle did not. Action settle /
+## phase banners then rebuilt a third inset without the notch. Select focus_cell
+## / focus_follow and CombatFrame.follow_cells used the raw stage play inset and
+## could slide the figure under the info column or into the notch lip.
 
 
 static func for_host(host, reserve_top: float = -1.0) -> Rect2:
