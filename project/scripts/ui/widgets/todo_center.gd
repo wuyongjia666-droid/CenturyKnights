@@ -67,7 +67,9 @@ static func snapshot() -> Array:
 	rows.append(_row("sui_ke", "family", Locale.t("ux_todo_sui_ke"), CKSuiKe.inbox_count()))
 	var threat_n := CKTerritory.threatened_owned().size()
 	if threat_n > 0:
-		rows.append(_row("territory_threat", "military", Locale.t("ux_todo_territory_threat"), threat_n))
+		var row := _row("territory_threat", "military", Locale.t("ux_todo_territory_threat"), threat_n)
+		row["severity"] = "block"
+		rows.append(row)
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)
