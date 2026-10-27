@@ -63,7 +63,10 @@ static func _focus_nearest(host, idxs: Array[int]) -> int:
 	for i in idxs:
 		if i == ui:
 			continue
-		var d: int = absi(host.units[i].pos.x - host.units[ui].pos.x) + absi(host.units[i].pos.y - host.units[ui].pos.y)
+		var d: int = (
+			absi(host.units[i].pos.x - host.units[ui].pos.x)
+			+ absi(host.units[i].pos.y - host.units[ui].pos.y)
+		)
 		if d < best_d or (d == best_d and i < best):
 			best_d = d
 			best = i
@@ -95,14 +98,20 @@ static func arm(host, sid: String) -> bool:
 	var cells: Array = [stand]
 	for i in idxs:
 		cells.append(host.units[i].pos)
-	var applied := BattleCombatFrame.follow_cells(host, cells, BattleCombatFrame.forecast_band(true))
-	host.set_meta(META, {
-		"sid": sid,
-		"focus": focus,
-		"targets": idxs.duplicate(),
-		"delta": applied,
-		"msec": Time.get_ticks_msec(),
-	})
+	var applied := BattleCombatFrame.follow_cells(host, cells, 0.0)
+	(
+		host
+		. set_meta(
+			META,
+			{
+				"sid": sid,
+				"focus": focus,
+				"targets": idxs.duplicate(),
+				"delta": applied,
+				"msec": Time.get_ticks_msec(),
+			}
+		)
+	)
 	if host.has_method("_update_skill_hint"):
 		host._update_skill_hint()
 	if host.has_method("_refresh_info"):
@@ -163,7 +172,7 @@ static func _aim(host, ally_i: int) -> int:
 	host.set_meta(META, m)
 	var stand: Vector2i = host.units[int(host.selected)].pos
 	var ally_pos: Vector2i = host.units[ally_i].pos
-	BattleCombatFrame.follow_cells(host, [stand, ally_pos], BattleCombatFrame.forecast_band(true))
+	BattleCombatFrame.follow_cells(host, [stand, ally_pos], 0.0)
 	if host.has_method("_refresh_info"):
 		host._refresh_info()
 	if host.overlay:
@@ -202,7 +211,15 @@ static func draw(host, overlay) -> void:
 		var marks := BattleSelectChrome.chrome_marks(origin, cell_px, cell, half_w, 1.0)
 		var thick: float = LINE_W + (1.1 if i == focus else 0.0)
 		var fill_a: float = BODY_FILL_A * pulse * (1.2 if i == focus else 1.0)
-		overlay.draw_arc(marks.mid, float(marks.mid_r) * (1.06 if i == focus else 1.0), 0.0, TAU, 40, Color(tone, 0.95 * pulse), thick)
+		overlay.draw_arc(
+			marks.mid,
+			float(marks.mid_r) * (1.06 if i == focus else 1.0),
+			0.0,
+			TAU,
+			40,
+			Color(tone, 0.95 * pulse),
+			thick
+		)
 		var body: Rect2 = marks.body
 		overlay.draw_rect(body, Color(tone, fill_a))
 		overlay.draw_rect(body, Color(tone, 0.92 * pulse), false, thick)
