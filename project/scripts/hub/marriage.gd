@@ -129,7 +129,7 @@ func _build() -> void:
 	add_child(_list)
 	_tabs = HBoxContainer.new()
 	_tabs.name = "CandidateTabs"
-	_tabs.position = Vector2(300, 200)
+	_tabs.position = Vector2(520, 200)
 	_tabs.add_theme_constant_override("separation", 8)
 	add_child(_tabs)
 
@@ -269,7 +269,26 @@ func _unhandled_input(e: InputEvent) -> void:
 func _refresh() -> void:
 	for c in _tabs.get_children():
 		c.queue_free()
-	if _posts_label:
+	var reroll := get_node_or_null("MarriageActions/Reroll") as Button
+	var sp := _spouse()
+	_sync_reroll_btn(reroll, sp == null)
+	_sync_footer_hints(sp != null)
+	_sync_contract_price_label()
+	if sp != null:
+		## Married: hide 廷帖|同袍 + posts line so MarriedBanner owns the strip (court_ui overlap).
+		if _posts_label:
+			_posts_label.visible = false
+		if _source_bar:
+			_source_bar.visible = false
+		var banner := UIKit.body_label(married_banner_text(sp), UIKit.OK, MobilePage.FONT if _mob else 14)
+		banner.name = "MarriedBanner"
+		banner.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_tabs.add_child(banner)
+		_select(sp)
+		return
+	## Unmarried desktop: restore source/posts (narrow/mobile keep them hidden).
+	if _posts_label and not _mob and not _narrow:
+		_posts_label.visible = true
 		var su_l := _get_suitor()
 		if _source_mode == "comrade":
 			_posts_label.text = Locale.t("ux_marriage_comrade_posts")
@@ -280,19 +299,8 @@ func _refresh() -> void:
 				_posts_label.text = Locale.t("ux_posts_hero_fixed")
 		else:
 			_posts_label.text = Locale.t("ux_marriage_posts", [_nation_name(_post_nation)])
-	var reroll := get_node_or_null("MarriageActions/Reroll") as Button
-	var sp := _spouse()
-	_sync_reroll_btn(reroll, sp == null)
-	_sync_footer_hints(sp != null)
-	_sync_contract_price_label()
-	if sp != null:
-		## Married: no candidate tabs — one clear banner, and the right card is the spouse.
-		var banner := UIKit.body_label(married_banner_text(sp), UIKit.OK, MobilePage.FONT if _mob else 14)
-		banner.name = "MarriedBanner"
-		banner.autowrap_mode = TextServer.AUTOWRAP_OFF
-		_tabs.add_child(banner)
-		_select(sp)
-		return
+	if _source_bar and not _mob and not _narrow:
+		_source_bar.visible = true
 	var pool := _candidate_pool()
 	if pool.is_empty():
 		## Y1-B / heir #30: empty posts get why/how + named forward CTAs (tavern / roster).
