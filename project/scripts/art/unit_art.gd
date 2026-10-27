@@ -91,6 +91,11 @@ static func tick(delta: float) -> void:
 		_token_phase = 0.0
 		_banner_frame = (_banner_frame + 1) % 6
 
+## P1-BNR-02: castle hang / DIY wave cycle (0..5).
+static func banner_frame() -> int:
+	return _banner_frame % 6
+
+
 static func crest_color() -> Color:
 	var spec_raw = GameState.get("banner_spec")
 	if typeof(spec_raw) == TYPE_DICTIONARY and (spec_raw as Dictionary).has("field_a"):
