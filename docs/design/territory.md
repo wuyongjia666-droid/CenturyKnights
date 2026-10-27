@@ -89,3 +89,13 @@ UI：`ContestTugModal` 增 `ContestStake` + `EchoLine_contest`；`TerritoryMonth
 
 E2E：`territory_contest_stake_claim_check` + mobile twin。
 
+## 10. 失守反夺交令与月回读（Territory fat）
+
+失守后 `_post_reclaim` 在锚点委托榜贴出一发「反夺」hunt（`territory_reclaim`）。玩家三条路：
+
+1. **月报按钮**：`TerritoryMonthModal` 的 `TerritoryMonthReclaim` 跳到锚点看榜。
+2. **接令开战**：接榜 → 赶到目标开战 → 回锚点交令 → `_finish_reclaim` → `capture(id, "reclaim")`（驻军≥1、短民心未附）。
+3. **月回读**：交令成功写入 `month_echo.reclaim`；月报增 `ReclaimLine`（待交）+ `EchoLine_reclaim`（得手）。
+
+E2E：`territory_reclaim_quest_echo_check` + mobile twin。
+
