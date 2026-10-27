@@ -1,6 +1,6 @@
 {
   "id": "season_06",
-  "version": 4,
+  "version": 5,
   "title_zh": "校场上的灯",
   "title_en": "The Lamp on the Drill Yard",
   "status": "playable_draft",
@@ -76,6 +76,18 @@
       "label_zh": "可玩章 cs06_02 对白可走",
       "suite": "res://tests/suites/narrative/content_season_playable_s06_02_check.tscn",
       "done": true
+    },
+    {
+      "id": "playable_dialogue_03",
+      "label_zh": "可玩章 cs06_03 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s06_03_check.tscn",
+      "done": true
+    },
+    {
+      "id": "playable_gate_s06",
+      "label_zh": "S06 同档可玩门禁（01+02+03）",
+      "suite": "res://tests/suites/narrative/content_season_playable_gate_s06_check.tscn",
+      "done": true
     }
   ],
   "pipeline_stages": {
@@ -126,6 +138,7 @@
   "playable_chapter": "cs06_01",
   "playable_path": "res://data/story/chapters/cs06_01.json",
   "playable_chapters": [
-    "cs06_02"
+    "cs06_02",
+    "cs06_03"
   ]
 }
