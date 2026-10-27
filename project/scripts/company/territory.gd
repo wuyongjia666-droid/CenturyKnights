@@ -215,6 +215,10 @@ static func capture(id: String, how: String) -> Dictionary:
 		var ys3 := int(site(id).yield_silver)
 		CKEconomyState.month_echo_note("assault", Locale.t("terr_echo_assault",
 			[str(site(id).name), ys3, int(st.unrest)]))
+	elif how == "chain":
+		var ys4 := int(site(id).yield_silver)
+		CKEconomyState.month_echo_note("chain", Locale.t("terr_echo_chain",
+			[str(site(id).name), ys4, int(st.garrison)]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_10") % site(id).name}
