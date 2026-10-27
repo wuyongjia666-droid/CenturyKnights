@@ -1,6 +1,6 @@
 extends Node
-## Fat heraldry wave-10 E2E: AftermathCrestStrip / ReserveCrestStrip / ReportCrestStrip
-## — strip_company + cloth banner child field_route ownership — desk + mobile.
+## Fat heraldry wave-17 E2E: AftermathCrestStrip / ReserveCrestStrip / ReportCrestStrip
+## — _cloth_beside Field cloth + arms_kind ownership — desk + mobile.
 ## Real atlas_view / deploy / BattleReport.present; no EmptyHost.
 
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
@@ -16,11 +16,11 @@ func _ready() -> void:
 	await _run_mobile()
 	_source_contracts()
 	if _fails.is_empty():
-		print("HERALDRY AFTERMATH RESERVE REPORT SCENE PASS")
+		print("HERALDRY AFTERMATH RESERVE REPORT CLOTH SCENE PASS")
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL heraldry aftermath reserve report scene: ", f)
+			print("FAIL heraldry aftermath reserve report cloth scene: ", f)
 		get_tree().quit(1)
 
 
@@ -100,15 +100,21 @@ func _run_helpers() -> void:
 	var aft := CKHeraldryField.place_aftermath_crest_strip(host, Vector2(8, 8), "ashbanner")
 	_ok(aft != null and aft.name == "AftermathCrestStrip", "helper AftermathCrestStrip")
 	_ok(aft != null and aft.get_child_count() == 3, "helper aftermath child_count=3")
-	_ok(_route(aft.find_child("AftermathBanner", true, false) if aft else null, "aftermath_banner"), "helper aftermath_banner")
+	var abn := aft.find_child("AftermathBanner", true, false) if aft else null
+	_ok(_route(abn, "aftermath_banner"), "helper aftermath_banner")
+	_ok(abn != null and str(abn.get_meta("arms_kind", "")) == "lb_aftermath_arms", "helper aftermath kind")
 	var res := CKHeraldryField.place_reserve_crest_strip(host, lead, Vector2(200, 8))
 	_ok(res != null and res.name == "ReserveCrestStrip", "helper ReserveCrestStrip")
 	_ok(res != null and res.get_child_count() == 3, "helper reserve child_count=3")
-	_ok(_route(res.find_child("ReserveBanner", true, false) if res else null, "reserve_banner"), "helper reserve_banner")
+	var rbn := res.find_child("ReserveBanner", true, false) if res else null
+	_ok(_route(rbn, "reserve_banner"), "helper reserve_banner")
+	_ok(rbn != null and str(rbn.get_meta("arms_kind", "")) == "lb_reserve_arms", "helper reserve kind")
 	var rep := CKHeraldryField.place_report_crest_strip(host, Vector2(400, 8), "ashbanner")
 	_ok(rep != null and rep.name == "ReportCrestStrip", "helper ReportCrestStrip")
 	_ok(rep != null and rep.get_child_count() == 3, "helper report child_count=3")
-	_ok(_route(rep.find_child("ReportBanner", true, false) if rep else null, "report_banner"), "helper report_banner")
+	var rpbn := rep.find_child("ReportBanner", true, false) if rep else null
+	_ok(_route(rpbn, "report_banner"), "helper report_banner")
+	_ok(rpbn != null and str(rpbn.get_meta("arms_kind", "")) == "lb_report_arms", "helper report kind")
 	host.queue_free()
 	await _settle(2)
 
@@ -135,7 +141,9 @@ func _assert_aftermath(tag: String) -> void:
 	if strip != null:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/aftermath strip_company" % tag)
 		_ok(_route(strip.find_child("FoeArms", true, false), "aftermath_foe"), "%s/aftermath aftermath_foe" % tag)
-		_ok(_route(strip.find_child("AftermathBanner", true, false), "aftermath_banner"), "%s/aftermath aftermath_banner" % tag)
+		var bn := strip.find_child("AftermathBanner", true, false)
+		_ok(_route(bn, "aftermath_banner"), "%s/aftermath aftermath_banner" % tag)
+		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_aftermath_arms", "%s/aftermath AftermathBanner kind" % tag)
 		_ok(strip.get_child_count() == 3, "%s/aftermath child_count=3" % tag)
 	page.queue_free()
 	await _settle(2)
@@ -155,7 +163,9 @@ func _assert_reserve(tag: String) -> void:
 	if strip != null:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/reserve strip_company" % tag)
 		_ok(_route(strip.find_child("ReserveArms", true, false), "reserve_focus"), "%s/reserve reserve_focus" % tag)
-		_ok(_route(strip.find_child("ReserveBanner", true, false), "reserve_banner"), "%s/reserve reserve_banner" % tag)
+		var bn := strip.find_child("ReserveBanner", true, false)
+		_ok(_route(bn, "reserve_banner"), "%s/reserve reserve_banner" % tag)
+		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_reserve_arms", "%s/reserve ReserveBanner kind" % tag)
 		_ok(strip.get_child_count() == 3, "%s/reserve child_count=3" % tag)
 	page.queue_free()
 	await _settle(2)
@@ -179,7 +189,9 @@ func _assert_report(tag: String) -> void:
 	if strip != null:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/report strip_company" % tag)
 		_ok(_route(strip.find_child("FoeArms", true, false), "report_foe"), "%s/report report_foe" % tag)
-		_ok(_route(strip.find_child("ReportBanner", true, false), "report_banner"), "%s/report report_banner" % tag)
+		var bn := strip.find_child("ReportBanner", true, false)
+		_ok(_route(bn, "report_banner"), "%s/report report_banner" % tag)
+		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_report_arms", "%s/report ReportBanner kind" % tag)
 		_ok(strip.get_child_count() == 3, "%s/report child_count=3" % tag)
 	host.queue_free()
 	await _settle(2)
@@ -221,6 +233,16 @@ func _source_contracts() -> void:
 	_ok(deploy.find("CKHeraldryField.place_reserve_crest_strip") >= 0, "deploy wires reserve Field")
 	var report := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_report.gd")
 	_ok(report.find("CKHeraldryField.place_report_crest_strip") >= 0, "battle_report wires Field")
+	_ok(field.find('_cloth_beside(host, shield, "AftermathBanner"') >= 0, "field aftermath via _cloth_beside")
+	_ok(field.find('_cloth_beside(host, shield, "ReserveBanner"') >= 0, "field reserve via _cloth_beside")
+	_ok(field.find('_cloth_beside(host, shield, "ReportBanner"') >= 0, "field report via _cloth_beside")
+	_ok(field.find('"lb_aftermath_arms"') >= 0, "field lb_aftermath_arms")
+	_ok(field.find('"lb_reserve_arms"') >= 0, "field lb_reserve_arms")
+	_ok(field.find('"lb_report_arms"') >= 0, "field lb_report_arms")
+	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
+	_ok(loc.find("lb_aftermath_arms,") >= 0, "locale lb_aftermath_arms")
+	_ok(loc.find("lb_reserve_arms,") >= 0, "locale lb_reserve_arms")
+	_ok(loc.find("lb_report_arms,") >= 0, "locale lb_report_arms")
 
 
 class _ReportHost:
