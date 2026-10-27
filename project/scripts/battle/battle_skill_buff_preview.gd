@@ -5,6 +5,7 @@ extends RefCounted
 ## Confirm consumes; cancel keeps uses. Tab cycles party allies for focus.
 ## BoardInset: refresh m_info_block from MobileSideCol before follow_cells
 ## so buff settle shares notch+info+edge (same as ActionSettle / land/ghost / danger).
+## SkillFeelLoop: arm/aim 盖整链戳；施放落定由 controller._cast_buff_skill 调用.
 
 const META := "m_skill_buff_preview"
 const BODY_FILL_A := 0.22
@@ -127,6 +128,7 @@ static func arm(host, sid: String) -> bool:
 		BattleMobileBar.rebuild(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
+	BattleSkillFeelLoop.after_arm(host, "buff")
 	return true
 
 
@@ -185,6 +187,7 @@ static func _aim(host, ally_i: int) -> int:
 		host.overlay.queue_redraw()
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
+	BattleSkillFeelLoop.after_aim(host, "buff", ally_i)
 	return ally_i
 
 
