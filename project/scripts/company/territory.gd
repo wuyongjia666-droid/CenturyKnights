@@ -1447,6 +1447,7 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 			"looted": looted,
 			"anchor": anchor,
 		})
+		CKEconomyState.month_echo_note("threat_held", Locale.t("terr_echo_threat_held", [site_name, by_name, before, int(st.garrison), hold_pct]))
 	else:
 		# Lost — empty the granary into the attackers before ownership flips.
 		var looted2 := loot_cache(id, 1.0)
@@ -1472,6 +1473,7 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 			"looted": looted2,
 			"anchor": anchor,
 		})
+		CKEconomyState.month_echo_note("threat_lost", Locale.t("terr_echo_threat_lost", [site_name, by_name, hold_pct]))
 		lose(id, by)
 
 static func threatened_at(anchor: String) -> Array:
