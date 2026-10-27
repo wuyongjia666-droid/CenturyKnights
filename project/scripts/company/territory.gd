@@ -202,6 +202,7 @@ static func capture(id: String, how: String) -> Dictionary:
 	else:
 		st.unrest = 0
 	_put(id, st)
+	_clear_reclaim(id)
 	_log(Locale.t("terr_07") % [site(id).name, Locale.t("terr_08") if how == "assault" else Locale.t("terr_09")])
 	if how == "contest":
 		var ys := int(site(id).yield_silver)
@@ -326,10 +327,13 @@ static func on_quest_done(q: Dictionary) -> String:
 
 static func _finish_reclaim(id: String) -> String:
 	if owned(id):
+		# Stale「反夺」commission (board/active) must drop so HubTodo chip clears.
+		_clear_reclaim(id)
 		return Locale.t("terr_49") % site(id).name
 	var block := capture_block(id, false)
 	if block != "":
 		return Locale.t("terr_23") % [site(id).name, block]
+	# capture() clears pending reclaim commission (chip / ledger / hourglass).
 	capture(id, "reclaim")
 	World.add_city_rep(str(site(id).anchor), 4)
 	return Locale.t("terr_50") % site(id).name
@@ -355,6 +359,34 @@ static func _has_reclaim(id: String) -> bool:
 		if str(q.get("territory", "")) == id and bool(q.get("territory_reclaim", false)):
 			return true
 	return false
+
+## Drop open「反夺」commission for site (board offer + active). Chip / ledger / hourglass read this.
+static func _clear_reclaim(id: String) -> void:
+	var changed := false
+	var kept_active: Array = []
+	for q in World.active:
+		if str(q.get("territory", "")) == id and bool(q.get("territory_reclaim", false)):
+			changed = true
+			continue
+		kept_active.append(q)
+	if changed:
+		World.active = kept_active
+	var anchor := str(site(id).anchor)
+	if anchor != "" and World.boards.has(anchor):
+		var offers: Array = World.boards[anchor].get("offers", [])
+		var kept: Array = []
+		var board_hit := false
+		for q in offers:
+			if str(q.get("territory", "")) == id and bool(q.get("territory_reclaim", false)):
+				board_hit = true
+				continue
+			kept.append(q)
+		if board_hit:
+			World.boards[anchor].offers = kept
+			changed = true
+	if changed:
+		GameState.mark_dirty()
+		World.world_changed.emit()
 
 static func _reclaim_quest(id: String, who: String) -> Dictionary:
 	var s := site(id)
