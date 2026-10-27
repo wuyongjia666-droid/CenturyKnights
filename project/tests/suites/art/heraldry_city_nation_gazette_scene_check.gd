@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry wave-9 E2E: CityCrestStrip / NationCrestStrip / GazetteCrestStrip
+## Fat heraldry E2E: CityCrestStrip / NationCrestStrip / GazetteCrestStrip
 ## — strip_company + cloth banner child field_route ownership — desk + mobile.
 ## Real city / bloodline_codex / court_news scenes; no EmptyHost.
 
@@ -105,6 +105,8 @@ func _run_helpers() -> void:
 	_ok(nat != null and nat.name == "NationCrestStrip", "helper NationCrestStrip")
 	_ok(nat != null and nat.get_child_count() == 3, "helper nation child_count=3")
 	_ok(_route(nat.find_child("NationBanner", true, false) if nat else null, "nation_banner"), "helper nation_banner")
+	var natbn := nat.find_child("NationBanner", true, false) if nat else null
+	_ok(natbn != null and str(natbn.get_meta("arms_kind", "")) == "lb_nation_arms", "helper nation kind")
 	var gaz := CKHeraldryField.place_gazette_crest_strip(host, nid, Vector2(400, 8))
 	_ok(gaz != null and gaz.name == "GazetteCrestStrip", "helper GazetteCrestStrip")
 	_ok(gaz != null and gaz.get_child_count() == 3, "helper gazette child_count=3")
@@ -153,6 +155,8 @@ func _assert_nation(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/nation strip_company" % tag)
 		_ok(_route(strip.find_child("CityNationArms", true, false), "nation_arms"), "%s/nation nation_arms" % tag)
 		_ok(_route(strip.find_child("NationBanner", true, false), "nation_banner"), "%s/nation nation_banner" % tag)
+		var natbn := strip.find_child("NationBanner", true, false)
+		_ok(natbn != null and str(natbn.get_meta("arms_kind", "")) == "lb_nation_arms", "%s/nation NationBanner kind" % tag)
 		_ok(strip.get_child_count() == 3, "%s/nation child_count=3" % tag)
 	page.queue_free()
 	await _settle(2)
@@ -212,3 +216,6 @@ func _source_contracts() -> void:
 	_ok(codex.find("CKHeraldryField.place_nation_crest_strip") >= 0, "codex wires Field")
 	var news := FileAccess.get_file_as_string("res://scripts/hub/court_news.gd")
 	_ok(news.find("CKHeraldryField.place_gazette_crest_strip") >= 0, "court_news wires Field")
+	_ok(field.find('"lb_nation_arms"') >= 0, "field lb_nation_arms")
+	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
+	_ok(loc.find("lb_nation_arms,") >= 0, "locale lb_nation_arms")

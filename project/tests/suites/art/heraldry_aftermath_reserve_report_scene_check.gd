@@ -1,7 +1,6 @@
 extends Node
-## Fat heraldry wave-17 E2E: AftermathCrestStrip / ReserveCrestStrip / ReportCrestStrip
-## — _cloth_beside Field cloth + arms_kind ownership — desk + mobile.
-## Real atlas_view / deploy / BattleReport.present; no EmptyHost.
+## Aftermath / reserve / report Field cloth arms_kind ownership — desk + mobile.
+## Covered by 纹章全局一致; kept as surface E2E (no EmptyHost).## Real atlas_view / deploy / BattleReport.present; no EmptyHost.
 
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
 const DEPLOY := "res://scenes/hub/deploy.tscn"

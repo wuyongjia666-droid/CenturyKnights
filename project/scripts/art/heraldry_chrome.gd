@@ -238,21 +238,21 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 	return CKHeraldryField.place_aftermath_crest_strip(parent, at, foe_nation, shield, banner)
 
 ## Nation crest strip. Field owns NationCrestStrip.
-static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_nation_crest_strip(parent, nation_id, at, shield)
+static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_nation_crest_strip(parent, nation_id, at, shield, banner)
 
 ## Rite crest strip. Field owns RiteCrestStrip.
-static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_rite_crest_strip(parent, heir, at, shield)
+static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_rite_crest_strip(parent, heir, at, shield, banner)
 
 ## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip). Field-owned.
-static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_succession_crest_strip(parent, heir, at, shield)
+static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_succession_crest_strip(parent, heir, at, shield, banner)
 
 
 ## Heir-trial duel strip: 团徽 + A + B. Field-owned.
-static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_duel_crest_strip(parent, left_c, right_c, at, shield)
+static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_duel_crest_strip(parent, left_c, right_c, at, shield, banner)
 
 
 ## Marriage house-card plate HouseArms. Field-owned.
@@ -261,8 +261,8 @@ static func attach_house_card_chrome(parent: Control, c, plate: Rect2, arms_sz: 
 
 
 ## Marriage protocol strip: 团徽 + suitor + candidate. Field-owned.
-static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_marriage_crest_strip(parent, left_c, right_c, at, shield)
+static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_marriage_crest_strip(parent, left_c, right_c, at, shield, banner)
 
 static func issuer_is_home(issuer_id: String) -> bool:
 	## Company seat posts use 团徽; every other city uses its nation plate.
@@ -280,8 +280,8 @@ static func make_row_arms(c, size: Vector2 = Vector2(28, 34)) -> TextureRect:
 	return arms
 
 ## Muster crest strip. Field owns MusterCrestStrip.
-static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
-	return CKHeraldryField.place_muster_crest_strip(parent, leader, at, shield)
+static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_muster_crest_strip(parent, leader, at, shield, banner)
 
 
 static func attach_title_leader_arms(parent: Node, leader, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(44, 52)) -> TextureRect:
