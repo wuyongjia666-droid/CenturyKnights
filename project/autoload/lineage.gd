@@ -664,20 +664,30 @@ func dynasty_end_snapshot() -> Dictionary:
 	return d
 
 
-func note_dynasty_end(reason: String, msg: String = "") -> Dictionary:
+func note_dynasty_end(reason: String, msg: String = "", last_id: String = "", heir_id: String = "") -> Dictionary:
 	if reason == "":
 		return dynasty_end_snapshot()
 	## First stamp wins; later fails keep the original closing.
 	if is_dynasty_ended():
 		return dynasty_end_snapshot()
 	var text := msg if msg != "" else Locale.t("lineage_no_heir")
+	var lid := last_id
+	var hid := heir_id
+	if lid == "":
+		var lead := GameState.get_leader()
+		if lead != null:
+			lid = str(lead.id)
 	var d := {
 		"reason": reason,
 		"msg": text,
 		"label": Calendar.label(),
 		"at": int(Calendar.year) * 12 + int(Calendar.month),
+		"last_id": lid,
+		"heir_id": hid,
 	}
 	GameState.house_mods["dynasty_end"] = d
+	## Dynasty end supersedes a pending banner-handoff tip.
+	GameState.house_mods.erase("banner_handoff")
 	GameState.add_lineage_event(text)
 	GameState.mark_dirty()
 	return d
@@ -693,6 +703,11 @@ func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	panel.add_theme_constant_override("separation", 8)
 	panel.custom_minimum_size = Vector2(width, 0)
 	parent.add_child(panel)
+	var last_c = GameState.characters.get(str(snap.get("last_id", "")), null)
+	var heir_c = GameState.characters.get(str(snap.get("heir_id", "")), null)
+	if last_c == null:
+		last_c = GameState.get_leader()
+	CKHeraldryField.place_dynasty_end_crest_strip(panel, last_c, heir_c, Vector2.ZERO, Vector2(32, 38), Vector2(20, 28))
 	panel.add_child(UIKit.mono(Locale.t("lb_dynasty_end_head"), 11, UIKit.DANGER, false))
 	var why := Locale.t("lb_dynasty_end_why_no_heir")
 	var reason := str(snap.get("reason", ""))
@@ -706,6 +721,47 @@ func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	to_t.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
 	panel.add_child(to_t)
 	UIFX.wire_button(to_t)
+	return panel
+
+
+## Hub tip after a successful 传旗: BannerHandoffPanel + crest strip + dismiss.
+## Cleared on dismiss or when dynasty_end stamps.
+func is_banner_handoff_pending() -> bool:
+	var raw: Variant = GameState.house_mods.get("banner_handoff", {})
+	return typeof(raw) == TYPE_DICTIONARY and not (raw as Dictionary).is_empty()
+
+
+func banner_handoff_snapshot() -> Dictionary:
+	var raw: Variant = GameState.house_mods.get("banner_handoff", {})
+	if typeof(raw) != TYPE_DICTIONARY:
+		return {}
+	return raw
+
+
+func attach_banner_handoff_feel(parent: Node, width: float = 520.0) -> Control:
+	if parent == null or is_dynasty_ended() or not is_banner_handoff_pending():
+		return null
+	var snap := banner_handoff_snapshot()
+	var outgoing = GameState.characters.get(str(snap.get("from_id", "")), null)
+	var heir = GameState.characters.get(str(snap.get("heir_id", "")), null)
+	var panel := VBoxContainer.new()
+	panel.name = "BannerHandoffPanel"
+	panel.add_theme_constant_override("separation", 8)
+	panel.custom_minimum_size = Vector2(width, 0)
+	parent.add_child(panel)
+	CKHeraldryField.place_banner_handoff_crest_strip(panel, outgoing, heir, Vector2.ZERO, Vector2(32, 38), Vector2(20, 28))
+	panel.add_child(UIKit.mono(Locale.t("lb_handoff_head"), 11, UIKit.ACCENT, false))
+	panel.add_child(CKPageKit.text(str(snap.get("msg", "")), UIKit.TEXT, 14, maxf(280.0, width - 24.0)))
+	var dismiss := CKPageKit.button(Locale.t("lb_handoff_dismiss"), false, mini(280.0, width))
+	dismiss.name = "DismissHandoff"
+	dismiss.pressed.connect(func():
+		GameState.house_mods.erase("banner_handoff")
+		GameState.mark_dirty()
+		if is_instance_valid(panel):
+			panel.queue_free()
+	)
+	panel.add_child(dismiss)
+	UIFX.wire_button(dismiss)
 	return panel
 
 
@@ -725,7 +781,8 @@ func close_after_battle() -> Dictionary:
 		if heir != null:
 			return transfer_banner("death")
 	var msg := Locale.t("lineage_wipeout")
-	note_dynasty_end("wipeout", msg)
+	var last_id := str(leader.id) if leader != null else ""
+	note_dynasty_end("wipeout", msg, last_id, "")
 	return {"ok": false, "msg": msg, "dynasty_end": true, "reason": "wipeout"}
 
 
@@ -793,7 +850,7 @@ func transfer_banner(reason: String) -> Dictionary:
 		via = "minor"
 	if heir == null:
 		var nh := Locale.t("lineage_no_heir")
-		note_dynasty_end("no_heir", nh)
+		note_dynasty_end("no_heir", nh, str(leader.id), "")
 		return {"ok": false, "msg": nh, "dynasty_end": true}
 	leader.is_leader = false
 	if reason == "abdicate" or reason == "retire":
@@ -846,6 +903,15 @@ func transfer_banner(reason: String) -> Dictionary:
 		GameState.house_mods.erase("regency_names")
 	GameState.add_lineage_event(msg)
 	_Ambitions.on_banner(heir)
+	## Hub tip: castle / hourglass / estates show 传旗 crest strip until dismissed or dynasty ends.
+	GameState.house_mods["banner_handoff"] = {
+		"from_id": str(leader.id),
+		"heir_id": str(heir.id),
+		"msg": msg,
+		"reason": reason,
+		"via": via,
+		"label": Calendar.label(),
+	}
 	GameState.mark_dirty()
 	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason, "via": via, "regency": minor}
 

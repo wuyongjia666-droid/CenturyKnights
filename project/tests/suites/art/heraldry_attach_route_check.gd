@@ -559,6 +559,23 @@ func _court_chronicle_dossier(leader) -> void:
 	var vow := CKHeraldryField.attach_vow_company_arms(root, Vector2(120, 240))
 	_ok(vow != null and str(vow.get_meta("field_route", "")) == "marriage_vow", "marriage_vow route")
 
+	var de := CKHeraldryField.place_dynasty_end_crest_strip(root, leader, leader, Vector2(8, 320))
+	_ok(de != null and str(de.get_meta("field_route", "")) == "dynasty_end_strip", "dynasty_end_strip route")
+	_ok(de != null and de.find_child("DynastyEndBanner", true, false) != null, "dynasty_end banner child")
+	var ho := CKHeraldryField.place_banner_handoff_crest_strip(root, leader, leader, Vector2(200, 320))
+	_ok(ho != null and str(ho.get_meta("field_route", "")) == "banner_handoff_strip", "banner_handoff_strip route")
+	_ok(ho != null and ho.find_child("HandoffBanner", true, false) != null, "handoff banner child")
+	var vs := CKHeraldryField.place_vow_crest_strip(root, leader, leader, Vector2(400, 320))
+	_ok(vs != null and str(vs.get_meta("field_route", "")) == "vow_strip", "vow_strip route")
+	var vco = vs.find_child("VowCompanyArms", true, false) if vs != null else null
+	_ok(vco != null and str(vco.get_meta("field_route", "")) == "marriage_vow", "vow strip keeps marriage_vow")
+	var ans_host := VBoxContainer.new()
+	ans_host.name = "AnswerHost"
+	ans_host.position = Vector2(600, 320)
+	root.add_child(ans_host)
+	var ans := CKHeraldryField.attach_succession_answer_arms(ans_host, leader)
+	_ok(ans != null and str(ans.get_meta("field_route", "")) == "succession_answer", "succession_answer route")
+
 	var tl := CKHeraldryField.attach_title_leader_arms(root, leader, Vector2(200, 240))
 	_ok(tl != null and str(tl.get_meta("field_route", "")) == "title_leader", "title_leader route")
 	var lb := CKHeraldryField.attach_ladder_badge(root, "baron")
@@ -731,6 +748,13 @@ func _source_contracts() -> void:
 		["dossier_crest", "CrestTexture"],
 		["rival_arms", "RivalArms"],
 		["marriage_vow", "VowCompanyArms"],
+		["dynasty_end_strip", "DynastyEndCrestStrip"],
+		["dynasty_end_banner", "DynastyEndBanner"],
+		["banner_handoff_strip", "BannerHandoffCrestStrip"],
+		["banner_handoff_banner", "HandoffBanner"],
+		["vow_strip", "VowCrestStrip"],
+		["vow_banner", "VowBanner"],
+		["succession_answer", "AnswerHeirArms"],
 		["title_leader", "LeaderArms"],
 		["title_ladder_badge", "LadderBadge"],
 		["lineage_info", "PersonArms"],
