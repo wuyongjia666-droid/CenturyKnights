@@ -37,6 +37,14 @@ func _boot() -> void:
 func _assert_page(page: Node, where: String) -> void:
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms" % where)
 	_ok(page.find_child("CastleBannerStrip", true, false) != null or page.find_child("CastleBanner", true, false) != null, "%s banner chrome" % where)
+	var strip := page.find_child("EstatesCrestStrip", true, false)
+	_ok(strip != null, "%s EstatesCrestStrip" % where)
+	if strip != null:
+		_ok(str(strip.get_meta("field_route", "")) == "estates_strip", "%s estates_strip" % where)
+		var bn := strip.find_child("EstatesBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "estates_banner", "%s estates_banner" % where)
+		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_estates_arms", "%s lb_estates_arms" % where)
+		_ok(strip.get_child_count() == 2, "%s estates child_count=2" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")
