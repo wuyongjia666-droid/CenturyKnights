@@ -9,6 +9,7 @@ const MOBILE_COL_MIN_W := 168.0
 const MOBILE_PANEL_MIN := Vector2(400, 196)
 const MOBILE_PAD := Vector2(28, 24)  ## stylebox margins + breathing room
 
+
 static func sides(
 	attacker: CKCharacter,
 	defender: CKCharacter,
@@ -121,20 +122,26 @@ static func refresh(host) -> void:
 	var def = host.units[def_i]
 	var tid := str(host.terrain[def.pos.y][def.pos.x])
 	var atk_tid := str(host.terrain[atk.pos.y][atk.pos.x])
-	var info := sides(atk.char, def.char, tid, host._combat_extras(atk_i, def_i), atk.pos, def.pos, atk_tid)
+	var info := sides(
+		atk.char, def.char, tid, host._combat_extras(atk_i, def_i), atk.pos, def.pos, atk_tid
+	)
 	_fill(panel.get_node("Cols/Ours"), BattleObjectives.text("forecast_ours"), info, false)
 	_fill(panel.get_node("Cols/Theirs"), BattleObjectives.text("forecast_theirs"), info, true)
 	# Refit after text lands so floored fonts are not clipped.
 	if DeviceProfile.is_mobile():
 		_place(host, panel)
-	CKHeraldryField.pin_forecast_arms(panel, atk.char, str(atk.get("team", "player")), CKHeraldryField.battle_foe_nation_for(host))
+	CKHeraldryField.pin_forecast_arms(
+		panel, atk.char, str(atk.get("team", "player")), CKHeraldryField.battle_foe_nation_for(host)
+	)
 
 
 static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool) -> void:
 	var title_l := box.get_node("Title") as Label
 	var body := box.get_node("Body") as Label
 	title_l.text = title
-	title_l.add_theme_color_override("font_color", UIKit.faction_color("enemy" if counter_side else "player"))
+	title_l.add_theme_color_override(
+		"font_color", UIKit.faction_color("enemy" if counter_side else "player")
+	)
 	if counter_side and not bool(info.counter):
 		body.text = BattleObjectives.text("forecast_no_counter")
 		return
@@ -142,15 +149,32 @@ static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool
 	var lo := int(info.counter_lo) if counter_side else int(info.dmg_lo)
 	var hi := int(info.counter_hi) if counter_side else int(info.dmg_hi)
 	var crit := int(info.counter_crit) if counter_side else int(info.crit)
-	var follow := BattleObjectives.text("forecast_yes") if (not counter_side and bool(info.follow)) else BattleObjectives.text("forecast_no")
-	var back := BattleObjectives.text("forecast_yes") if bool(info.counter) else BattleObjectives.text("forecast_no")
-	body.text = "%s %d%%\n%s %d–%d\n%s %d%%\n%s %s\n%s %s" % [
-		BattleObjectives.text("forecast_hit"), hit,
-		BattleObjectives.text("forecast_dmg"), lo, hi,
-		BattleObjectives.text("forecast_crit"), crit,
-		BattleObjectives.text("forecast_follow"), follow,
-		BattleObjectives.text("forecast_counter"), back,
-	]
+	var follow := (
+		BattleObjectives.text("forecast_yes")
+		if (not counter_side and bool(info.follow))
+		else BattleObjectives.text("forecast_no")
+	)
+	var back := (
+		BattleObjectives.text("forecast_yes")
+		if bool(info.counter)
+		else BattleObjectives.text("forecast_no")
+	)
+	body.text = (
+		"%s %d%%\n%s %d–%d\n%s %d%%\n%s %s\n%s %s"
+		% [
+			BattleObjectives.text("forecast_hit"),
+			hit,
+			BattleObjectives.text("forecast_dmg"),
+			lo,
+			hi,
+			BattleObjectives.text("forecast_crit"),
+			crit,
+			BattleObjectives.text("forecast_follow"),
+			follow,
+			BattleObjectives.text("forecast_counter"),
+			back,
+		]
+	)
 	var links: Array = info.get("link_names", [])
 	if not counter_side and not links.is_empty():
 		body.text += "\n" + (BattleObjectives.text("link_with") % str(links[0]))
@@ -214,23 +238,27 @@ static func _stage_of(host) -> Rect2:
 
 
 static func _place(host, panel: Control) -> void:
-	var stage := _stage_of(host)
+	# Shared BoardInset (notch + info + edge, reserve_top 0) — same readable
+	# rect as range keep / confirm settle / focus. Raw stage let the chip sit
+	# under the notch lip or over the landscape info column.
+	var bounds := BattleCombatFrame.forecast_place_bounds(host)
 	var pair := BattleCombatFrame.pair_mid_shown(host)
 	if DeviceProfile.is_mobile():
 		_style_mobile(panel)
 		var sz := _mobile_panel_size(panel)
 		panel.custom_minimum_size = sz
 		panel.size = sz
-		if stage.size.x < 32.0:
+		if bounds.size.x < 32.0:
 			panel.position = Vector2(12, 56)
 			return
-		# Opposite the pair so the forecast band does not cover the fight.
-		panel.position = BattleCombatFrame.forecast_slot(stage, sz, pair)
+		# Opposite the pair inside BoardInset so the band does not cover the fight
+		# and stays clear of the notch lip / info column.
+		panel.position = BattleCombatFrame.forecast_slot(bounds, sz, pair)
 		return
 	panel.clip_contents = true
 	panel.custom_minimum_size = Vector2.ZERO
 	panel.size = DESK_SIZE
-	if stage.size.x < 32.0:
+	if bounds.size.x < 32.0:
 		panel.position = Vector2(24, 560)
 		return
-	panel.position = BattleCombatFrame.forecast_slot(stage, DESK_SIZE, pair)
+	panel.position = BattleCombatFrame.forecast_slot(bounds, DESK_SIZE, pair)
