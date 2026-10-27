@@ -731,6 +731,11 @@ atlas_contest_resolve_body_won,「%s」拉锯由本团得手。月银约 %d · �
 atlas_contest_resolve_body_lost,「%s」拉锯旁落 · %s 得手。月银约 %d 落入对手。,"%s" contest lost · %s claims it. Yield ~%d goes to the rival.
 atlas_contest_resolve_body_miss,「%s」拉锯散场 · %s。月银约 %d 仍悬。,"%s" contest scattered · %s. Yield ~%d stays unsettled.
 atlas_contest_resolve_ok,已知晓,Understood
+atlas_threat_resolve_en,THREAT // 自守落幕,THREAT // RESOLVE
+atlas_threat_resolve_title,自守落幕,Threat settled
+atlas_threat_resolve_body_held,%s 袭扰「%s」：驻军从 %d 减至 %d（守成率 %d%%）。据点仍在本团手中。,%s raided "%s": garrison %d → %d (hold %d%%). Site still ours.
+atlas_threat_resolve_body_lost,%s 攻陷「%s」（守成率 %d%%）。据点易主。,%s took "%s" (hold %d%%). Site lost.
+atlas_threat_resolve_ok,已知晓,Understood
 atlas_terr_month_contest,拉锯落幕：%s,Contest settled: %s
 atlas_terr_month_contest_open,拉锯未决：%s,Contest open: %s
 terr_echo_contest_stake,拉锯加码·%s（−%d银·压%d）,Contest stake · %s (−%d silver · pressure %d)
