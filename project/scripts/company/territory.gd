@@ -194,15 +194,19 @@ static func capture(id: String, how: String) -> Dictionary:
 	st.owner = OWN
 	st.threat = {}
 	st.contest = {}
-	st.garrison = maxi(1, int(st.garrison)) if how == "chain" or how == "reclaim" else 0
+	st.garrison = maxi(1, int(st.garrison)) if how == "chain" or how == "reclaim" or how == "contest" else 0
 	if how == "assault":
 		st.unrest = int(rule("unrest_months", 2))
-	elif how == "reclaim":
+	elif how == "reclaim" or how == "contest":
 		st.unrest = 1
 	else:
 		st.unrest = 0
 	_put(id, st)
 	_log(Locale.t("terr_07") % [site(id).name, Locale.t("terr_08") if how == "assault" else Locale.t("terr_09")])
+	if how == "contest":
+		var ys := int(site(id).yield_silver)
+		CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_win",
+			[str(site(id).name), ys, int(st.garrison)]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_10") % site(id).name}
@@ -976,18 +980,46 @@ static func tick_neutral_contests(force_resolve: bool = false) -> Array:
 			var winner: Dictionary = _contest_winner(c.get("factions", []))
 			var wid := str(winner.get("id", "bandit"))
 			var wname := str(winner.get("name", ""))
+			var ys := int(site(id).yield_silver)
 			st.contest = {}
-			if wid.begins_with("rival:"):
+			_put(id, st)
+			if wid == "company":
+				# Company stake won the race — claim with short unrest (产出半额至民心附).
+				var cap: Dictionary = capture(id, "contest")
+				if not bool(cap.get("ok", false)):
+					# Fallback if capture blocked (rep/cap): leave neutral + unrest.
+					st = state(id)
+					st.owner = NEUTRAL
+					st.garrison = 0
+					st.unrest = maxi(int(st.unrest), 1)
+					_put(id, st)
+					CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_miss",
+						[str(site(id).name), wname, ys]))
+			elif wid.begins_with("rival:"):
+				st = state(id)
 				st.owner = wid
 				st.garrison = 1
+				_put(id, st)
+				CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_loss",
+					[str(site(id).name), wname, ys]))
 			else:
 				# Bandits scatter the hold — site stays free but unrest spikes.
+				st = state(id)
 				st.owner = NEUTRAL
 				st.garrison = 0
 				st.unrest = maxi(int(st.unrest), 1)
-			_put(id, st)
+				_put(id, st)
+				CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_miss",
+					[str(site(id).name), wname, ys]))
 			_log(Locale.t("atlas_contest_resolved") % [site(id).name, wname])
-			resolved.append({"id": id, "name": str(site(id).name), "winner": wid, "winner_name": wname})
+			resolved.append({
+				"id": id,
+				"name": str(site(id).name),
+				"winner": wid,
+				"winner_name": wname,
+				"yield_silver": ys,
+				"company_won": wid == "company" and owned(id),
+			})
 			World.world_changed.emit()
 		else:
 			c["months"] = 1
@@ -1029,6 +1061,96 @@ static func contested_ids() -> Array:
 	return out
 
 
+## Territory fat: gate readout for neutral contest stake / seize (UI + E2E).
+static func contest_stake_cost(id: String) -> int:
+	return int(rule("contest_stake_cost", 40)) + int(site(id).get("danger", 1)) * 12
+
+
+static func contest_preview(id: String) -> Dictionary:
+	var s := site(id)
+	if s.is_empty() or is_home(id):
+		return {"ok": false, "msg": Locale.t("terr_01"), "reason": "site"}
+	var st := state(id)
+	var c: Dictionary = st.contest if typeof(st.contest) == TYPE_DICTIONARY else {}
+	if c.is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_contest_gone"), "reason": "gone"}
+	if owner(id) != NEUTRAL:
+		return {"ok": false, "msg": Locale.t("atlas_contest_gone"), "reason": "owned"}
+	var anchor := str(s.anchor)
+	var factions: Array = c.get("factions", []) if typeof(c.get("factions", [])) == TYPE_ARRAY else []
+	var staked := false
+	var top_p := 0
+	for f in factions:
+		if typeof(f) != TYPE_DICTIONARY:
+			continue
+		top_p = maxi(top_p, int(f.get("pressure", 0)))
+		if str(f.get("id", "")) == "company":
+			staked = true
+	var cost := contest_stake_cost(id)
+	var can_stake := not staked and GameState.silver >= cost
+	var stake_reason := ""
+	if staked:
+		stake_reason = "staked"
+	elif GameState.silver < cost:
+		stake_reason = "silver"
+	return {
+		"ok": true,
+		"id": id,
+		"name": str(s.name),
+		"anchor": anchor,
+		"at_anchor": World.pos == anchor and anchor != "",
+		"phase": "imminent" if int(c.get("months", 0)) >= 1 else "declared",
+		"months": int(c.get("months", 0)),
+		"factions": factions.duplicate(true),
+		"yield_silver": int(s.yield_silver),
+		"stake_cost": cost,
+		"can_stake": can_stake,
+		"staked": staked,
+		"stake_reason": stake_reason,
+		"top_pressure": top_p,
+		"msg": Locale.t("atlas_contest_summary") % _faction_names(factions),
+	}
+
+
+## Spend silver to plant company pressure in the race (加码). Highest pressure claims on resolve.
+static func contest_stake(id: String) -> Dictionary:
+	var prev: Dictionary = contest_preview(id)
+	if not bool(prev.get("ok", false)):
+		return prev
+	if bool(prev.get("staked", false)):
+		return {"ok": false, "msg": Locale.t("atlas_contest_staked"), "reason": "staked", "preview": prev}
+	var cost := int(prev.get("stake_cost", contest_stake_cost(id)))
+	if GameState.silver < cost:
+		return {"ok": false, "msg": Locale.t("terr_27") % cost, "reason": "silver", "preview": prev}
+	var st := state(id)
+	var c: Dictionary = st.contest
+	var factions: Array = c.get("factions", []) if typeof(c.get("factions", [])) == TYPE_ARRAY else []
+	var top_p := int(prev.get("top_pressure", 0))
+	var company_p := top_p + 1
+	var cname := Locale.t("atlas_contest_company") % str(GameState.surname)
+	factions.append({"id": "company", "name": cname, "pressure": company_p})
+	c["factions"] = factions
+	c["staked"] = true
+	st.contest = c
+	_put(id, st)
+	GameState.silver -= cost
+	var msg := Locale.t("atlas_contest_stake_ok") % [str(site(id).name), cost, company_p]
+	_log(msg)
+	CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_stake",
+		[str(site(id).name), cost, company_p]))
+	_emit_neutral_contest(id)
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {
+		"ok": true,
+		"msg": msg,
+		"cost": cost,
+		"pressure": company_p,
+		"factions": factions.duplicate(true),
+		"preview": contest_preview(id),
+	}
+
+
 ## Player cuts into a neutral race: assault if on the anchor, else signal travel.
 static func intervene_contest(id: String) -> Dictionary:
 	var s := site(id)
@@ -1046,7 +1168,12 @@ static func intervene_contest(id: String) -> Dictionary:
 			"msg": Locale.t("terr_05") % World.node(anchor).get("name", "")}
 	clear_contest(id)
 	World.dismiss_neutral_contest()
-	return assault(id)
+	var r: Dictionary = assault(id)
+	if bool(r.get("ok", false)):
+		CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_seize",
+			[str(s.name), int(s.yield_silver)]))
+		r["echo"] = str(CKEconomyState.month_echo_snapshot().get("contest", ""))
+	return r
 
 
 ## Stand aside; contest keeps ticking on next months.
@@ -1066,7 +1193,22 @@ static func apply_month(force_roll: float = -1.0) -> String:
 	if ids.is_empty():
 		# Still tick/start neutral races even with zero holdings.
 		_roll_neutral_contests(force_roll)
-		last_month_report = {}
+		# Territory fat: surface resolved / open contests even with no holdings
+		# (company stake → claim can be the first capture of the month).
+		last_month_report = {
+			"silver": 0,
+			"food": 0,
+			"owned": owned_ids().size(),
+			"owned_before": 0,
+			"drains": [],
+			"lost": [],
+			"held": [],
+			"threats": [],
+			"contests": resolved_contests,
+			"contest_open": contested_ids(),
+			"line": "",
+			"reclaims": [],
+		}
 		return ""
 	var silver := 0
 	var food_gain := 0
