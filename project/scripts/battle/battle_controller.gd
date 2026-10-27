@@ -1428,6 +1428,8 @@ func apply_mobile_layout() -> void:
 	if terrain.size() > 0:
 		_layout_board()
 	BattleEdgePick.note_layout(self)
+	# BoardInset: stage/info may move after a prior action settle — re-frame.
+	BattleActionSettle.refresh_if_stamped(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
 	CKHeraldryField.sync_battle_hud_crests(self)
@@ -1584,6 +1586,9 @@ func _on_viewport_resized() -> void:
 	_place_mobile_bar()
 	if terrain.size() > 0:
 		_layout_board()
+	BattleEdgePick.note_layout(self)
+	# BoardInset: resize can shrink the readable stage under a settled actor.
+	BattleActionSettle.refresh_if_stamped(self)
 
 func simulate_board_click(cell: Vector2i) -> void:
 	var ev := InputEventMouseButton.new()

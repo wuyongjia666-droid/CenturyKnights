@@ -37,7 +37,7 @@ static func settle_delta(
 	return actor_delta
 
 
-static func apply(host, actor: Vector2i, also: Array) -> void:
+static func apply(host, actor: Vector2i, also: Array, smooth: bool = true) -> void:
 	if not DeviceProfile.is_mobile():
 		return
 	if host.has_meta("ck_unit_drag"):
@@ -82,4 +82,25 @@ static func apply(host, actor: Vector2i, also: Array) -> void:
 	if applied.length_squared() < 0.25:
 		BattlePick.cancel_focus_tween(host)
 		return
-	BattlePick._apply_focus_pan(host, clamped, true)
+	BattlePick._apply_focus_pan(host, clamped, smooth)
+
+
+## Re-frame a prior action settle into the live BoardInset after layout moves
+## the stage or info column (viewport resize / apply_mobile_layout). No-op when
+## nothing was stamped or the actor cell is gone.
+static func refresh_if_stamped(host) -> void:
+	if host == null or not host.has_meta("m_action_settle"):
+		return
+	var info = host.get_meta("m_action_settle")
+	if not (info is Dictionary):
+		return
+	var actor = (info as Dictionary).get("actor", Vector2i(-1, -1))
+	if not (actor is Vector2i) or (actor as Vector2i).x < 0:
+		return
+	# Drop the stamp so apply recomputes against current for_host / blockers.
+	host.remove_meta("m_action_settle")
+	if host.has_meta("m_confirm_settle"):
+		host.remove_meta("m_confirm_settle")
+	BattlePick.cancel_focus_tween(host)
+	# Immediate: layout-driven refresh must land before the next frame asserts.
+	apply(host, actor as Vector2i, [], false)
