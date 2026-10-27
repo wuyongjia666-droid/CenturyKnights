@@ -189,7 +189,8 @@ static func _settle_readable(host, actor: Vector2i, also: Array) -> void:
 	var stage: Rect2 = BattlePick._stage_rect(host)
 	if stage.size.x < 8.0:
 		return
-	var inset := readable_inset(stage, _blockers(host), _edge_band(host))
+	# Same inset as range keep / chips — notch lip + info column cut out.
+	var inset := BattleBoardInset.for_host(host, 0.0)
 	var origin: Vector2 = host.ORIGIN
 	var cell_px := float(host.CELL)
 	var pan: Vector2 = host._board_pan
@@ -228,18 +229,9 @@ static func _edge_band(host) -> float:
 	return 0.0
 
 
-## Board-local clamp rect for chips: stage play inset minus info + notch lip.
+## Board-local clamp rect for chips: shared BoardInset (info + notch lip).
 static func chip_bounds(host) -> Rect2:
-	var stage := Rect2()
-	if host != null and host.has_meta("m_board_area"):
-		var area = host.get_meta("m_board_area")
-		if area is Rect2:
-			stage = area
-	if stage.size.x < 8.0:
-		stage = BattlePick._stage_rect(host)
-	if stage.size.x < 8.0:
-		return Rect2()
-	return readable_inset(stage, _blockers(host), _edge_band(host))
+	return BattleBoardInset.for_host(host, 0.0)
 
 
 ## True when both chips sit fully outside the info column block (when one is stamped).

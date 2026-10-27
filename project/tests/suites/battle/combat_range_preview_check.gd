@@ -391,9 +391,15 @@ func _notch_clip_contract() -> String:
 	var raw := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
 	if _battle.position.x < 200.0:
 		return "fitted root lost mobile_origin (pos %s origin %s)" % [_battle.position, _battle._ui_origin()]
+	# Shared BoardInset may cut edge/info; notch itself must stay identity when
+	# the root already carries the left inset (no double-count).
 	var fitted := BattleRangePreview.playable_inset(_battle)
-	if absf(fitted.position.x - raw.position.x) > 6.0 or absf(fitted.size.x - raw.size.x) > 6.0:
-		return "fitted root double-counted the notch (fitted %s raw %s pos %s)" % [fitted, raw, _battle.position]
+	var shared := BattleBoardInset.for_host(_battle, 0.0)
+	if absf(fitted.position.x - shared.position.x) > 1.0 or absf(fitted.size.x - shared.size.x) > 1.0:
+		return "playable_inset drifted from BoardInset (fitted %s shared %s)" % [fitted, shared]
+	var notch_only := BattleRangePreview.clip_notch(_battle, raw)
+	if absf(notch_only.position.x - raw.position.x) > 6.0 or absf(notch_only.size.x - raw.size.x) > 6.0:
+		return "fitted root double-counted the notch (notch %s raw %s pos %s)" % [notch_only, raw, _battle.position]
 	var saved_pos: Vector2 = _battle.position
 	var saved_origin: Vector2 = _battle._ui_origin()
 	# Re-pin notch env. Do not await: the next frame runs battle _process
@@ -404,7 +410,7 @@ func _notch_clip_contract() -> String:
 	_battle.set_meta("mobile_origin", Vector2.ZERO)
 	_battle.position = Vector2.ZERO
 	_battle.force_update_transform()
-	var bare := BattleRangePreview.playable_inset(_battle)
+	var bare := BattleRangePreview.clip_notch(_battle, raw)
 	var measured_pos := _battle.position
 	_battle.set_meta("mobile_origin", saved_origin)
 	_battle.position = saved_pos
@@ -417,9 +423,14 @@ func _notch_clip_contract() -> String:
 func _desktop_inset_is_unclipped() -> String:
 	var stage: Rect2 = _battle.get_meta("m_board_area")
 	var raw := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
+	# Notch must stay identity on desktop; BoardInset may still cut edge/info.
+	var notch := BattleRangePreview.clip_notch(_battle, raw)
+	if absf(notch.position.x - raw.position.x) > 2.0 or absf(notch.size.x - raw.size.x) > 2.0:
+		return "desktop notch clip fired (%s vs %s)" % [notch, raw]
 	var got := BattleRangePreview.playable_inset(_battle)
-	if absf(got.position.x - raw.position.x) > 2.0 or absf(got.size.x - raw.size.x) > 2.0:
-		return "desktop inset was clipped (%s vs %s)" % [got, raw]
+	var shared := BattleBoardInset.for_host(_battle, 0.0)
+	if absf(got.position.x - shared.position.x) > 1.0 or absf(got.size.x - shared.size.x) > 1.0:
+		return "desktop playable drifted from BoardInset (%s vs %s)" % [got, shared]
 	return ""
 
 
