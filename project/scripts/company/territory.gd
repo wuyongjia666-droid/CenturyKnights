@@ -1342,11 +1342,6 @@ static func apply_month(force_roll: float = -1.0) -> String:
 	var line := Locale.t("terr_30") % [silver, owned_ids().size()]
 	for n in notes:
 		line += "；" + str(n)
-	var reclaim_ids: Array = []
-	for row in lost:
-		var rid := str(row.get("id", ""))
-		if rid != "" and _has_reclaim(rid):
-			reclaim_ids.append(rid)
 	_roll_neutral_contests(force_roll)
 	last_month_report = {
 		"silver": silver,
@@ -1360,7 +1355,7 @@ static func apply_month(force_roll: float = -1.0) -> String:
 		"contests": resolved_contests,
 		"contest_open": contested_ids(),
 		"line": line,
-		"reclaims": reclaim_ids,
+		"reclaims": pending_reclaim_ids(),
 	}
 	return line
 
@@ -1500,6 +1495,31 @@ static func threatened_owned() -> Array:
 		if not (state(id).threat as Dictionary).is_empty():
 			out.append(id)
 	return out
+
+## Sites with an open「反夺」commission (board or active). Castle HubTodo / ledger / hourglass.
+static func pending_reclaim_ids() -> Array:
+	var out: Array = []
+	for id in site_ids():
+		if _has_reclaim(str(id)):
+			out.append(str(id))
+	return out
+
+## Castle Todo / hourglass / ledger deep-link: focus atlas on a pending reclaim site.
+## Returns the site id focused, or "" if none.
+static func hub_focus_reclaim(id: String = "") -> String:
+	id = str(id)
+	var ids := pending_reclaim_ids()
+	if id == "":
+		if ids.is_empty():
+			return ""
+		id = str(ids[0])
+	elif not _has_reclaim(id):
+		return ""
+	var anchor := str(site(id).get("anchor", ""))
+	if anchor != "":
+		GameState.set_meta("atlas_select", anchor)
+	GameState.set_meta("atlas_territory_site", id)
+	return id
 
 ## Castle Todo chip deep-link: re-queue SiegeAlert for the most urgent threatened site.
 ## Returns the site id queued, or "" if none.

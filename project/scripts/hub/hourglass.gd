@@ -166,6 +166,7 @@ func _show_forecast(months: int) -> void:
 	for e in evs:
 		_forecast.add_child(_line(str(e.get("text", "")), UIKit.TEXT))
 	_paint_threat_pending(_forecast)
+	_paint_reclaim_pending(_forecast)
 
 
 ## Territory closed-loop: pending siege threats on the forecast + deep-link to SiegeAlert.
@@ -180,6 +181,24 @@ func _paint_threat_pending(host: VBoxContainer) -> void:
 	btn.name = "ToSiegeThreat"
 	btn.pressed.connect(func():
 		CKTerritory.hub_requeue_siege_alert()
+		CKNav.go("res://scenes/hub/atlas_view.tscn")
+	)
+	host.add_child(btn)
+	UIFX.wire_button(btn)
+
+
+## Territory closed-loop: open「反夺」commissions on the forecast + deep-link atlas focus.
+func _paint_reclaim_pending(host: VBoxContainer) -> void:
+	var ids: Array = CKTerritory.pending_reclaim_ids()
+	if ids.is_empty():
+		return
+	var warn := _line(Locale.t("lb_hg_reclaim_pending", [ids.size()]), UIKit.EMBER)
+	warn.name = "ReclaimPending"
+	host.add_child(warn)
+	var btn := CKPageKit.button(Locale.t("lb_hg_to_reclaim"), true, 220)
+	btn.name = "ToReclaim"
+	btn.pressed.connect(func():
+		CKTerritory.hub_focus_reclaim()
 		CKNav.go("res://scenes/hub/atlas_view.tscn")
 	)
 	host.add_child(btn)

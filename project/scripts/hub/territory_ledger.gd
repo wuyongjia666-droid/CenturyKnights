@@ -1,6 +1,6 @@
 extends Control
-## Territory Ledger (P1-UX-04 / design §19 + §20) — owned sites whole-chain:
-## list · yield/garrison/threat · remote reinforce · siege alert · atlas site jump · free stockade credit.
+## Territory Ledger (P1-UX-04 / design §19–§21) — owned sites whole-chain:
+## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim.
 
 const _MAX_LIST := 48
 
@@ -13,6 +13,8 @@ var _btn_stockade: Button
 var _msg: Label
 var _empty: Label
 var _credit: Label
+var _reclaim: Label
+var _btn_reclaim: Button
 var _ids: Array = []
 var _pick := ""
 
@@ -47,14 +49,30 @@ func _build() -> void:
 	_credit.name = "TerritoryCreditBanner"
 	_credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_credit.position = Vector2(42, 148)
-	_credit.size = Vector2(1196, 24)
+	_credit.size = Vector2(980, 24)
 	_credit.visible = false
 	add_child(_credit)
+
+	_reclaim = UIKit.body_label("", UIKit.EMBER, 13)
+	_reclaim.name = "TerritoryReclaimBanner"
+	_reclaim.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_reclaim.position = Vector2(42, 172)
+	_reclaim.size = Vector2(980, 24)
+	_reclaim.visible = false
+	add_child(_reclaim)
+
+	_btn_reclaim = UIKit.cta_button(Locale.t("ux_territory_reclaim_goto"), "R", 160, 28)
+	_btn_reclaim.name = "TerritoryReclaimGoto"
+	_btn_reclaim.position = Vector2(1040, 168)
+	_btn_reclaim.size = Vector2(160, 28)
+	_btn_reclaim.visible = false
+	_btn_reclaim.pressed.connect(_on_reclaim_goto)
+	add_child(_btn_reclaim)
 
 	_empty = UIKit.body_label(Locale.t("ux_territory_empty"), UIKit.EMBER, 13)
 	_empty.name = "TerritoryEmpty"
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_empty.position = Vector2(42, 176)
+	_empty.position = Vector2(42, 200)
 	_empty.size = Vector2(1196, 28)
 	_empty.visible = false
 	add_child(_empty)
@@ -135,6 +153,16 @@ func _refresh() -> void:
 	else:
 		_credit.text = ""
 		_credit.visible = false
+	var reclaim_n := CKTerritory.pending_reclaim_ids().size()
+	if reclaim_n > 0:
+		_reclaim.text = Locale.t("ux_territory_reclaim_banner") % reclaim_n
+		_reclaim.visible = true
+		_btn_reclaim.visible = true
+		_btn_reclaim.disabled = false
+	else:
+		_reclaim.text = ""
+		_reclaim.visible = false
+		_btn_reclaim.visible = false
 	var owned: Array = CKTerritory.owned_ids()
 	owned.sort()
 	for id in owned:
@@ -274,3 +302,13 @@ func _on_atlas() -> void:
 	GameState.set_meta("atlas_select", anchor)
 	GameState.set_meta("atlas_territory_site", _pick)
 	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": _pick})
+
+
+func _on_reclaim_goto() -> void:
+	var focused := CKTerritory.hub_focus_reclaim()
+	if focused == "":
+		_msg.add_theme_color_override("font_color", UIKit.DANGER)
+		_msg.text = Locale.t("ux_territory_reclaim_fail")
+		return
+	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": focused})
+
