@@ -179,11 +179,12 @@ func _assert_marriage(page: Node, where: String) -> void:
 	var strip := page.find_child("MarriageCrestStrip", true, false)
 	_ok(_route(strip, "marriage_strip"), "%s marriage_strip" % where)
 	if strip != null:
-		_ok(strip.find_child("CastleArms", true, false) != null, "%s marriage CastleArms" % where)
+		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s marriage strip_company" % where)
 		var la := strip.find_child("LeftArms", true, false)
 		var ra := strip.find_child("RightArms", true, false)
 		_ok(_route(la, "marriage_left"), "%s marriage_left" % where)
 		_ok(_route(ra, "marriage_right"), "%s marriage_right" % where)
+		_ok(_route(strip.find_child("MarriageBanner", true, false), "marriage_banner"), "%s marriage_banner" % where)
 	var houses: Array = []
 	_collect(page, "HouseArms", houses)
 	_ok(houses.size() >= 1, "%s HouseArms" % where)
@@ -195,9 +196,10 @@ func _assert_succession(page: Node, where: String) -> void:
 	var strip := page.find_child("SuccessionCrestStrip", true, false)
 	_ok(_route(strip, "succession_strip"), "%s succession_strip" % where)
 	if strip != null:
-		_ok(strip.find_child("CastleArms", true, false) != null, "%s succession CastleArms" % where)
+		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s succession strip_company" % where)
 		var la := strip.find_child("LeaderArms", true, false)
 		_ok(_route(la, "succession_heir"), "%s succession_heir" % where)
+		_ok(_route(strip.find_child("SuccessionBanner", true, false), "succession_banner"), "%s succession_banner" % where)
 
 
 func _assert_deploy(page: Node, where: String) -> void:
@@ -305,8 +307,10 @@ func _source_contracts() -> void:
 		["marriage_strip", "place_marriage_crest_strip"],
 		["marriage_left", "LeftArms"],
 		["marriage_right", "RightArms"],
+		["marriage_banner", "MarriageBanner"],
 		["succession_strip", "place_succession_crest_strip"],
 		["succession_heir", "succession_heir"],
+		["succession_banner", "SuccessionBanner"],
 		["deploy_muster", "place_deploy_muster_strip"],
 		["deploy_muster_leader", "deploy_muster_leader"],
 		["hire_plate", "attach_hire_plate_arms"],

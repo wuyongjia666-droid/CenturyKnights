@@ -56,6 +56,18 @@ static func _pair(host: Control, shield: Vector2, second: TextureRect) -> void:
 		host.add_child(second)
 
 
+## Cloth plate beside a Field strip — keeps surface CastleArms node names; route deepens ownership.
+static func _cloth_beside(host: Control, shield: Vector2, banner_name: String, field_route: String) -> TextureRect:
+	var bn := CKHeraldryChrome.make_company_banner(Vector2(maxf(18.0, shield.x * 0.7), maxf(24.0, shield.y * 0.85)))
+	bn.name = banner_name
+	bn.set_meta("field_route", field_route)
+	bn.tooltip_text = Locale.t("lb_castle_view_arms")
+	bn.position = Vector2(host.size.x + 8.0, (shield.y - bn.size.y) * 0.5)
+	host.add_child(bn)
+	host.size = Vector2(bn.position.x + bn.size.x, maxf(host.size.y, bn.size.y))
+	return bn
+
+
 ## Tavern hire header: 团徽 + focused candidate 族徽|旗徽. No candidate → 团徽 only.
 static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
 	if parent == null:
@@ -464,6 +476,8 @@ static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector
 		ra.set_meta("field_route", "marriage_right")
 		ra.position = Vector2(x, 0)
 		host.add_child(ra)
+	# Cloth plate beside the vow pair — castle-readable Field chrome on the marriage strip.
+	_cloth_beside(host, shield, "MarriageBanner", "marriage_banner")
 	host.set_meta("has_left", left_c != null)
 	host.set_meta("has_right", right_c != null)
 	return host
@@ -497,6 +511,8 @@ static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield
 		focus.name = "LeaderArms"
 		focus.set_meta("field_route", "succession_heir")
 	_pair(host, shield, focus)
+	# Cloth plate beside the heir pair — Field ownership on the succession strip.
+	_cloth_beside(host, shield, "SuccessionBanner", "succession_banner")
 	host.set_meta("has_heir", heir != null)
 	return host
 
@@ -531,6 +547,8 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 		ra.set_meta("field_route", "duel_right")
 		ra.position = Vector2(x, 0)
 		host.add_child(ra)
+	# Cloth plate beside the trial pair — Field ownership on the duel strip.
+	_cloth_beside(host, shield, "DuelBanner", "duel_banner")
 	host.set_meta("has_left", left_c != null)
 	host.set_meta("has_right", right_c != null)
 	return host
