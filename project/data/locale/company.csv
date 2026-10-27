@@ -713,3 +713,4 @@ terr_echo_garrison,驻军·%s升至%d级（-%d银）,Garrison · %s to rank %d (
 terr_echo_stockade,屯营·%s筑成（-%d银）,Stockade · %s raised (-%d silver)
 terr_echo_head,领地月回读 // TERRITORY ECHO,Territory month echo
 terr_echo_sister,姊妹驰援·%s→%s（驻%d/源%d）,Sister relief · %s→%s (garrison %d / source %d)
+terr_echo_muster,开仓募卒·%s（−%d粮·驻%d）,Muster · %s (−%d food · garrison %d)
