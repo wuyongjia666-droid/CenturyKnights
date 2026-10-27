@@ -66,6 +66,22 @@
 - `cs06_02` 口语加厚至约 124–130 行；保留 visit@hourglass / battle@bridge CTA 与 mid_lost 门闸。
 - 前三拍收束不为旁白；suite walk_to_choice 提到 220。
 
+
+## 第三可玩章 · 沙圈上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs06_03` |
+| 标题 | 沙圈上的灯 |
+| legacy_index | 424 |
+| 文件 | `project/data/story/chapters/cs06_03.json` |
+
+沙圈与空桩对照；栏场并排可读。拍：沙圈 → 空桩 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **栏场仍并** → flag `cs06_circle_parallel`，进 `ledger`。
+- **先催胜名** → flag `cs06_circle_push`，仍进收束。
+- 验收：`content_season_playable_s06_03_check`；同档门禁 `content_season_playable_gate_s06_check`（cs06_01+02+03）。
+
 ## 中章口头去套话（mid-oral）
 
 - 访/战/酒馆回程里跨章复读的套话改成该拍自己的句子；入谱拍不动。
