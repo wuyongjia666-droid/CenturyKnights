@@ -2621,8 +2621,11 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		bits.append(Locale.t("atlas_terr_month_contest_open") % "、".join(on))
 	var extra := " ".join(bits) if not bits.is_empty() else Locale.t("atlas_terr_month_none")
 	var echo_contest := str(CKEconomyState.month_echo_snapshot().get("contest", ""))
+	var echo_reclaim := str(CKEconomyState.month_echo_snapshot().get("reclaim", ""))
 	var h := 340.0 if reclaims.is_empty() else 390.0
 	if echo_contest != "" or not contests.is_empty():
+		h += 40.0
+	if echo_reclaim != "" or not reclaims.is_empty():
 		h += 40.0
 	var panel := _modal_panel(h)
 	panel.name = "TerritoryMonthModal"
@@ -2708,6 +2711,22 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		echo_m.position = Vector2(24, h - 96)
 		echo_m.size = Vector2(452, 20)
 		panel.add_child(echo_m)
+	# Territory fat: ReclaimLine + EchoLine_reclaim on month panel.
+	if not reclaims.is_empty():
+		var rbits: Array = []
+		for rid0 in reclaims:
+			rbits.append(str(CKTerritory.site(str(rid0)).get("name", rid0)))
+		var rl := UIKit.body_label(Locale.t("atlas_terr_month_reclaim_line") % "、".join(rbits), UIKit.EMBER, 12)
+		rl.name = "ReclaimLine"
+		rl.position = Vector2(24, (h - 136.0) if echo_reclaim != "" else (h - 116.0))
+		rl.size = Vector2(452, 20)
+		panel.add_child(rl)
+	if echo_reclaim != "":
+		var echo_r := UIKit.body_label(echo_reclaim, UIKit.OK, 12)
+		echo_r.name = "EchoLine_reclaim"
+		echo_r.position = Vector2(24, h - 96)
+		echo_r.size = Vector2(452, 20)
+		panel.add_child(echo_r)
 	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
 	later.name = "TerritoryMonthLater"
 	later.position = Vector2(24, h - 56)
