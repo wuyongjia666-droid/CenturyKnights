@@ -236,8 +236,10 @@ func _assert_phase_banner_shares(tag: String) -> String:
 	_battle._turn_flash = BattlePhaseFeel.TURN_FLASH_SEC
 	_battle.turn_team = "player"
 	_battle.set_meta("m_phase_team", "player")
-	var expect: Rect2 = BattleBoardInset.for_host(_battle, 0.0)
 	BattlePhaseFeel.focus_phase_lead(_battle, "player")
+	# ActionSettle.apply refreshes m_info_block from MobileSideCol — capture
+	# expect after the stamp so we compare the same BoardInset algebra.
+	var expect: Rect2 = BattleBoardInset.for_host(_battle, 0.0)
 	await _settle(2)
 	if not _battle.has_meta("m_action_settle"):
 		return "%s: phase lead did not stamp m_action_settle" % tag
@@ -270,8 +272,9 @@ func _assert_engage_settle_shares(tag: String) -> String:
 	await _settle(2)
 	BattleEdgePick.note_layout(_battle)
 	await _settle(1)
-	var expect: Rect2 = BattleBoardInset.for_host(_battle, 0.0)
 	BattleEngageCutscene.note_engage_bridge(_battle, atk, deff)
+	# Capture expect after stamp (apply refreshes m_info_block from live col).
+	var expect: Rect2 = BattleBoardInset.for_host(_battle, 0.0)
 	await _settle(2)
 	if not _battle.has_meta("m_engage_bridge"):
 		return "%s: engage bridge meta missing" % tag
@@ -325,8 +328,8 @@ func _assert_action_settle_shares(tag: String) -> String:
 		_battle.apply_mobile_layout()
 	await _settle(2)
 	BattleEdgePick.note_layout(_battle)
-	var expect: Rect2 = BattleBoardInset.for_host(_battle, 0.0)
 	BattleActionSettle.apply(_battle, actor, [])
+	var expect: Rect2 = BattleBoardInset.for_host(_battle, 0.0)
 	await _settle(1)
 	if not _battle.has_meta("m_action_settle"):
 		return "%s: ActionSettle.apply missing m_action_settle" % tag

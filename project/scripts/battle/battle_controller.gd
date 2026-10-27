@@ -1428,9 +1428,9 @@ func apply_mobile_layout() -> void:
 	if terrain.size() > 0:
 		_layout_board()
 	BattleEdgePick.note_layout(self)
-	# BoardInset: stage/info may move after a prior action settle — re-frame.
-	BattleActionSettle.refresh_if_stamped(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
+	# BoardInset re-settle stays on viewport resize only — apply_mobile_layout
+	# mid-suite (phase/engage) must not fight a just-stamped ActionSettle.
 	ForecastPanel.refresh(self)
 	CKHeraldryField.sync_battle_hud_crests(self)
 
@@ -1633,12 +1633,11 @@ func _unit_at(pos: Vector2i) -> int:
 
 func _select_player(ui: int) -> void:
 	selected = ui
-	# BoardInset: drop post-action settle stamps so layout refresh cannot
-	# re-frame a waited-out unit over wait-handoff / formation focus.
-	if has_meta("m_action_settle"):
-		remove_meta("m_action_settle")
-	if has_meta("m_confirm_settle"):
-		remove_meta("m_confirm_settle")
+	# BoardInset: do not clear settle stamps here. refresh_if_stamped already
+	# no-ops when selected != stamped actor (wait-handoff / formation keep
+	# their focus tween). Clearing m_action_settle made confirm settle_camera
+	# take the already-owned early-return without writing m_confirm_settle;
+	# clearing m_confirm_settle erased the attack-confirm E2E stamp.
 	attack_mode = false
 	skill_mode = false
 	active_skill_id = ""

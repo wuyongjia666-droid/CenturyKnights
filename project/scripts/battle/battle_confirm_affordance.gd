@@ -131,7 +131,12 @@ static func _settle_already_owned(host, actor: Vector2i) -> bool:
 	var info = host.get_meta("m_action_settle")
 	if not (info is Dictionary):
 		return false
-	return (info as Dictionary).get("actor", Vector2i(-999, -999)) == actor
+	if (info as Dictionary).get("actor", Vector2i(-999, -999)) != actor:
+		return false
+	# T-P15 already owns the tween — still mirror so confirm E2E can read
+	# m_confirm_settle after attack commit / select churn.
+	host.set_meta("m_confirm_settle", info)
+	return true
 
 
 static func _hand_to_tp15(host, actor: Vector2i, also: Array) -> bool:

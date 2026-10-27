@@ -108,10 +108,15 @@ static func refresh_if_stamped(host) -> void:
 			var pos = u.get("pos", Vector2i(-1, -1))
 			if pos is Vector2i and (pos as Vector2i) != (actor as Vector2i):
 				return
-	# Drop the stamp so apply recomputes against current for_host / blockers.
+	# Drop the action stamp so apply recomputes against current for_host.
+	# Re-mirror m_confirm_settle after apply so a layout refresh mid-await
+	# cannot erase the confirm E2E stamp.
+	var keep_confirm: bool = host.has_meta("m_confirm_settle")
 	host.remove_meta("m_action_settle")
-	if host.has_meta("m_confirm_settle"):
+	if keep_confirm:
 		host.remove_meta("m_confirm_settle")
 	BattlePick.cancel_focus_tween(host)
 	# Immediate: layout-driven refresh must land before the next frame asserts.
 	apply(host, actor as Vector2i, [], false)
+	if keep_confirm and host.has_meta("m_action_settle"):
+		host.set_meta("m_confirm_settle", host.get_meta("m_action_settle"))
