@@ -228,6 +228,8 @@ static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Ve
 		focus.name = "ForgeFocusArms"
 		focus.set_meta("field_route", "forge_focus_arms")
 	_pair(host, shield, focus)
+	# Cloth plate beside the smith pair — Field ownership on the forge strip.
+	_cloth_beside(host, shield, "ForgeBanner", "forge_banner")
 	host.set_meta("has_smith", smith != null)
 	return host
 
@@ -260,6 +262,8 @@ static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shiel
 		focus.name = "HealFocusArms"
 		focus.set_meta("field_route", "shrine_heal_focus")
 	_pair(host, shield, focus)
+	# Cloth plate beside the heal pair — Field ownership on the shrine strip.
+	_cloth_beside(host, shield, "ShrineBanner", "shrine_banner")
 	host.set_meta("has_hurt", focus_hurt != null)
 	return host
 
@@ -568,6 +572,8 @@ static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Ve
 		focus.name = "TrainFocusArms"
 		focus.set_meta("field_route", "train_focus_arms")
 	_pair(host, shield, focus)
+	# Cloth plate beside the pupil pair — Field ownership on the train strip.
+	_cloth_beside(host, shield, "TrainBanner", "train_banner")
 	host.set_meta("has_pupil", pupil != null)
 	return host
 
