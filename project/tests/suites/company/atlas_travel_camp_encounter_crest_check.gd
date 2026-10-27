@@ -63,6 +63,8 @@ func _assert_travel_strip(host: Node, where: String, expect_nid: String) -> void
 	_ok(str(strip.get_meta("field_route", "")) == "travel_strip", "%s field_route" % where)
 	var ca = strip.find_child("CastleArms", true, false)
 	_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
+	var bn = strip.find_child("TravelBanner", true, false)
+	_ok(bn != null and str(bn.get_meta("field_route", "")) == "travel_banner", "%s travel_banner" % where)
 	if expect_nid != "":
 		var terr = strip.find_child("TerritoryArms", true, false)
 		_ok(terr != null and str(terr.get_meta("arms_kind", "")) == "lb_territory_arms", "%s 领地徽" % where)
@@ -140,6 +142,8 @@ func _ui_camp_event_crests() -> void:
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "camp 团徽")
 		_ok(terr != null and str(terr.get_meta("arms_kind", "")) == "lb_territory_arms", "camp 领地徽")
 		_ok(terr != null and str(terr.get_meta("nation_id", "")) == nid, "camp territory nation")
+		var cbn = strip.find_child("CampBanner", true, false)
+		_ok(cbn != null and str(cbn.get_meta("field_route", "")) == "camp_banner", "camp camp_banner")
 	page.queue_free()
 	await _settle(2)
 
@@ -195,6 +199,8 @@ func _ui_encounter_crests() -> void:
 		_ok(foe_arms != null and str(foe_arms.get_meta("arms_kind", "")) == "lb_rv_arms", "encounter 敌徽")
 		_ok(foe_arms != null and str(foe_arms.get_meta("nation_id", "")) == foe, "encounter foe nation")
 		_ok(foe_arms != null and str(foe_arms.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "encounter foe != company")
+		var ebn = strip.find_child("EncounterBanner", true, false)
+		_ok(ebn != null and str(ebn.get_meta("field_route", "")) == "encounter_banner", "encounter encounter_banner")
 	_ok(page.find_child("AftermathCrestStrip", true, false) == null, "encounter not AftermathCrestStrip")
 	World.cancel_travel()
 	World.encounter = {}
