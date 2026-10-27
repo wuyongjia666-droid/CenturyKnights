@@ -527,6 +527,11 @@ static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vec
 	return CKHeraldryField.place_castle_view_crest_strip(parent, at, shield, banner)
 
 
+## Castle hang flag (6-frame wave). Field owns CastleHangBanner.
+static func place_castle_hang_banner(parent: Node, at: Vector2, size: Vector2 = Vector2(56, 78)) -> Control:
+	return CKHeraldryField.place_castle_hang_banner(parent, at, size)
+
+
 ## Blood-assay strip. Field owns BloodCrestStrip.
 static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	return CKHeraldryField.place_blood_crest_strip(parent, at, shield, banner)

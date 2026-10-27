@@ -43,6 +43,8 @@ var _art_row: HBoxContainer
 var _start_btn: Button
 var _back_btn: Button
 var _last_edit_ms := 0
+## P1-BNR-02: hub/settings reopen this page to re-edit 团徽 only (no new_game).
+var _reedit := false
 
 const FIELD_KEYS := {
 	"solid": "ux_field_solid",
@@ -102,6 +104,7 @@ const COLOR_KEYS := [
 ]
 
 func _ready() -> void:
+	_reedit = bool(CKNav.params().get("reedit", false)) or str(CKNav.params().get("mode", "")) == "banner_reedit"
 	_colors = BannerSpec.palette().duplicate()
 	_color_names = []
 	for k in COLOR_KEYS:
@@ -113,6 +116,8 @@ func _ready() -> void:
 	if _nations.is_empty():
 		_nations = PackedStringArray(["ashbanner"])
 	_build()
+	if _reedit:
+		_apply_reedit_mode()
 	_refresh_preview_art()
 
 func _heart() -> String:
@@ -503,6 +508,9 @@ func _face_btns_need_paint() -> bool:
 func _sync_start() -> void:
 	if _start_btn == null or _surname == null or _given == null:
 		return
+	if _reedit:
+		_start_btn.disabled = false
+		return
 	var missing := ""
 	if _surname.text.strip_edges() == "":
 		missing = Locale.t("ux_name_need_surname")
@@ -514,6 +522,9 @@ func _sync_start() -> void:
 		_warn.add_theme_color_override("font_color", UIKit.DANGER)
 
 func _on_start() -> void:
+	if _reedit:
+		_save_reedit()
+		return
 	var g = _given.text.strip_edges()
 	var s = _surname.text.strip_edges()
 	if g == "" or s == "":
@@ -535,6 +546,95 @@ func _on_start() -> void:
 	UnitArt.clear_cache()
 	GameState.save_game()
 	CKNav.replace("res://scenes/story/chapter0.tscn")
+
+
+## Hub / settings re-open: load current 团徽, hide founding-only controls, save back to hub.
+func _apply_reedit_mode() -> void:
+	_load_from_banner_spec(BannerSpec.normalize(GameState.banner_spec if typeof(GameState.banner_spec) == TYPE_DICTIONARY else {}))
+	if _surname:
+		_surname.text = str(GameState.surname)
+		_surname.editable = false
+	if _given:
+		var lead: CKCharacter = GameState.get_leader()
+		_given.text = str(lead.name) if lead != null else ""
+		_given.editable = false
+	# Founding-only: gender / face stay hidden in reedit — cloth only.
+	for n in ["GenderRow", "FaceRow"]:
+		var node := find_child(n, true, false)
+		if node:
+			node.visible = false
+	# Also hide the gender/face section labels that sit just above those rows.
+	if _opts != null:
+		for child in _opts.get_children():
+			if child is Label:
+				var t := str(child.text)
+				if t == Locale.t("ux_name_gender") or t == Locale.t("ux_name_face"):
+					child.visible = false
+	if _start_btn:
+		_start_btn.text = Locale.t("ux_banner_reedit_save")
+		_start_btn.disabled = false
+	if _back_btn:
+		# Drop founding TITLE hop; return to hub stack.
+		for c in _back_btn.pressed.get_connections():
+			_back_btn.pressed.disconnect(c["callable"])
+		_back_btn.pressed.connect(func(): CKNav.up())
+	if _warn:
+		_warn.text = Locale.t("ux_banner_reedit_hint")
+		_warn.add_theme_color_override("font_color", UIKit.ACCENT)
+
+
+func _load_from_banner_spec(spec: Dictionary) -> void:
+	if spec.is_empty():
+		return
+	var div := str(spec.get("division", spec.get("field", "solid")))
+	_field_idx = maxi(0, _divisions.find(div))
+	var part := str(spec.get("partition_line", "straight"))
+	_partition_idx = maxi(0, _partitions.find(part))
+	var ord := str(spec.get("ordinary", spec.get("charge", "none")))
+	_charge_idx = maxi(0, _ordinaries.find(ord))
+	var heart := str(spec.get("charge_color", spec.get("ordinary_tincture", spec.get("emblem_color", "")))).to_lower()
+	if heart == "":
+		heart = str(spec.get("field_a", "")).to_lower()
+	for i in _colors.size():
+		if str(_colors[i]).to_lower() == heart or str(_colors[i]).to_lower() == heart.trim_prefix("#"):
+			_color_idx = i
+			break
+		if ("#" + str(_colors[i]).trim_prefix("#").to_lower()) == (heart if heart.begins_with("#") else "#" + heart):
+			_color_idx = i
+			break
+	var border := str(spec.get("border", "none"))
+	var bix := BannerSpec.BORDERS.find(border)
+	_border_idx = maxi(0, bix)
+	var eid := str(spec.get("emblem", "ring"))
+	var chs: Array = spec.get("charges", [])
+	if not chs.is_empty() and typeof(chs[0]) == TYPE_DICTIONARY:
+		eid = str((chs[0] as Dictionary).get("id", eid))
+	var eix := BannerSpec.EMBLEMS.find(eid)
+	_emblem_idx = maxi(0, eix if eix >= 0 else BannerSpec.EMBLEMS.find("ring"))
+	var nid := str(spec.get("nation", ""))
+	var nix := _nations.find(nid)
+	if nix >= 0:
+		_nation_idx = nix
+	if _preview:
+		_preview.color = Color(str(_colors[_color_idx]))
+	if _color_name_label:
+		_color_name_label.text = str(_color_names[_color_idx])
+
+
+func _save_reedit() -> void:
+	var spec := _current_spec()
+	if not BannerSpec.contrast_ok(spec):
+		if _warn:
+			_warn.text = Locale.t("ux_name_contrast")
+			_warn.add_theme_color_override("font_color", UIKit.DANGER)
+		Sfx.miss()
+		return
+	GameState.banner_spec = spec
+	GameState.crest_color = _heart()
+	UnitArt.clear_cache()
+	GameState.save_game()
+	Sfx.confirm()
+	CKNav.up()
 
 
 func _set_gender(g: String) -> void:
@@ -637,5 +737,8 @@ func _process(_d: float) -> void:
 ## Android back: closing the soft keyboard also sends back; never pop the pause menu here.
 func nav_back() -> void:
 	if Time.get_ticks_msec() - _last_edit_ms < 800:
+		return
+	if _reedit:
+		CKNav.up()
 		return
 	CKNav.replace(CKNav.TITLE)

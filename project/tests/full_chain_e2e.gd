@@ -405,8 +405,8 @@ func _step_castle_hub() -> void:
 				break
 		if not found:
 			missing.append(sub)
-	if labels.size() > 13:
-		_err("hub: year-one doors %s want<=13: %s" % [labels.size(), str(labels)])
+	if labels.size() > 14:
+		_err("hub: year-one doors %s want<=14: %s" % [labels.size(), str(labels)])  # +旗饰 P1-BNR-02
 	elif labels.size() < 4:
 		_err("hub: too few panel buttons (%s): %s" % [labels.size(), str(labels)])
 	elif missing.size() > 0:
