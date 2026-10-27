@@ -14,6 +14,7 @@ var _dual: Control
 const DUAL_W := 380.0
 var _vow_step: int = 0
 var _vow_panel: Control
+var _vow_card: Control
 var _vow_body: RichTextLabel
 var _vow_actions: HBoxContainer
 var _vow_gift: String = "banner"
@@ -230,7 +231,8 @@ func _build() -> void:
 	dim.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_vow_panel.add_child(dim)
 	var vp := UIKit.panel_at(_vow_panel, Rect2(220, 120, 840, 420), 12, true)
-	CKHeraldryField.attach_vow_company_arms(vp, Vector2(28, 16), Vector2(40, 48))
+	_vow_card = vp
+	CKHeraldryField.place_vow_crest_strip(vp, null, null, Vector2(28, 16), Vector2(36, 44), Vector2(24, 34))
 	var ve := UIKit.mono("VOW RITUAL // 誓约仪式", 10, UIKit.ACCENT)
 	ve.position = Vector2(80, 22)
 	vp.add_child(ve)
@@ -1272,7 +1274,15 @@ func _start_vow() -> void:
 	_vow_panel.visible = true
 	_show_vow()
 
+func _place_vow_crests() -> void:
+	## 誓约卡：团徽 + 求娶方 + 候选 + VowBanner（不再只挂一张公司徽）.
+	if _vow_card == null:
+		return
+	CKHeraldryField.place_vow_crest_strip(_vow_card, _get_suitor(), _selected, Vector2(28, 16), Vector2(36, 44), Vector2(24, 34))
+
+
 func _show_vow() -> void:
+	_place_vow_crests()
 	for c in _vow_actions.get_children():
 		c.queue_free()
 	var suitor = _get_suitor()

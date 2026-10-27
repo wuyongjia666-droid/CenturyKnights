@@ -292,6 +292,25 @@ static func attach_ladder_badge(parent: Node, rank: String, badge_size: int = 26
 	return CKHeraldryField.attach_ladder_badge(parent, rank, badge_size)
 
 
+static func place_dynasty_end_crest_strip(parent: Node, last_c = null, heir_c = null, at: Vector2 = Vector2.ZERO,
+		shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_dynasty_end_crest_strip(parent, last_c, heir_c, at, shield, banner)
+
+
+static func place_banner_handoff_crest_strip(parent: Node, outgoing = null, heir = null, at: Vector2 = Vector2.ZERO,
+		shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_banner_handoff_crest_strip(parent, outgoing, heir, at, shield, banner)
+
+
+static func place_vow_crest_strip(parent: Node, suitor = null, selected = null, at: Vector2 = Vector2(28, 16),
+		shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_vow_crest_strip(parent, suitor, selected, at, shield, banner)
+
+
+static func attach_succession_answer_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	return CKHeraldryField.attach_succession_answer_arms(host, c, arms_sz)
+
+
 static func attach_vow_company_arms(parent: Node, at: Vector2 = Vector2.ZERO, arms_sz: Vector2 = Vector2(40, 48)) -> TextureRect:
 	return CKHeraldryField.attach_vow_company_arms(parent, at, arms_sz)
 

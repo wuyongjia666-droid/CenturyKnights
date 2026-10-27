@@ -574,6 +574,139 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 	return host
 
 
+## Dynasty-end strip: 团徽 + last leader + record heir + DynastyEndBanner.
+## Mounted on DynastyEndPanel so the closing card reads as a house seal, not bare text.
+static func place_dynasty_end_crest_strip(parent: Node, last_c = null, heir_c = null, at: Vector2 = Vector2.ZERO,
+		shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var gap := 8.0
+	var x := 0.0
+	var w := shield.x
+	if last_c != null:
+		w += gap + shield.x
+	if heir_c != null:
+		w += gap + shield.x
+	var host := _host(parent, "DynastyEndCrestStrip", at, Vector2(w, shield.y), "dynasty_end_strip")
+	var co := CKHeraldryChrome.make_company_arms(shield)
+	co.position = Vector2(x, 0)
+	co.set_meta("field_route", "strip_company")
+	host.add_child(co)
+	x += shield.x + gap
+	if last_c != null:
+		var la := CKHeraldryChrome.make_person_arms(last_c, shield)
+		la.name = "LastLeaderArms"
+		la.set_meta("field_route", "dynasty_end_last")
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if heir_c != null:
+		var ra := CKHeraldryChrome.make_person_arms(heir_c, shield)
+		ra.name = "RecordHeirArms"
+		ra.set_meta("field_route", "dynasty_end_heir")
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+	_cloth_beside(host, shield, "DynastyEndBanner", "dynasty_end_banner", "lb_dynasty_end_arms", banner)
+	host.set_meta("has_last", last_c != null)
+	host.set_meta("has_heir", heir_c != null)
+	return host
+
+
+## Banner-handoff strip: 团徽 + outgoing + incoming + HandoffBanner.
+## Mounted on castle / hourglass / estates after transfer_banner stamps house_mods.banner_handoff.
+static func place_banner_handoff_crest_strip(parent: Node, outgoing = null, heir = null, at: Vector2 = Vector2.ZERO,
+		shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var gap := 8.0
+	var x := 0.0
+	var w := shield.x
+	if outgoing != null:
+		w += gap + shield.x
+	if heir != null:
+		w += gap + shield.x
+	var host := _host(parent, "BannerHandoffCrestStrip", at, Vector2(w, shield.y), "banner_handoff_strip")
+	var co := CKHeraldryChrome.make_company_arms(shield)
+	co.position = Vector2(x, 0)
+	co.set_meta("field_route", "strip_company")
+	host.add_child(co)
+	x += shield.x + gap
+	if outgoing != null:
+		var la := CKHeraldryChrome.make_person_arms(outgoing, shield)
+		la.name = "OutgoingArms"
+		la.set_meta("field_route", "banner_handoff_out")
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if heir != null:
+		var ra := CKHeraldryChrome.make_person_arms(heir, shield)
+		ra.name = "IncomingArms"
+		ra.set_meta("field_route", "banner_handoff_in")
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+	_cloth_beside(host, shield, "HandoffBanner", "banner_handoff_banner", "lb_handoff_arms", banner)
+	host.set_meta("has_out", outgoing != null)
+	host.set_meta("has_in", heir != null)
+	return host
+
+
+## Vow ritual strip: 团徽 (VowCompanyArms) + suitor + selected + VowBanner.
+## Replaces the lone company plate on the vow card with a readable three-shield seal.
+static func place_vow_crest_strip(parent: Node, suitor = null, selected = null, at: Vector2 = Vector2(28, 16),
+		shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var gap := 8.0
+	var x := 0.0
+	var w := shield.x
+	if suitor != null:
+		w += gap + shield.x
+	if selected != null:
+		w += gap + shield.x
+	var host := _host(parent, "VowCrestStrip", at, Vector2(w, shield.y), "vow_strip")
+	var co := CKHeraldryChrome.make_company_arms(shield)
+	co.name = "VowCompanyArms"
+	co.position = Vector2(x, 0)
+	co.set_meta("field_route", "marriage_vow")
+	host.add_child(co)
+	x += shield.x + gap
+	if suitor != null:
+		var la := CKHeraldryChrome.make_person_arms(suitor, shield)
+		la.name = "VowLeftArms"
+		la.set_meta("field_route", "vow_left")
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if selected != null:
+		var ra := CKHeraldryChrome.make_person_arms(selected, shield)
+		ra.name = "VowRightArms"
+		ra.set_meta("field_route", "vow_right")
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+	_cloth_beside(host, shield, "VowBanner", "vow_banner", "lb_vow_arms", banner)
+	host.set_meta("has_suitor", suitor != null)
+	host.set_meta("has_selected", selected != null)
+	return host
+
+
+## Succession answer-card person arms (承旗 / 教养 / 立嗣答卡旁挂族徽或旗徽).
+static func attach_succession_answer_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if host == null:
+		return null
+	_retire(host, "AnswerHeirArms")
+	if c == null:
+		return null
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "AnswerHeirArms"
+	arms.set_meta("field_route", "succession_answer")
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	host.add_child(arms)
+	if host is Container:
+		host.move_child(arms, 0)
+	return arms
+
+
 ## Banner school focus strip: 团徽 + selected pupil 族徽|旗徽. No pupil → 团徽 only.
 static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Vector2 = Vector2(40, 48), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:

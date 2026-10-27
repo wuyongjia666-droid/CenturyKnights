@@ -138,8 +138,11 @@ func _run_helpers() -> void:
 
 func _run_vow_sources() -> void:
 	var hub := FileAccess.get_file_as_string("res://scripts/hub/marriage.gd")
-	_ok(hub.find("CKHeraldryField.attach_vow_company_arms") >= 0, "vow → Field")
-	_ok(hub.find("VowCompanyArms") < 0 or hub.find("attach_vow_company_arms") >= 0, "vow not raw Chrome")
+	# 承旗深刀：誓约卡走 place_vow_crest_strip（团徽+双方+旗布），仍属 Field。
+	var via_strip := hub.find("CKHeraldryField.place_vow_crest_strip") >= 0
+	var via_arms := hub.find("CKHeraldryField.attach_vow_company_arms") >= 0
+	_ok(via_strip or via_arms, "vow → Field")
+	_ok(hub.find("CKHeraldryChrome.place_vow") < 0 and hub.find("CKHeraldryChrome.attach_vow") < 0, "vow not raw Chrome")
 	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
 	_ok(field.find("static func attach_vow_company_arms") >= 0, "field owns vow arms")
 	var host := Control.new()

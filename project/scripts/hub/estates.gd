@@ -519,6 +519,8 @@ func _month_echo_feel(parent: Node) -> void:
 	## Y1-B 月循环加深：属地页回读上月领地/属地收成；尚无则 CTA 去沙漏。
 	if Lineage.is_dynasty_ended():
 		Lineage.attach_dynasty_end_feel(parent, 1190.0)
+	elif Lineage.is_banner_handoff_pending():
+		Lineage.attach_banner_handoff_feel(parent, 1190.0)
 	var panel := VBoxContainer.new()
 	panel.name = "MonthEchoPanel"
 	panel.add_theme_constant_override("separation", 6)

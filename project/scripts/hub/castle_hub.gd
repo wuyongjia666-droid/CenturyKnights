@@ -45,6 +45,7 @@ func _build() -> void:
 	CKHeraldryField.place_banner_plate(self, Vector2(188, 14), Vector2(40, 48), Vector2(26, 36))
 
 	## Y1-B stub: mid-run dynasty end banner over the seasonal dossier.
+	## After a successful 传旗, show BannerHandoffPanel with crest strip until dismissed.
 	if Lineage.is_dynasty_ended():
 		var host := Control.new()
 		host.name = "DynastyEndHost"
@@ -52,6 +53,13 @@ func _build() -> void:
 		host.size = Vector2(700, 140)
 		add_child(host)
 		Lineage.attach_dynasty_end_feel(host, 680.0)
+	elif Lineage.is_banner_handoff_pending():
+		var hhost := Control.new()
+		hhost.name = "BannerHandoffHost"
+		hhost.position = Vector2(190, 72)
+		hhost.size = Vector2(700, 160)
+		add_child(hhost)
+		Lineage.attach_banner_handoff_feel(hhost, 680.0)
 
 	# ── NAVIGATION ─────────────────────────────────────────
 	var nav_panel := UIKit.panel_at(self, Rect2(26, 72, 150, 612), 10)

@@ -52,6 +52,7 @@ func _ready() -> void:
 	_paint_kpis()
 	_show_forecast(1)
 	_feel_dynasty_end()
+	_feel_banner_handoff()
 	_place_hourglass_crests()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "HOURGLASS · FROST")
 	UIFX.page_enter(self)
@@ -198,6 +199,13 @@ func _feel_dynasty_end() -> void:
 		var b := find_child(n, true, false) as BaseButton
 		if b != null:
 			b.disabled = true
+
+
+func _feel_banner_handoff() -> void:
+	## After 传旗: show handoff crest tip in the month log until dismissed.
+	if Lineage.is_dynasty_ended() or not Lineage.is_banner_handoff_pending():
+		return
+	Lineage.attach_banner_handoff_feel(_log, 520.0)
 
 
 func _advance(months: int, btn: Control) -> void:
