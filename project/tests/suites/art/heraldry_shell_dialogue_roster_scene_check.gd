@@ -1,6 +1,6 @@
 extends Node
-## Fat heraldry wave-11 E2E: ShellCrestStrip / DialogueCrestStrip / RosterCrestStrip
-## — ShellBanner + cloth field_route ownership — desk + mobile.
+## Fat heraldry wave-15 E2E: ShellCrestStrip / DialogueCrestStrip / RosterCrestStrip
+## — _cloth_beside Field cloth + arms_kind ownership — desk + mobile.
 ## Real main_menu / chapter_player / roster; no EmptyHost.
 
 const MENU := "res://scenes/ui/main_menu.tscn"
@@ -18,11 +18,11 @@ func _ready() -> void:
 	await _run_mobile()
 	_source_contracts()
 	if _fails.is_empty():
-		print("HERALDRY SHELL DIALOGUE ROSTER SCENE PASS")
+		print("HERALDRY SHELL DIALOGUE ROSTER CLOTH SCENE PASS")
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL heraldry shell dialogue roster scene: ", f)
+			print("FAIL heraldry shell dialogue roster cloth scene: ", f)
 		get_tree().quit(1)
 
 
@@ -183,8 +183,16 @@ func _source_contracts() -> void:
 		var lit := field.find('set_meta("field_route", "%s")' % route) >= 0
 		var arg := field.find('"%s"' % route) >= 0
 		_ok(lit or arg, "field source route %s" % route)
-	_ok(field.find('bn.name = "ShellBanner"') >= 0, "field names ShellBanner")
+	_ok(field.find('_cloth_beside(host, shield, "ShellBanner"') >= 0, "field shell via _cloth_beside")
+	_ok(field.find('_cloth_beside(host, shield, "DialogueBanner"') >= 0, "field dialogue via _cloth_beside")
+	_ok(field.find('_cloth_beside(host, shield, "RosterBanner"') >= 0, "field roster via _cloth_beside")
 	_ok(field.find('"lb_shell_arms"') >= 0, "field lb_shell_arms")
+	_ok(field.find('"lb_dialogue_arms"') >= 0, "field lb_dialogue_arms")
+	_ok(field.find('"lb_roster_arms"') >= 0, "field lb_roster_arms")
+	# Manual banner blocks must be gone for these three strips.
+	_ok(field.find('bn.name = "ShellBanner"') < 0, "shell banner not manual")
+	_ok(field.find('bn.name = "DialogueBanner"') < 0, "dialogue banner not manual")
+	_ok(field.find('bn.name = "RosterBanner"') < 0, "roster banner not manual")
 	var menu := FileAccess.get_file_as_string("res://scripts/ui/main_menu.gd")
 	_ok(menu.find("CKHeraldryField.place_shell_crest_strip") >= 0
 			or menu.find("CKHeraldryChrome.place_shell_crest_strip") >= 0, "main_menu wires shell Field")
@@ -196,3 +204,5 @@ func _source_contracts() -> void:
 			or ros.find("CKHeraldryChrome.place_roster_crest_strip") >= 0, "roster wires Field")
 	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
 	_ok(loc.find("lb_shell_arms,") >= 0, "locale lb_shell_arms")
+	_ok(loc.find("lb_dialogue_arms,") >= 0, "locale lb_dialogue_arms")
+	_ok(loc.find("lb_roster_arms,") >= 0, "locale lb_roster_arms")
