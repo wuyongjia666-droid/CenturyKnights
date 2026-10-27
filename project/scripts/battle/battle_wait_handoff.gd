@@ -46,6 +46,7 @@ static func next_idx(units, from_idx: int) -> int:
 
 ## Call AFTER the finished unit is marked done and selected is cleared.
 ## Returns the new selected index, or -1 when no ready unit / not player turn.
+## TurnCycleFeel clears leftover land-peek / aim before the next select.
 static func after_unit_done(host, from_idx: int = -1) -> int:
 	if host == null:
 		return -1
@@ -58,7 +59,10 @@ static func after_unit_done(host, from_idx: int = -1) -> int:
 	if n < 0:
 		if host.has_meta(META):
 			host.remove_meta(META)
+		# No next ready: still drop peek chrome so end-turn / idle board is clean.
+		BattleTurnCycleFeel.before_handoff(host)
 		return -1
+	BattleTurnCycleFeel.before_handoff(host)
 	if host.has_method("_select_player"):
 		host._select_player(n)
 	else:
@@ -69,4 +73,5 @@ static func after_unit_done(host, from_idx: int = -1) -> int:
 		"to": n,
 		"msec": Time.get_ticks_msec(),
 	})
+	BattleTurnCycleFeel.after_handoff(host, from_idx, n)
 	return n
