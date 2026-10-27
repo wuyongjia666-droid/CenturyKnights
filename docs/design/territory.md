@@ -141,3 +141,14 @@ E2E：`territory_chain_attach_echo_check` + mobile twin。
 
 E2E：`atlas_contest_resolve_check` + `mobile_atlas_contest_resolve_check`。
 
+## 15. 自守落幕 ThreatResolveModal（Territory fat）
+
+未应答围城 `_resolve_unanswered` 落幕时写入 `World.last_threat_resolve`（最新一条），大地图弹出 `ThreatResolveModal`——对齐 `ContestResolveModal` / `SiegeLootModal` 的事后确认。粮仓劫掠仍走 `SiegeLootModal`；本模态只报驻军守成 / 据点易主。
+
+1. **守住**（`outcome=held`）：威胁清除，驻军 −1，正文驻军前后与守成率。
+2. **失守**（`outcome=lost`）：`lose(id, by)` 前写入；据点易主。
+3. **链路**：月报 / 围城劫仓 OK 之后、`ContestResolveModal` 之前检查；新威胁 `start_threat` 时清掉同点未读落幕。
+
+E2E：`atlas_threat_resolve_check` + `mobile_atlas_threat_resolve_check`。
+
+

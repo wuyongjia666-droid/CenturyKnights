@@ -1798,6 +1798,10 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_threat_resolve():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if _check_contest_resolve():
 			_set_busy(false)
 			_refresh_top()
@@ -1858,6 +1862,8 @@ func _after_arrival() -> void:
 		return
 	if _check_siege_loot():
 		return
+	if _check_threat_resolve():
+		return
 	if _check_contest_resolve():
 		return
 	if _check_neutral_contest():
@@ -1892,6 +1898,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_loot():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_threat_resolve():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_contest_resolve():
 		return
@@ -2707,6 +2715,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 			return
 		if _check_siege_loot():
 			return
+		if _check_threat_resolve():
+			return
 		if _check_contest_resolve():
 			return
 		if _check_neutral_contest():
@@ -3127,6 +3137,70 @@ func _show_siege_loot_modal(loot: Dictionary) -> void:
 	panel.add_child(body)
 	var ok := UIKit.cta_button(Locale.t("atlas_siege_loot_ok"), "A", 452, 42)
 	ok.name = "SiegeLootOk"
+	ok.position = Vector2(24, h - 70)
+	ok.pressed.connect(func():
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if _check_threat_resolve():
+			return
+		if _check_contest_resolve():
+			return
+		if _check_neutral_contest():
+			return
+		if _check_march_muster():
+			return
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_siege"))
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
+
+
+## Unanswered threat settled → ThreatResolveModal (held / lost).
+func _check_threat_resolve() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_threat_resolve.is_empty():
+		return false
+	var row: Dictionary = World.take_threat_resolve()
+	if row.is_empty():
+		return false
+	_show_threat_resolve_modal(row)
+	return true
+
+
+func _show_threat_resolve_modal(row: Dictionary) -> void:
+	var site_name := str(row.get("name", row.get("id", "")))
+	var by_name := str(row.get("by_name", ""))
+	var outcome := str(row.get("outcome", "held"))
+	var g_before := int(row.get("garrison_before", 0))
+	var g_after := int(row.get("garrison_after", 0))
+	var hold_pct := int(row.get("hold_pct", 0))
+	var accent := UIKit.OK if outcome == "held" else UIKit.DANGER
+	var h := 320.0
+	var panel := _modal_panel(h)
+	panel.name = "ThreatResolveModal"
+	var el := UIKit.mono(Locale.t("atlas_threat_resolve_en"), 9, accent)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_threat_resolve_title"), 20, accent)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body_key := "atlas_threat_resolve_body_held" if outcome == "held" else "atlas_threat_resolve_body_lost"
+	var body_text := ""
+	if outcome == "held":
+		body_text = Locale.t(body_key) % [by_name, site_name, g_before, g_after, hold_pct]
+	else:
+		body_text = Locale.t(body_key) % [by_name, site_name, hold_pct]
+	var body := UIKit.body_label(body_text, UIKit.TEXT, 13)
+	body.name = "ThreatResolveBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 110)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var ok := UIKit.cta_button(Locale.t("atlas_threat_resolve_ok"), "A", 452, 42)
+	ok.name = "ThreatResolveOk"
 	ok.position = Vector2(24, h - 70)
 	ok.pressed.connect(func():
 		_clear_modal()

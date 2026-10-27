@@ -1316,6 +1316,14 @@ static func apply_month(force_roll: float = -1.0) -> String:
 	for id in owned_ids():
 		var st3 := state(id)
 		if (st3.threat as Dictionary).is_empty():
+			# Just held this month — do not re-threaten and wipe ThreatResolveModal.
+			var just_held := false
+			for h in held:
+				if str(h.get("id", "")) == id:
+					just_held = true
+					break
+			if just_held:
+				continue
 			var roll := rng.randf() if force_roll < 0.0 else force_roll
 			if roll < contest_chance(id):
 				var th := start_threat(id)
@@ -1375,6 +1383,9 @@ static func start_threat(id: String) -> Dictionary:
 	var st := state(id)
 	st.threat = {"by": by, "name": by_name, "day": World.days_total, "months": 0}
 	_put(id, st)
+	# Fresh siege — drop stale aftermath so ThreatResolveModal does not replay.
+	if str(World.last_threat_resolve.get("id", "")) == id:
+		World.dismiss_threat_resolve()
 	_log(Locale.t("terr_32") % [by_name, s.name, World.node(str(s.anchor)).get("name", "")])
 	World.world_changed.emit()
 	_emit_siege_alert(id, "declared")
@@ -1402,6 +1413,8 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 	var by_name := str(st.threat.get("name", ""))
 	var roll := rng.randf() if force_roll < 0.0 else force_roll
 	var hold_pct := int(round(hold_chance(id) * 100.0))
+	var site_name := str(site(id).name)
+	var anchor := str(site(id).get("anchor", ""))
 	if roll < hold_chance(id):
 		# Held the site — raiders still sack half the granary if any.
 		var looted := loot_cache(id, 0.5)
@@ -1410,32 +1423,55 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 		st.threat = {}
 		st.garrison = maxi(0, before - 1)
 		_put(id, st)
-		_log(Locale.t("terr_53") % [site(id).name, before, int(st.garrison), hold_pct])
+		_log(Locale.t("terr_53") % [site_name, before, int(st.garrison), hold_pct])
 		if looted > 0:
-			_log(Locale.t("atlas_siege_loot_hold_log") % [site(id).name, looted])
+			_log(Locale.t("atlas_siege_loot_hold_log") % [site_name, looted])
 			World.mark_siege_loot({
 				"id": id,
-				"name": str(site(id).name),
+				"name": site_name,
 				"by_name": by_name,
 				"looted": looted,
 				"cache_left": int(state(id).get("cache_food", 0)),
 				"outcome": "held",
-				"anchor": str(site(id).get("anchor", "")),
+				"anchor": anchor,
 			})
+		# Aftermath modal (SiegeLoot stays for cache; this is hold/garrison).
+		World.mark_threat_resolve({
+			"id": id,
+			"name": site_name,
+			"by_name": by_name,
+			"outcome": "held",
+			"garrison_before": before,
+			"garrison_after": int(st.garrison),
+			"hold_pct": hold_pct,
+			"looted": looted,
+			"anchor": anchor,
+		})
 	else:
 		# Lost — empty the granary into the attackers before ownership flips.
 		var looted2 := loot_cache(id, 1.0)
 		if looted2 > 0:
-			_log(Locale.t("atlas_siege_loot_lost_log") % [site(id).name, looted2])
+			_log(Locale.t("atlas_siege_loot_lost_log") % [site_name, looted2])
 			World.mark_siege_loot({
 				"id": id,
-				"name": str(site(id).name),
+				"name": site_name,
 				"by_name": by_name,
 				"looted": looted2,
 				"cache_left": 0,
 				"outcome": "lost",
-				"anchor": str(site(id).get("anchor", "")),
+				"anchor": anchor,
 			})
+		World.mark_threat_resolve({
+			"id": id,
+			"name": site_name,
+			"by_name": by_name,
+			"outcome": "lost",
+			"garrison_before": int(st.garrison),
+			"garrison_after": 0,
+			"hold_pct": hold_pct,
+			"looted": looted2,
+			"anchor": anchor,
+		})
 		lose(id, by)
 
 static func threatened_at(anchor: String) -> Array:
