@@ -390,7 +390,7 @@ func _step_castle_hub() -> void:
 					if b is BaseButton:
 						labels.append(str(b.text))
 
-	# ux-navigation §9-1：首年六门（出战、花名册、酒馆、联姻、族谱、结束本月）+ 设置 + 城堡全景；其余灰显不隐藏。
+	# ux-navigation §9-1：首年门禁 + 领地簿（P1-UX-04）+ 设置 + 城堡全景；其余灰显不隐藏。
 	var need_substrings := ["出战", "联姻", "酒馆", "花名册", "岁月", "设置", "岁课"]
 	var need_alt := ["deploy", "marriage", "tavern", "roster", "hourglass", "settings", "sui"]
 	var missing: Array = []
@@ -405,8 +405,8 @@ func _step_castle_hub() -> void:
 				break
 		if not found:
 			missing.append(sub)
-	if labels.size() > 12:
-		_err("hub: year-one doors %s want<=12: %s" % [labels.size(), str(labels)])
+	if labels.size() > 13:
+		_err("hub: year-one doors %s want<=13: %s" % [labels.size(), str(labels)])
 	elif labels.size() < 4:
 		_err("hub: too few panel buttons (%s): %s" % [labels.size(), str(labels)])
 	elif missing.size() > 0:

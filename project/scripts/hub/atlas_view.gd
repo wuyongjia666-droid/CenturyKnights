@@ -87,6 +87,13 @@ func _ready() -> void:
 	if guided:
 		hilite(focus)
 		call_deferred("_toast_quest_guide", focus)
+	# Territory ledger / P1-UX-04: open site modal after frame (nav params or meta).
+	var terr_site := str(CKNav.params().get("site", ""))
+	if terr_site == "" and GameState.has_meta("atlas_territory_site"):
+		terr_site = str(GameState.get_meta("atlas_territory_site"))
+		GameState.remove_meta("atlas_territory_site")
+	if terr_site != "" and CKTerritory.site(terr_site).get("anchor", "") != "":
+		call_deferred("_open_territory_site", terr_site)
 	if not _mob:
 		UIKit.footer_bar(self, [["A", "选定 / 启程"], ["Y", "进入城镇"], ["X", "世界 / 疆域"], ["ESC", "返回"]], "OVERWORLD · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)

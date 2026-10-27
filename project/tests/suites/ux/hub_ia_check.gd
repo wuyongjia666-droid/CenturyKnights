@@ -52,6 +52,7 @@ func _unlock_and_scale() -> void:
 	_ok(Todo.is_unlocked("deploy"), "deploy locked")
 	_ok(Todo.is_unlocked("marriage"), "marriage is a year-one door (#148)")
 	_ok(Todo.is_unlocked("atlas"), "atlas is a year-one door (#148)")
+	_ok(Todo.is_unlocked("territory"), "territory ledger is a year-one door (P1-UX-04)")
 	var st := UnlockSchedule.state("forge")
 	_ok(bool(st.locked) and str(st.reason).find("第一卷第 5 章") >= 0 and str(st.link) == "mainline", "forge lock reason %s" % str(st))
 	_ok(str(UnlockSchedule.state("rite").reason) != "" and str(UnlockSchedule.state("rite").link) == "", "rite lock reason")
@@ -96,8 +97,8 @@ func _hub() -> void:
 		hub.queue_free()
 		return
 	var labels: Array = hub.panel_button_labels()
-	# #148/#385 eleven doors (+岁课) + castle view; everything else is shown locked, never hidden
-	_ok(labels.size() <= 12, "year-one buttons %s" % str(labels))
+	# #148/#385 eleven doors (+岁课) + castle view + territory ledger (P1-UX-04); locked entries stay visible
+	_ok(labels.size() <= 13, "year-one buttons %s" % str(labels))
 	_ok(labels.size() >= 6, "buttons %s" % str(labels))
 	_ok(hub.find_child("Locked_forge", true, false) != null, "locked forge hidden")
 	_ok(hub.find_child("Locked_estates", true, false) != null, "locked estates hidden")
@@ -109,7 +110,7 @@ func _hub() -> void:
 		_ok(hub.find_child("LockSheet", true, false) != null and hub.find_child("LockGo", true, false) != null, "lock sheet / take-me-there missing")
 		_ok(CKNav.back() == "overlay", "back must close the lock sheet first")
 		await get_tree().process_frame
-	for sub in [Locale.t("btn_marriage"), Locale.t("btn_lineage"), Locale.t("btn_sui_year"), "酒馆", "花名册", "岁月", "设置"]:
+	for sub in [Locale.t("btn_marriage"), Locale.t("btn_lineage"), Locale.t("btn_sui_year"), Locale.t("ux_hub_territory_btn"), "酒馆", "花名册", "岁月", "设置"]:
 		var found := false
 		for lb in labels:
 			if str(lb).find(sub) >= 0:
