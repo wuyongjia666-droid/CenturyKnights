@@ -262,7 +262,7 @@ func _assert_layout(tag: String) -> String:
 	# Live inset must not re-bleed into the info column.
 	var overlap := shared.intersection(block)
 	if overlap.size.x > 1.0 and overlap.size.y > 1.0:
-		return "%s: BoardInset re-bleeds into info (%s ∩ %s = %s)" % [tag, shared, block, overlap]
+		return "%s: BoardInset re-bleeds into info (%s x %s = %s)" % [tag, shared, block, overlap]
 	var stage: Rect2 = _stage()
 	var parts := BattleBoardInset.from_parts(stage, 0.0, [block], edge)
 	# from_parts is pre-notch; for_host must be at least as tight on the left (notch).
