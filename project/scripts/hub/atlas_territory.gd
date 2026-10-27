@@ -250,7 +250,7 @@ static func _echo_strip(parent: Node, pos: Vector2, width: float) -> void:
 	var terr_rows: Array = []
 	for row in rows:
 		var k := str(row.get("kind", ""))
-		if k == "garrison" or k == "stockade":
+		if k == "garrison" or k == "stockade" or k == "sister":
 			terr_rows.append(row)
 	if terr_rows.is_empty():
 		return

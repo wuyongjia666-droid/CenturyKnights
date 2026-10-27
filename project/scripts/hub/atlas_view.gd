@@ -2854,6 +2854,14 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 					var hp4 := int(alert.get("hold_pct", -1))
 					var il4 := Locale.t("atlas_siege_intel") % hp4 if bool(alert.get("scouted", false)) and hp4 >= 0 else Locale.t("atlas_siege_intel_unknown")
 					bl4.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, garrison, pl4, il4]
+				# Territory fat: sister → month_echo.sister → EchoLine_sister on siege panel.
+				var echo_txt := str(CKEconomyState.month_echo_snapshot().get("sister", ""))
+				if echo_txt != "" and panel.get_node_or_null("EchoLine_sister") == null:
+					var echo_sis := UIKit.body_label(echo_txt, UIKit.OK, 12)
+					echo_sis.name = "EchoLine_sister"
+					echo_sis.position = Vector2(24, h - 96)
+					echo_sis.size = Vector2(452, 20)
+					panel.add_child(echo_sis)
 			_refresh_top()
 			_build_nodes())
 		panel.add_child(sis)
