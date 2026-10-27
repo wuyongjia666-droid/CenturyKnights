@@ -7,7 +7,7 @@ const Schema = preload("res://scripts/narrative/chapter_schema.gd")
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const HUB := "res://scenes/hub/castle_hub.tscn"
 const CHAPTERS := [
-	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs04_01", "cs04_02",
+	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs03_03", "cs04_01", "cs04_02",
 	"cs05_01", "cs05_02", "cs06_01", "cs06_02", "cs07_01", "cs07_02",
 	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]
@@ -62,7 +62,7 @@ func _beat_acceptance_all() -> String:
 		if str(data.get("return_scene", "")) != HUB:
 			return "%s return_scene" % cid
 		var idx := int(data.get("legacy_index", 0))
-		if idx < 401 or idx > 420:
+		if idx < 401 or idx > 430:
 			return "%s legacy_index %d not in season marker band" % [cid, idx]
 		# Int slot must NOT accept season markers (root-cause gate).
 		GameState.story.set_beat(idx, "should_not_stick")
