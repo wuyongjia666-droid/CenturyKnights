@@ -1504,11 +1504,22 @@ static func hub_requeue_siege_alert() -> String:
 		if m > best_m:
 			best_m = m
 			pick = str(id)
+	return hub_requeue_siege_alert_site(pick)
+
+
+## Territory ledger / deep-link: re-queue SiegeAlert for one owned threatened site.
+static func hub_requeue_siege_alert_site(id: String) -> String:
+	id = str(id)
+	if id == "" or not owned(id):
+		return ""
+	var th: Dictionary = state(id).threat if typeof(state(id).threat) == TYPE_DICTIONARY else {}
+	if th.is_empty():
+		return ""
+	var best_m := int(th.get("months", 0))
 	var phase := "imminent" if best_m >= 1 else "declared"
-	# Clear so mark_siege_alert always accepts the castle deep-link payload.
 	World.last_siege_alert = {}
-	_emit_siege_alert(pick, phase)
-	return pick
+	_emit_siege_alert(id, phase)
+	return id
 
 ## Push a SiegeAlertModal payload onto World (declared / imminent).
 static func _emit_siege_alert(id: String, phase: String) -> void:
