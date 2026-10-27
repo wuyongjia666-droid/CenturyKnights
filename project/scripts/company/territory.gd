@@ -975,6 +975,9 @@ static func _emit_neutral_contest(id: String) -> void:
 		"months": int(c.get("months", 0)),
 		"phase": "imminent" if int(c.get("months", 0)) >= 1 else "declared",
 	}
+	# New tug supersedes a stale settle modal for this site.
+	if str(World.last_contest_resolve.get("id", "")) == id:
+		World.last_contest_resolve = {}
 	World.mark_neutral_contest(payload)
 
 
