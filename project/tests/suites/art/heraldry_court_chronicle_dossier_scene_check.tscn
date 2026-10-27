@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://tests/suites/art/heraldry_court_chronicle_dossier_scene_check.gd" id="1"]
+[node name="HeraldryCourtChronicleDossierSceneCheck" type="Node"]
+script = ExtResource("1")
