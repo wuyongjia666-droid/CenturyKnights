@@ -619,20 +619,21 @@ static func open_cache(id: String) -> Dictionary:
 
 ## Under siege: haul the granary out before the raid. Prefer another owned stockade; else company food.
 ## Road spoilage: lose ~1 food per 2 travel-days (min 0). Clears cache on the threatened site.
-static func evacuate_cache(id: String) -> Dictionary:
+## Territory fat: gate readout for siege convoy evacuate (UI + E2E).
+static func evacuate_preview(id: String) -> Dictionary:
 	if not owned(id):
-		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours"), "reason": "owned"}
 	var st := state(id)
 	if not bool(st.stockade):
-		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade"), "reason": "stockade"}
 	if (st.threat as Dictionary).is_empty():
-		return {"ok": false, "msg": Locale.t("atlas_convoy_need_threat")}
+		return {"ok": false, "msg": Locale.t("atlas_convoy_need_threat"), "reason": "threat"}
 	var qty := maxi(0, int(st.get("cache_food", 0)))
 	if qty <= 0:
-		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id))}
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id)),
+			"reason": "empty"}
 	var from_name := str(site(id).get("name", id))
 	var from_anchor := str(site(id).get("anchor", ""))
-	# Destination: nearest other owned stockade (ignore empty-cache preference — any stockade).
 	var dest_id := ""
 	var dest_anchor := ""
 	var dest_name := ""
@@ -664,16 +665,39 @@ static func evacuate_cache(id: String) -> Dictionary:
 			days = dist
 	var spoilage := mini(qty - 1, int(days / 2)) if qty > 1 else 0
 	var delivered := qty - spoilage
+	var via := "stockade" if dest_id != "" else "company"
+	if via == "company":
+		dest_name = Locale.t("atlas_convoy_via_company")
+	return {
+		"ok": true, "qty": qty, "delivered": delivered, "spoilage": spoilage,
+		"from_name": from_name, "dest_id": dest_id, "dest_name": dest_name,
+		"dest_anchor": dest_anchor, "via": via, "days": days,
+	}
+
+
+static func evacuate_cache(id: String) -> Dictionary:
+	var prev: Dictionary = evacuate_preview(id)
+	if not bool(prev.get("ok", false)):
+		return prev
+	var qty := int(prev.get("qty", 0))
+	var delivered := int(prev.get("delivered", 0))
+	var spoilage := int(prev.get("spoilage", 0))
+	var dest_id := str(prev.get("dest_id", ""))
+	var dest_name := str(prev.get("dest_name", ""))
+	var dest_anchor := str(prev.get("dest_anchor", ""))
+	var via := str(prev.get("via", "company"))
+	var days := int(prev.get("days", 0))
+	var from_name := str(prev.get("from_name", site(id).get("name", id)))
+	var st := state(id)
 	st.cache_food = 0
 	_put(id, st)
-	var via := "company"
-	if dest_id != "":
+	if via == "stockade" and dest_id != "":
 		var dst := state(dest_id)
 		dst.cache_food = int(dst.get("cache_food", 0)) + delivered
 		_put(dest_id, dst)
-		via = "stockade"
 	else:
 		GameState.food += delivered
+		via = "company"
 	var msg := ""
 	if via == "stockade":
 		msg = Locale.t("atlas_convoy_ok_stockade") % [from_name, delivered, dest_name, spoilage]
@@ -692,10 +716,12 @@ static func evacuate_cache(id: String) -> Dictionary:
 		"via": via,
 		"days": days,
 	})
+	CKEconomyState.month_echo_note("convoy", Locale.t("terr_echo_convoy",
+		[from_name, dest_name, delivered, spoilage]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "qty": qty, "delivered": delivered, "spoilage": spoilage,
-		"dest_id": dest_id, "via": via, "msg": msg}
+		"dest_id": dest_id, "via": via, "msg": msg, "preview": prev}
 
 
 ## Under siege: spend stockade cache food to raise +1 garrison (no silver).
