@@ -9,7 +9,8 @@ extends RefCounted
 ## dialogue / save / battle-order / board / tavern-annex Field plates,
 ## infirmary / deploy / office Field arms,
 ## hourglass / castle-view / blood / market / skill / tavern / works / estates / annex Field strips,
-## shell / dialogue / roster / field-book / travel / camp / encounter Field strips via _cloth_beside,
+## shell / dialogue / roster / field-book / travel / camp / encounter / forge / shrine / affairs /
+## marriage / succession / duel / train / nation / rite / muster Field strips via _cloth_beside,
 ## gazette / yeartrace / purse / yearcard Field plates,
 ## atlas travel / camp / encounter Field strips,
 ## city / aftermath / nation / rite / muster / battle-hud / field-row Field plates,
@@ -103,7 +104,7 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 	return host
 
 
-## Deploy reserve chip: 团徽 + appointed reserve 族徽|旗徽 via _cloth_beside. Unset → 团徽 only.
+## Deploy reserve chip: 团徽 + appointed reserve 族徽|旗徽. Unset → 团徽 only.
 static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -117,7 +118,7 @@ static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shie
 		extra.name = "ReserveArms"
 		extra.set_meta("field_route", "reserve_focus")
 	_pair(host, shield, extra)
-	# Cloth plate beside the reserve pair — real reserve arms_kind.
+	# Cloth plate beside the reserve pair — Field ownership on 预备.
 	_cloth_beside(host, shield, "ReserveBanner", "reserve_banner", "lb_reserve_arms", banner)
 	host.set_meta("has_reserve", reserve_c != null)
 	return host
@@ -173,7 +174,7 @@ static func pin_forecast_arms(panel: Control, atk_char, atk_team: String, foe_na
 	panel.set_meta("forecast_has_foe", str(foe_nation) != "" and str(atk_team) == "player")
 
 
-## Post-action report header: 团徽 + optional 敌徽 via _cloth_beside.
+## Post-action report header: 团徽 + optional 敌徽.
 static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: String, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -185,7 +186,7 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
 		extra.set_meta("field_route", "report_foe")
 	_pair(host, shield, extra)
-	# Cloth plate beside the report pair — real report arms_kind.
+	# Cloth plate beside the report pair — Field ownership on 战报.
 	_cloth_beside(host, shield, "ReportBanner", "report_banner", "lb_report_arms", banner)
 	host.set_meta("has_foe", nid != "")
 	return host
@@ -228,7 +229,7 @@ static func attach_annex_row_arms(row: Control, kind: String, who, arms_sz: Vect
 
 
 ## Forge focus strip: 团徽 + selected smith 族徽|旗徽. No selection → 团徽 only.
-static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var w := shield.x
@@ -242,7 +243,7 @@ static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Ve
 		focus.set_meta("field_route", "forge_focus_arms")
 	_pair(host, shield, focus)
 	# Cloth plate beside the smith pair — Field ownership on the forge strip.
-	_cloth_beside(host, shield, "ForgeBanner", "forge_banner")
+	_cloth_beside(host, shield, "ForgeBanner", "forge_banner", "lb_forge_arms", banner)
 	host.set_meta("has_smith", smith != null)
 	return host
 
@@ -262,7 +263,7 @@ static func attach_forge_slot_arms(row: Control, c, arms_sz: Vector2 = Vector2(2
 
 
 ## Shrine HealCard strip: 团徽 + first hurt knight 族徽|旗徽. Empty hurt → 团徽 only.
-static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shield: Vector2 = Vector2(32, 40)) -> Control:
+static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shield: Vector2 = Vector2(32, 40), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var w := shield.x
@@ -276,12 +277,12 @@ static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shiel
 		focus.set_meta("field_route", "shrine_heal_focus")
 	_pair(host, shield, focus)
 	# Cloth plate beside the heal pair — Field ownership on the shrine strip.
-	_cloth_beside(host, shield, "ShrineBanner", "shrine_banner")
+	_cloth_beside(host, shield, "ShrineBanner", "shrine_banner", "lb_shrine_arms", banner)
 	host.set_meta("has_hurt", focus_hurt != null)
 	return host
 
 ## City 本城之事 overlay: 团徽 + 本城邦徽. Host AffairCrestStrip (not CityCrestStrip).
-static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	_retire(parent, "AffairCrestStrip")
@@ -304,7 +305,7 @@ static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2
 	host.set_meta("nation_id", nid)
 	host.set_meta("city_id", str(city_id))
 	# Cloth plate beside the affairs pair — Field ownership on 本城之事.
-	_cloth_beside(host, shield, "AffairsBanner", "affairs_banner")
+	_cloth_beside(host, shield, "AffairsBanner", "affairs_banner", "lb_affairs_arms", banner)
 	return host
 
 
@@ -466,7 +467,7 @@ static func _bind_rank_badge(c, badge: TextureRect, badge_sz: int) -> void:
 
 ## Marriage protocol strip: 团徽 + left (suitor) + right (candidate/spouse) 族徽|旗徽.
 ## Never marshalls/impales — three separate shields.
-static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var gap := 8.0
@@ -496,7 +497,7 @@ static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector
 		ra.position = Vector2(x, 0)
 		host.add_child(ra)
 	# Cloth plate beside the vow pair — castle-readable Field chrome on the marriage strip.
-	_cloth_beside(host, shield, "MarriageBanner", "marriage_banner")
+	_cloth_beside(host, shield, "MarriageBanner", "marriage_banner", "lb_marriage_arms", banner)
 	host.set_meta("has_left", left_c != null)
 	host.set_meta("has_right", right_c != null)
 	return host
@@ -517,7 +518,7 @@ static func attach_house_card_arms(parent: Control, c, plate: Rect2, arms_sz: Ve
 
 
 ## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip).
-static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var w := shield.x
@@ -531,13 +532,13 @@ static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield
 		focus.set_meta("field_route", "succession_heir")
 	_pair(host, shield, focus)
 	# Cloth plate beside the heir pair — Field ownership on the succession strip.
-	_cloth_beside(host, shield, "SuccessionBanner", "succession_banner")
+	_cloth_beside(host, shield, "SuccessionBanner", "succession_banner", "lb_succession_arms", banner)
 	host.set_meta("has_heir", heir != null)
 	return host
 
 
 ## Heir-trial duel strip: 团徽 + heir A + heir B 族徽|旗徽 (DuelCrestStrip). Missing side omitted.
-static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var gap := 8.0
@@ -567,14 +568,14 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 		ra.position = Vector2(x, 0)
 		host.add_child(ra)
 	# Cloth plate beside the trial pair — Field ownership on the duel strip.
-	_cloth_beside(host, shield, "DuelBanner", "duel_banner")
+	_cloth_beside(host, shield, "DuelBanner", "duel_banner", "lb_duel_arms", banner)
 	host.set_meta("has_left", left_c != null)
 	host.set_meta("has_right", right_c != null)
 	return host
 
 
 ## Banner school focus strip: 团徽 + selected pupil 族徽|旗徽. No pupil → 团徽 only.
-static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Vector2 = Vector2(40, 48), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var w := shield.x
@@ -588,7 +589,7 @@ static func place_train_focus_strip(parent: Node, pupil, at: Vector2, shield: Ve
 		focus.set_meta("field_route", "train_focus_arms")
 	_pair(host, shield, focus)
 	# Cloth plate beside the pupil pair — Field ownership on the train strip.
-	_cloth_beside(host, shield, "TrainBanner", "train_banner")
+	_cloth_beside(host, shield, "TrainBanner", "train_banner", "lb_train_arms", banner)
 	host.set_meta("has_pupil", pupil != null)
 	return host
 
@@ -1479,7 +1480,7 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	return host
 
 
-## Aftermath strip: 团徽 + optional foe (AftermathCrestStrip) via _cloth_beside.
+## Aftermath strip: 团徽 + optional foe (AftermathCrestStrip).
 static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -1502,14 +1503,14 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
-	# Cloth plate beside the aftermath pair — real aftermath arms_kind.
+	# Cloth plate beside the aftermath pair — Field ownership on 战后.
 	_cloth_beside(host, shield, "AftermathBanner", "aftermath_banner", "lb_aftermath_arms", banner)
 	parent.add_child(host)
 	return host
 
 
 ## Nation overview strip: 团徽 + nation arms (NationCrestStrip).
-static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var old := parent.get_node_or_null("NationCrestStrip")
@@ -1536,13 +1537,13 @@ static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
 	# Cloth plate beside the nation pair — Field ownership on 邦谱.
-	_cloth_beside(host, shield, "NationBanner", "nation_banner")
+	_cloth_beside(host, shield, "NationBanner", "nation_banner", "lb_nation_arms", banner)
 	parent.add_child(host)
 	return host
 
 
 ## Rite / 仪礼 strip: 团徽 + rite nation (RiteCrestStrip).
-static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var old := parent.get_node_or_null("RiteCrestStrip")
@@ -1570,13 +1571,13 @@ static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vect
 		host.size = Vector2(shield.x, shield.y)
 	host.set_meta("has_heir", heir != null)
 	# Cloth plate beside the rite pair — Field ownership on 继位礼.
-	_cloth_beside(host, shield, "RiteBanner", "rite_banner")
+	_cloth_beside(host, shield, "RiteBanner", "rite_banner", "lb_rite_arms", banner)
 	parent.add_child(host)
 	return host
 
 
 ## Muster / 点兵 strip: 团徽 + muster nation (MusterCrestStrip).
-static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48), banner: Vector2 = Vector2(24, 34)) -> Control:
 	var old := parent.get_node_or_null("MusterCrestStrip")
 	if old:
 		old.name = "_MusterCrestStripDying"
@@ -1601,7 +1602,7 @@ static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: 
 	else:
 		host.size = Vector2(shield.x, shield.y)
 	# Cloth plate beside the muster pair — Field ownership on 晋爵/点兵.
-	_cloth_beside(host, shield, "MusterBanner", "muster_banner")
+	_cloth_beside(host, shield, "MusterBanner", "muster_banner", "lb_muster_arms", banner)
 	parent.add_child(host)
 	return host
 

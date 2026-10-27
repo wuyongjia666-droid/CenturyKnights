@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry wave-6 E2E: forge focus strip, shrine heal strip, train focus
+## Fat heraldry E2E: forge focus strip, shrine heal strip, train focus
 ## strip — strip_company + cloth banner child field_route ownership —
 ## desk + mobile. Real scenes; no EmptyHost.
 
@@ -133,6 +133,8 @@ func _assert_forge(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/forge strip_company" % tag)
 		_ok(_route(strip.find_child("ForgeFocusArms", true, false), "forge_focus_arms"), "%s/forge forge_focus_arms" % tag)
 		_ok(_route(strip.find_child("ForgeBanner", true, false), "forge_banner"), "%s/forge forge_banner" % tag)
+		var fbn := strip.find_child("ForgeBanner", true, false)
+		_ok(fbn != null and str(fbn.get_meta("arms_kind", "")) == "lb_forge_arms", "%s/forge ForgeBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -150,6 +152,8 @@ func _assert_shrine(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/shrine strip_company" % tag)
 		_ok(_route(strip.find_child("HealFocusArms", true, false), "shrine_heal_focus"), "%s/shrine shrine_heal_focus" % tag)
 		_ok(_route(strip.find_child("ShrineBanner", true, false), "shrine_banner"), "%s/shrine shrine_banner" % tag)
+		var shbn := strip.find_child("ShrineBanner", true, false)
+		_ok(shbn != null and str(shbn.get_meta("arms_kind", "")) == "lb_shrine_arms", "%s/shrine ShrineBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -167,6 +171,8 @@ func _assert_train(tag: String) -> void:
 		_ok(_route(strip.find_child("CastleArms", true, false), "strip_company"), "%s/train strip_company" % tag)
 		_ok(_route(strip.find_child("TrainFocusArms", true, false), "train_focus_arms"), "%s/train train_focus_arms" % tag)
 		_ok(_route(strip.find_child("TrainBanner", true, false), "train_banner"), "%s/train train_banner" % tag)
+		var trbn := strip.find_child("TrainBanner", true, false)
+		_ok(trbn != null and str(trbn.get_meta("arms_kind", "")) == "lb_train_arms", "%s/train TrainBanner kind" % tag)
 	page.queue_free()
 	await _settle(2)
 
@@ -208,3 +214,10 @@ func _source_contracts() -> void:
 	for hub in hubs.keys():
 		var src := FileAccess.get_file_as_string(hubs[hub])
 		_ok(src.find("CKHeraldryField.") >= 0, "%s wires Field" % hub)
+	_ok(field.find('"lb_forge_arms"') >= 0, "field lb_forge_arms")
+	_ok(field.find('"lb_shrine_arms"') >= 0, "field lb_shrine_arms")
+	_ok(field.find('"lb_train_arms"') >= 0, "field lb_train_arms")
+	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
+	_ok(loc.find("lb_forge_arms,") >= 0, "locale lb_forge_arms")
+	_ok(loc.find("lb_shrine_arms,") >= 0, "locale lb_shrine_arms")
+	_ok(loc.find("lb_train_arms,") >= 0, "locale lb_train_arms")
