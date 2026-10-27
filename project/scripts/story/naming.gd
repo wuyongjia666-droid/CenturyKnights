@@ -95,6 +95,7 @@ const EMBLEM_KEYS := {
 	"reed": "ux_emblem_wave", "anvil": "ux_emblem_notch", "starbridge": "ux_emblem_spark",
 	"zephyr": "ux_emblem_leaf", "tower": "ux_emblem_bars", "bridge": "ux_emblem_bend",
 	"lozenge": "ux_emblem_leaf", "plume": "ux_emblem_bars",
+	"surname": "ux_emblem_surname",
 }
 const COLOR_KEYS := [
 	"ux_color_frost_cyan", "ux_color_mint", "ux_color_frost_silver", "ux_color_river", "ux_color_clear_frost", "ux_color_tide_ink",
@@ -135,6 +136,12 @@ func _current_spec() -> Dictionary:
 	var emblem_id: String = str(BannerSpec.EMBLEMS[_emblem_idx])
 	var nation := str(_nations[_nation_idx])
 	var charge_col := heart
+	var glyph := ""
+	if emblem_id == "surname":
+		glyph = CKHeraldry.surname_char(_surname.text if _surname else "")
+	var charge_row := {"id": emblem_id, "tincture": charge_col, "placement": "center"}
+	if glyph != "":
+		charge_row["glyph"] = glyph
 	return BannerSpec.normalize({
 		"schema": 2,
 		"field": division if division in BannerSpec.FIELDS else "solid",
@@ -150,7 +157,8 @@ func _current_spec() -> Dictionary:
 		"border_color": "#" + UIKit.ACCENT_HOVER.to_html(false),
 		"emblem": emblem_id,
 		"emblem_color": charge_col,
-		"charges": [{"id": emblem_id, "tincture": charge_col, "placement": "center"}],
+		"glyph_char": glyph,
+		"charges": [charge_row],
 		"nation": nation,
 		"shield_shape": str(CKHeraldry.nation_style(nation).get("shield", "heater")),
 	})
@@ -495,17 +503,26 @@ func _sync_layer_labels() -> void:
 		_border_label.text = Locale.t(BORDER_KEYS[_border_idx])
 	if _emblem_label:
 		var e: String = str(BannerSpec.EMBLEMS[_emblem_idx])
-		_emblem_label.text = Locale.t(str(EMBLEM_KEYS.get(e, "ux_emblem_ring")))
+		if e == "surname":
+			var g := CKHeraldry.surname_char(_surname.text if _surname else "")
+			var base := Locale.t("ux_emblem_surname")
+			_emblem_label.text = ("%s·%s" % [base, g]) if g != "" else base
+		else:
+			_emblem_label.text = Locale.t(str(EMBLEM_KEYS.get(e, "ux_emblem_ring")))
 	if _nation_label and _nations.size() > 0:
 		var st := CKHeraldry.nation_style(str(_nations[_nation_idx]))
 		_nation_label.text = str(st.get("zh", _nations[_nation_idx]))
 
 func _on_name_typed() -> void:
 	## Typing only needs the banner tag + raise-button state — not a full portrait rebuild.
+	## Surname emblem is the exception: glyph must recompose with the typed character.
 	var s := _surname.text.strip_edges() if _surname else ""
 	if _banner:
 		BannerName.attach(_banner, s)
-	_sync_start()
+	if str(BannerSpec.EMBLEMS[_emblem_idx]) == "surname":
+		_refresh_preview_art()
+	else:
+		_sync_start()
 
 func _refresh_preview_art() -> void:
 	_sync_layer_labels()
