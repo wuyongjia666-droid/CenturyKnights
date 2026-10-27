@@ -290,6 +290,8 @@ static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2
 		host.add_child(nat)
 	host.set_meta("nation_id", nid)
 	host.set_meta("city_id", str(city_id))
+	# Cloth plate beside the affairs pair — Field ownership on 本城之事.
+	_cloth_beside(host, shield, "AffairsBanner", "affairs_banner")
 	return host
 
 
@@ -1522,6 +1524,8 @@ static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vect
 	else:
 		host.size = Vector2(shield.x, shield.y)
 	host.set_meta("has_heir", heir != null)
+	# Cloth plate beside the rite pair — Field ownership on 继位礼.
+	_cloth_beside(host, shield, "RiteBanner", "rite_banner")
 	parent.add_child(host)
 	return host
 
@@ -1551,6 +1555,8 @@ static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: 
 		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
 	else:
 		host.size = Vector2(shield.x, shield.y)
+	# Cloth plate beside the muster pair — Field ownership on 晋爵/点兵.
+	_cloth_beside(host, shield, "MusterBanner", "muster_banner")
 	parent.add_child(host)
 	return host
 

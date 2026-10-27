@@ -54,6 +54,7 @@ func _assert_empty(page: Node, where: String) -> void:
 	if strip != null:
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s 团徽" % where)
 		_ok(strip.find_child("LeaderArms", true, false) == null, "%s no LeaderArms yet" % where)
+		_ok(strip.find_child("RiteBanner", true, false) != null, "%s empty keeps rite_banner" % where)
 
 func _assert_selected(page: Node, where: String, kid: CKCharacter) -> void:
 	var strip := page.find_child("RiteCrestStrip", true, false)
@@ -64,6 +65,10 @@ func _assert_selected(page: Node, where: String, kid: CKCharacter) -> void:
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
 		_ok(la != null, "%s LeaderArms" % where)
 		_ok(bool(strip.get_meta("has_heir", false)), "%s has_heir" % where)
+		_ok(str(ca.get_meta("field_route", "")) == "strip_company" if ca != null else false, "%s strip_company" % where)
+		_ok(str(la.get_meta("field_route", "")) == "rite_leader" if la != null else false, "%s rite_leader" % where)
+		var bn := strip.find_child("RiteBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "rite_banner", "%s rite_banner" % where)
 		if la != null and ca != null:
 			_ok(str(la.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s heir!=团徽" % where)
 	_ok(page.find_child("CastleArms", true, false) != null, "%s company header present" % where)
@@ -104,6 +109,8 @@ func _run_helpers() -> void:
 	_ok(strip != null and str(strip.get_meta("field_route", "")) == "rite_strip", "helper field_route")
 	_ok(strip.find_child("CastleArms", true, false) != null, "helper CastleArms")
 	_ok(strip.find_child("LeaderArms", true, false) != null, "helper LeaderArms")
+	_ok(strip.find_child("RiteBanner", true, false) != null, "helper RiteBanner")
 	var empty := CKHeraldryField.place_rite_crest_strip(host, null, Vector2(10, 80), Vector2(36, 44))
 	_ok(empty != null and empty.find_child("LeaderArms", true, false) == null, "helper empty no LeaderArms")
+	_ok(empty != null and empty.find_child("RiteBanner", true, false) != null, "helper empty keeps banner")
 	host.queue_free()
