@@ -226,22 +226,34 @@ func _place_major_strips(leader) -> void:
 
 	var mar := CKHeraldryField.place_marriage_crest_strip(root, leader, leader, Vector2(8, 80))
 	_ok(mar != null and str(mar.get_meta("field_route", "")) == "marriage_strip", "place marriage_strip")
+	var mco := mar.find_child("CastleArms", true, false) if mar != null else null
 	var ml := mar.find_child("LeftArms", true, false) if mar != null else null
 	var mr := mar.find_child("RightArms", true, false) if mar != null else null
+	var mbn := mar.find_child("MarriageBanner", true, false) if mar != null else null
+	_ok(mco != null and str(mco.get_meta("field_route", "")) == "strip_company", "place marriage strip_company")
 	_ok(ml != null and str(ml.get_meta("field_route", "")) == "marriage_left", "place marriage_left")
 	_ok(mr != null and str(mr.get_meta("field_route", "")) == "marriage_right", "place marriage_right")
+	_ok(mbn != null and str(mbn.get_meta("field_route", "")) == "marriage_banner", "place marriage_banner")
 
 	var succ := CKHeraldryField.place_succession_crest_strip(root, leader, Vector2(280, 80))
 	_ok(succ != null and str(succ.get_meta("field_route", "")) == "succession_strip", "place succession_strip")
+	var sco := succ.find_child("CastleArms", true, false) if succ != null else null
 	var sh := succ.find_child("LeaderArms", true, false) if succ != null else null
+	var sbn := succ.find_child("SuccessionBanner", true, false) if succ != null else null
+	_ok(sco != null and str(sco.get_meta("field_route", "")) == "strip_company", "place succession strip_company")
 	_ok(sh != null and str(sh.get_meta("field_route", "")) == "succession_heir", "place succession_heir")
+	_ok(sbn != null and str(sbn.get_meta("field_route", "")) == "succession_banner", "place succession_banner")
 
 	var duel := CKHeraldryField.place_duel_crest_strip(root, leader, leader, Vector2(420, 80))
 	_ok(duel != null and str(duel.get_meta("field_route", "")) == "duel_strip", "place duel_strip")
+	var dco := duel.find_child("CastleArms", true, false) if duel != null else null
 	var dl := duel.find_child("LeftArms", true, false) if duel != null else null
 	var dr := duel.find_child("RightArms", true, false) if duel != null else null
+	var dbn := duel.find_child("DuelBanner", true, false) if duel != null else null
+	_ok(dco != null and str(dco.get_meta("field_route", "")) == "strip_company", "place duel strip_company")
 	_ok(dl != null and str(dl.get_meta("field_route", "")) == "duel_left", "place duel_left")
 	_ok(dr != null and str(dr.get_meta("field_route", "")) == "duel_right", "place duel_right")
+	_ok(dbn != null and str(dbn.get_meta("field_route", "")) == "duel_banner", "place duel_banner")
 
 	var muster := CKHeraldryField.place_deploy_muster_strip(root, leader, Vector2(8, 160))
 	_ok(muster != null and str(muster.get_meta("field_route", "")) == "deploy_muster", "place deploy_muster")
@@ -549,11 +561,14 @@ func _source_contracts() -> void:
 		["marriage_strip", "MarriageCrestStrip"],
 		["marriage_left", "marriage_left"],
 		["marriage_right", "marriage_right"],
+		["marriage_banner", "MarriageBanner"],
 		["succession_strip", "SuccessionCrestStrip"],
 		["succession_heir", "succession_heir"],
+		["succession_banner", "SuccessionBanner"],
 		["duel_strip", "DuelCrestStrip"],
 		["duel_left", "duel_left"],
 		["duel_right", "duel_right"],
+		["duel_banner", "DuelBanner"],
 		["deploy_muster", "deploy_muster"],
 		["deploy_muster_leader", "deploy_muster_leader"],
 		["deploy_slot", "deploy_slot"],

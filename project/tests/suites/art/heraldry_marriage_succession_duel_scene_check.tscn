@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://tests/suites/art/heraldry_marriage_succession_duel_scene_check.gd" id="1"]
+[node name="HeraldryMarriageSuccessionDuelSceneCheck" type="Node"]
+script = ExtResource("1")
