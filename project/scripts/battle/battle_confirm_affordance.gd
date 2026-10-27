@@ -84,37 +84,10 @@ static func is_cancel_key(event: InputEvent) -> bool:
 	return false
 
 
-## Same readable inset as T-P15 BattleActionSettle.readable_inset.
-## Edge band and info blockers are honoured when a later slice stamped them.
+## Same readable inset as T-P15 BattleActionSettle — shared BoardInset.from_parts
+## (edge + blockers, no-rebleed cut). Live chips/settle still use for_host.
 static func readable_inset(stage: Rect2, blockers: Array, edge_band: float) -> Rect2:
-	var inset := BattleCombatFrame.play_inset(stage, 0.0, 0.0)
-	if edge_band > 1.0:
-		var shrunk := Rect2(
-			inset.position + Vector2(edge_band, edge_band),
-			inset.size - Vector2(edge_band, edge_band) * 2.0)
-		if shrunk.size.x >= 72.0 and shrunk.size.y >= 72.0:
-			inset = shrunk
-	for b in blockers:
-		if b is Rect2 and (b as Rect2).size.x > 1.0 and (b as Rect2).intersects(inset):
-			inset = _cut_blocker(inset, b)
-	return inset
-
-
-static func _cut_blocker(inset: Rect2, block: Rect2) -> Rect2:
-	var inter := inset.intersection(block)
-	if inter.size.x < 1.0 or inter.size.y < 1.0:
-		return inset
-	if inter.size.x <= inter.size.y and block.get_center().x >= inset.get_center().x:
-		var right := inter.position.x
-		return Rect2(inset.position, Vector2(maxf(72.0, right - inset.position.x), inset.size.y))
-	if inter.size.x <= inter.size.y:
-		var left := inter.end.x
-		return Rect2(Vector2(left, inset.position.y), Vector2(maxf(72.0, inset.end.x - left), inset.size.y))
-	if block.get_center().y < inset.get_center().y:
-		var top := inter.end.y
-		return Rect2(Vector2(inset.position.x, top), Vector2(inset.size.x, maxf(72.0, inset.end.y - top)))
-	var bot := inter.position.y
-	return Rect2(inset.position, Vector2(inset.size.x, maxf(72.0, bot - inset.position.y)))
+	return BattleBoardInset.from_parts(stage, 0.0, blockers, edge_band)
 
 
 ## Actor stays inside `inset`. `also` is framed with the actor only when that
@@ -158,7 +131,12 @@ static func _settle_already_owned(host, actor: Vector2i) -> bool:
 	var info = host.get_meta("m_action_settle")
 	if not (info is Dictionary):
 		return false
-	return (info as Dictionary).get("actor", Vector2i(-999, -999)) == actor
+	if (info as Dictionary).get("actor", Vector2i(-999, -999)) != actor:
+		return false
+	# T-P15 already owns the tween — still mirror so confirm E2E can read
+	# m_confirm_settle after attack commit / select churn.
+	host.set_meta("m_confirm_settle", info)
+	return true
 
 
 static func _hand_to_tp15(host, actor: Vector2i, also: Array) -> bool:
