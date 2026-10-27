@@ -16,6 +16,8 @@ const ROWS := [
 	{"cid": "cs03_03", "beat": "hourglass", "needle": "我到漏前。账事放下，再认月份。"},
 	{"cid": "cs04_01", "beat": "hourglass", "needle": "我进厅。训在胸，漏在眼，先站。"},
 	{"cid": "cs04_02", "beat": "hourglass", "needle": "我到漏前。契在袖，再看月份。"},
+	{"cid": "cs04_03", "beat": "hourglass", "needle": "我到漏前。帖在袖，再看月份。"},
+
 	{"cid": "cs05_01", "beat": "hourglass", "needle": "我进厅。空椅过了，漏还在。"},
 	{"cid": "cs05_02", "beat": "hourglass", "needle": "我到漏前。链收好，再认月份。"},
 	{"cid": "cs06_01", "beat": "hourglass", "needle": "我进厅。场沙不带上漏。"},
