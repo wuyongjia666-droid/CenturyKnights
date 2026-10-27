@@ -709,3 +709,6 @@ atlas_produce_echo_specialty_deliver,特产·%s上缴「%s」（+%d银 · 声望
 atlas_specialty_echo_head,特产月回读 // SPECIALTY ECHO,Specialty month echo
 forge_echo_craft,工坊·%s铸%s（-%d铁/-%d银）,Forge · %s forged %s (-%d iron / -%d silver)
 forge_echo_head,工坊月回读 // FORGE ECHO,Forge month echo
+terr_echo_garrison,驻军·%s升至%d级（-%d银）,Garrison · %s to rank %d (-%d silver)
+terr_echo_stockade,屯营·%s筑成（-%d银）,Stockade · %s raised (-%d silver)
+terr_echo_head,领地月回读 // TERRITORY ECHO,Territory month echo
