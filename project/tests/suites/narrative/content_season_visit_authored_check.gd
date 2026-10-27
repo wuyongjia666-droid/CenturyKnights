@@ -25,6 +25,7 @@ const VISIT_BEAT := {
 	"cs06_01": "hourglass",
 	"cs06_02": "hourglass",
 	"cs06_03": "hourglass",
+	"cs07_03": "hourglass",
 	"cs07_01": "hourglass",
 	"cs07_02": "hourglass",
 	"cs08_01": "hourglass",
@@ -52,6 +53,7 @@ const AFTER := {
 	"cs06_01": "bridge",
 	"cs06_02": "bridge",
 	"cs06_03": "bridge",
+	"cs07_03": "bridge",
 	"cs07_01": "bridge",
 	"cs07_02": "bridge",
 	"cs08_01": "bridge",
@@ -65,6 +67,7 @@ const AFTER := {
 const LIVE := [
 	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs03_03", "cs04_01", "cs04_02", "cs04_03",
 	"cs05_01", "cs05_02", "cs05_03", "cs06_01", "cs06_02", "cs06_03", "cs07_01", "cs07_02",
+	"cs07_03",
 	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]
 
