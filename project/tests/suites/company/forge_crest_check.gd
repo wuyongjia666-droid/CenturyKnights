@@ -72,7 +72,13 @@ func _assert_page(page: Node, where: String) -> void:
 		if ca != null and fa != null:
 			_ok(str(ca.get_meta("arms_core", "")) == ban, "%s strip company core" % where)
 			_ok(str(fa.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")) or str(fa.get_meta("arms_kind", "")) == "gen2_35", "%s focus != 团徽 or 旗徽" % where)
-		_ok(strip.get_child_count() == 2, "%s strip two shields, no marshalling" % where)
+		_ok(str(strip.get_meta("field_route", "")) == "forge_focus", "%s forge_focus route" % where)
+		_ok(str(ca.get_meta("field_route", "")) == "strip_company" if ca != null else false, "%s strip_company" % where)
+		_ok(str(fa.get_meta("field_route", "")) == "forge_focus_arms" if fa != null else false, "%s forge_focus_arms" % where)
+		var bn := strip.find_child("ForgeBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "forge_banner", "%s forge_banner" % where)
+		# Two shields + cloth plate (banner is not a third marshalling shield).
+		_ok(strip.get_child_count() == 3, "%s strip two shields + cloth, no marshalling" % where)
 		_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s strip ignores mouse" % where)
 	var slots: Array = []
 	_collect(page, "ForgeSlotArms", slots)
