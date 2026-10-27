@@ -1531,10 +1531,13 @@ static func on_battle(enc: Dictionary, win: bool) -> String:
 		"territory_defend":
 			if win:
 				var st := state(id)
+				var by_name := str(st.threat.get("name", ""))
 				st.threat = {}
 				_put(id, st)
 				World.add_city_rep(str(site(id).anchor), 3)
 				_log(Locale.t("terr_36") % site(id).name)
+				CKEconomyState.month_echo_note("defend", Locale.t("terr_echo_defend",
+					[str(site(id).name), by_name, int(st.garrison)]))
 				return Locale.t("terr_37") % site(id).name
 			var by := str(state(id).threat.get("by", NEUTRAL))
 			lose(id, by)
