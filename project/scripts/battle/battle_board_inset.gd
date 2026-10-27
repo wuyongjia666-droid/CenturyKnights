@@ -20,10 +20,27 @@ extends RefCounted
 ## follow; now refreshes before follow_cells too.
 ## AttackAim after_enter / AttackCycle _aim had the same stale m_info_block
 ## follow; now refreshes before follow_cells too (keeps forecast_band).
+## for_host itself now live-refreshes m_info_block from MobileSideCol
+## before cutting blockers, so select focus / follow_selected / wait
+## handoff / confirm chips cannot pass a stale side-col either.
 ## Blocker cut used to inflate a 72px floor past the info/notch edge (re-bleed);
 ## now matches ActionSettle's no-rebleed cut. Pure algebra suites call
 ## from_parts (same edge+blocker cuts, no host/notch) so ConfirmAffordance /
 ## ActionSettle.readable_inset share one source.
+
+
+## Rewrite host.m_info_block from the live MobileSideCol / SideCol rect.
+## No-op when host is null or no sized side col is present (algebra hosts).
+static func refresh_info_block(host) -> void:
+	if host == null:
+		return
+	var col := host.get_node_or_null("MobileSideCol") as Control
+	if col == null:
+		col = host.find_child("MobileSideCol", true, false) as Control
+	if col == null:
+		col = host.get_node_or_null("SideCol") as Control
+	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
+		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 
 static func for_host(host, reserve_top: float = -1.0) -> Rect2:
@@ -32,6 +49,7 @@ static func for_host(host, reserve_top: float = -1.0) -> Rect2:
 	var stage: Rect2 = BattlePick._stage_rect(host)
 	if stage.size.x < 8.0:
 		return Rect2()
+	refresh_info_block(host)
 	var top := reserve_top
 	if top < 0.0:
 		top = 0.0
