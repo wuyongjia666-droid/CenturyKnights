@@ -46,6 +46,15 @@ func _run() -> String:
 
 
 func _algebra() -> String:
+	# Split for gdlint max-returns.
+	var err := _algebra_inset()
+	if err != "":
+		return err
+	return _algebra_callers()
+
+
+## Split for gdlint max-returns.
+func _algebra_inset() -> String:
 	var path := "res://scripts/battle/battle_board_inset.gd"
 	var body := FileAccess.get_file_as_string(path)
 	if body.find("static func refresh_info_block") < 0:
@@ -73,6 +82,11 @@ func _algebra() -> String:
 		or body.find("EmptyHost") >= 0
 	):
 		return "%s dragged telegraph/EmptyHost residue" % path
+	return ""
+
+
+## Split for gdlint max-returns.
+func _algebra_callers() -> String:
 	# Select / wait handoff paths must still route through BoardInset.
 	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
 	if pick.find("BattleBoardInset.for_host") < 0:
