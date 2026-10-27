@@ -178,9 +178,9 @@ static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	return CKHeraldryField.place_shell_crest_strip(parent, at, shield, banner)
 
 
-## Save-slot / load-card row arms. Field owns the plate; crest_hex stays the slot crest.
-static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), crest_hex: String = "") -> TextureRect:
-	return CKHeraldryField.attach_save_row_arms(row, size, crest_hex)
+## Save-slot / load-card row arms. Field owns the plate; prefer banner_spec, crest_hex legacy.
+static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), crest_hex: String = "", banner_spec: Dictionary = {}) -> TextureRect:
+	return CKHeraldryField.attach_save_row_arms(row, size, crest_hex, banner_spec)
 
 ## Castle hub banner strip: 团徽 shield + cloth banner side by side under the top bar.
 static func place_castle_banner_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:

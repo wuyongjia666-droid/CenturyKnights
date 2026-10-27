@@ -422,7 +422,7 @@ func _build_nation_preset_strip(box: VBoxContainer) -> void:
 		var st := CKHeraldry.nation_style(str(nid))
 		btn.tooltip_text = Locale.t("ux_nation_preset_tip", [str(st.get("zh", nid))])
 		var ink_s := str(mark.get("ink", "")).strip_edges()
-		var ink := Color(ink_s) if ink_s != "" else Color(0.431, 0.831, 1.0)
+		var ink := Color(ink_s) if ink_s != "" else UIKit.ACCENT
 		btn.add_theme_color_override("font_color", ink)
 		btn.add_theme_color_override("font_hover_color", ink.lightened(0.15))
 		var captured := str(nid)

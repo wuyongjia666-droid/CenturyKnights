@@ -4,6 +4,8 @@ extends Node
 
 var _fails: Array = []
 
+const TEN_NATIONS := ["ashbanner", "shuoying", "qinghe", "lantern", "frostcrown", "emberold", "saltmarsh", "irongorge", "starriver", "southzephyr"]
+
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -55,16 +57,25 @@ func _open(path: String) -> Control:
 func _api_preset_ash() -> void:
 	var ash := CKHeraldry.tincture_hex("ash").to_lower()
 	var deep := CKHeraldry.tincture_hex("ash_deep").to_lower()
-	for nid in ["ashbanner", "qinghe", "starriver"]:
+	var cores: Dictionary = {}
+	for nid in TEN_NATIONS:
 		var p := CKHeraldry.company_preset_from_nation(nid)
 		_ok(str(p.get("nation", "")) == nid, "api nation=%s" % nid)
 		_ok(str(p.get("field_a", "")).to_lower() == ash, "api %s ash field" % nid)
 		_ok(str(p.get("field_b", "")).to_lower() == deep, "api %s ash_deep pair" % nid)
 		var eid := str(p.get("emblem", ""))
 		_ok(eid in BannerSpec.EMBLEMS, "api %s emblem in DIY slots (%s)" % [nid, eid])
+		var shape := str(p.get("shield_shape", ""))
+		_ok(shape != "", "api %s shield_shape set" % nid)
 		var a := CKHeraldry.company_preset_from_nation(nid)
 		var b := CKHeraldry.company_preset_from_nation(nid)
 		_ok(CKHeraldry.core_key(a) == CKHeraldry.core_key(b), "api %s deterministic" % nid)
+		cores[nid] = CKHeraldry.core_key(a)
+	# Neighbors in the list must not collapse (ten-nation visual lock).
+	for i in range(TEN_NATIONS.size() - 1):
+		var left := str(TEN_NATIONS[i])
+		var right := str(TEN_NATIONS[i + 1])
+		_ok(str(cores[left]) != str(cores[right]), "api %s != %s core" % [left, right])
 
 
 func _assert_surfaces(want: String, where: String) -> void:
@@ -74,7 +85,7 @@ func _assert_surfaces(want: String, where: String) -> void:
 	var hang := CKHeraldryField.place_castle_hang_banner(root, Vector2(8, 8), Vector2(56, 78))
 	_ok(hang != null, "%s hang placed" % where)
 	var cloth = hang.find_child("HangCloth", true, false) if hang else null
-	# Hang cloth uses banner_layers from live GameState — core via company_spec.
+	_ok(cloth != null and str(cloth.get_meta("arms_core", "")) == want, "%s HangCloth arms_core" % where)
 	var shell := CKHeraldryField.place_shell_crest_strip(root, Vector2(100, 8))
 	_ok(shell != null, "%s shell strip" % where)
 	var hdr := CKHeraldryField.place_company_header(root, Vector2(280, 8))
@@ -102,7 +113,9 @@ func _run_founding_apply_surfaces() -> void:
 	await _settle(6)
 	_ok(page.find_child("NationPresetStrip", true, false) != null, "founding NationPresetStrip")
 	_ok(page.find_child("NationPresetBtn", true, false) != null, "founding NationPresetBtn")
-	var nations := ["ashbanner", "qinghe", "starriver"]
+	for nid in TEN_NATIONS:
+		_ok(page.find_child("NationPreset_%s" % nid, true, false) != null, "founding chip %s" % nid)
+	var nations := ["ashbanner", "qinghe", "starriver", "emberold", "southzephyr"]
 	var cores: Dictionary = {}
 	for nid in nations:
 		_ok(page.has_method("_on_apply_nation_preset"), "founding apply API")
@@ -117,9 +130,11 @@ func _run_founding_apply_surfaces() -> void:
 		GameState.crest_color = str(page.call("_heart"))
 		UnitArt.clear_cache()
 		_assert_surfaces(core, "founding/%s" % nid)
-	# Three nations must not collapse to the same core (style lock still distinct).
+	# Applied nations must not collapse (style lock still distinct).
 	_ok(cores["ashbanner"] != cores["qinghe"], "ashbanner != qinghe core")
 	_ok(cores["qinghe"] != cores["starriver"], "qinghe != starriver core")
+	_ok(cores["starriver"] != cores["emberold"], "starriver != emberold core")
+	_ok(cores["emberold"] != cores["southzephyr"], "emberold != southzephyr core")
 	page.queue_free()
 	await _settle(2)
 
@@ -185,6 +200,8 @@ func _source_wiring() -> void:
 	_ok(naming.find("company_preset_from_nation") >= 0, "naming uses company_preset")
 	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
 	_ok(field.find("banner_spec: Dictionary") >= 0, "Field attach accepts banner_spec")
+	var chrome := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
+	_ok(chrome.find("banner_spec: Dictionary = {}") >= 0, "Chrome shim forwards banner_spec")
 	var slots := FileAccess.get_file_as_string("res://scripts/core/save_slots.gd")
 	_ok(slots.find("banner_spec") >= 0, "save_slots passes banner_spec")
 	var gs := FileAccess.get_file_as_string("res://autoload/game_state.gd")
