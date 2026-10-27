@@ -111,7 +111,7 @@ static func refresh_if_stamped(host) -> void:
 	# Drop the action stamp so apply recomputes against current for_host.
 	# Re-mirror m_confirm_settle after apply so a layout refresh mid-await
 	# cannot erase the confirm E2E stamp.
-	var keep_confirm: bool = host.has_meta("m_confirm_settle")
+	var keep_confirm: bool = bool(host.has_meta("m_confirm_settle"))
 	host.remove_meta("m_action_settle")
 	if keep_confirm:
 		host.remove_meta("m_confirm_settle")
