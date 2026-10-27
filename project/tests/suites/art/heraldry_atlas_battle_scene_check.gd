@@ -346,7 +346,10 @@ func _source_contracts() -> void:
 		"market_banner", "hourglass_banner", "blood_banner", "skill_banner",
 		"roster_banner", "gazette_nation", "strip_company",
 	]:
-		_ok(field.find('set_meta("field_route", "%s")' % route) >= 0, "field source route %s" % route)
+		# Cloth-migrated routes stamp via _cloth_beside arg; others still set_meta.
+		var lit := field.find('set_meta("field_route", "%s")' % route) >= 0
+		var arg := field.find('"%s"' % route) >= 0
+		_ok(lit or arg, "field source route %s" % route)
 	var hubs := {
 		"atlas_view": "res://scripts/hub/atlas_view.gd",
 		"city": "res://scripts/hub/city.gd",
