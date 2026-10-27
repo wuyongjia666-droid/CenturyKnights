@@ -185,3 +185,13 @@ E2E：`territory_hub_todo_threat_check` + mobile twin；`todo_due_check` 覆盖�
 
 E2E：`territory_threat_closed_loop_check` + mobile twin（城堡→围城→贿探→沙漏→自守落幕/守卫一整条）。
 
+## 19. 领地簿整链（Territory fat · P1-UX-04）
+
+城堡主页「领地簿」页：归旗属地一览，不是 chip 切片，也不是再拆一口 echo。
+
+1. **入口**：城堡舆图组 `territory`（`year_one` 与 atlas 同开）；场景 `territory_ledger.tscn`。
+2. **列表**：`owned_ids` → 月银 / 驻军 / 未附 / 屯营 / 威胁标签。
+3. **远程增派 / 屯营**：调用既有 `reinforce` / `build_stockade`（可远程，无需亲临锚点）。
+4. **告急围城**：行内按钮 → `hub_requeue_siege_alert_site(id)` → 跳舆图弹出 `SiegeAlertModal`（对齐 HubTodo J14，但按点指定）。
+5. **前往舆图**：`CKNav` params `site=` + `GameState` meta `atlas_territory_site` / `atlas_select`；`atlas_view` `_ready` 消费后 `_open_territory_site`。
+6. **E2E**：`territory_ledger_closed_loop_check` + `mobile_territory_ledger_closed_loop_check`。
