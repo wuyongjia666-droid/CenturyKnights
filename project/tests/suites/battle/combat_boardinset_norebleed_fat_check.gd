@@ -46,7 +46,10 @@ func _run() -> String:
 
 
 func _algebra() -> String:
-	var err := _algebra_sources()
+	var err := _algebra_sources_inset()
+	if err != "":
+		return err
+	err = _algebra_sources_readers()
 	if err != "":
 		return err
 	err = _algebra_no_rebleed()
@@ -58,7 +61,8 @@ func _algebra() -> String:
 	return _algebra_no_telegraph()
 
 
-func _algebra_sources() -> String:
+## Split for gdlint max-returns.
+func _algebra_sources_inset() -> String:
 	var inset := FileAccess.get_file_as_string("res://scripts/battle/battle_board_inset.gd")
 	if inset.find("static func from_parts") < 0:
 		return "BoardInset.from_parts missing"
@@ -72,11 +76,20 @@ func _algebra_sources() -> String:
 		return "BoardInset._cut_blocker still inflates 72px floor"
 	if cut_body.find("w < 8.0") < 0:
 		return "BoardInset._cut_blocker missing no-rebleed 8px floor"
+	if inset.find("clip_notch") < 0:
+		return "BoardInset must still clip_notch"
+	return ""
+
+
+## Split for gdlint max-returns.
+func _algebra_sources_readers() -> String:
 	var conf := FileAccess.get_file_as_string("res://scripts/battle/battle_confirm_affordance.gd")
 	if conf.find("BattleBoardInset.from_parts") < 0:
 		return "ConfirmAffordance.readable_inset must call from_parts"
 	if conf.find("static func _cut_blocker") >= 0:
 		return "ConfirmAffordance must drop private _cut_blocker"
+	if conf.find("BattleBoardInset.for_host") < 0:
+		return "confirm live chips/settle must still use for_host"
 	var settle := FileAccess.get_file_as_string("res://scripts/battle/battle_action_settle.gd")
 	if settle.find("BattleBoardInset.from_parts") < 0:
 		return "ActionSettle.readable_inset must call from_parts"
@@ -84,12 +97,8 @@ func _algebra_sources() -> String:
 		return "ActionSettle must drop private _cut_blocker"
 	if settle.find("static func readable_inset") < 0:
 		return "ActionSettle.readable_inset algebra helper missing"
-	if conf.find("BattleBoardInset.for_host") < 0:
-		return "confirm live chips/settle must still use for_host"
 	if settle.find("BattleBoardInset.for_host") < 0:
 		return "ActionSettle.apply must still use for_host"
-	if inset.find("clip_notch") < 0:
-		return "BoardInset must still clip_notch"
 	return ""
 
 
