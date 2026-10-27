@@ -122,9 +122,12 @@ func _assert_tavern(page: Node, where: String) -> void:
 	var strip := page.find_child("TavernCrestStrip", true, false)
 	_ok(_route(strip, "tavern_strip"), "%s tavern_strip" % where)
 	if strip != null:
-		_ok(strip.find_child("CastleArms", true, false) != null, "%s tavern CastleArms" % where)
+		var co := strip.find_child("CastleArms", true, false)
+		_ok(_route(co, "strip_company"), "%s tavern strip_company" % where)
 		var focus := strip.find_child("HireFocusArms", true, false)
 		_ok(_route(focus, "tavern_focus"), "%s tavern_focus" % where)
+		var bn := strip.find_child("TavernBanner", true, false)
+		_ok(_route(bn, "tavern_banner"), "%s tavern_banner" % where)
 	var hires: Array = []
 	_collect(page, "HireArms", hires)
 	_ok(hires.size() >= 1, "%s HireArms present" % where)
@@ -136,7 +139,8 @@ func _assert_castle_view(page: Node, where: String) -> void:
 	var strip := page.find_child("CastleViewCrestStrip", true, false)
 	_ok(_route(strip, "castle_view_strip"), "%s castle_view_strip" % where)
 	if strip != null:
-		_ok(strip.find_child("CastleArms", true, false) != null, "%s castle CastleArms" % where)
+		var co := strip.find_child("CastleArms", true, false)
+		_ok(_route(co, "strip_company"), "%s castle strip_company" % where)
 		var bn := strip.find_child("CastleViewBanner", true, false)
 		_ok(_route(bn, "castle_view_banner"), "%s castle_view_banner" % where)
 	var pan := page.find_child("PanoramaLineageStrip", true, false)
@@ -291,6 +295,8 @@ func _source_contracts() -> void:
 	for pair in [
 		["tavern_strip", "place_tavern_crest_strip"],
 		["tavern_focus", "HireFocusArms"],
+		["tavern_banner", "TavernBanner"],
+		["strip_company", "strip_company"],
 		["castle_view_strip", "place_castle_view_crest_strip"],
 		["castle_view_banner", "CastleViewBanner"],
 		["panorama_lineage", "place_panorama_lineage_strip"],
