@@ -210,9 +210,8 @@ static func _charge_frag(id: String, hex: String, cx: float, cy: float, size: fl
 ## Surname geometric glyph: TextServer contours (vector strokes), seal fallback if font missing.
 static func _surname_frag(hex: String, cx: float, cy: float, size: float, glyph: String) -> String:
 	var ch := CKHeraldry.surname_char(glyph)
-	if ch == "":
-		ch = "霜"
-	var glyphs := text_path(ch, 96)
+	# Empty glyph → procedural seal (seed 0); no CJK fallback literal (i18n ratchet).
+	var glyphs := text_path(ch, 96) if ch != "" else {"d": ""}
 	if str(glyphs.get("d", "")) != "":
 		var gw := maxf(1.0, float(glyphs.get("width", 96.0)))
 		var gk := size * 0.78 / gw
