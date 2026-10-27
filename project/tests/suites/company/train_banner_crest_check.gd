@@ -76,6 +76,10 @@ func _assert_page(page: Node, where: String) -> void:
 		if ca != null and fa != null:
 			_ok(str(ca.get_meta("arms_core", "")) != str(fa.get_meta("arms_core", "")), "%s 团徽!=瞳徽" % where)
 		_ok(bool(strip.get_meta("has_pupil", false)), "%s has_pupil" % where)
+		_ok(str(ca.get_meta("field_route", "")) == "strip_company" if ca != null else false, "%s strip_company" % where)
+		_ok(str(fa.get_meta("field_route", "")) == "train_focus_arms" if fa != null else false, "%s train_focus_arms" % where)
+		var bn := strip.find_child("TrainBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "train_banner", "%s train_banner" % where)
 	var rows: Array = []
 	_collect(page, "TrainRowArms", rows)
 	_ok(rows.size() >= 2, "%s TrainRowArms>=2 (pupil+tutor)" % where)

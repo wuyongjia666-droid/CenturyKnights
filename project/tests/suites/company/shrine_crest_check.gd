@@ -80,7 +80,13 @@ func _assert_heal_filled(page: Node, where: String) -> void:
 		_ok(str(ca.get_meta("arms_core", "")) == ban, "%s heal company core" % where)
 		_ok(str(fa.get_meta("arms_core", "")) == fam, "%s heal family core" % where)
 		_ok(str(fa.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s 族徽!=团徽" % where)
-	_ok(strip.get_child_count() == 2, "%s heal strip two shields" % where)
+	_ok(str(strip.get_meta("field_route", "")) == "shrine_heal", "%s shrine_heal route" % where)
+	_ok(str(ca.get_meta("field_route", "")) == "strip_company" if ca != null else false, "%s heal strip_company" % where)
+	_ok(str(fa.get_meta("field_route", "")) == "shrine_heal_focus" if fa != null else false, "%s shrine_heal_focus" % where)
+	var bn := strip.find_child("ShrineBanner", true, false)
+	_ok(bn != null and str(bn.get_meta("field_route", "")) == "shrine_banner", "%s shrine_banner" % where)
+	# Two shields + cloth plate (banner is not a third marshalling shield).
+	_ok(strip.get_child_count() == 3, "%s heal strip two shields + cloth" % where)
 	_ok(bool(strip.get_meta("has_hurt", false)), "%s has_hurt meta" % where)
 
 func _assert_heal_empty(page: Node, where: String) -> void:
@@ -91,6 +97,7 @@ func _assert_heal_empty(page: Node, where: String) -> void:
 		var strip: Node = strips[0]
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s empty 团徽" % where)
 		_ok(strip.find_child("HealFocusArms", true, false) == null, "%s empty has no HealFocusArms" % where)
+		_ok(strip.find_child("ShrineBanner", true, false) != null, "%s empty keeps shrine_banner" % where)
 		_ok(not bool(strip.get_meta("has_hurt", true)), "%s has_hurt false" % where)
 
 func _open() -> Control:
