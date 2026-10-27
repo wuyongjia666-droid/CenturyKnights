@@ -164,6 +164,25 @@ func _show_forecast(months: int) -> void:
 		_forecast.add_child(CKPageKit.text(Locale.t("lb_hg_quiet"), UIKit.TEXT_DIM, 14, 520))
 	for e in evs:
 		_forecast.add_child(_line(str(e.get("text", "")), UIKit.TEXT))
+	_paint_threat_pending(_forecast)
+
+
+## Territory closed-loop: pending siege threats on the forecast + deep-link to SiegeAlert.
+func _paint_threat_pending(host: VBoxContainer) -> void:
+	var ids: Array = CKTerritory.threatened_owned()
+	if ids.is_empty():
+		return
+	var warn := _line(Locale.t("lb_hg_threat_pending", [ids.size()]), UIKit.DANGER)
+	warn.name = "ThreatPending"
+	host.add_child(warn)
+	var btn := CKPageKit.button(Locale.t("lb_hg_to_siege"), true, 220)
+	btn.name = "ToSiegeThreat"
+	btn.pressed.connect(func():
+		CKTerritory.hub_requeue_siege_alert()
+		CKNav.go("res://scenes/hub/atlas_view.tscn")
+	)
+	host.add_child(btn)
+	UIFX.wire_button(btn)
 
 func _line(t: String, col: Color) -> Control:
 	var r := CKPageKit.row(col, 40)
