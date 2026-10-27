@@ -245,3 +245,9 @@
 - 各章首拍在 `_axl6` 后、离开该拍前加 `_knk1`–`_knk6` 门环一叩口头，全库去重；收束非旁白。
 - 验收：`content_season_knocker_knock_chain_check` — hub chip → 门环一叩针口头。
 - 不碰既有 `_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 门内应声口头加厚（answer-echo）
+
+- 各章首拍在 `_knk6` 后、离开该拍前加 `_ans1`–`_ans6` 门内应声口头，全库去重；收束非旁白。
+- 验收：`content_season_answer_echo_chain_check` — hub chip → 门内应声针口头。
+- 不碰既有 `_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
