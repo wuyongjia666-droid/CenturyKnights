@@ -100,6 +100,8 @@ func _audit_marry_pregnancy() -> String:
 		GameState.house_mods.erase("month_echo")
 		GameState.rng.seed = seed
 		GameState.silver = maxi(int(GameState.silver), 200)
+		## Roster×roster = 同袍; seed A4 bond so paced marry is about pregnancy, not gate.
+		CKFamilyState.note_company_bond(_father, _mother, CKFamilyState.INTERNAL_BOND_NEED)
 		wed = Lineage.marry(_father, _mother, 40, null, true)
 		if not bool(wed.get("ok", false)):
 			continue

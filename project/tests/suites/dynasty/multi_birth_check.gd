@@ -125,6 +125,7 @@ func _calendar_family() -> String:
 	CKFamilyState.set_fast_family(GameState, false)
 	var leader: CKCharacter = GameState.get_leader()
 	var bride := _person("bride_mb", "f" if leader.gender == "m" else "m", 21)
+	bride.in_roster = false  ## court post, not 同袍
 	GameState.characters[bride.id] = bride
 	if not Lineage.marry(leader, bride, 0, [], true).get("ok", false):
 		return "wedding refused"
