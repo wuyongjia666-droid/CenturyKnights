@@ -171,3 +171,17 @@ J14：领地受威胁只写日志，城堡不提醒、也没有带路。本刀�
 4. **清零**：威胁解除（截击/收买落幕/`_resolve_unanswered`）后 chip 自然消失。
 
 E2E：`territory_hub_todo_threat_check` + mobile twin；`todo_due_check` 覆盖无威胁不显示 / 有威胁可链。
+
+## 18. 属地威胁整链闭环（Territory fat · 禁止再拆 chip/echo/modal）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **威胁出现**：`start_threat` / 月结来犯 → 城堡 HubTodo `territory_threat`（severity=block）。
+2. **待办带路**：chip → `hub_requeue_siege_alert` → 舆图 `SiegeAlertModal`。
+3. **应战/贿探**：模态上截击/收买/斥候；收买·斥候写 `month_echo.bribe/scout` 并贴 `EchoLine_*`（威胁仍在，仅缓兵/探明）。
+4. **结算**：守卫得手写 `month_echo.defend`；逾期自守 `_resolve_unanswered` 弹 `ThreatResolveModal` 并写 `month_echo.threat_held` / `threat_lost`。
+5. **沙漏回读**：有 echo 时 Result 列 `EchoLine_*`；Forecast 在威胁未清时挂 `ThreatPending` + `ToSiegeThreat`（再深链围城告急）。
+6. **清零**：威胁字典清空后 chip 与 Forecast 条一起消失。
+
+E2E：`territory_threat_closed_loop_check` + mobile twin（城堡→围城→贿探→沙漏→自守落幕/守卫一整条）。
+
