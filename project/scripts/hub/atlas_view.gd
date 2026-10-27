@@ -2892,6 +2892,14 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 					var il2 := Locale.t("atlas_siege_intel") % hp2 if bool(alert.get("scouted", false)) and hp2 >= 0 else Locale.t("atlas_siege_intel_unknown")
 					var gar2 := int(alert.get("garrison", garrison))
 					bl2.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, gar2, pl2, il2]
+				# Territory fat: evacuate → month_echo.convoy → EchoLine_convoy on siege panel.
+				var echo_c := str(CKEconomyState.month_echo_snapshot().get("convoy", ""))
+				if echo_c != "" and panel.get_node_or_null("EchoLine_convoy") == null:
+					var echo_cv := UIKit.body_label(echo_c, UIKit.OK, 12)
+					echo_cv.name = "EchoLine_convoy"
+					echo_cv.position = Vector2(24, h - 96)
+					echo_cv.size = Vector2(452, 20)
+					panel.add_child(echo_cv)
 			_refresh_top()
 			_build_nodes())
 		panel.add_child(evac)
