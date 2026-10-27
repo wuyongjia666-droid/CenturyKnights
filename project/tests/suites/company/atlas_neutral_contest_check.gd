@@ -51,6 +51,7 @@ func _setup() -> void:
 	World.last_territory_month = {}
 	World.last_siege_alert = {}
 	World.last_neutral_contest = {}
+	World.last_contest_resolve = {}
 	CKTerritory.last_month_report = {}
 
 func _reset_site() -> void:
@@ -63,6 +64,7 @@ func _reset_site() -> void:
 	st.contest = {}
 	CKTerritory._put(SITE, st)
 	World.last_neutral_contest = {}
+	World.last_contest_resolve = {}
 
 func _force_factions() -> Array:
 	return [

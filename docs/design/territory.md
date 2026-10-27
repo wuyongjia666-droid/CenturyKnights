@@ -130,4 +130,14 @@ E2E：`territory_assault_seize_echo_check` + mobile twin。
 
 E2E：`territory_chain_attach_echo_check` + mobile twin。
 
+## 14. 拉锯落幕 ContestResolveModal（Territory fat）
+
+中立拉锯 `tick_neutral_contests` 落幕时写入 `World.last_contest_resolve`（最新一条），大地图弹出 `ContestResolveModal`——对齐围城 `SiegeLootModal` 的事后确认，而不是再加一条 `month_echo` 碎条。
+
+1. **得手**（`outcome=won`）：本团压力最高 → `capture(how=contest)`，正文月银/驻军。
+2. **旁落**（`outcome=lost`）：`rival:*` 得手，领地易主。
+3. **散场**（`outcome=miss`）：流寇/截击失败，点仍中立但民心动荡。
+4. **链路**：月报 / 围城辎重 OK 之后、`ContestTugModal` 之前检查；同点落幕时清掉未读 `last_neutral_contest`。
+
+E2E：`atlas_contest_resolve_check` + `mobile_atlas_contest_resolve_check`。
 
