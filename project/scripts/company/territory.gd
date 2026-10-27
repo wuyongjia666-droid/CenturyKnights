@@ -704,22 +704,36 @@ static func muster_cache_cost(_id: String = "") -> int:
 	return maxi(1, int(rule("muster_cache_cost", 4)))
 
 
-static func muster_from_cache(id: String) -> Dictionary:
+## Territory fat: gate readout for siege muster (UI + E2E).
+static func muster_preview(id: String) -> Dictionary:
 	if not owned(id):
-		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours"), "reason": "owned"}
 	var st := state(id)
 	if not bool(st.stockade):
-		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade"), "reason": "stockade"}
 	if (st.threat as Dictionary).is_empty():
-		return {"ok": false, "msg": Locale.t("atlas_muster_need_threat")}
+		return {"ok": false, "msg": Locale.t("atlas_muster_need_threat"), "reason": "threat"}
 	var cost := muster_cache_cost(id)
 	var cache := maxi(0, int(st.get("cache_food", 0)))
 	if cache < cost:
-		return {"ok": false, "msg": Locale.t("atlas_muster_need_food") % [cost, cache]}
+		return {"ok": false, "msg": Locale.t("atlas_muster_need_food") % [cost, cache],
+			"reason": "food", "cost": cost, "cache": cache}
 	var gmax := garrison_max(id)
 	var gar := int(st.garrison)
 	if gar >= gmax:
-		return {"ok": false, "msg": Locale.t("atlas_muster_full") % gmax}
+		return {"ok": false, "msg": Locale.t("atlas_muster_full") % gmax,
+			"reason": "full", "cost": cost, "cache": cache, "garrison": gar, "gmax": gmax}
+	return {"ok": true, "cost": cost, "cache": cache, "garrison": gar, "gmax": gmax}
+
+
+static func muster_from_cache(id: String) -> Dictionary:
+	var prev: Dictionary = muster_preview(id)
+	if not bool(prev.get("ok", false)):
+		return prev
+	var cost := int(prev.get("cost", muster_cache_cost(id)))
+	var st := state(id)
+	var cache := maxi(0, int(st.get("cache_food", 0)))
+	var gar := int(st.garrison)
 	st.cache_food = cache - cost
 	st.garrison = gar + 1
 	_put(id, st)
@@ -734,10 +748,11 @@ static func muster_from_cache(id: String) -> Dictionary:
 		"cache_left": int(st.cache_food),
 		"hold_pct": int(round(hold_chance(id) * 100.0)),
 	})
+	CKEconomyState.month_echo_note("muster", Locale.t("terr_echo_muster", [site_name, cost, int(st.garrison)]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "spent": cost, "garrison": int(st.garrison),
-		"cache_left": int(st.cache_food), "msg": msg}
+		"cache_left": int(st.cache_food), "msg": msg, "preview": prev}
 
 
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
