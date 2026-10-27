@@ -173,6 +173,10 @@ func _place_major_strips(leader) -> void:
 	_ok(tavern != null and str(tavern.get_meta("field_route", "")) == "tavern_strip", "place tavern_strip")
 	var tf := tavern.find_child("HireFocusArms", true, false) if tavern != null else null
 	_ok(tf != null and str(tf.get_meta("field_route", "")) == "tavern_focus", "place tavern_focus")
+	var tco := tavern.find_child("CastleArms", true, false) if tavern != null else null
+	_ok(tco != null and str(tco.get_meta("field_route", "")) == "strip_company", "tavern strip_company")
+	var tbn := tavern.find_child("TavernBanner", true, false) if tavern != null else null
+	_ok(tbn != null and str(tbn.get_meta("field_route", "")) == "tavern_banner", "place tavern_banner")
 
 	var hire := Control.new()
 	hire.name = "HirePlate"
@@ -195,6 +199,21 @@ func _place_major_strips(leader) -> void:
 	_ok(home != null and str(home.get_meta("field_route", "")) == "home_lineage", "place home_lineage")
 	var hl := home.find_child("HomeLeaderArms", true, false) if home != null else null
 	_ok(hl != null and str(hl.get_meta("field_route", "")) == "home_leader", "place home_leader")
+
+	var hub := CKHeraldryField.place_banner_plate(root, Vector2(640, 8), Vector2(40, 48), Vector2(26, 36))
+	_ok(hub != null and str(hub.get_meta("field_route", "")) == "banner_plate", "place banner_plate")
+	var hco := hub.find_child("CastleArms", true, false) if hub != null else null
+	_ok(hco != null and str(hco.get_meta("field_route", "")) == "strip_company", "hub strip_company")
+	var hbn := hub.find_child("CastleBanner", true, false) if hub != null else null
+	_ok(hbn != null and str(hbn.get_meta("field_route", "")) == "castle_hub_banner", "place castle_hub_banner")
+
+	var tok := Control.new()
+	tok.name = "PartyToken"
+	tok.size = Vector2(26, 26)
+	root.add_child(tok)
+	var ta_arms := CKHeraldryField.attach_party_token_arms(tok)
+	_ok(ta_arms != null and str(ta_arms.get_meta("field_route", "")) == "atlas_party", "place atlas_party")
+	_ok(str(tok.get_meta("field_route", "")) == "atlas_party_token", "place atlas_party_token")
 
 	var board := Control.new()
 	board.name = "BoardRow"
@@ -371,7 +390,12 @@ func _source_contracts() -> void:
 		["train_row", "TrainRowArms"],
 		["tavern_strip", "TavernCrestStrip"],
 		["tavern_focus", "HireFocusArms"],
+		["tavern_banner", "TavernBanner"],
 		["hire_plate", "HireArms"],
+		["castle_hub_banner", "CastleBanner"],
+		["banner_plate", "CastleBannerStrip"],
+		["atlas_party", "TokenArms"],
+		["atlas_party_token", "atlas_party_token"],
 		["castle_view_strip", "CastleViewCrestStrip"],
 		["castle_view_banner", "CastleViewBanner"],
 		["panorama_lineage", "PanoramaLineageStrip"],
