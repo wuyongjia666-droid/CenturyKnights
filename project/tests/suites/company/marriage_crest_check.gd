@@ -50,8 +50,13 @@ func _assert_strip(page: Node, where: String) -> void:
 	var la := strip.find_child("LeftArms", true, false)
 	var ra := strip.find_child("RightArms", true, false)
 	_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
+	_ok(ca != null and str(ca.get_meta("field_route", "")) == "strip_company", "%s strip_company" % where)
 	_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeftArms (suitor)" % where)
+	_ok(la != null and str(la.get_meta("field_route", "")) == "marriage_left", "%s marriage_left" % where)
 	_ok(ra != null and str(ra.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s RightArms (candidate)" % where)
+	_ok(ra != null and str(ra.get_meta("field_route", "")) == "marriage_right", "%s marriage_right" % where)
+	var bn := strip.find_child("MarriageBanner", true, false)
+	_ok(bn != null and str(bn.get_meta("field_route", "")) == "marriage_banner", "%s marriage_banner" % where)
 	if la != null and ca != null:
 		_ok(str(la.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s suitor!=团徽" % where)
 	if ra != null and la != null:
