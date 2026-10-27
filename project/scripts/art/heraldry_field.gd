@@ -8,7 +8,7 @@ extends RefCounted
 ## (pupil focus strip + row person arms), roster crest/row/hire plate,
 ## dialogue / save / battle-order / board / tavern-annex Field plates,
 ## infirmary / deploy / office Field arms,
-## hourglass / castle-view / blood / market Field strips,
+## hourglass / castle-view / blood / market / skill / tavern Field strips,
 ## gazette / yeartrace / purse / yearcard Field plates,
 ## atlas travel / camp / encounter Field strips,
 ## city / aftermath / nation / rite / muster / battle-hud / field-row Field plates,
@@ -96,14 +96,8 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 		focus.name = "HireFocusArms"
 		focus.set_meta("field_route", "tavern_focus")
 	_pair(host, shield, focus)
-	# Cloth plate beside the hire pair — castle-readable Field chrome on the tavern strip.
-	var bn := CKHeraldryChrome.make_company_banner(Vector2(maxf(18.0, shield.x * 0.7), maxf(24.0, shield.y * 0.85)))
-	bn.name = "TavernBanner"
-	bn.set_meta("field_route", "tavern_banner")
-	bn.tooltip_text = Locale.t("lb_castle_view_arms")
-	bn.position = Vector2(host.size.x + 8.0, (shield.y - bn.size.y) * 0.5)
-	host.add_child(bn)
-	host.size = Vector2(bn.position.x + bn.size.x, maxf(host.size.y, bn.size.y))
+	# Cloth plate beside the hire pair — real tavern arms_kind (no fake castle_view tip).
+	_cloth_beside(host, shield, "TavernBanner", "tavern_banner", "lb_tavern_arms")
 	host.set_meta("has_candidate", candidate != null)
 	return host
 
@@ -1168,7 +1162,7 @@ static func attach_blood_queue_arms(row: Control, c, arms_sz: Vector2 = Vector2(
 	return arms
 
 
-## Market desk strip: 团徽 + 市集旗布 (MarketCrestStrip). Distinct from CityCrestStrip.
+## Market desk strip: 团徽 + 市集旗布 (MarketCrestStrip) via _cloth_beside. Distinct from CityCrestStrip.
 static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -1176,20 +1170,14 @@ static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 
 	var host := Control.new()
 	host.name = "MarketCrestStrip"
 	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.size = Vector2(shield.x, shield.y)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.set_meta("field_route", "market_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
-	var bn := CKHeraldryChrome.make_company_banner(banner)
-	bn.name = "MarketBanner"
-	bn.tooltip_text = Locale.t("lb_market_arms")
-	bn.set_meta("arms_kind", "lb_market_arms")
-	bn.set_meta("field_route", "market_banner")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
+	_cloth_beside(host, shield, "MarketBanner", "market_banner", "lb_market_arms", banner)
 	parent.add_child(host)
 	return host
 
@@ -1754,7 +1742,7 @@ static func sync_battle_hud_crests(host) -> void:
 	else:
 		sync_battle_order_crests(host)
 
-## Skill tree header: 团徽 + skill banner cloth (SkillCrestStrip / SkillBanner).
+## Skill tree header: 团徽 + skill banner cloth (SkillCrestStrip / SkillBanner) via _cloth_beside.
 static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
@@ -1762,20 +1750,14 @@ static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	var host := Control.new()
 	host.name = "SkillCrestStrip"
 	host.position = at
-	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.size = Vector2(shield.x, shield.y)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.set_meta("field_route", "skill_strip")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
-	var bn := CKHeraldryChrome.make_company_banner(banner)
-	bn.name = "SkillBanner"
-	bn.tooltip_text = Locale.t("lb_skill_arms")
-	bn.set_meta("arms_kind", "lb_skill_arms")
-	bn.set_meta("field_route", "skill_banner")
-	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
-	host.add_child(bn)
+	_cloth_beside(host, shield, "SkillBanner", "skill_banner", "lb_skill_arms", banner)
 	parent.add_child(host)
 	return host
 

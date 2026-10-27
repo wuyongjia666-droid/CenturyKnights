@@ -84,6 +84,7 @@ func _assert_filled(page: Node, where: String) -> void:
 	# Pair shields + cloth TavernBanner — still separate plates, no marshalling.
 	var bn := strip.find_child("TavernBanner", true, false)
 	_ok(bn != null and str(bn.get_meta("field_route", "")) == "tavern_banner", "%s tavern_banner" % where)
+	_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_tavern_arms", "%s TavernBanner kind" % where)
 	_ok(strip.get_child_count() == 3, "%s strip is pair + banner, no marshalling" % where)
 	_ok(ca != null and fa != null and ca.get_parent() == strip and fa.get_parent() == strip, "%s pair stays direct children" % where)
 	_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s strip ignores mouse" % where)
@@ -119,6 +120,7 @@ func _assert_empty(page: Node, where: String) -> void:
 		_ok(strip.find_child("HireFocusArms", true, false) == null, "%s empty has no person arms" % where)
 		var ebn := strip.find_child("TavernBanner", true, false)
 		_ok(ebn != null and str(ebn.get_meta("field_route", "")) == "tavern_banner", "%s empty tavern_banner" % where)
+		_ok(ebn != null and str(ebn.get_meta("arms_kind", "")) == "lb_tavern_arms", "%s empty TavernBanner kind" % where)
 	_ok(page.find_child("EmptyHost", true, false) != null, "%s EmptyHost stays" % where)
 	_ok(page.find_child("ToRoster", true, false) != null, "%s ToRoster stays" % where)
 

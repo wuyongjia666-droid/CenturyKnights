@@ -11,6 +11,11 @@ extends RefCounted
 ## parked against the raw stage and could cover the notch lip or info column.
 ## Skill buff/heal soft-confirm follow used to reserve the forecast band even
 ## though no ForecastPanel is shown, shrinking the shared BoardInset for free.
+## Land/ghost strike follow used to call follow_cells on a stale
+## m_info_block (pre-layout side col), so figures could sit under the
+## info column; now refreshes the live MobileSideCol block first.
+## Danger focus settle (BattleDangerFeel.after_set) had the same stale
+## m_info_block follow; now refreshes before follow_cells too.
 ## Blocker cut used to inflate a 72px floor past the info/notch edge (re-bleed);
 ## now matches ActionSettle's no-rebleed cut. Pure algebra suites call
 ## from_parts (same edge+blocker cuts, no host/notch) so ConfirmAffordance /
