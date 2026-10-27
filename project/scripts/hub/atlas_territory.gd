@@ -248,9 +248,14 @@ static func run(kind: String, id: String) -> Dictionary:
 static func _echo_strip(parent: Node, pos: Vector2, width: float) -> void:
 	var rows := CKEconomyState.month_echo_lines()
 	var terr_rows: Array = []
+	var kinds := {
+		"garrison": true, "stockade": true, "sister": true, "muster": true, "convoy": true,
+		"contest": true, "reclaim": true, "defend": true, "assault": true, "chain": true,
+		"bribe": true, "scout": true,
+	}
 	for row in rows:
 		var k := str(row.get("kind", ""))
-		if k == "garrison" or k == "stockade" or k == "sister" or k == "muster" or k == "convoy" or k == "contest" or k == "reclaim" or k == "defend" or k == "assault" or k == "chain" or k == "bribe" or k == "scout":
+		if kinds.has(k):
 			terr_rows.append(row)
 	if terr_rows.is_empty():
 		return
