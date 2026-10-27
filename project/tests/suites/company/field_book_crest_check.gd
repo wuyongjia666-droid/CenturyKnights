@@ -8,6 +8,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await _run_desktop()
 	await _run_mobile()
+	_source_contracts()
 	if _fails.is_empty():
 		print("FIELD BOOK CREST PASS")
 		get_tree().quit(0)
@@ -96,3 +97,14 @@ func _run_mobile() -> void:
 	page.queue_free()
 	await _settle(2)
 	OS.set_environment("CK_FORCE_MOBILE", "")
+
+func _source_contracts() -> void:
+	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
+	_ok(field.find('_cloth_beside(host, shield, "FieldBanner"') >= 0, "field via _cloth_beside")
+	_ok(field.find('"lb_field_arms"') >= 0, "field lb_field_arms")
+	_ok(field.find('bn.name = "FieldBanner"') < 0, "field banner not manual")
+	var es := FileAccess.get_file_as_string("res://scripts/hub/estates.gd")
+	_ok(es.find("CKHeraldryField.place_field_crest_strip") >= 0
+			or es.find("CKHeraldryChrome.place_field_crest_strip") >= 0, "estates wires field strip")
+	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
+	_ok(loc.find("lb_field_arms,") >= 0, "locale lb_field_arms")
