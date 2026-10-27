@@ -41,7 +41,10 @@ func _assert_shell(host: Node, where: String) -> void:
 	if strip != null:
 		_ok(str(strip.get_meta("field_route", "")) == "shell_strip", "%s strip field_route" % where)
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s strip CastleArms" % where)
-		_ok(strip.find_child("CastleBanner", true, false) != null, "%s strip CastleBanner" % where)
+		var bn = strip.find_child("ShellBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_shell_arms", "%s ShellBanner" % where)
+		_ok(bn != null and str(bn.get_meta("field_route", "")) == "shell_banner", "%s shell_banner route" % where)
+		_ok(strip.get_child_count() == 2, "%s shell child_count=2" % where)
 	_ok(host.find_child("CastleArms", true, false) != null, "%s CastleArms header" % where)
 	var row = host.find_child("SlotRow_manual_0", true, false)
 	_ok(row != null, "%s SlotRow" % where)
