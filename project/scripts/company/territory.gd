@@ -810,10 +810,11 @@ static func call_sister_garrison(id: String) -> Dictionary:
 		"days": int(prev.get("days", 0)),
 		"hold_pct": int(round(hold_chance(id) * 100.0)),
 	})
+	CKEconomyState.month_echo_note("sister", Locale.t("terr_echo_sister", [from_name, to_name, int(st.garrison), int(src.garrison)]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "from_id": from_id, "garrison": int(st.garrison),
-		"from_garrison": int(src.garrison), "msg": msg}
+		"from_garrison": int(src.garrison), "msg": msg, "preview": prev}
 
 
 ## Chance a neutral site draws multi-faction tug-of-war this month.

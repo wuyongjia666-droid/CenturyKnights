@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/suites/mobile/mobile_territory_sister_relief_echo_check.gd" id="1"]
+
+[node name="MobileTerritorySisterReliefEchoCheck" type="Node"]
+script = ExtResource("1")
