@@ -207,3 +207,17 @@ E2E：`territory_threat_closed_loop_check` + mobile twin（城堡→围城→贿
 5. **回读**：属地月报条 `EchoLine_stockade_credit`（发）+ `EchoLine_stockade`（筑成）。
 
 E2E：`territory_stockade_credit_loop_check` + mobile twin。
+
+## 21. 失守反夺整链（Territory fat · 禁止再拆 chip/ledger/hourglass/echo）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **失守发令**：`lose` → `_post_reclaim` 在锚点告示栏贴「反夺」hunt；`pending_reclaim_ids` 扫描 board/active。
+2. **待办带路**：城堡 HubTodo `territory_reclaim`（severity=block, count=待反夺数）→ `prepare_nav` → `hub_focus_reclaim`（写 `atlas_select` / `atlas_territory_site`）→ 舆图。
+3. **领地簿**：顶栏 `TerritoryReclaimBanner` + `TerritoryReclaimGoto` → 同深链跳舆图。
+4. **沙漏 Forecast**：`ReclaimPending` + `ToReclaim` 深链舆图焦点。
+5. **交令得手**：`turn_in` / `_finish_reclaim` → `capture(how=reclaim)` → `month_echo.reclaim`；chip / Forecast / 簿条清零。
+6. **月回报**：`last_month_report.reclaims` 始终取 `pending_reclaim_ids()`（跨月仍可见）；TerritoryMonth `ReclaimLine` + `EchoLine_reclaim`。
+
+E2E：`territory_reclaim_closed_loop_check` + mobile twin；`todo_due_check` 覆盖无反夺不显示 / 有反夺可链。
+

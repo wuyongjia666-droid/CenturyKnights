@@ -25,13 +25,17 @@ const LINKS := {
 	"sui_ke": "res://scenes/hub/sui_yearcard.tscn",
 	"territory_threat": "res://scenes/hub/atlas_view.tscn",
 	"stockade_credit": "res://scenes/hub/territory_ledger.tscn",
+	"territory_reclaim": "res://scenes/hub/atlas_view.tscn",
 }
 
 
-## Before CKNav.go on a chip: re-queue siege alert so atlas shows SiegeAlertModal (J14).
+## Before CKNav.go on a chip: re-queue siege alert / focus reclaim atlas site.
 static func prepare_nav(item: Dictionary) -> void:
-	if str(item.get("category", "")) == "territory_threat":
+	var cat := str(item.get("category", ""))
+	if cat == "territory_threat":
 		CKTerritory.hub_requeue_siege_alert()
+	elif cat == "territory_reclaim":
+		CKTerritory.hub_focus_reclaim()
 
 static func link_for(item: Dictionary) -> String:
 	var link := str(item.get("link", ""))
@@ -74,6 +78,12 @@ static func snapshot() -> Array:
 	var credit_n := CKTerritory.stockade_credit_count()
 	if credit_n > 0:
 		rows.append(_row("stockade_credit", "military", Locale.t("ux_todo_stockade_credit"), credit_n))
+	# §21 lost→reclaim commission still open — castle chip deep-links atlas focus.
+	var reclaim_n := CKTerritory.pending_reclaim_ids().size()
+	if reclaim_n > 0:
+		var rrow := _row("territory_reclaim", "military", Locale.t("ux_todo_territory_reclaim"), reclaim_n)
+		rrow["severity"] = "block"
+		rows.append(rrow)
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)
