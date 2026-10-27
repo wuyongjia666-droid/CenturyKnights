@@ -99,6 +99,8 @@ func _report_annex_forge(leader) -> void:
 	_ok(report != null and str(report.get_meta("field_route", "")) == "report_strip", "report_strip route")
 	var rfoe := report.find_child("FoeArms", true, false) if report != null else null
 	_ok(rfoe != null and str(rfoe.get_meta("field_route", "")) == "report_foe", "report_foe route")
+	var rbn := report.find_child("ReportBanner", true, false) if report != null else null
+	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "report_banner", "report_banner route")
 	var annex := Control.new()
 	annex.name = "AnnexRow"
 	root.add_child(annex)
@@ -275,6 +277,8 @@ func _place_major_strips(leader) -> void:
 	_ok(reserve != null and str(reserve.get_meta("field_route", "")) == "reserve_strip", "place reserve_strip")
 	var rf := reserve.find_child("ReserveArms", true, false) if reserve != null else null
 	_ok(rf != null and str(rf.get_meta("field_route", "")) == "reserve_focus", "place reserve_focus")
+	var rsvbn := reserve.find_child("ReserveBanner", true, false) if reserve != null else null
+	_ok(rsvbn != null and str(rsvbn.get_meta("field_route", "")) == "reserve_banner", "place reserve_banner")
 
 	var trainf := CKHeraldryField.place_train_focus_strip(root, leader, Vector2(360, 160))
 	_ok(trainf != null and str(trainf.get_meta("field_route", "")) == "train_focus", "place train_focus")
@@ -332,6 +336,8 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(aft != null and str(aft.get_meta("field_route", "")) == "aftermath_strip", "aftermath_strip route")
 	var afoe := aft.find_child("FoeArms", true, false) if aft != null else null
 	_ok(afoe != null and str(afoe.get_meta("field_route", "")) == "aftermath_foe", "aftermath_foe")
+	var aftbn := aft.find_child("AftermathBanner", true, false) if aft != null else null
+	_ok(aftbn != null and str(aftbn.get_meta("field_route", "")) == "aftermath_banner", "aftermath_banner")
 
 	var city := CKHeraldryField.place_city_crest_strip(root, "ash_capital", Vector2(8, 80))
 	_ok(city != null and str(city.get_meta("field_route", "")) == "city_strip", "city_strip route")
@@ -575,6 +581,7 @@ func _source_contracts() -> void:
 		["report_row", "ReportRowArms"],
 		["report_strip", "ReportCrestStrip"],
 		["report_foe", "FoeArms"],
+		["report_banner", "ReportBanner"],
 		["annex_row", "AnnexRowArms"],
 		["forge_slot", "ForgeSlotArms"],
 		["forge_focus", "ForgeFocusStrip"],
@@ -615,6 +622,7 @@ func _source_contracts() -> void:
 		["deploy_slot", "deploy_slot"],
 		["reserve_strip", "reserve_strip"],
 		["reserve_focus", "reserve_focus"],
+		["reserve_banner", "ReserveBanner"],
 		["train_focus", "train_focus"],
 		["train_focus_arms", "train_focus_arms"],
 		["shrine_heal", "shrine_heal"],
@@ -631,6 +639,7 @@ func _source_contracts() -> void:
 		["encounter_banner", "encounter_banner"],
 		["aftermath_strip", "aftermath_strip"],
 		["aftermath_foe", "aftermath_foe"],
+		["aftermath_banner", "AftermathBanner"],
 		["city_strip", "city_strip"],
 		["city_nation", "city_nation"],
 		["city_banner", "city_banner"],
