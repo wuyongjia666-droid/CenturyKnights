@@ -520,9 +520,10 @@ func _run() -> void:
 	_ok(shell_strip != null and shell_strip.name == "ShellCrestStrip", "ShellCrestStrip missing")
 	if shell_strip != null:
 		var sca := shell_strip.find_child("CastleArms", true, false)
-		var scb := shell_strip.find_child("CastleBanner", true, false)
+		var scb := shell_strip.find_child("ShellBanner", true, false)
 		_ok(sca != null and str(sca.get_meta("arms_kind", "")) == "gen2_36", "shell strip 团徽")
-		_ok(scb != null and str(scb.get_meta("arms_kind", "")) == "gen2_36", "shell strip 旗徽")
+		_ok(scb != null and str(scb.get_meta("arms_kind", "")) == "lb_shell_arms", "shell strip 旗徽")
+		_ok(scb != null and str(scb.get_meta("field_route", "")) == "shell_banner", "shell strip banner route")
 		_ok(sca != null and str(sca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "shell arms_core")
 	var shell_row := HBoxContainer.new()
 	shell_host.add_child(shell_row)
