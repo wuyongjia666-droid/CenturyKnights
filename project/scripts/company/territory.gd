@@ -1481,6 +1481,33 @@ static func threatened_at(anchor: String) -> Array:
 			out.append(id)
 	return out
 
+## Owned sites currently under rival threat (castle HubTodo / J14).
+static func threatened_owned() -> Array:
+	var out: Array = []
+	for id in owned_ids():
+		if not (state(id).threat as Dictionary).is_empty():
+			out.append(id)
+	return out
+
+## Castle Todo chip deep-link: re-queue SiegeAlert for the most urgent threatened site.
+## Returns the site id queued, or "" if none.
+static func hub_requeue_siege_alert() -> String:
+	var ids := threatened_owned()
+	if ids.is_empty():
+		return ""
+	var pick := str(ids[0])
+	var best_m := -1
+	for id in ids:
+		var m := int(state(str(id)).threat.get("months", 0))
+		if m > best_m:
+			best_m = m
+			pick = str(id)
+	var phase := "imminent" if best_m >= 1 else "declared"
+	# Clear so mark_siege_alert always accepts the castle deep-link payload.
+	World.last_siege_alert = {}
+	_emit_siege_alert(pick, phase)
+	return pick
+
 ## Push a SiegeAlertModal payload onto World (declared / imminent).
 static func _emit_siege_alert(id: String, phase: String) -> void:
 	var s := site(id)
