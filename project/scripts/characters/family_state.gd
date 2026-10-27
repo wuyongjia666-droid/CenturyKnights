@@ -8,6 +8,10 @@ const COMPANIONS_PATH := "res://data/cast/companions_v92.json"
 ## 后招佣兵「再议」廷帖：每次 15 银，每月最多 2 次。主角团禁用再议。
 const COURT_REROLL_SILVER := 15
 const COURT_REROLL_MONTHLY_CAP := 2
+## marriage-all-cast A4: 同袍内婚聘礼低于外姓廷帖；相识门槛与 Bonds.C 同级。
+const COURT_BRIDE_PRICE := 40
+const INTERNAL_BRIDE_PRICE := 20
+const INTERNAL_BOND_NEED := 2
 
 static var _hero_cast_keys: Dictionary = {}
 static var _hero_cast_ready := false
@@ -250,6 +254,124 @@ static func marriage_suitors(host) -> Array:
 		return str(a.name) < str(b.name)
 	)
 	return out
+
+## 同袍内婚：双方都在花名册（非外姓廷帖）。
+static func is_internal_pair(suitor: CKCharacter, target: CKCharacter) -> bool:
+	if suitor == null or target == null:
+		return false
+	if str(suitor.id) == str(target.id):
+		return false
+	return bool(suitor.in_roster) and bool(target.in_roster)
+
+
+static func bride_price_for(suitor: CKCharacter, target: CKCharacter) -> int:
+	if is_internal_pair(suitor, target):
+		return INTERNAL_BRIDE_PRICE
+	return COURT_BRIDE_PRICE
+
+
+static func _company_bond_key(a_id: String, b_id: String) -> String:
+	if a_id < b_id:
+		return "%s|%s" % [a_id, b_id]
+	return "%s|%s" % [b_id, a_id]
+
+
+## 故事同伴走 Bonds；普通佣兵走 house_mods.company_bond（id 对）。
+static func company_bond_points(a: CKCharacter, b: CKCharacter) -> int:
+	if a == null or b == null:
+		return 0
+	var bp := Bonds.points(a, b)
+	if bp > 0:
+		return bp
+	var bag: Variant = GameState.house_mods.get("company_bond", {})
+	if typeof(bag) != TYPE_DICTIONARY:
+		return 0
+	return int(bag.get(_company_bond_key(str(a.id), str(b.id)), 0))
+
+
+static func note_company_bond(a: CKCharacter, b: CKCharacter, amount: int = 1) -> int:
+	if a == null or b == null or amount == 0:
+		return company_bond_points(a, b)
+	## Prefer story Bonds when both resolve to cast ids.
+	if Bonds.resolve(str(a.cast_key)) != "" and Bonds.resolve(str(b.cast_key)) != "":
+		Bonds.note_event(a, b, amount)
+		return company_bond_points(a, b)
+	if Bonds.resolve(str(a.name)) != "" and Bonds.resolve(str(b.name)) != "":
+		Bonds.note_event(a, b, amount)
+		return company_bond_points(a, b)
+	var bag: Variant = GameState.house_mods.get("company_bond", {})
+	if typeof(bag) != TYPE_DICTIONARY:
+		bag = {}
+	var key := _company_bond_key(str(a.id), str(b.id))
+	var next := maxi(0, int(bag.get(key, 0)) + amount)
+	bag[key] = next
+	GameState.house_mods["company_bond"] = bag
+	GameState.mark_dirty()
+	return next
+
+
+static func internal_bond_ok(a: CKCharacter, b: CKCharacter) -> bool:
+	if a == null or b == null:
+		return false
+	if Bonds.rank(a, b) != "":
+		return true
+	return company_bond_points(a, b) >= INTERNAL_BOND_NEED
+
+
+static func internal_marriage_targets(host, suitor: CKCharacter) -> Array:
+	var out: Array = []
+	if host == null or suitor == null:
+		return out
+	if not is_marriage_suitor(suitor) or str(suitor.spouse_id) != "":
+		return out
+	for c in host.characters.values():
+		if c == null or str(c.id) == str(suitor.id):
+			continue
+		if not bool(c.in_roster) or not c.alive or bool(c.retired):
+			continue
+		if int(c.age) < Calendar.ADULT_AGE:
+			continue
+		if str(c.spouse_id) != "":
+			continue
+		## A9 同性别盟约是 P2；默认异性。
+		if str(c.gender) == str(suitor.gender):
+			continue
+		out.append(c)
+	out.sort_custom(func(a, b):
+		return str(a.name) < str(b.name)
+	)
+	return out
+
+
+static func can_internal_propose(suitor: CKCharacter, target: CKCharacter) -> Dictionary:
+	if not is_internal_pair(suitor, target):
+		return {"ok": false, "msg": Locale.t("ux_internal_not_roster")}
+	if not suitor.alive or not target.alive:
+		return {"ok": false, "msg": Locale.t("ux_marry_party_gone")}
+	if int(suitor.age) < Calendar.ADULT_AGE or int(target.age) < Calendar.ADULT_AGE:
+		return {"ok": false, "msg": Locale.t("ux_marry_underage")}
+	if str(suitor.spouse_id) != "" or str(target.spouse_id) != "":
+		return {"ok": false, "msg": Locale.t("ux_marry_has_spouse")}
+	if str(suitor.gender) == str(target.gender):
+		return {"ok": false, "msg": Locale.t("ux_internal_same_sex")}
+	var pts := company_bond_points(suitor, target)
+	if Bonds.rank(suitor, target) == "" and pts < INTERNAL_BOND_NEED:
+		return {
+			"ok": false,
+			"msg": Locale.t("ux_internal_bond_short", [pts, INTERNAL_BOND_NEED]),
+			"bond": pts,
+			"need": INTERNAL_BOND_NEED,
+		}
+	var bar := CKBloodline.marriage_barrier(suitor, target, GameState.characters)
+	if bar != "":
+		return {"ok": false, "msg": bar}
+	return {
+		"ok": true,
+		"msg": Locale.t("ux_internal_ok"),
+		"bride_price": INTERNAL_BRIDE_PRICE,
+		"bond": maxi(pts, INTERNAL_BOND_NEED),
+	}
+
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
