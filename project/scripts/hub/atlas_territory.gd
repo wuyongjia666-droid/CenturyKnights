@@ -126,6 +126,7 @@ static func fill_modal(p: Panel, anchor: String, act: Callable) -> void:
 			b.pressed.connect(func(): act.call(k, id))
 			row.add_child(b)
 		y += 150.0
+	_echo_strip(p, Vector2(24, p.size.y - 78), 300.0)
 	var close := UIKit.ghost_button(Locale.t("terr_ui_close"), 140, 36)
 	close.name = "TerrClose"
 	close.position = Vector2(336, p.size.y - 52)
@@ -168,6 +169,7 @@ static func _fill_modal_mobile(p: Panel, anchor: String, act: Callable) -> void:
 			b.disabled = str(spec.why) != ""
 			b.tooltip_text = str(spec.why)
 			list.add_child(b)
+	_echo_strip(root, Vector2.ZERO, 0.0)
 	var close := MobilePage.button(Locale.t("terr_ui_close"), true, func(): act.call("close", ""))
 	close.name = "TerrClose"
 	root.add_child(close)
@@ -176,26 +178,29 @@ static func _fill_modal_mobile(p: Panel, anchor: String, act: Callable) -> void:
 
 static func modal_height(anchor: String) -> float:
 	if DeviceProfile.is_mobile():
-		# Phone modal is sized by atlas _modal_panel; give enough room for scroll + close.
-		return 520.0 + 40.0 * float(CKTerritory.sites_at(anchor).size())
-	return 150.0 + 150.0 * CKTerritory.sites_at(anchor).size()
+		# Phone modal is sized by atlas _modal_panel; give enough room for scroll + close + echo.
+		return 560.0 + 40.0 * float(CKTerritory.sites_at(anchor).size())
+	# Desktop: site rows + garrison/stockade month-echo strip.
+	return 200.0 + 150.0 * CKTerritory.sites_at(anchor).size()
 
 static func _actions(id: String) -> Array:
 	var out: Array = []
 	if CKTerritory.owned(id):
 		var st := CKTerritory.state(id)
+		var rprev: Dictionary = CKTerritory.reinforce_preview(id)
 		var why := ""
-		if int(st.garrison) >= CKTerritory.garrison_max(id):
+		if bool(rprev.get("full", false)):
 			why = Locale.t("terr_ui_full")
-		elif GameState.silver < CKTerritory.garrison_cost(id):
-			why = Locale.t("terr_ui_silver") % CKTerritory.garrison_cost(id)
-		out.append({"kind": "reinforce", "label": Locale.t("terr_ui_reinforce") % CKTerritory.garrison_cost(id), "why": why})
+		elif bool(rprev.get("short", false)):
+			why = Locale.t("terr_ui_silver") % int(rprev.get("cost", 0))
+		out.append({"kind": "reinforce", "label": Locale.t("terr_ui_reinforce") % int(rprev.get("cost", CKTerritory.garrison_cost(id))), "why": why})
+		var sprev: Dictionary = CKTerritory.stockade_preview(id)
 		var swhy := ""
-		if bool(st.stockade):
+		if bool(sprev.get("have", false)):
 			swhy = Locale.t("terr_st_have")
-		elif GameState.silver < CKTerritory.stockade_cost():
-			swhy = Locale.t("terr_ui_silver") % CKTerritory.stockade_cost()
-		out.append({"kind": "stockade", "label": Locale.t("terr_st_up") % CKTerritory.stockade_cost(), "why": swhy})
+		elif bool(sprev.get("short", false)):
+			swhy = Locale.t("terr_ui_silver") % int(sprev.get("cost", 0))
+		out.append({"kind": "stockade", "label": Locale.t("terr_st_up") % int(sprev.get("cost", CKTerritory.stockade_cost())), "why": swhy})
 		if not (st.threat as Dictionary).is_empty():
 			var dwhy := "" if World.pos == str(CKTerritory.site(id).anchor) else Locale.t("terr_ui_go")
 			out.append({"kind": "defend", "label": Locale.t("terr_ui_defend"), "why": dwhy})
@@ -238,3 +243,30 @@ static func run(kind: String, id: String) -> Dictionary:
 		"scout":
 			return CKTerritory.scout_threat(id)
 	return {"ok": false, "msg": ""}
+
+## Territory fat: month echo strip for garrison/stockade loop E2E (EchoLine_garrison / EchoLine_stockade).
+static func _echo_strip(parent: Node, pos: Vector2, width: float) -> void:
+	var rows := CKEconomyState.month_echo_lines()
+	var terr_rows: Array = []
+	for row in rows:
+		var k := str(row.get("kind", ""))
+		if k == "garrison" or k == "stockade":
+			terr_rows.append(row)
+	if terr_rows.is_empty():
+		return
+	var stacked := parent is BoxContainer or parent is ScrollContainer
+	var y := pos.y
+	var head := UIKit.mono(Locale.t("terr_echo_head"), 9, UIKit.ACCENT, false)
+	if not stacked:
+		head.position = pos
+	parent.add_child(head)
+	y += 16.0
+	for row in terr_rows:
+		var line := UIKit.body_label(str(row.get("text", "")), UIKit.OK, 12)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		if not stacked:
+			line.position = Vector2(pos.x, y)
+			line.size = Vector2(width, 20)
+		parent.add_child(line)
+		y += 18.0
+
