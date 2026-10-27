@@ -337,11 +337,15 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(city != null and str(city.get_meta("field_route", "")) == "city_strip", "city_strip route")
 	var cnat := city.find_child("CityNationArms", true, false) if city != null else null
 	_ok(cnat != null and str(cnat.get_meta("field_route", "")) == "city_nation", "city_nation")
+	var citybn := city.find_child("CityBanner", true, false) if city != null else null
+	_ok(citybn != null and str(citybn.get_meta("field_route", "")) == "city_banner", "city_banner")
 
 	var nat := CKHeraldryField.place_nation_crest_strip(root, "ashbanner", Vector2(200, 80))
 	_ok(nat != null and str(nat.get_meta("field_route", "")) == "nation_strip", "nation_strip route")
 	var nn := nat.find_child("CityNationArms", true, false) if nat != null else null
 	_ok(nn != null and str(nn.get_meta("field_route", "")) == "nation_arms", "nation_arms")
+	var natbn := nat.find_child("NationBanner", true, false) if nat != null else null
+	_ok(natbn != null and str(natbn.get_meta("field_route", "")) == "nation_banner", "nation_banner")
 
 	var affairs := CKHeraldryField.place_affairs_crest_strip(root, "ash_capital", Vector2(800, 80))
 	_ok(affairs != null and str(affairs.get_meta("field_route", "")) == "affairs_strip", "affairs_strip route")
@@ -408,6 +412,8 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(gco != null and str(gco.get_meta("field_route", "")) == "strip_company", "gazette strip_company")
 	var gnat := gaz.find_child("GazetteNationArms", true, false) if gaz != null else null
 	_ok(gnat != null and str(gnat.get_meta("field_route", "")) == "gazette_nation", "gazette_nation")
+	var gazbn := gaz.find_child("GazetteBanner", true, false) if gaz != null else null
+	_ok(gazbn != null and str(gazbn.get_meta("field_route", "")) == "gazette_banner", "gazette_banner")
 
 	# Blood / skill strip hosts already placed above — assert strip field_route + strip_company.
 	_ok(blood != null and str(blood.get_meta("field_route", "")) == "blood_strip", "blood_strip route")
@@ -627,7 +633,9 @@ func _source_contracts() -> void:
 		["aftermath_foe", "aftermath_foe"],
 		["city_strip", "city_strip"],
 		["city_nation", "city_nation"],
+		["city_banner", "city_banner"],
 		["nation_strip", "nation_strip"],
+		["nation_banner", "nation_banner"],
 		["nation_arms", "nation_arms"],
 		["rite_strip", "rite_strip"],
 		["rite_leader", "rite_leader"],
@@ -650,6 +658,7 @@ func _source_contracts() -> void:
 		["roster_banner", "roster_banner"],
 		["gazette_nation", "gazette_nation"],
 		["gazette_strip", "GazetteCrestStrip"],
+		["gazette_banner", "gazette_banner"],
 		["dialogue_banner", "dialogue_banner"],
 		["shell_banner", "shell_banner"],
 		["news_row", "GazetteNationArms"],
