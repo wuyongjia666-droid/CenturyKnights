@@ -185,6 +185,7 @@ func _place_major_strips(leader) -> void:
 	_ok(tco != null and str(tco.get_meta("field_route", "")) == "strip_company", "tavern strip_company")
 	var tbn := tavern.find_child("TavernBanner", true, false) if tavern != null else null
 	_ok(tbn != null and str(tbn.get_meta("field_route", "")) == "tavern_banner", "place tavern_banner")
+	_ok(tbn != null and str(tbn.get_meta("arms_kind", "")) == "lb_tavern_arms", "place tavern_banner kind")
 
 	var hire := Control.new()
 	hire.name = "HirePlate"
@@ -403,10 +404,12 @@ func _atlas_city_battle_strips(leader) -> void:
 	var market := CKHeraldryField.place_market_crest_strip(root, Vector2(520, 160))
 	var mbn := market.find_child("MarketBanner", true, false) if market != null else null
 	_ok(mbn != null and str(mbn.get_meta("field_route", "")) == "market_banner", "market_banner")
+	_ok(mbn != null and str(mbn.get_meta("arms_kind", "")) == "lb_market_arms", "market_banner kind")
 
 	var skill := CKHeraldryField.place_skill_crest_strip(root, Vector2(680, 160))
 	var sbn := skill.find_child("SkillBanner", true, false) if skill != null else null
 	_ok(sbn != null and str(sbn.get_meta("field_route", "")) == "skill_banner", "skill_banner")
+	_ok(sbn != null and str(sbn.get_meta("arms_kind", "")) == "lb_skill_arms", "skill_banner kind")
 
 	var roster := CKHeraldryField.place_roster_crest_strip(root, Vector2(840, 160))
 	var rbn := roster.find_child("RosterBanner", true, false) if roster != null else null
