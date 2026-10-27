@@ -109,3 +109,14 @@ E2E：`territory_reclaim_quest_echo_check` + mobile twin。
 3. **月回读**：`TerritoryMonthModal` 增 `DefendLine`（待守威胁）+ `EchoLine_defend`（得手）。
 
 E2E：`territory_defend_hold_echo_check` + mobile twin。
+
+## 12. 强攻得手与月回读（Territory fat）
+
+中立/对手领地在锚点发起 `territory_assault`，胜 → `capture(how=assault)`（民心未附 `unrest` 月数按规则）。
+
+1. **胜**：写入 `month_echo.assault`（locale `terr_echo_assault`：地名·月银·未附月数）。
+2. **败**：走遭遇败退（本刀不改）。
+3. **月回读**：`TerritoryMonthModal` 增 `UnrestLine`（民心未附待定）+ `EchoLine_assault`（得手）。
+
+E2E：`territory_assault_seize_echo_check` + mobile twin。
+
