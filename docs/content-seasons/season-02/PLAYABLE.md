@@ -224,3 +224,9 @@
 - 各章首拍在 `_gln6` 后、离开该拍前加 `_hst1`–`_hst6` 门槛半步口头，全库去重；收束非旁白。
 - 验收：`content_season_threshold_halfstep_chain_check` — hub chip → 门槛半步针口头。
 - 不碰既有 `_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 门闩一触口头加厚（latch-touch）
+
+- 各章首拍在 `_hst6` 后、离开该拍前加 `_blt1`–`_blt6` 门闩一触口头，全库去重；收束非旁白。
+- 验收：`content_season_latch_touch_chain_check` — hub chip → 门闩一触针口头。
+- 不碰既有 `_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
