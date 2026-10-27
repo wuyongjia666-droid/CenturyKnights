@@ -46,8 +46,12 @@ func _assert_page(page: Node, where: String) -> void:
 	_ok(bd != null, "%s BloodCrestStrip" % where)
 	if bd != null:
 		_ok(str(bd.get_meta("field_route", "")) == "blood_strip", "%s strip field_route" % where)
+		var bco = bd.find_child("CastleArms", true, false)
+		_ok(bco != null and str(bco.get_meta("field_route", "")) == "strip_company", "%s strip_company" % where)
 		var bn = bd.find_child("BloodBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_blood_arms", "%s BloodBanner" % where)
+		if bn != null:
+			_ok(str(bn.get_meta("field_route", "")) == "blood_banner", "%s BloodBanner field_route" % where)
 	var src := FileAccess.get_file_as_string("res://scripts/hub/blood_test.gd")
 	_ok(src.find("CKHeraldryField.place_blood_crest_strip") >= 0, "%s hub calls Field strip" % where)
 	_ok(src.find("CKHeraldryField.attach_blood_queue_arms") >= 0, "%s hub calls Field queue" % where)

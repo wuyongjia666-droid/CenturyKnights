@@ -2,7 +2,8 @@ extends Node
 ## Fat Field route coverage — attach_* + place_* child field_route live meta E2E
 ## for tavern/hire, castle view, board, genealogy wall, marriage/succession,
 ## deploy muster, atlas travel/camp/encounter/aftermath, city/nation/rite/muster,
-## battle HUD, field banner, hourglass/blood/market/skill/roster banners.
+## battle HUD, field banner, hourglass/blood/market/skill/roster banners,
+## plus court gazette / yearcard / yeartrace / purse / dossier / rival / title.
 ## Source vows.
 
 var _fails: Array = []
@@ -51,6 +52,7 @@ func _run() -> void:
 	await _wall_tree_house_train(leader)
 	await _place_major_strips(leader)
 	await _atlas_city_battle_strips(leader)
+	await _court_chronicle_dossier(leader)
 	_source_contracts()
 
 
@@ -354,9 +356,20 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "roster_banner", "roster_banner")
 
 	var gaz := CKHeraldryField.place_gazette_crest_strip(root, "ashbanner", Vector2(8, 240))
+	_ok(gaz != null and str(gaz.get_meta("field_route", "")) == "gazette_strip", "gazette_strip route")
+	var gco := gaz.find_child("CastleArms", true, false) if gaz != null else null
+	_ok(gco != null and str(gco.get_meta("field_route", "")) == "strip_company", "gazette strip_company")
 	var gnat := gaz.find_child("GazetteNationArms", true, false) if gaz != null else null
 	_ok(gnat != null and str(gnat.get_meta("field_route", "")) == "gazette_nation", "gazette_nation")
 
+	# Blood / skill strip hosts already placed above — assert strip field_route + strip_company.
+	_ok(blood != null and str(blood.get_meta("field_route", "")) == "blood_strip", "blood_strip route")
+	var bco := blood.find_child("CastleArms", true, false) if blood != null else null
+	_ok(bco != null and str(bco.get_meta("field_route", "")) == "strip_company", "blood strip_company")
+	_ok(skill != null and str(skill.get_meta("field_route", "")) == "skill_strip", "skill_strip route")
+	var sco := skill.find_child("CastleArms", true, false) if skill != null else null
+	_ok(sco != null and str(sco.get_meta("field_route", "")) == "strip_company", "skill strip_company")
+	_ok(roster != null and str(roster.get_meta("field_route", "")) == "roster_strip", "roster_strip route")
 
 	var dialogue := CKHeraldryField.place_dialogue_crest_strip(root, Vector2(200, 240))
 	var dbn := dialogue.find_child("DialogueBanner", true, false) if dialogue != null else null
@@ -365,6 +378,136 @@ func _atlas_city_battle_strips(leader) -> void:
 	var shell := CKHeraldryField.place_shell_crest_strip(root, Vector2(400, 240))
 	var sbn2 := shell.find_child("CastleBanner", true, false) if shell != null else null
 	_ok(sbn2 != null and str(sbn2.get_meta("field_route", "")) == "shell_banner", "shell_banner")
+
+	root.queue_free()
+	await _settle()
+
+
+
+func _court_chronicle_dossier(leader) -> void:
+	var root := Control.new()
+	root.name = "CourtChronicleHost"
+	root.size = Vector2(1280, 720)
+	add_child(root)
+
+	# News row 朝徽
+	var news_host := HBoxContainer.new()
+	news_host.name = "NewsRowHost"
+	root.add_child(news_host)
+	var news := CKHeraldryField.attach_news_row_arms(news_host, "ashbanner")
+	_ok(news != null and str(news.get_meta("field_route", "")) == "news_row", "news_row route")
+
+	# Yearcard row + arms
+	var yc_box := VBoxContainer.new()
+	yc_box.name = "YearCardBox"
+	yc_box.position = Vector2(8, 40)
+	root.add_child(yc_box)
+	var ya := CKHeraldryField.attach_yearcard_row_arms(yc_box, leader)
+	_ok(ya != null and str(ya.get_meta("field_route", "")) == "yearcard_arms", "yearcard_arms route")
+	var yhead := yc_box.find_child("YearArmsHead", true, false)
+	_ok(yhead != null and str(yhead.get_meta("field_route", "")) == "yearcard_row", "yearcard_row route")
+
+	# Yeartrace head + arms
+	var yt_panel := VBoxContainer.new()
+	yt_panel.name = "YeartracePanel"
+	yt_panel.position = Vector2(200, 40)
+	root.add_child(yt_panel)
+	CKHeraldryField.attach_yeartrace_arms(yt_panel, leader)
+	var yt_head := yt_panel.find_child("YeartraceArmsHead", true, false)
+	_ok(yt_head != null and str(yt_head.get_meta("field_route", "")) == "yeartrace", "yeartrace head route")
+	var yt_arms := yt_panel.find_child("YeartraceArms", true, false)
+	_ok(yt_arms != null and str(yt_arms.get_meta("field_route", "")) == "yeartrace_arms", "yeartrace_arms route")
+
+	# Purse plate + arms
+	var purse := CKHeraldryField.place_purse_plate(root, leader, 7)
+	_ok(purse != null and str(purse.get_meta("field_route", "")) == "purse_plate", "purse_plate route")
+	var pa := purse.find_child("PurseArms", true, false) if purse != null else null
+	_ok(pa != null and str(pa.get_meta("field_route", "")) == "purse_arms", "purse_arms route")
+
+	# Blood queue + skill person
+	var bq := HBoxContainer.new()
+	bq.name = "BloodQueueHost"
+	bq.position = Vector2(8, 160)
+	root.add_child(bq)
+	var bqa := CKHeraldryField.attach_blood_queue_arms(bq, leader)
+	_ok(bqa != null and str(bqa.get_meta("field_route", "")) == "blood_queue", "blood_queue route")
+
+	var sk_host := HBoxContainer.new()
+	sk_host.name = "SkillDetailHost"
+	sk_host.position = Vector2(200, 160)
+	root.add_child(sk_host)
+	var spa := CKHeraldryField.attach_skill_person_arms(sk_host, leader)
+	_ok(spa != null and str(spa.get_meta("field_route", "")) == "skill_person", "skill_person route")
+
+	# Dossier chip / badge / crest
+	var chip_host := HBoxContainer.new()
+	chip_host.name = "ChipHost"
+	chip_host.position = Vector2(400, 160)
+	root.add_child(chip_host)
+	var chip := CKHeraldryField.attach_dossier_chip_arms(chip_host, leader)
+	_ok(chip != null and str(chip.get_meta("field_route", "")) == "dossier_chip", "dossier_chip route")
+	var badge := CKHeraldryField.attach_dossier_chip_badge(chip_host, "baron")
+	_ok(badge != null and str(badge.get_meta("field_route", "")) == "dossier_chip_badge", "dossier_chip_badge route")
+	var crest := CKHeraldryField.attach_dossier_crest_banner(root, leader, Vector2(600, 40), Vector2(80, 110))
+	_ok(crest != null and str(crest.get_meta("field_route", "")) == "dossier_crest", "dossier_crest route")
+
+	# Rival / vow / title / lineage / codex / site / roster row / infirmary / office / deploy focus
+	var rival_host := Control.new()
+	rival_host.name = "RivalHost"
+	rival_host.position = Vector2(8, 240)
+	root.add_child(rival_host)
+	var rival_house := {"id": "suite_rival", "nation": "ashbanner", "name": "suite"}
+	var ra := CKHeraldryField.attach_rival_arms(rival_host, rival_house)
+	_ok(ra != null and str(ra.get_meta("field_route", "")) == "rival_arms", "rival_arms route")
+
+	var vow := CKHeraldryField.attach_vow_company_arms(root, Vector2(120, 240))
+	_ok(vow != null and str(vow.get_meta("field_route", "")) == "marriage_vow", "marriage_vow route")
+
+	var tl := CKHeraldryField.attach_title_leader_arms(root, leader, Vector2(200, 240))
+	_ok(tl != null and str(tl.get_meta("field_route", "")) == "title_leader", "title_leader route")
+	var lb := CKHeraldryField.attach_ladder_badge(root, "baron")
+	_ok(lb != null and str(lb.get_meta("field_route", "")) == "title_ladder_badge", "title_ladder_badge route")
+
+	var li_host := Control.new()
+	li_host.name = "LineageInfoHost"
+	li_host.position = Vector2(280, 240)
+	root.add_child(li_host)
+	var lia := CKHeraldryField.attach_lineage_info_arms(li_host, leader)
+	_ok(lia != null and str(lia.get_meta("field_route", "")) == "lineage_info", "lineage_info route")
+	var lrb := CKHeraldryField.attach_lineage_rank_badge(li_host, "baron")
+	_ok(lrb != null and str(lrb.get_meta("field_route", "")) == "lineage_rank_badge", "lineage_rank_badge route")
+
+	var codex := CKHeraldryField.attach_codex_rail_arms(root, "ashbanner", Vector2(400, 240))
+	_ok(codex != null and str(codex.get_meta("field_route", "")) == "codex_rail", "codex_rail route")
+	var site := CKHeraldryField.attach_site_company_banner(root, Vector2(460, 240))
+	_ok(site != null and str(site.get_meta("field_route", "")) == "site_banner", "site_banner route")
+
+	var row := HBoxContainer.new()
+	row.name = "RosterRowHost"
+	row.position = Vector2(8, 320)
+	root.add_child(row)
+	var rra := CKHeraldryField.attach_roster_row_arms(row, leader)
+	_ok(rra != null and str(rra.get_meta("field_route", "")) == "roster_row", "roster_row route")
+
+	var inf := HBoxContainer.new()
+	inf.name = "InfirmaryHost"
+	inf.position = Vector2(120, 320)
+	root.add_child(inf)
+	var iha := CKHeraldryField.attach_infirmary_heal_arms(inf, leader)
+	_ok(iha != null and str(iha.get_meta("field_route", "")) == "infirmary_heal", "infirmary_heal route")
+
+	var off := HBoxContainer.new()
+	off.name = "OfficeHost"
+	off.position = Vector2(240, 320)
+	root.add_child(off)
+	var ofa := CKHeraldryField.attach_office_field_arms(off, leader)
+	_ok(ofa != null and str(ofa.get_meta("field_route", "")) == "office_field", "office_field route")
+
+	var df := CKHeraldryField.attach_deploy_focus_arms(root, leader, Vector2(360, 320))
+	_ok(df != null and str(df.get_meta("field_route", "")) == "deploy_focus", "deploy_focus route")
+
+	var hdr := CKHeraldryField.place_company_header(root, Vector2(520, 320))
+	_ok(hdr != null and str(hdr.get_meta("field_route", "")) == "company_header", "company_header route")
 
 	root.queue_free()
 	await _settle()
@@ -448,8 +591,37 @@ func _source_contracts() -> void:
 		["skill_banner", "skill_banner"],
 		["roster_banner", "roster_banner"],
 		["gazette_nation", "gazette_nation"],
+		["gazette_strip", "GazetteCrestStrip"],
 		["dialogue_banner", "dialogue_banner"],
 		["shell_banner", "shell_banner"],
+		["news_row", "GazetteNationArms"],
+		["yearcard_row", "YearArmsHead"],
+		["yearcard_arms", "YearArms"],
+		["yeartrace", "YeartraceArmsHead"],
+		["yeartrace_arms", "YeartraceArms"],
+		["purse_plate", "PursePlate"],
+		["purse_arms", "PurseArms"],
+		["blood_strip", "BloodCrestStrip"],
+		["blood_queue", "BloodQueueArms"],
+		["skill_strip", "SkillCrestStrip"],
+		["skill_person", "SkillPersonArms"],
+		["roster_strip", "RosterCrestStrip"],
+		["roster_row", "RosterRowArms"],
+		["dossier_chip", "ChipArms"],
+		["dossier_chip_badge", "ChipBadge"],
+		["dossier_crest", "CrestTexture"],
+		["rival_arms", "RivalArms"],
+		["marriage_vow", "VowCompanyArms"],
+		["title_leader", "LeaderArms"],
+		["title_ladder_badge", "LadderBadge"],
+		["lineage_info", "PersonArms"],
+		["lineage_rank_badge", "RankBadge"],
+		["codex_rail", "CodexRailArms"],
+		["site_banner", "SiteBanner"],
+		["infirmary_heal", "InnHealArms"],
+		["office_field", "FieldRowArms"],
+		["deploy_focus", "FocusArms"],
+		["company_header", "CastleArms"],
 	]:
 		var route: String = pair[0]
 		var lit := field.find('set_meta("field_route", "%s")' % route) >= 0
