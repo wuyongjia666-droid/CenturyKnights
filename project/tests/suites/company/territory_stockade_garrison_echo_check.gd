@@ -228,62 +228,63 @@ func _ui_desktop() -> String:
 
 	if page.has_method("_open_territory"):
 		page.call("_open_territory", anchor)
+	var err := await _ui_reinforce_echo(page, anchor)
+	if err == "":
+		err = await _ui_stockade_echo(page, anchor)
+	page.queue_free()
+	await get_tree().process_frame
+	return err
+
+
+## Split for gdlint max-returns.
+func _ui_reinforce_echo(page: Control, anchor: String) -> String:
 	var modal: Control = await _wait_terr_modal(page, anchor)
 	if modal == null:
-		page.queue_free()
 		return "TerritoryModal missing"
 	var rf := modal.find_child("Terr_reinforce_%s" % SITE, true, false) as Button
 	if rf == null or rf.disabled:
-		page.queue_free()
 		return "Terr_reinforce missing/disabled"
 	var gar0 := int(CKTerritory.state(SITE).garrison)
 	rf.pressed.emit()
 	for _k in 6:
 		await get_tree().process_frame
 	if int(CKTerritory.state(SITE).garrison) != gar0 + 1:
-		page.queue_free()
 		return "UI reinforce garrison not +1"
 	if str(CKEconomyState.month_echo_snapshot().get("garrison", "")) == "":
-		page.queue_free()
 		return "UI missing month_echo.garrison"
-	# modal re-opens after act; EchoLine should show
 	modal = await _wait_terr_modal(page, anchor)
 	if modal == null:
-		page.queue_free()
 		return "TerritoryModal missing after reinforce"
 	var eg := modal.find_child("EchoLine_garrison", true, false) as Label
 	if eg == null:
-		page.queue_free()
 		return "EchoLine_garrison missing"
-	var g_txt := eg.text
+	print("ui reinforce echo ok g=%s" % eg.text)
+	return ""
+
+
+## Split for gdlint max-returns.
+func _ui_stockade_echo(page: Control, anchor: String) -> String:
+	var modal: Control = await _wait_terr_modal(page, anchor)
+	if modal == null:
+		return "TerritoryModal missing before stockade"
 	var sk := modal.find_child("Terr_stockade_%s" % SITE, true, false) as Button
 	if sk == null or sk.disabled:
-		page.queue_free()
 		return "Terr_stockade missing/disabled"
 	sk.pressed.emit()
 	for _m in 6:
 		await get_tree().process_frame
 	if not bool(CKTerritory.state(SITE).stockade):
-		page.queue_free()
 		return "UI stockade not built"
 	if str(CKEconomyState.month_echo_snapshot().get("stockade", "")) == "":
-		page.queue_free()
 		return "UI missing month_echo.stockade"
 	modal = await _wait_terr_modal(page, anchor)
 	if modal == null:
-		page.queue_free()
 		return "TerritoryModal missing after stockade"
 	var es := modal.find_child("EchoLine_stockade", true, false) as Label
 	if es == null:
-		page.queue_free()
 		return "EchoLine_stockade missing"
-	var s_txt := es.text
-	# have-gate: stockade button disabled after build
 	sk = modal.find_child("Terr_stockade_%s" % SITE, true, false) as Button
 	if sk == null or not sk.disabled:
-		page.queue_free()
 		return "Terr_stockade should disable after have"
-	print("ui desktop reinforce+stockade+echo ok g=%s s=%s" % [g_txt, s_txt])
-	page.queue_free()
-	await get_tree().process_frame
+	print("ui stockade echo ok s=%s" % es.text)
 	return ""
