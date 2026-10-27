@@ -201,11 +201,19 @@ func _focus_tile(fk: String, current: bool, hid: String) -> Button:
 
 
 func _place_estates_crests() -> void:
-	## Estates chrome: 团徽 header + castle banner strip.
+	## Estates chrome: 团徽 header + castle banner + EstatesCrestStrip cloth.
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
-	CKHeraldryField.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
-	CKHeraldryField.place_banner_plate(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+	var at_y := 8.0 if not mob else 4.0
+	for n in ["CastleArms", "CastleBannerStrip", "EstatesCrestStrip"]:
+		var oldn := get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	CKHeraldryField.place_company_header(self, Vector2(1180, at_y), hdr)
+	CKHeraldryField.place_banner_plate(self, Vector2(1120, at_y), hdr, Vector2(28, 38))
+	var eat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 220.0), at_y)
+	CKHeraldryField.place_estates_crest_strip(self, eat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
