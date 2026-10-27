@@ -104,7 +104,8 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 	return host
 
 
-## Deploy reserve chip: 团徽 + appointed reserve 族徽|旗徽. Unset → 团徽 only.static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+## Deploy reserve chip: 团徽 + appointed reserve 族徽|旗徽. Unset → 团徽 only.
+static func place_reserve_crest_strip(parent: Node, reserve_c, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var w := shield.x
@@ -117,7 +118,8 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 		extra.name = "ReserveArms"
 		extra.set_meta("field_route", "reserve_focus")
 	_pair(host, shield, extra)
-	# Cloth plate beside the reserve pair — Field ownership on 预备.	_cloth_beside(host, shield, "ReserveBanner", "reserve_banner", "lb_reserve_arms", banner)
+	# Cloth plate beside the reserve pair — Field ownership on 预备.
+	_cloth_beside(host, shield, "ReserveBanner", "reserve_banner", "lb_reserve_arms", banner)
 	host.set_meta("has_reserve", reserve_c != null)
 	return host
 
@@ -172,7 +174,8 @@ static func pin_forecast_arms(panel: Control, atk_char, atk_team: String, foe_na
 	panel.set_meta("forecast_has_foe", str(foe_nation) != "" and str(atk_team) == "player")
 
 
-## Post-action report header: 团徽 + optional 敌徽.static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: String, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+## Post-action report header: 团徽 + optional 敌徽.
+static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: String, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	var nid := str(foe_nation)
@@ -1476,7 +1479,8 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	return host
 
 
-## Aftermath strip: 团徽 + optional foe (AftermathCrestStrip).static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+## Aftermath strip: 团徽 + optional foe (AftermathCrestStrip).
+static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
 		return null
 	_retire(parent, "AftermathCrestStrip")
