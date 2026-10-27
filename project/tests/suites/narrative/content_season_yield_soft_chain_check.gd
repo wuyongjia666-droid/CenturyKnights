@@ -18,6 +18,8 @@ const ROWS := [
 	{"cid": "cs03_03", "beat": "lab", "needle": "门扇微让。工账外的秤，我先不迈。"},
 	{"cid": "cs04_01", "beat": "preach", "needle": "门扇微让。家训外的步，我先不迈出。"},
 	{"cid": "cs04_02", "beat": "back", "needle": "门扇微让。训阴外的契，我先不迈。"},
+	{"cid": "cs04_03", "beat": "hall", "needle": "门扇微让。训堂外的帖，我先不迈。"},
+
 	{"cid": "cs05_01", "beat": "court", "needle": "门扇微让。空椅外的旗，我先不迈出。"},
 	{"cid": "cs05_02", "beat": "reread", "needle": "门扇微让。回读外的环，我先不迈。"},
 	{"cid": "cs06_01", "beat": "yard", "needle": "门扇微让。校场外的沙，我先不迈出。"},
