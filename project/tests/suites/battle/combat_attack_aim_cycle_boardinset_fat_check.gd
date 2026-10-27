@@ -58,8 +58,8 @@ func _algebra() -> String:
 
 func _algebra_one(path: String, is_aim: bool) -> String:
 	var body := FileAccess.get_file_as_string(path)
-	if body.find("_refresh_info_block") < 0:
-		return "%s missing _refresh_info_block" % path
+	if body.find("BattleBoardInset.refresh_info_block") < 0:
+		return "%s missing BattleBoardInset.refresh_info_block" % path
 	if body.find("m_info_block") < 0 or body.find("follow_cells") < 0:
 		return "%s missing m_info_block refresh or follow_cells" % path
 	# Attack keep forecast_band when ForecastPanel is up (unlike skill refresh).
@@ -71,7 +71,7 @@ func _algebra_one(path: String, is_aim: bool) -> String:
 		if enter_i < 0:
 			return "%s missing after_enter" % path
 		var enter_body := body.substr(enter_i, 1200)
-		var ref_i := enter_body.find("_refresh_info_block(host)")
+		var ref_i := enter_body.find("BattleBoardInset.refresh_info_block(host)")
 		var fol_i := enter_body.find("follow_cells(host, cells,")
 		if ref_i < 0 or fol_i < 0 or ref_i > fol_i:
 			return "%s after_enter must refresh before follow_cells" % path
@@ -80,14 +80,14 @@ func _algebra_one(path: String, is_aim: bool) -> String:
 		if empty_i < 0:
 			return "%s after_enter missing empty path" % path
 		var empty_slice := enter_body.substr(empty_i, 280)
-		if empty_slice.find("_refresh_info_block(host)") < 0:
+		if empty_slice.find("BattleBoardInset.refresh_info_block(host)") < 0:
 			return "%s empty after_enter must refresh before follow" % path
 	else:
 		var aim_i := body.find("static func _aim")
 		if aim_i < 0:
 			return "%s missing _aim" % path
 		var aim_body := body.substr(aim_i, 700)
-		var ref_i := aim_body.find("_refresh_info_block(host)")
+		var ref_i := aim_body.find("BattleBoardInset.refresh_info_block(host)")
 		var fol_i := aim_body.find("follow_cells(")
 		if ref_i < 0 or fol_i < 0 or ref_i > fol_i:
 			return "%s _aim must refresh m_info_block before follow_cells" % path

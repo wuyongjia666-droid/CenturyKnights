@@ -89,7 +89,7 @@ static func after_enter(host) -> void:
 	if idxs.is_empty():
 		clear(host)
 		# Still settle on the attacker so the player sees the empty range.
-		_refresh_info_block(host)
+		BattleBoardInset.refresh_info_block(host)
 		BattleCombatFrame.follow_cells(host, [stand], 0.0)
 		host.set_meta(META, {"stand": stand, "foes": [], "nearest": -1, "msec": Time.get_ticks_msec()})
 		return
@@ -100,7 +100,7 @@ static func after_enter(host) -> void:
 	# Refresh live info column so BoardInset cuts the same chrome as
 	# ActionSettle / land-ghost / danger / skill refresh (stale m_info_block
 	# left figures under the side col).
-	_refresh_info_block(host)
+	BattleBoardInset.refresh_info_block(host)
 	var applied := BattleCombatFrame.follow_cells(host, cells, BattleCombatFrame.forecast_band(DeviceProfile.is_mobile()))
 	var foes: Array[Vector2i] = []
 	for i in idxs:
@@ -115,18 +115,6 @@ static func after_enter(host) -> void:
 	if host.overlay:
 		host.overlay.queue_redraw()
 
-
-
-static func _refresh_info_block(host) -> void:
-	if host == null:
-		return
-	var col := host.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		col = host.find_child("MobileSideCol", true, false) as Control
-	if col == null:
-		col = host.get_node_or_null("SideCol") as Control
-	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
-		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
 
 static func draw(host, overlay) -> void:

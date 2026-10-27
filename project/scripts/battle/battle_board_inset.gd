@@ -23,6 +23,8 @@ extends RefCounted
 ## for_host itself now live-refreshes m_info_block from MobileSideCol
 ## before cutting blockers, so select focus / follow_selected / wait
 ## handoff / confirm chips cannot pass a stale side-col either.
+## Land/ghost/danger/skill/attack callers now share refresh_info_block
+## (no private _refresh_info_block copies left).
 ## Blocker cut used to inflate a 72px floor past the info/notch edge (re-bleed);
 ## now matches ActionSettle's no-rebleed cut. Pure algebra suites call
 ## from_parts (same edge+blocker cuts, no host/notch) so ConfirmAffordance /
