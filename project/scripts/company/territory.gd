@@ -1024,13 +1024,35 @@ static func tick_neutral_contests(force_resolve: bool = false) -> Array:
 				CKEconomyState.month_echo_note("contest", Locale.t("terr_echo_contest_miss",
 					[str(site(id).name), wname, ys]))
 			_log(Locale.t("atlas_contest_resolved") % [site(id).name, wname])
+			var company_won := wid == "company" and owned(id)
+			var outcome := "won" if company_won else ("lost" if wid.begins_with("rival:") else "miss")
+			if wid == "company" and not company_won:
+				outcome = "miss"
+			var srow := site(id)
+			var anchor := str(srow.get("anchor", ""))
 			resolved.append({
 				"id": id,
-				"name": str(site(id).name),
+				"name": str(srow.name),
 				"winner": wid,
 				"winner_name": wname,
 				"yield_silver": ys,
-				"company_won": wid == "company" and owned(id),
+				"company_won": company_won,
+				"outcome": outcome,
+			})
+			# Stale tug payload for this site is no longer actionable.
+			if str(World.last_neutral_contest.get("id", "")) == id:
+				World.last_neutral_contest = {}
+			World.mark_contest_resolve({
+				"id": id,
+				"name": str(srow.name),
+				"anchor": anchor,
+				"anchor_name": str(World.node(anchor).get("name", anchor)) if anchor != "" else "",
+				"winner": wid,
+				"winner_name": wname,
+				"yield_silver": ys,
+				"company_won": company_won,
+				"outcome": outcome,
+				"garrison": int(state(id).garrison) if company_won else 0,
 			})
 			World.world_changed.emit()
 		else:

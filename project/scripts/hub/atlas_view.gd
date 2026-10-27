@@ -1798,6 +1798,10 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_contest_resolve():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if _check_neutral_contest():
 			_set_busy(false)
 			_refresh_top()
@@ -1854,6 +1858,8 @@ func _after_arrival() -> void:
 		return
 	if _check_siege_loot():
 		return
+	if _check_contest_resolve():
+		return
 	if _check_neutral_contest():
 		return
 	if _check_march_muster():
@@ -1886,6 +1892,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_loot():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_contest_resolve():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_neutral_contest():
 		return
@@ -2699,6 +2707,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 			return
 		if _check_siege_loot():
 			return
+		if _check_contest_resolve():
+			return
 		if _check_neutral_contest():
 			return
 		if _check_march_muster():
@@ -3122,12 +3132,78 @@ func _show_siege_loot_modal(loot: Dictionary) -> void:
 		_clear_modal()
 		_refresh_top()
 		_build_nodes()
+		if _check_contest_resolve():
+			return
 		if _check_neutral_contest():
 			return
 		if _check_march_muster():
 			return
 		if World.is_traveling():
 			call_deferred("_resume_travel_after_siege"))
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
+
+
+## Neutral contest settled → ContestResolveModal (won / lost / miss).
+func _check_contest_resolve() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_contest_resolve.is_empty():
+		return false
+	var row: Dictionary = World.take_contest_resolve()
+	if row.is_empty():
+		return false
+	_show_contest_resolve_modal(row)
+	return true
+
+
+func _show_contest_resolve_modal(row: Dictionary) -> void:
+	var site_name := str(row.get("name", row.get("id", "")))
+	var winner_name := str(row.get("winner_name", row.get("winner", "")))
+	var ys := int(row.get("yield_silver", 0))
+	var garrison := int(row.get("garrison", 0))
+	var outcome := str(row.get("outcome", "miss"))
+	var accent := UIKit.OK if outcome == "won" else (UIKit.DANGER if outcome == "lost" else UIKit.EMBER)
+	var h := 320.0
+	var panel := _modal_panel(h)
+	panel.name = "ContestResolveModal"
+	var el := UIKit.mono(Locale.t("atlas_contest_resolve_en"), 9, accent)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_contest_resolve_title"), 20, accent)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body_key := "atlas_contest_resolve_body_won"
+	var body_text := ""
+	if outcome == "won":
+		body_key = "atlas_contest_resolve_body_won"
+		body_text = Locale.t(body_key) % [site_name, ys, garrison]
+	elif outcome == "lost":
+		body_key = "atlas_contest_resolve_body_lost"
+		body_text = Locale.t(body_key) % [site_name, winner_name, ys]
+	else:
+		body_key = "atlas_contest_resolve_body_miss"
+		body_text = Locale.t(body_key) % [site_name, winner_name, ys]
+	var body := UIKit.body_label(body_text, UIKit.TEXT, 13)
+	body.name = "ContestResolveBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 110)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var ok := UIKit.cta_button(Locale.t("atlas_contest_resolve_ok"), "A", 452, 42)
+	ok.name = "ContestResolveOk"
+	ok.position = Vector2(24, h - 70)
+	ok.pressed.connect(func():
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if _check_neutral_contest():
+			return
+		if _check_march_muster():
+			return
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_contest"))
 	panel.add_child(ok)
 	ok.call_deferred("grab_focus")
 
