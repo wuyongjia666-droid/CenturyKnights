@@ -66,7 +66,12 @@ func _assert_page(page: Node, where: String) -> void:
 	_ok(gaz != null, "%s GazetteCrestStrip" % where)
 	if gaz != null:
 		_ok(str(gaz.get_meta("field_route", "")) == "gazette_strip", "%s strip field_route" % where)
-		_ok(gaz.find_child("GazetteNationArms", true, false) != null, "%s strip GazetteNationArms" % where)
+		var gco = gaz.find_child("CastleArms", true, false)
+		_ok(gco != null and str(gco.get_meta("field_route", "")) == "strip_company", "%s strip_company" % where)
+		var gnat = gaz.find_child("GazetteNationArms", true, false)
+		_ok(gnat != null, "%s strip GazetteNationArms" % where)
+		if gnat != null:
+			_ok(str(gnat.get_meta("field_route", "")) == "gazette_nation", "%s gazette_nation" % where)
 		_ok(str(gaz.get_meta("nation_id", "")) != "", "%s strip nation_id" % where)
 	var src := FileAccess.get_file_as_string("res://scripts/hub/court_news.gd")
 	_ok(src.find("CKHeraldryField.place_gazette_crest_strip") >= 0, "%s hub calls Field strip" % where)
@@ -76,6 +81,8 @@ func _assert_page(page: Node, where: String) -> void:
 	if list != null:
 		var row_arms := list.find_child("GazetteNationArms", true, false)
 		_ok(row_arms != null, "%s news-row GazetteNationArms" % where)
+		if row_arms != null:
+			_ok(str(row_arms.get_meta("field_route", "")) == "news_row", "%s news_row field_route" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")
