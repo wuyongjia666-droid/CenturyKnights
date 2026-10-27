@@ -482,12 +482,22 @@ static func build_stockade(id: String) -> Dictionary:
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_st_done") % [nm, cost], "preview": prev}
 
+## Free stockade credits left (Territory fat · 免费屯营整链).
+static func stockade_credit_count() -> int:
+	return maxi(0, int(_st().get("stockade_credit", 0)))
+
+
 ## A finished scripted nation chain used to offer a second seat. Now it pays for one stockade.
+## Whole chain: grant → month_echo.stockade_credit → HubTodo chip → ledger free build → EchoLine_stockade.
 static func grant_stockade_credit(chain_id: String) -> void:
 	if chain_id == "":
 		return
 	_st().stockade_credit = int(_st().get("stockade_credit", 0)) + 1
+	var n := stockade_credit_count()
 	_log(Locale.t("terr_st_credit"))
+	CKEconomyState.month_echo_note("stockade_credit", Locale.t("terr_echo_stockade_credit", [n]))
+	GameState.mark_dirty()
+	World.world_changed.emit()
 
 ## Save migration: holdings.second_seat -> owned site next to the same settlement,
 ## with a stockade, the seat's garrison, and a contract floor so its value never drops.

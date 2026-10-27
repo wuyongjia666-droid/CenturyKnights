@@ -195,3 +195,15 @@ E2E：`territory_threat_closed_loop_check` + mobile twin（城堡→围城→贿
 4. **告急围城**：行内按钮 → `hub_requeue_siege_alert_site(id)` → 跳舆图弹出 `SiegeAlertModal`（对齐 HubTodo J14，但按点指定）。
 5. **前往舆图**：`CKNav` params `site=` + `GameState` meta `atlas_territory_site` / `atlas_select`；`atlas_view` `_ready` 消费后 `_open_territory_site`。
 6. **E2E**：`territory_ledger_closed_loop_check` + `mobile_territory_ledger_closed_loop_check`。
+
+## 20. 免费屯营整链（Territory fat · 禁止再拆 credit/chip/ledger）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **发额度**：一国剧情委托链走完 → `grant_stockade_credit` → `_log` + `month_echo.stockade_credit`（`terr_echo_stockade_credit`）。
+2. **待办带路**：城堡 HubTodo `stockade_credit` chip（count=额度）→ `territory_ledger`。
+3. **领地簿**：顶栏 `TerritoryCreditBanner`；未建屯营行按钮改「免费建屯营」；详情写免费/耗银。
+4. **消费**：`build_stockade` 花额度（cost=0）→ `month_echo.stockade` → chip 随额度清零。
+5. **回读**：属地月报条 `EchoLine_stockade_credit`（发）+ `EchoLine_stockade`（筑成）。
+
+E2E：`territory_stockade_credit_loop_check` + mobile twin。
