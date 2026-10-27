@@ -21,6 +21,7 @@ const ROWS := [
 
 	{"cid": "cs05_01", "beat": "court", "needle": "帘边驻足。空椅外的旗，我先不掀帘。"},
 	{"cid": "cs05_02", "beat": "reread", "needle": "帘边驻足。回读外的环，我先不掀。"},
+	{"cid": "cs05_03", "beat": "atrium", "needle": "帘边驻足。嗣庭外的帖，我先不掀。"},
 	{"cid": "cs06_01", "beat": "yard", "needle": "帘边驻足。校场外的沙，我先不掀帘。"},
 	{"cid": "cs06_02", "beat": "yard", "needle": "帘边驻足。空条外的鼓，我先不掀。"},
 	{"cid": "cs07_01", "beat": "yard", "needle": "帘边驻足。礼序外的阶，我先不掀帘。"},
