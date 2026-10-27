@@ -60,6 +60,22 @@ func _place_castle_view_crests() -> void:
 	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
 	CKHeraldryField.place_castle_view_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
 	_place_panorama_lineage()
+	_place_castle_hang_banner()
+
+
+## P1-BNR-02: company cloth waves beside the main hall (slot 0) — 6 frames.
+func _place_castle_hang_banner() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var hang_sz := Vector2(48, 68) if mob else Vector2(56, 78)
+	# Hall card is SLOTS[0] at ORIGIN; pin the pole to the art's upper-right.
+	var hall_pos := ORIGIN
+	if mob:
+		# Mobile grid: hang sits under the crest strip, left of the right-edge arms.
+		var w := MobilePage.width(self)
+		hall_pos = Vector2(maxf(24.0, w - hang_sz.x - 140.0), MobilePage.TOP + 36.0)
+	else:
+		hall_pos = ORIGIN + Vector2(CARD.x - hang_sz.x - 12.0, 18.0)
+	CKHeraldryField.place_castle_hang_banner(self, hall_pos, hang_sz)
 
 
 func _place_panorama_lineage() -> void:
