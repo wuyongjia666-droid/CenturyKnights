@@ -98,5 +98,23 @@ func _run() -> String:
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "territory_threat" and int(item.get("count", 0)) > 0:
 			return "cleared threat still shows territory_threat"
+	# §20 free stockade credit: grant → chip+ledger link; spend → chip gone.
+	CKTerritory._st().stockade_credit = 0
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "stockade_credit" and int(item.get("count", 0)) > 0:
+			return "no-credit still shows stockade_credit"
+	CKTerritory.grant_stockade_credit("chain_ash")
+	var credit_row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "stockade_credit":
+			credit_row = item
+	if int(credit_row.get("count", 0)) != 1:
+		return "stockade_credit chip missing after grant (%s)" % str(credit_row)
+	if Todo.link_for(credit_row) != "res://scenes/hub/territory_ledger.tscn":
+		return "stockade_credit chip has no ledger link"
+	CKTerritory._st().stockade_credit = 0
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "stockade_credit" and int(item.get("count", 0)) > 0:
+			return "cleared credit still shows stockade_credit"
 	print("OK todo due")
 	return ""
