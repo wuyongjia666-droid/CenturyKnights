@@ -86,6 +86,7 @@ func _build() -> void:
 		]},
 		{"id": "atlas", "title": Locale.t("ux_hub_atlas"), "items": [
 			[Locale.t("ux_hub_atlas_btn"), Locale.t("ux_hub_atlas_sub"), "res://scenes/hub/atlas_view.tscn", Locale.t("ux_hub_atlas_btn"), "atlas"],
+			[Locale.t("ux_hub_territory_btn"), Locale.t("ux_hub_territory_sub"), "res://scenes/hub/territory_ledger.tscn", Locale.t("ux_hub_territory_btn"), "territory"],
 			[Locale.t("btn_quests"), Locale.t("ux_hub_quests_sub"), "res://scenes/hub/quests.tscn", Locale.t("btn_quests"), "quests"],
 			[Locale.t("ux_entry_court_news"), Locale.t("ux_entry_court_news"), "res://scenes/hub/court_news.tscn", "", "court_news"],
 		]},
@@ -810,7 +811,7 @@ const M_ICONS := {
 	"hourglass": _IC + "kpi_grain.png", "castle_view": _IC + "kpi_fortify.png", "settings": _IC + "mk_iron.png",
 	"deploy": _IE + "stone_slope.png", "roster": _IC + "kpi_fortify.png", "tavern": _IC + "mk_herb.png",
 	"train": _IC + "mk_iron.png", "skills": _IE + "stone_slope.png",
-	"atlas": _IE + "tide_bridge.png", "quests": _IE + "stone_slope.png", "court_news": _IE + "reed_ford.png",
+	"atlas": _IE + "tide_bridge.png", "territory": _IE + "tide_bridge.png", "quests": _IE + "stone_slope.png", "court_news": _IE + "reed_ford.png",
 	"lineage": _IE + "fog_vale.png", "sui_ke": _IC + "kpi_grain.png", "marriage": _IE + "fog_vale.png", "rite": _IC + "kpi_fortify.png",
 	"titles": _IC + "kpi_cash.png", "rivals": _IE + "stone_slope.png", "ancestors": _IE + "fog_vale.png", "bonds": _IE + "reed_ford.png",
 	"works": _IC + "kpi_fortify.png", "forge": _IC + "mk_iron.png", "market": _IC + "kpi_cash.png", "shrine": _IC + "mk_herb.png", "estates": _IC + "kpi_grain.png",

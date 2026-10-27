@@ -52,6 +52,7 @@ func _unlock_and_scale() -> void:
 	_ok(Todo.is_unlocked("deploy"), "deploy locked")
 	_ok(Todo.is_unlocked("marriage"), "marriage is a year-one door (#148)")
 	_ok(Todo.is_unlocked("atlas"), "atlas is a year-one door (#148)")
+	_ok(Todo.is_unlocked("territory"), "territory ledger is a year-one door (P1-UX-04)")
 	var st := UnlockSchedule.state("forge")
 	_ok(bool(st.locked) and str(st.reason).find("第一卷第 5 章") >= 0 and str(st.link) == "mainline", "forge lock reason %s" % str(st))
 	_ok(str(UnlockSchedule.state("rite").reason) != "" and str(UnlockSchedule.state("rite").link) == "", "rite lock reason")
