@@ -2624,6 +2624,35 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	var echo_reclaim := str(CKEconomyState.month_echo_snapshot().get("reclaim", ""))
 	var echo_defend := str(CKEconomyState.month_echo_snapshot().get("defend", ""))
 	var echo_assault := str(CKEconomyState.month_echo_snapshot().get("assault", ""))
+	var echo_chain := str(CKEconomyState.month_echo_snapshot().get("chain", ""))
+	# ChainLine: open pledge commissions (board/active, chain, not reclaim).
+	var chain_rows: Array = []
+	var _seen_chain: Dictionary = {}
+	for q0 in World.active:
+		if typeof(q0) != TYPE_DICTIONARY:
+			continue
+		if not bool(q0.get("chain", false)):
+			continue
+		if bool(q0.get("territory_reclaim", false)):
+			continue
+		var cid0 := str(q0.get("territory", ""))
+		if cid0 == "" or _seen_chain.has(cid0):
+			continue
+		_seen_chain[cid0] = true
+		chain_rows.append({"id": cid0, "name": str(CKTerritory.site(cid0).get("name", cid0)), "step": int(q0.get("territory_step", 0))})
+	for nid0 in World.nodes.keys():
+		for q1 in World.board(str(nid0)):
+			if typeof(q1) != TYPE_DICTIONARY:
+				continue
+			if not bool(q1.get("chain", false)):
+				continue
+			if bool(q1.get("territory_reclaim", false)):
+				continue
+			var cid1 := str(q1.get("territory", ""))
+			if cid1 == "" or _seen_chain.has(cid1):
+				continue
+			_seen_chain[cid1] = true
+			chain_rows.append({"id": cid1, "name": str(CKTerritory.site(cid1).get("name", cid1)), "step": int(q1.get("territory_step", 0))})
 	# UnrestLine: owned sites still under 民心未附 after assault.
 	var unrest_rows: Array = []
 	for uid in CKTerritory.owned_ids():
@@ -2638,6 +2667,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	if echo_defend != "" or not threats.is_empty():
 		h += 40.0
 	if echo_assault != "" or not unrest_rows.is_empty():
+		h += 40.0
+	if echo_chain != "" or not chain_rows.is_empty():
 		h += 40.0
 	var panel := _modal_panel(h)
 	panel.name = "TerritoryMonthModal"
@@ -2772,6 +2803,22 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		echo_a.position = Vector2(24, h - 96)
 		echo_a.size = Vector2(452, 20)
 		panel.add_child(echo_a)
+	# Territory fat: ChainLine + EchoLine_chain on month panel.
+	if not chain_rows.is_empty():
+		var cbits2: Array = []
+		for cr in chain_rows:
+			cbits2.append("%s·%d" % [str(cr.get("name", "")), int(cr.get("step", 0)) + 1])
+		var cln := UIKit.body_label(Locale.t("atlas_terr_month_chain_line") % "、".join(cbits2), UIKit.EMBER, 12)
+		cln.name = "ChainLine"
+		cln.position = Vector2(24, (h - 136.0) if echo_chain != "" else (h - 116.0))
+		cln.size = Vector2(452, 20)
+		panel.add_child(cln)
+	if echo_chain != "":
+		var echo_c := UIKit.body_label(echo_chain, UIKit.OK, 12)
+		echo_c.name = "EchoLine_chain"
+		echo_c.position = Vector2(24, h - 96)
+		echo_c.size = Vector2(452, 20)
+		panel.add_child(echo_c)
 	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
 	later.name = "TerritoryMonthLater"
 	later.position = Vector2(24, h - 56)

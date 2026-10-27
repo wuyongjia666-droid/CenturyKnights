@@ -120,3 +120,14 @@ E2E：`territory_defend_hold_echo_check` + mobile twin。
 
 E2E：`territory_assault_seize_echo_check` + mobile twin。
 
+## 13. 归附得手与月回读（Territory fat）
+
+中立领地在锚点贴两阶归附委托（`post_chain` → gather → hunt）→ 交令收尾 `capture(how=chain)`（驻军≥1、无民心未附）。
+
+1. **得手**：写入 `month_echo.chain`（locale `terr_echo_chain`：地名·月银·驻军）。
+2. **贴令**：仅上榜，不写得手回读。
+3. **月回读**：`TerritoryMonthModal` 增 `ChainLine`（待交归附令）+ `EchoLine_chain`（得手）。
+
+E2E：`territory_chain_attach_echo_check` + mobile twin。
+
+
