@@ -82,6 +82,12 @@ const CHAINS := [
 		"needle": "回读页夹着空椅图。图上无人，沙漏仍走。",
 	},
 	{
+		"cid": "cs05_03",
+		"beat": "hourglass",
+		"after": "bridge",
+		"needle": "嗣庭写在轴背。背着的字，要翻过来才见。",
+	},
+	{
 		"cid": "cs06_01",
 		"beat": "hourglass",
 		"after": "bridge",
