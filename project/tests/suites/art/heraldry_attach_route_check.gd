@@ -411,6 +411,19 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(sbn != null and str(sbn.get_meta("field_route", "")) == "skill_banner", "skill_banner")
 	_ok(sbn != null and str(sbn.get_meta("arms_kind", "")) == "lb_skill_arms", "skill_banner kind")
 
+	var works := CKHeraldryField.place_works_crest_strip(root, Vector2(8, 320))
+	var wbn := works.find_child("WorksBanner", true, false) if works != null else null
+	_ok(wbn != null and str(wbn.get_meta("field_route", "")) == "works_banner", "works_banner")
+	_ok(wbn != null and str(wbn.get_meta("arms_kind", "")) == "lb_works_arms", "works_banner kind")
+	var estates := CKHeraldryField.place_estates_crest_strip(root, Vector2(200, 320))
+	var ebn := estates.find_child("EstatesBanner", true, false) if estates != null else null
+	_ok(ebn != null and str(ebn.get_meta("field_route", "")) == "estates_banner", "estates_banner")
+	_ok(ebn != null and str(ebn.get_meta("arms_kind", "")) == "lb_estates_arms", "estates_banner kind")
+	var annex_strip := CKHeraldryField.place_annex_crest_strip(root, Vector2(400, 320))
+	var axbn := annex_strip.find_child("AnnexBanner", true, false) if annex_strip != null else null
+	_ok(axbn != null and str(axbn.get_meta("field_route", "")) == "annex_banner", "annex_banner")
+	_ok(axbn != null and str(axbn.get_meta("arms_kind", "")) == "lb_annex_arms", "annex_banner kind")
+
 	var roster := CKHeraldryField.place_roster_crest_strip(root, Vector2(840, 160))
 	var rbn := roster.find_child("RosterBanner", true, false) if roster != null else null
 	_ok(rbn != null and str(rbn.get_meta("field_route", "")) == "roster_banner", "roster_banner")
@@ -669,6 +682,12 @@ func _source_contracts() -> void:
 		["blood_banner", "blood_banner"],
 		["market_banner", "market_banner"],
 		["skill_banner", "skill_banner"],
+		["works_banner", "works_banner"],
+		["estates_banner", "estates_banner"],
+		["annex_banner", "annex_banner"],
+		["works_strip", "WorksCrestStrip"],
+		["estates_strip", "EstatesCrestStrip"],
+		["annex_strip", "AnnexCrestStrip"],
 		["roster_banner", "roster_banner"],
 		["gazette_nation", "gazette_nation"],
 		["gazette_strip", "GazetteCrestStrip"],
