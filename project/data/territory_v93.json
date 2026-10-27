@@ -46,7 +46,8 @@
   "bribe_cost": 50,
   "scout_cost": 20,
   "neutral_contest_base": 0.04,
-  "neutral_contest_cap": 0.18
+  "neutral_contest_cap": 0.18,
+  "contest_stake_cost": 40
  },
  "sites": [
   {
