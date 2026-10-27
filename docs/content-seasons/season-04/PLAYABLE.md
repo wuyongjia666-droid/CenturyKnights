@@ -53,6 +53,21 @@
 - **训行仍并** → flag `cs04_back_parallel`，进 `ledger`。
 - 验收：`content_season_playable_s04_02_check`。
 
+## 第三可玩章 · 训堂上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs04_03` |
+| 标题 | 训堂上的灯 |
+| legacy_index | 422 |
+| 文件 | `project/data/story/chapters/cs04_03.json` |
+
+训堂与碑廊对照；堂碑并排可读。拍：训堂 → 碑廊 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **堂碑仍并** → flag `cs04_hall_parallel`，进 `ledger`。
+- **先催训条** → flag `cs04_hall_push`，仍进收束。
+- 验收：`content_season_playable_s04_03_check`；同档门禁 `content_season_playable_gate_s04_check`（cs04_01+02+03）。
+
 ## 中章口头去套话（mid-oral）
 
 - 访/战/酒馆回程里跨章复读的套话改成该拍自己的句子；入谱拍不动。
