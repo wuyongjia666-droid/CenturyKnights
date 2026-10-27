@@ -90,6 +90,7 @@ var last_siege_muster: Dictionary = {}  # cache→garrison under siege
 var last_siege_sister: Dictionary = {}  # sister stockade garrison relief
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
+var last_contest_resolve: Dictionary = {}  # contest settled → ContestResolveModal
 var march_hold: Dictionary = {}  # halted march dest; survives city enter/exit
 var seal_detour: Dictionary = {}  # winter detour {dest, path}; survives food-halt so resume stays off sealed edges
 var march_resume: Dictionary = {}  # readable chip while a halted march is moving again
@@ -214,6 +215,7 @@ func reset() -> void:
 	last_siege_sister = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
+	last_contest_resolve = {}
 	march_hold = {}
 	march_resume = {}
 	city_gate = {}
@@ -309,6 +311,7 @@ func from_save(d: Dictionary) -> void:
 	last_siege_sister = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
+	last_contest_resolve = {}
 	march_hold = _saved_dict(d.get("march_hold", {}))
 	march_resume = _saved_dict(d.get("march_resume", {}))
 	seal_detour = _saved_dict(d.get("seal_detour", {}))
@@ -3366,6 +3369,22 @@ func take_neutral_contest() -> Dictionary:
 func dismiss_neutral_contest() -> void:
 	last_neutral_contest = {}
 
+
+## Neutral contest settled — keep latest report (one modal).
+func mark_contest_resolve(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	last_contest_resolve = payload.duplicate(true)
+
+
+func take_contest_resolve() -> Dictionary:
+	var d: Dictionary = last_contest_resolve.duplicate(true)
+	last_contest_resolve = {}
+	return d
+
+
+func dismiss_contest_resolve() -> void:
+	last_contest_resolve = {}
 
 
 ## Unanswered siege sacked the stockade granary (held half / lost all).

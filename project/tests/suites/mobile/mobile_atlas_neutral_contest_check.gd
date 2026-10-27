@@ -42,6 +42,7 @@ func _setup() -> void:
 	World.encounter = {}
 	World.travel = {}
 	World.last_neutral_contest = {}
+	World.last_contest_resolve = {}
 	var st: Dictionary = CKTerritory.state(SITE)
 	st.owner = CKTerritory.NEUTRAL
 	st.garrison = 0
