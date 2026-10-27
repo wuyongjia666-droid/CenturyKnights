@@ -1179,6 +1179,9 @@ func heal_at_shrine() -> String:
 func train(cid: String) -> Dictionary:
 	return CKEconomyState.train(self, cid)
 
+func craft_weapon_preview(cid: String) -> Dictionary:
+	return CKEconomyState.craft_weapon_preview(self, cid)
+
 func craft_weapon(cid: String) -> Dictionary:
 	return CKEconomyState.craft_weapon(self, cid)
 

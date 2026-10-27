@@ -1177,19 +1177,55 @@ static func train(host, cid: String) -> Dictionary:
 		extra = "；" + str(mr.get("msg", ""))
 	return {"ok": true, "msg": Locale.t("ux_tutor_self_drill") % [c.name, Locale.t("stat_" + key), extra]}
 
+static func craft_weapon_preview(host, cid: String) -> Dictionary:
+	## Shop fat: cost/short/none/same readout for craft_weapon (UI + E2E).
+	var cost: Dictionary = CKEconomyState.forge_craft_cost(host)
+	var c: CKCharacter = null
+	if cid != "":
+		c = host.characters.get(cid)
+	var none: bool = c == null
+	var short: bool = (not none) and (int(host.iron) < int(cost.iron) or int(host.silver) < int(cost.silver))
+	var target := "ash_blade_fine" if CKEconomyState.building_level(host, "forge") >= 4 else "ash_blade"
+	var same: bool = (not none) and str(c.weapon_id) == target
+	var reason := ""
+	if none:
+		reason = "none"
+	elif short:
+		reason = "short"
+	elif same:
+		reason = "same"
+	return {
+		"ok": not none,
+		"cost_iron": int(cost.iron),
+		"cost_silver": int(cost.silver),
+		"short": short,
+		"same": same,
+		"none": none,
+		"target": target,
+		"craftable": (not none) and (not short) and (not same),
+		"reason": reason,
+	}
+
+
 static func craft_weapon(host, cid: String) -> Dictionary:
-	var cost = CKEconomyState.forge_craft_cost(host)
-	if host.iron < int(cost.iron) or host.silver < int(cost.silver):
-		return {"ok": false, "msg": "需要 %d 铁与 %d 银" % [cost.iron, cost.silver]}
+	var prev: Dictionary = CKEconomyState.craft_weapon_preview(host, cid)
+	if str(prev.get("reason", "")) == "none":
+		return {"ok": false, "msg": "选择角色", "preview": prev}
+	if bool(prev.get("short", false)):
+		return {
+			"ok": false,
+			"msg": "需要 %d 铁与 %d 银" % [int(prev.cost_iron), int(prev.cost_silver)],
+			"preview": prev,
+		}
 	var c: CKCharacter = host.characters.get(cid)
-	if c == null:
-		return {"ok": false, "msg": "选择角色"}
-	host.iron -= int(cost.iron)
-	host.silver -= int(cost.silver)
+	var cost_iron := int(prev.cost_iron)
+	var cost_silver := int(prev.cost_silver)
+	host.iron -= cost_iron
+	host.silver -= cost_silver
 	host.house_mods.erase("sundry_forge_iron")
 	if World.is_world_item(c.weapon_id):  # v8.7: a world weapon goes back to the armory, not the scrap heap
 		World.armory[c.weapon_id] = int(World.armory.get(c.weapon_id, 0)) + 1
-	c.weapon_id = "ash_blade_fine" if CKEconomyState.building_level(host, "forge") >= 4 else "ash_blade"
+	c.weapon_id = str(prev.target)
 	# 负重检查（简化）
 	var burden = 4
 	var cap = 5 + int(c.stats.get("vit", 8) / 2)
@@ -1199,8 +1235,9 @@ static func craft_weapon(host, cid: String) -> Dictionary:
 	var fine := str(c.weapon_id) == "ash_blade_fine"
 	var wname := Locale.t("forge_weapon_fine" if fine else "forge_weapon")
 	host.log_event(Locale.t("forge_craft_equipped") % [c.name, wname, warn])
+	CKEconomyState.month_echo_note("forge", Locale.t("forge_echo_craft", [c.name, wname, cost_iron, cost_silver]))
 	host.mark_dirty()
-	return {"ok": true, "msg": Locale.t("forge_craft_done_fine" if fine else "forge_craft_done") + warn}
+	return {"ok": true, "msg": Locale.t("forge_craft_done_fine" if fine else "forge_craft_done") + warn, "preview": prev}
 
 static func market_buy(host, item: String, qty: int = 1) -> Dictionary:
 	var prices = CKEconomyState.market_buy_prices(host)
@@ -1322,7 +1359,7 @@ static func month_echo_lines() -> Array:
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
 		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade", "unlock",
-		"works", "caravan", "smith", "produce",
+		"works", "caravan", "smith", "produce", "forge",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
