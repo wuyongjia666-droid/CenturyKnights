@@ -20,6 +20,7 @@ const ROWS := [
 	{"cid": "cs05_01", "beat": "chair", "after": "hourglass", "needle": "空椅我摸过。链口我留，再听月份。"},
 	{"cid": "cs05_02", "beat": "chain", "after": "hourglass", "needle": "链我验。环我对。对完再往下走。"},
 	{"cid": "cs05_03", "beat": "rail", "after": "hourglass", "needle": "栏我验。空椅留。留完再往下。"},
+	{"cid": "cs06_03", "beat": "post", "after": "hourglass", "needle": "圈我验。空桩留。留完再往下。"},
 	{"cid": "cs06_01", "beat": "spar", "after": "hourglass", "needle": "圈我量。沙我认。认完再听鼓。"},
 	{"cid": "cs06_02", "beat": "spar", "after": "hourglass", "needle": "副鼓我听。空条我留。留完再往下。"},
 	{"cid": "cs07_01", "beat": "rite", "after": "hourglass", "needle": "礼序我验。步我齐。齐完再看月份。"},
