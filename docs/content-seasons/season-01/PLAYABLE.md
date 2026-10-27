@@ -212,3 +212,9 @@
 - 各章首拍在 `_crn6` 后、离开该拍前加 `_slv1`–`_slv6` 门风过袖口头，全库去重；收束非旁白。
 - 验收：`content_season_sleeve_wind_chain_check` — hub chip → 门风针口头。
 - 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`/`_rim`/`_crn`。
+
+## 缝光一瞥口头加厚（seam-glimpse）
+
+- 各章首拍在 `_slv6` 后、离开该拍前加 `_gln1`–`_gln6` 缝光一瞥口头，全库去重；收束非旁白。
+- 验收：`content_season_seam_glimpse_chain_check` — hub chip → 缝光针口头。
+- 不碰 `_arr`/`_tvp`/`_aft`/`_tvn`/`_tvx`/`_sth`/`_brd`/`_rtn`/`_lop`/`_cls`/`_wex`/`_ink`/`_aud`/`_sec`/`_hlp`/`_bpl`/`_msr`/`_vop`/`_opn`/`_thm`/`_ods`/`_rim`/`_crn`/`_slv`。
