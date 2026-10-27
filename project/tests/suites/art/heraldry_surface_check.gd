@@ -174,6 +174,10 @@ func _run() -> void:
 			_ok(str(ca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "castle arms core drift")
 		if bn != null:
 			_ok(str(bn.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "castle banner core drift")
+			_ok(str(bn.get_meta("field_route", "")) == "castle_hub_banner", "castle banner field_route")
+		if ca != null:
+			_ok(str(ca.get_meta("field_route", "")) == "strip_company", "castle arms field_route")
+		_ok(str(strip.get_meta("field_route", "")) == "banner_plate", "castle strip field_route")
 	## Territory banner_texture must match company core
 	var terr_tex := CKTerritory.banner_texture(26, 36)
 	_ok(terr_tex != null, "territory banner null")

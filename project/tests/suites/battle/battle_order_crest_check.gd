@@ -61,6 +61,7 @@ func _assert_strip(page: Node, where: String) -> void:
 	_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s ignores taps" % where)
 	var co := strip.find_child("CastleArms", true, false)
 	_ok(co != null and str(co.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
+	_ok(co != null and str(co.get_meta("field_route", "")) == "strip_company", "%s strip_company" % where)
 	var n := int(strip.get_meta("chip_count", 0))
 	_ok(n >= 1, "%s chip_count=%d" % [where, n])
 	var lead := strip.find_child("OrderChip0", true, false)
