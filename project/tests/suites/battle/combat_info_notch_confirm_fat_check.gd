@@ -238,6 +238,10 @@ func _scene_b_confirm_settle_and_side() -> String:
 		# refresh — #670 smooth=false; brief await for frame settle.
 		BattleActionSettle.apply(_battle, dest, [], false)
 		await _settle(4)
+		# Layout may still move during the await (viewport / apply_mobile_layout) —
+		# same path as battle_controller: re-frame the stamped actor before assert.
+		BattleActionSettle.refresh_if_stamped(_battle)
+		await _settle(2)
 		var inset := BattleBoardInset.for_host(_battle, 0.0)
 		var fig := BattleCombatFrame.figure_rect(
 			_battle.ORIGIN, float(_battle.CELL), dest, _battle._board_pan, float(_battle._board_zoom))

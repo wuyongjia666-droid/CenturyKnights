@@ -149,7 +149,9 @@ func _ui_siege_modal_scout_bribe() -> void:
 				await get_tree().process_frame
 			_ok(bool(CKTerritory.state(SITE).threat.get("bribed", false)), "threat bribed")
 			_ok(int(CKTerritory.state(SITE).threat.get("months", 1)) == 0, "bribe reset months")
-			_ok(page.find_child("SiegeAlertModal", true, false) == null, "modal cleared after bribe")
+			modal = page.find_child("SiegeAlertModal", true, false)
+			_ok(modal != null, "modal stays after bribe")
+			_ok(modal != null and modal.find_child("EchoLine_bribe", true, false) != null, "EchoLine_bribe after bribe")
 	page.queue_free()
 	for _z in 4:
 		await get_tree().process_frame

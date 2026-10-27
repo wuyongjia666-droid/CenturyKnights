@@ -1533,6 +1533,7 @@ static func bribe_threat(id: String) -> Dictionary:
 	st.threat["months"] = 0
 	_put(id, st)
 	_log(Locale.t("terr_56") % [site(id).name, cost])
+	CKEconomyState.month_echo_note("bribe", Locale.t("terr_echo_bribe", [site(id).name, cost]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_56") % [site(id).name, cost]}
@@ -1560,6 +1561,7 @@ static func scout_threat(id: String) -> Dictionary:
 	_put(id, st)
 	var msg := Locale.t("terr_57") % [intel["by"], hold_pct]
 	_log(msg)
+	CKEconomyState.month_echo_note("scout", Locale.t("terr_echo_scout", [site(id).name, cost, hold_pct]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": msg, "intel": intel}

@@ -406,16 +406,16 @@ static func make_territory_arms(nid: String, size: Vector2 = Vector2(40, 48)) ->
 	return tr
 
 ## Atlas travel strip. Field owns TravelCrestStrip.
-static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_travel_crest_strip(parent, at, territory_nation, shield)
+static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_travel_crest_strip(parent, at, territory_nation, shield, banner)
 
 ## Night-camp crest strip. Field owns CampCrestStrip.
-static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_camp_crest_strip(parent, at, territory_nation, shield)
+static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_camp_crest_strip(parent, at, territory_nation, shield, banner)
 
 ## Road encounter crest strip. Field owns EncounterCrestStrip.
-static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
-	return CKHeraldryField.place_encounter_crest_strip(parent, at, foe_nation, shield)
+static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	return CKHeraldryField.place_encounter_crest_strip(parent, at, foe_nation, shield, banner)
 
 ## Field crest strip. Field owns FieldCrestStrip.
 static func place_field_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:

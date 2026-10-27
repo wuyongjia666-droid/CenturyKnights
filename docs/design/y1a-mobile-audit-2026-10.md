@@ -320,6 +320,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 > | 危险跟焦 BoardInset 肥刀 | **DONE（本 PR）**：`BattleDangerFeel.after_set` follow 前刷新 `m_info_block`（对齐 ActionSettle / land-ghost）；`combat_danger_boardinset_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 战技 Buff/Heal 刷新 BoardInset 肥刀 | **DONE（本 PR）**：`BattleSkillBuffPreview` / `BattleSkillHealPreview` arm/_aim follow 前刷新 `m_info_block`（对齐 ActionSettle / land-ghost / danger）；`combat_skill_refresh_boardinset_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 攻击进入/循环 BoardInset 肥刀 | **DONE（本 PR）**：`BattleAttackAim.after_enter` / `BattleAttackCycle._aim` follow 前刷新 `m_info_block`（对齐 ActionSettle / skill refresh；保留 forecast_band）；`combat_attack_aim_cycle_boardinset_fat_check` 双图真 E2E；禁瞄准预告碎刀 / telegraph |
+> | BoardInset for_host 现场刷新肥刀 | **DONE（本 PR）**：`BattleBoardInset.for_host` 切 blockers 前 `refresh_info_block`（MobileSideCol 现场重写 `m_info_block`）；选中 focus / follow_selected / wait handoff / confirm chips 共用；`combat_boardinset_live_info_refresh_fat_check` 双图真 E2E；禁瞄准预告碎刀 / telegraph |
 > | BoardInset 无再渗/统一 from_parts 肥刀 | **DONE（本 PR）**：`_cut_blocker` 去掉 72px floor 再渗；`from_parts` 纯代数路径；ConfirmAffordance / ActionSettle.readable_inset 共用；`combat_boardinset_norebleed_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 打击/危险/循环肥刀 | **DONE（本 PR）**：合入 T-P18 撤退确认、T-P19 危险手感、T-P20 幽灵可打、T-P23 攻击瞄准、T-P25 Tab 循环；`combat_strike_danger_cycle_fat_check` 双图真 E2E；禁瞄准预告碎刀复活 |
 
