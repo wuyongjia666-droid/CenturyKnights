@@ -51,10 +51,8 @@ func _algebra() -> String:
 	var body := FileAccess.get_file_as_string(path)
 	if body.find("_refresh_info_block") < 0:
 		return "%s missing _refresh_info_block" % path
-	if body.find("m_info_block") < 0:
-		return "%s missing m_info_block refresh" % path
-	if body.find("follow_cells") < 0:
-		return "%s missing follow_cells" % path
+	if body.find("m_info_block") < 0 or body.find("follow_cells") < 0:
+		return "%s missing m_info_block refresh or follow_cells" % path
 	var i := 0
 	while true:
 		var hit := body.find("follow_cells(", i)
@@ -68,9 +66,12 @@ func _algebra() -> String:
 	var fol_i := body.find("follow_cells(host, cells, 0.0)")
 	if ref_i < 0 or fol_i < 0 or ref_i > fol_i:
 		return "%s must refresh m_info_block before follow_cells" % path
-	if body.find("foe_opening_telegraph") >= 0 or body.find("BattleLinkTelegraph") >= 0:
-		return "%s dragged telegraph residue" % path
-	if body.find("telegraph") >= 0 or body.find("Telegraph") >= 0:
+	if (
+		body.find("foe_opening_telegraph") >= 0
+		or body.find("BattleLinkTelegraph") >= 0
+		or body.find("telegraph") >= 0
+		or body.find("Telegraph") >= 0
+	):
 		return "%s dragged telegraph residue" % path
 	var inset := FileAccess.get_file_as_string("res://scripts/battle/battle_board_inset.gd")
 	if inset.find("Danger focus") < 0 and inset.find("danger focus") < 0:
