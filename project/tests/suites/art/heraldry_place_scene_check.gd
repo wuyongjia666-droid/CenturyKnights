@@ -326,6 +326,15 @@ func _source_contracts() -> void:
 		["muster_strip", "place_muster_crest_strip"],
 		["muster_leader", "muster_leader"],
 		["muster_banner", "MusterBanner"],
+		["travel_strip", "place_travel_crest_strip"],
+		["travel_territory", "travel_territory"],
+		["travel_banner", "TravelBanner"],
+		["camp_strip", "place_camp_crest_strip"],
+		["camp_territory", "camp_territory"],
+		["camp_banner", "CampBanner"],
+		["encounter_strip", "place_encounter_crest_strip"],
+		["encounter_foe", "encounter_foe"],
+		["encounter_banner", "EncounterBanner"],
 		["succession_strip", "place_succession_crest_strip"],
 		["succession_heir", "succession_heir"],
 		["succession_banner", "SuccessionBanner"],
@@ -350,6 +359,7 @@ func _source_contracts() -> void:
 		"lineage_rite": "res://scripts/hub/lineage_rite.gd",
 		"title_promote": "res://scripts/hub/title_promote.gd",
 		"city": "res://scripts/hub/city.gd",
+		"atlas_view": "res://scripts/hub/atlas_view.gd",
 	}
 	for hub in hubs.keys():
 		var src := FileAccess.get_file_as_string(hubs[hub])
