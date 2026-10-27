@@ -242,3 +242,9 @@
 - 各章首拍在 `_blt6` 后、离开该拍前加 `_hng1`–`_hng6` 门枢一转口头，全库去重；收束非旁白。
 - 验收：`content_season_hinge_turn_chain_check` — hub chip → 门枢一转针口头。
 - 不碰既有 `_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 门轴一响口头加厚（axle-creak）
+
+- 各章首拍在 `_hng6` 后、离开该拍前加 `_axl1`–`_axl6` 门轴一响口头，全库去重；收束非旁白。
+- 验收：`content_season_axle_creak_chain_check` — hub chip → 门轴一响针口头。
+- 不碰既有 `_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
