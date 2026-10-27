@@ -23,7 +23,14 @@ const LINKS := {
 	"quests": "res://scenes/hub/quests.tscn",
 	"injured": "res://scenes/hub/roster.tscn",
 	"sui_ke": "res://scenes/hub/sui_yearcard.tscn",
+	"territory_threat": "res://scenes/hub/atlas_view.tscn",
 }
+
+
+## Before CKNav.go on a chip: re-queue siege alert so atlas shows SiegeAlertModal (J14).
+static func prepare_nav(item: Dictionary) -> void:
+	if str(item.get("category", "")) == "territory_threat":
+		CKTerritory.hub_requeue_siege_alert()
 
 static func link_for(item: Dictionary) -> String:
 	var link := str(item.get("link", ""))
@@ -58,6 +65,9 @@ static func snapshot() -> Array:
 	rows.append(_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()))
 	rows.append(_row("festival", "home", Locale.t("ux_todo_festival"), _festival_count()))
 	rows.append(_row("sui_ke", "family", Locale.t("ux_todo_sui_ke"), CKSuiKe.inbox_count()))
+	var threat_n := CKTerritory.threatened_owned().size()
+	if threat_n > 0:
+		rows.append(_row("territory_threat", "military", Locale.t("ux_todo_territory_threat"), threat_n))
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)

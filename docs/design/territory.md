@@ -161,3 +161,13 @@ E2E：`atlas_threat_resolve_check` + `mobile_atlas_threat_resolve_check`。
 
 E2E：`territory_siege_bribe_scout_echo_check` + mobile twin。
 
+## 17. 城堡 HubTodo 领地威胁 chip（Territory fat · J14）
+
+J14：领地受威胁只写日志，城堡不提醒、也没有带路。本刀在城堡「本月待办」挂 `territory_threat` chip，深链回大地图围城告急模态——不是再开一层 month_echo 薄片，也不是完整领地簿（P1-UX-04）。
+
+1. **计数**：`CKTerritory.threatened_owned()` —— 自有且 `threat` 非空的据点。
+2. **chip**：`HubTodo` category `territory_threat` / group `military` / locale `ux_todo_territory_threat`；`LINKS` → `atlas_view.tscn`。count=0 不入 snapshot。
+3. **带路**：城堡 desk/mobile chip 点按先 `HubTodo.prepare_nav` → `CKTerritory.hub_requeue_siege_alert()`（优先 months 最大者，phase declared/imminent），再 `CKNav.go` 舆图；`SiegeAlertModal` 弹出。
+4. **清零**：威胁解除（截击/收买落幕/`_resolve_unanswered`）后 chip 自然消失。
+
+E2E：`territory_hub_todo_threat_check` + mobile twin；`todo_due_check` 覆盖无威胁不显示 / 有威胁可链。

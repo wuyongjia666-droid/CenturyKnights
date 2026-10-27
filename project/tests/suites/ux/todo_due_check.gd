@@ -60,5 +60,43 @@ func _run() -> String:
 		if wq < 1:
 			return "world active not counted (%d)" % wq
 	World.active.clear()
+	# J14 / territory HubTodo: no threat → no chip; planted threat → count + atlas link.
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_threat" and int(item.get("count", 0)) > 0:
+			return "fresh/no-threat still shows territory_threat"
+	var site := "t_ash_cinderpit"
+	var st: Dictionary = CKTerritory.state(site)
+	st.owner = CKTerritory.NEUTRAL
+	st.garrison = 0
+	st.threat = {}
+	CKTerritory._put(site, st)
+	var anchor := str(CKTerritory.site(site).get("anchor", ""))
+	World.pos = anchor
+	World.arrive(anchor)
+	CKTerritory.capture(site, "chain")
+	st = CKTerritory.state(site)
+	st.garrison = 2
+	st.threat = {}
+	CKTerritory._put(site, st)
+	World.last_siege_alert = {}
+	CKTerritory.start_threat(site)
+	World.take_siege_alert()  # dismiss — chip must still count from live threat
+	var threat_row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_threat":
+			threat_row = item
+	if int(threat_row.get("count", 0)) != 1:
+		return "threatened site not counted (%s)" % str(threat_row)
+	if Todo.link_for(threat_row) != "res://scenes/hub/atlas_view.tscn":
+		return "territory_threat chip has no atlas link"
+	Todo.prepare_nav(threat_row)
+	if World.last_siege_alert.is_empty() or str(World.last_siege_alert.get("id", "")) != site:
+		return "prepare_nav did not requeue siege alert"
+	st = CKTerritory.state(site)
+	st.threat = {}
+	CKTerritory._put(site, st)
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_threat" and int(item.get("count", 0)) > 0:
+			return "cleared threat still shows territory_threat"
 	print("OK todo due")
 	return ""
