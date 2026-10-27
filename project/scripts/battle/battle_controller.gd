@@ -679,6 +679,13 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 		_spawn_dmg(u.pos, "圣域", Color(0.7, 0.85, 1.0))
 	_consume_skill(u.char, sid)
 	var from_i: int = ui
+	var cast_cells: Array = []
+	for j2 in units.size():
+		var o2 = units[j2]
+		if o2.team == "player" and o2.char.hp > 0 and _manhattan(u.pos, o2.pos) <= 1:
+			cast_cells.append(o2.pos)
+	# 施放落定须在 WaitHandoff 之前，免得交接镜头盖掉治疗框。
+	BattleSkillFeelLoop.after_cast(self, "heal", u.pos, cast_cells)
 	u.done = true
 	selected = -1
 	Sfx.confirm()
@@ -733,6 +740,11 @@ func _cast_buff_skill(ui: int, sid: String) -> void:
 	_log("%s 释放「%s」%s" % [u.char.name, sk.get("name", ""), note])
 	Sfx.confirm()
 	Sfx.skill()
+	var buff_cells: Array = []
+	for ou2 in units:
+		if ou2.team == "player" and ou2.char.hp > 0:
+			buff_cells.append(ou2.pos)
+	BattleSkillFeelLoop.after_cast(self, "buff", u.pos, buff_cells)
 	_refresh_info()
 	map_draw.queue_redraw()
 	overlay.queue_redraw()

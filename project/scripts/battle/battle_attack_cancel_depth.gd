@@ -47,6 +47,7 @@ static func _exit_modes(host) -> void:
 	host.active_skill_id = ""
 	BattleSkillHealPreview.clear(host)
 	BattleSkillBuffPreview.clear(host)
+	BattleSkillFeelLoop.clear(host)
 	var ui := int(host.selected)
 	if ui >= 0 and ui < host.units.size() and str(host.units[ui].team) == "player" and not bool(host.units[ui].done):
 		if host.has_method("_compute_move_cells"):
