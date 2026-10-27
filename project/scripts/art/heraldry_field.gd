@@ -186,7 +186,8 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
 		extra.set_meta("field_route", "report_foe")
 	_pair(host, shield, extra)
-	# Cloth plate beside the report pair — Field ownership on 战报.	_cloth_beside(host, shield, "ReportBanner", "report_banner", "lb_report_arms", banner)
+	# Cloth plate beside the report pair — Field ownership on 战报.
+	_cloth_beside(host, shield, "ReportBanner", "report_banner", "lb_report_arms", banner)
 	host.set_meta("has_foe", nid != "")
 	return host
 
@@ -1502,7 +1503,8 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
-	# Cloth plate beside the aftermath pair — Field ownership on 战后.	_cloth_beside(host, shield, "AftermathBanner", "aftermath_banner", "lb_aftermath_arms", banner)
+	# Cloth plate beside the aftermath pair — Field ownership on 战后.
+	_cloth_beside(host, shield, "AftermathBanner", "aftermath_banner", "lb_aftermath_arms", banner)
 	parent.add_child(host)
 	return host
 
