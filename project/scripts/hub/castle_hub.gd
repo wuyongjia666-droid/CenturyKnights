@@ -282,7 +282,9 @@ func _build() -> void:
 		chip.flat = true
 		chip.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
 		chip.add_theme_color_override("font_color", UIKit.ACCENT)
-		chip.pressed.connect(func(): CKNav.go(link))
+		chip.pressed.connect(func():
+			HubTodo.prepare_nav(todo)
+			CKNav.go(link))
 		todo_row.add_child(chip)
 	if not HubTodo.any_due():
 		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), UIKit.desk_sz(10), UIKit.TEXT_FAINT, false))
@@ -1104,6 +1106,7 @@ func _m_right_column(rect: Rect2) -> void:
 		var link := HubTodo.link_for(todo)
 		var chip := MobilePage.button("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], false, func():
 			if link != "":
+				HubTodo.prepare_nav(todo)
 				CKNav.go(link))
 		chip.name = "Todo_%s" % str(todo.get("category", ""))
 		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
