@@ -9,12 +9,14 @@ var _charge_idx: int = 0
 var _border_idx: int = 0
 var _emblem_idx: int = 0
 var _nation_idx: int = 0
+var _shape_idx: int = 0
 var _colors: Array = []
 var _color_names: Array = []
 var _divisions: PackedStringArray = []
 var _partitions: PackedStringArray = []
 var _ordinaries: PackedStringArray = []
 var _nations: PackedStringArray = []
+var _shapes: PackedStringArray = []
 var _preview: ColorRect
 var _banner: TextureRect
 ## Opening review B-03: the preview face is a real leader built once; on start its genome is
@@ -37,6 +39,7 @@ var _charge_label: Label
 var _border_label: Label
 var _emblem_label: Label
 var _nation_label: Label
+var _shape_label: Label
 var _warn: Label
 var _scroll: ScrollContainer
 var _art_row: HBoxContainer
@@ -82,6 +85,13 @@ const CHARGE_KEYS := {
 	"pall": "ux_ord_pall",
 }
 const BORDER_KEYS := ["ux_border_none", "ux_border_line", "ux_border_double", "ux_border_dentil"]
+const SHAPE_KEYS := {
+	"heater": "ux_shield_heater",
+	"kite": "ux_shield_kite",
+	"round": "ux_shield_round",
+	"lozenge": "ux_shield_lozenge",
+	"banner": "ux_shield_banner",
+}
 const EMBLEM_KEYS := {
 	"ring": "ux_emblem_ring", "arc": "ux_emblem_arc", "wave": "ux_emblem_wave", "leaf": "ux_emblem_leaf",
 	"chevron": "ux_emblem_chevron", "chevron_mark": "ux_emblem_chevron", "spark": "ux_emblem_spark",
@@ -115,6 +125,9 @@ func _ready() -> void:
 	_nations = PackedStringArray(CKHeraldry.table().get("nations", {}).keys())
 	if _nations.is_empty():
 		_nations = PackedStringArray(["ashbanner"])
+	_shapes = PackedStringArray(CKHeraldry.table().get("shield_shapes", ["heater", "kite", "round", "lozenge", "banner"]))
+	if _shapes.is_empty():
+		_shapes = PackedStringArray(["heater", "kite", "round", "lozenge", "banner"])
 	_build()
 	if _reedit:
 		_apply_reedit_mode()
@@ -152,7 +165,7 @@ func _current_spec() -> Dictionary:
 		"emblem_color": charge_col,
 		"charges": [{"id": emblem_id, "tincture": charge_col, "placement": "center"}],
 		"nation": nation,
-		"shield_shape": str(CKHeraldry.nation_style(nation).get("shield", "heater")),
+		"shield_shape": str(_shapes[_shape_idx]) if _shapes.size() > 0 else "heater",
 	})
 
 ## Founding page: the preview pane (shield, banner, portrait, name fields, raise/back) never scrolls.
@@ -311,6 +324,8 @@ func _build() -> void:
 	row.add_child(_color_name_label)
 
 	_nation_label = _layer_row(box, Locale.t("ux_name_nation_style"), func(d): _shift_enum("nation", d))
+	_shape_label = _layer_row(box, Locale.t("ux_name_shield_shape"), func(d): _shift_enum("shape", d))
+	_shape_label.name = "ShieldShapeLabel"
 	_field_label = _layer_row(box, Locale.t("ux_name_field_split"), func(d): _shift_enum("field", d))
 	_partition_label = _layer_row(box, Locale.t("ux_name_partition"), func(d): _shift_enum("partition", d))
 	_charge_label = _layer_row(box, Locale.t("ux_name_ordinary"), func(d): _shift_enum("charge", d))
@@ -400,9 +415,13 @@ func _shift_enum(which: String, d: int) -> void:
 		"border":
 			_border_idx = (_border_idx + d + BannerSpec.BORDERS.size()) % BannerSpec.BORDERS.size()
 		"emblem":
-			_emblem_idx = (_emblem_idx + d + BannerSpec.EMBLEMS.size()) % BannerSpec.EMBLEMS.size()
+			_emblem_idx = (_emblem_idx + d + BannerSpec.EMBLEMS.size()) % maxi(1, BannerSpec.EMBLEMS.size())
+		"shape":
+			_shape_idx = (_shape_idx + d + _shapes.size()) % maxi(1, _shapes.size())
 		"nation":
 			_nation_idx = (_nation_idx + d + _nations.size()) % maxi(1, _nations.size())
+			# Nation style row also adopts that nation's shield silhouette (still fine-tunable).
+			_sync_shape_from_nation(str(_nations[_nation_idx]) if _nations.size() > 0 else "ashbanner")
 	_refresh_preview_art()
 
 func _build_nation_preset_strip(box: VBoxContainer) -> void:
@@ -499,6 +518,9 @@ func _sync_layer_labels() -> void:
 	if _nation_label and _nations.size() > 0:
 		var st := CKHeraldry.nation_style(str(_nations[_nation_idx]))
 		_nation_label.text = str(st.get("zh", _nations[_nation_idx]))
+	if _shape_label and _shapes.size() > 0:
+		var sh := str(_shapes[_shape_idx])
+		_shape_label.text = Locale.t(str(SHAPE_KEYS.get(sh, "ux_shield_heater")))
 
 func _on_name_typed() -> void:
 	## Typing only needs the banner tag + raise-button state — not a full portrait rebuild.
@@ -521,6 +543,8 @@ func _refresh_preview_art() -> void:
 	BannerName.attach(_banner, GameState.surname)
 	if _shield:
 		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
+		_shield.set_meta("shield_shape", str(spec.get("shield_shape", "heater")))
+		_shield.set_meta("arms_core", CKHeraldry.core_key(spec))
 	var faces_before := _faces.size()
 	_ensure_faces()
 	if _face == null and not _faces.is_empty():
@@ -661,6 +685,12 @@ func _nearest_color_idx(hex: String) -> int:
 	return best
 
 
+func _sync_shape_from_nation(nid: String) -> void:
+	var want := str(CKHeraldry.nation_style(nid).get("shield", "heater"))
+	var six := _shapes.find(want)
+	_shape_idx = maxi(0, six if six >= 0 else _shapes.find("heater"))
+
+
 func _load_from_banner_spec(spec: Dictionary) -> void:
 	if spec.is_empty():
 		return
@@ -688,6 +718,13 @@ func _load_from_banner_spec(spec: Dictionary) -> void:
 	var nix := _nations.find(nid)
 	if nix >= 0:
 		_nation_idx = nix
+	var shape := str(spec.get("shield_shape", "")).strip_edges()
+	if shape == "" and nid != "":
+		shape = str(CKHeraldry.nation_style(nid).get("shield", "heater"))
+	var six := _shapes.find(shape)
+	if six < 0:
+		six = _shapes.find("heater")
+	_shape_idx = maxi(0, six)
 	if _preview:
 		_preview.color = Color(str(_colors[_color_idx]))
 	if _color_name_label:
