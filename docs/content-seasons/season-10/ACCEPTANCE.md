@@ -4,9 +4,9 @@
 
 | id | 项 | suite |
 |---|---|---|
-| job_seal | 职印可感 | `month_echo_job_seal_check` |
+| job_seal | 印泥可感 | `job_seal_empty_cta_check` |
 | scaffold_gate | 内容季流水门禁（含 #10） | `content_season_scaffold_check` |
 | playable_dialogue | 可玩章 cs10_01 对白可走 | `content_season_playable_s10_check` |
 | playable_dialogue_02 | 可玩章 cs10_02 对白可走 | `content_season_playable_s10_02_check` |
-
-补充：`TOPIC` / `NOVEL`≥12000 / `BIBLE` / `PLAYABLE` / 枢纽 ContentSeasonRow 自动挂入（`playable_draft`）。盖印成功写入 `month_echo.job_seal`，属地与沙漏回读。立绘与真机自玩不挡合入。
+| playable_dialogue_03 | 可玩章 cs10_03 对白可走 | `content_season_playable_s10_03_check` |
+| playable_gate_s10 | S10 同档门禁 01+02+03 | `content_season_playable_gate_s10_check` |

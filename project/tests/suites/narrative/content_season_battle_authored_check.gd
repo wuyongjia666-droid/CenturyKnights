@@ -28,6 +28,7 @@ const BATTLE_BEAT := {
 	"cs07_03": "bridge",
 	"cs08_03": "bridge",
 	"cs09_03": "bridge",
+	"cs10_03": "bridge",
 	"cs07_01": "bridge",
 	"cs07_02": "bridge",
 	"cs08_01": "bridge",
@@ -58,6 +59,7 @@ const AFTER := {
 	"cs07_03": "tavern",
 	"cs08_03": "tavern",
 	"cs09_03": "tavern",
+	"cs10_03": "tavern",
 	"cs07_01": "tavern",
 	"cs07_02": "tavern",
 	"cs08_01": "tavern",
@@ -73,7 +75,7 @@ const LIVE := [
 	"cs05_01", "cs05_02", "cs05_03", "cs06_01", "cs06_02", "cs06_03", "cs07_01", "cs07_02",
 	"cs07_03",
 	"cs08_03",
-	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs09_03", "cs10_01", "cs10_02",
+	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs09_03", "cs10_01", "cs10_02", "cs10_03",
 ]
 
 

@@ -230,6 +230,17 @@ const CHAINS := [
 		"tavern_line": "cs09_03_tavern_y19",
 	},
 	{
+		"cid": "cs10_03",
+		"order": "visit_then_battle",
+		"battle": "bridge",
+		"after_battle": "tavern",
+		"battle_line": "cs10_03_bridge_y21",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+		"visit_line": "cs10_03_hourglass_y18",
+		"tavern_line": "cs10_03_tavern_y19",
+	},
+	{
 		"cid": "cs06_01",
 		"order": "visit_then_battle",
 		"battle": "bridge",
