@@ -1,6 +1,6 @@
 extends Control
-## Territory Ledger (P1-UX-04 / design §19–§22) — owned sites whole-chain:
-## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease.
+## Territory Ledger (P1-UX-04 / design §19–§23) — owned sites whole-chain:
+## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease · chain pledge.
 
 const _MAX_LIST := 48
 
@@ -17,6 +17,8 @@ var _reclaim: Label
 var _btn_reclaim: Button
 var _unrest: Label
 var _btn_appease: Button
+var _chain: Label
+var _btn_chain: Button
 var _ids: Array = []
 var _pick := ""
 
@@ -79,17 +81,33 @@ func _build() -> void:
 	_unrest.visible = false
 	add_child(_unrest)
 
+	_chain = UIKit.body_label("", UIKit.EMBER, 13)
+	_chain.name = "TerritoryChainBanner"
+	_chain.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_chain.position = Vector2(42, 220)
+	_chain.size = Vector2(980, 24)
+	_chain.visible = false
+	add_child(_chain)
+
+	_btn_chain = UIKit.cta_button(Locale.t("ux_territory_chain_goto"), "C", 160, 28)
+	_btn_chain.name = "TerritoryChainGoto"
+	_btn_chain.position = Vector2(1040, 216)
+	_btn_chain.size = Vector2(160, 28)
+	_btn_chain.visible = false
+	_btn_chain.pressed.connect(_on_chain_goto)
+	add_child(_btn_chain)
+
 	_empty = UIKit.body_label(Locale.t("ux_territory_empty"), UIKit.EMBER, 13)
 	_empty.name = "TerritoryEmpty"
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_empty.position = Vector2(42, 222)
+	_empty.position = Vector2(42, 246)
 	_empty.size = Vector2(1196, 28)
 	_empty.visible = false
 	add_child(_empty)
 
 	_list = ItemList.new()
 	_list.name = "TerritoryList"
-	_list.position = Vector2(42, 230)
+	_list.position = Vector2(42, 254)
 	_list.size = Vector2(420, 396)
 	_list.item_selected.connect(_on_pick)
 	add_child(_list)
@@ -185,6 +203,16 @@ func _refresh() -> void:
 	else:
 		_unrest.text = ""
 		_unrest.visible = false
+	var chain_n := CKTerritory.pending_chain_ids().size()
+	if chain_n > 0:
+		_chain.text = Locale.t("ux_territory_chain_banner") % chain_n
+		_chain.visible = true
+		_btn_chain.visible = true
+		_btn_chain.disabled = false
+	else:
+		_chain.text = ""
+		_chain.visible = false
+		_btn_chain.visible = false
 	var owned: Array = CKTerritory.owned_ids()
 	owned.sort()
 	for id in owned:
@@ -349,3 +377,11 @@ func _on_appease() -> void:
 	_msg.add_theme_color_override("font_color", UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
 	_msg.text = str(r.get("msg", ""))
 	_refresh()
+
+func _on_chain_goto() -> void:
+	var focused := CKTerritory.hub_focus_chain()
+	if focused == "":
+		_msg.add_theme_color_override("font_color", UIKit.DANGER)
+		_msg.text = Locale.t("ux_territory_chain_fail")
+		return
+	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": focused})

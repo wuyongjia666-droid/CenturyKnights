@@ -203,6 +203,7 @@ static func capture(id: String, how: String) -> Dictionary:
 		st.unrest = 0
 	_put(id, st)
 	_clear_reclaim(id)
+	_clear_chain(id)
 	_log(Locale.t("terr_07") % [site(id).name, Locale.t("terr_08") if how == "assault" else Locale.t("terr_09")])
 	if how == "contest":
 		var ys := int(site(id).yield_silver)
@@ -378,6 +379,49 @@ static func _clear_reclaim(id: String) -> void:
 		var board_hit := false
 		for q in offers:
 			if str(q.get("territory", "")) == id and bool(q.get("territory_reclaim", false)):
+				board_hit = true
+				continue
+			kept.append(q)
+		if board_hit:
+			World.boards[anchor].offers = kept
+			changed = true
+	if changed:
+		GameState.mark_dirty()
+		World.world_changed.emit()
+
+## Open「归附」pledge commission (chain=true, not reclaim) on board or active.
+static func _has_chain(id: String) -> bool:
+	for q in World.active:
+		if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
+			return true
+	## Read boards map only — never World.board() (that lazy-rolls offers and
+	## desyncs campaign_sim silver / portrait seeds when pending_chain_ids
+	## runs every month, including the zero-holdings early path).
+	var anchor := str(site(id).anchor)
+	if anchor != "" and World.boards.has(anchor):
+		for q in World.boards[anchor].get("offers", []):
+			if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
+				return true
+	return false
+
+## Drop open「归附」commission for site (board offer + active). Chip / ledger / hourglass read this.
+static func _clear_chain(id: String) -> void:
+	var changed := false
+	var kept_active: Array = []
+	for q in World.active:
+		if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
+			changed = true
+			continue
+		kept_active.append(q)
+	if changed:
+		World.active = kept_active
+	var anchor := str(site(id).anchor)
+	if anchor != "" and World.boards.has(anchor):
+		var offers: Array = World.boards[anchor].get("offers", [])
+		var kept: Array = []
+		var board_hit := false
+		for q in offers:
+			if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
 				board_hit = true
 				continue
 			kept.append(q)
@@ -1287,6 +1331,7 @@ static func apply_month(force_roll: float = -1.0) -> String:
 			"contest_open": contested_ids(),
 			"line": "",
 			"reclaims": [],
+			"chains": pending_chain_ids(),
 		}
 		return ""
 	var silver := 0
@@ -1388,6 +1433,7 @@ static func apply_month(force_roll: float = -1.0) -> String:
 		"contest_open": contested_ids(),
 		"line": line,
 		"reclaims": pending_reclaim_ids(),
+		"chains": pending_chain_ids(),
 	}
 	return line
 
@@ -1536,6 +1582,14 @@ static func pending_reclaim_ids() -> Array:
 			out.append(str(id))
 	return out
 
+## Sites with an open「归附」pledge commission (board or active). Castle HubTodo / ledger / hourglass.
+static func pending_chain_ids() -> Array:
+	var out: Array = []
+	for id in site_ids():
+		if _has_chain(str(id)):
+			out.append(str(id))
+	return out
+
 ## Owned sites still under 民心未附 (unrest > 0). Castle HubTodo / ledger / hourglass.
 static func unrest_owned_ids() -> Array:
 	var out: Array = []
@@ -1583,6 +1637,23 @@ static func hub_focus_reclaim(id: String = "") -> String:
 			return ""
 		id = str(ids[0])
 	elif not _has_reclaim(id):
+		return ""
+	var anchor := str(site(id).get("anchor", ""))
+	if anchor != "":
+		GameState.set_meta("atlas_select", anchor)
+	GameState.set_meta("atlas_territory_site", id)
+	return id
+
+## Castle Todo / hourglass / ledger deep-link: focus atlas on a pending chain-pledge site.
+## Returns the site id focused, or "" if none.
+static func hub_focus_chain(id: String = "") -> String:
+	id = str(id)
+	var ids := pending_chain_ids()
+	if id == "":
+		if ids.is_empty():
+			return ""
+		id = str(ids[0])
+	elif not _has_chain(id):
 		return ""
 	var anchor := str(site(id).get("anchor", ""))
 	if anchor != "":
