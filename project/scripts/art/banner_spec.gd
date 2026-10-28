@@ -6,7 +6,7 @@ extends RefCounted
 const FIELDS := ["solid", "per_fess", "per_pale"]
 const CHARGES := ["none", "fess", "pale", "bend", "chevron", "pale_thin"]
 const BORDERS := ["none", "line", "double", "dentil"]
-const EMBLEMS := ["ring", "arc", "wave", "leaf", "chevron", "spark", "filament", "tide", "notch", "bars", "bend", "hollow"]
+const EMBLEMS := ["ring", "arc", "wave", "leaf", "chevron", "spark", "filament", "tide", "notch", "bars", "bend", "hollow", "surname"]
 const DATA_PATH := "res://assets/art/banner_diy_v93.json"
 const HERALDRY_PATH := "res://assets/art/heraldry_v2.json"
 

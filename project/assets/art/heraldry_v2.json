@@ -376,6 +376,11 @@
       "shape": "ring_thick"
     },
     {
+      "id": "surname",
+      "zh": "姓氏单字",
+      "shape": "surname"
+    },
+    {
       "id": "arc",
       "zh": "弧",
       "shape": "arc"
@@ -885,7 +890,8 @@
         "none"
       ],
       "motto": ""
-    }
+    },
+    "glyph_char": ""
   },
   "v1_field_to_division": {
     "solid": "solid",

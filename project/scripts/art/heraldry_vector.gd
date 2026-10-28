@@ -188,7 +188,9 @@ static func _ordinary_path(kind: String) -> String:
 
 # ---------------------------------------------------------------- shield content
 
-static func _charge_frag(id: String, hex: String, cx: float, cy: float, size: float) -> String:
+static func _charge_frag(id: String, hex: String, cx: float, cy: float, size: float, glyph: String = "") -> String:
+	if id == "surname":
+		return _surname_frag(hex, cx, cy, size, glyph)
 	var L := lib()
 	var charges: Dictionary = L.get("charges", {})
 	var key := id
@@ -204,6 +206,36 @@ static func _charge_frag(id: String, hex: String, cx: float, cy: float, size: fl
 	var shadow := '<g transform="translate(%.2f,%.2f) scale(%.4f) translate(-50,-50)" opacity="0.28">%s</g>' % [
 		cx + size * 0.025, cy + size * 0.035, k, _sub(str(charges[key]), vars).replace("fill=\"" + str(vars["{T}"]) + "\"", "fill=\"" + _ink() + "\"")]
 	return shadow + '<g transform="translate(%.2f,%.2f) scale(%.4f) translate(-50,-50)">%s</g>' % [cx, cy, k, _sub(str(charges[key]), vars)]
+
+## Surname geometric glyph: TextServer contours (vector strokes), seal fallback if font missing.
+static func _surname_frag(hex: String, cx: float, cy: float, size: float, glyph: String) -> String:
+	var ch := CKHeraldry.surname_char(glyph)
+	# Empty glyph → procedural seal (seed 0); no CJK fallback literal (i18n ratchet).
+	var glyphs := text_path(ch, 96) if ch != "" else {"d": ""}
+	if str(glyphs.get("d", "")) != "":
+		var gw := maxf(1.0, float(glyphs.get("width", 96.0)))
+		var gk := size * 0.78 / gw
+		var tx := cx - gw * gk * 0.5
+		var ty := cy + size * 0.28
+		var shadow := '<path d="%s" transform="translate(%.2f,%.2f) scale(%.4f)" fill="%s" fill-rule="evenodd" opacity="0.28"/>' % [
+			glyphs.d, tx + size * 0.03, ty + size * 0.03, gk, _ink()]
+		return shadow + '<path d="%s" transform="translate(%.2f,%.2f) scale(%.4f)" fill="%s" fill-rule="evenodd"/>' % [
+			glyphs.d, tx, ty, gk, hex]
+	# Font-free procedural seal strokes (same recipe as raster).
+	var d := ""
+	for seg in CKHeraldry.surname_stroke_segments(ch):
+		if typeof(seg) != TYPE_ARRAY or (seg as Array).size() < 2:
+			continue
+		var a: Vector2 = (seg as Array)[0]
+		var b: Vector2 = (seg as Array)[1]
+		var ax := cx + a.x * size * 0.5
+		var ay := cy + a.y * size * 0.5
+		var bx := cx + b.x * size * 0.5
+		var by := cy + b.y * size * 0.5
+		d += "M%.2f,%.2f L%.2f,%.2f " % [ax, ay, bx, by]
+	var sw := maxf(1.6, size * 0.055)
+	return '<path d="%s" fill="none" stroke="%s" stroke-width="%.2f" stroke-linecap="square" stroke-linejoin="miter"/>' % [d, hex, sw]
+
 
 static func _fur_pattern(kind: String, base_hex: String, spot_hex: String) -> String:
 	var out := '<rect x="-10" y="-10" width="220" height="260" fill="%s"/>' % base_hex
@@ -259,7 +291,10 @@ static func _charges_svg(s: Dictionary, has_ordinary: bool) -> String:
 		var emblem := str(s.get("emblem", ""))
 		if emblem == "" or emblem == "none":
 			return ""
-		charges = [{"id": emblem, "tincture": str(s.get("emblem_color", "")), "placement": "center"}]
+		var row := {"id": emblem, "tincture": str(s.get("emblem_color", "")), "placement": "center"}
+		if emblem == "surname":
+			row["glyph"] = str(s.get("glyph_char", ""))
+		charges = [row]
 	var out := ""
 	var multi := charges.size() > 1
 	for ch in charges:
@@ -284,7 +319,10 @@ static func _charges_svg(s: Dictionary, has_ordinary: bool) -> String:
 			_:
 				if multi:
 					size = 92.0
-		out += _charge_frag(str(cd.get("id", "ring")), str(cd.get("tincture", CKHeraldry.tincture_hex("argent"))), pos.x, pos.y, size)
+		var gid := str(cd.get("glyph", ""))
+		if gid == "" and str(cd.get("id", "")) == "surname":
+			gid = str(s.get("glyph_char", ""))
+		out += _charge_frag(str(cd.get("id", "ring")), str(cd.get("tincture", CKHeraldry.tincture_hex("argent"))), pos.x, pos.y, size, gid)
 	return out
 
 static func _canton_svg(s: Dictionary) -> String:
