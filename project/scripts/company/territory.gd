@@ -507,6 +507,7 @@ static func reinforce(id: String) -> Dictionary:
 	_put(id, st)
 	var nm := str(site(id).name)
 	CKEconomyState.month_echo_note("garrison", Locale.t("terr_echo_garrison", [nm, int(st.garrison), cost]))
+	_clear_drain_pending(id)
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_28") % [nm, int(st.garrison), cost], "preview": prev}
@@ -1184,6 +1185,41 @@ static func contested_ids() -> Array:
 	return out
 
 
+## Alias for HubTodo / ledger / hourglass closed-loop (§24).
+static func pending_contest_ids() -> Array:
+	return contested_ids()
+
+
+## Owned sites that lost garrison to unpaid upkeep last month (耐久 §25).
+static func pending_drain_ids() -> Array:
+	var out: Array = []
+	var seen := {}
+	var drains: Array = last_month_report.get("drains", []) if typeof(last_month_report.get("drains", [])) == TYPE_ARRAY else []
+	for d in drains:
+		if typeof(d) != TYPE_DICTIONARY:
+			continue
+		var id := str(d.get("id", ""))
+		if id == "" or seen.has(id):
+			continue
+		if owned(id):
+			out.append(id)
+			seen[id] = true
+	return out
+
+
+static func _clear_drain_pending(id: String) -> void:
+	id = str(id)
+	var drains: Array = last_month_report.get("drains", []) if typeof(last_month_report.get("drains", [])) == TYPE_ARRAY else []
+	if drains.is_empty():
+		return
+	var kept: Array = []
+	for d in drains:
+		if typeof(d) == TYPE_DICTIONARY and str(d.get("id", "")) != id:
+			kept.append(d)
+	if kept.size() != drains.size():
+		last_month_report["drains"] = kept
+
+
 ## Territory fat: gate readout for neutral contest stake / seize (UI + E2E).
 static func contest_stake_cost(id: String) -> int:
 	return int(rule("contest_stake_cost", 40)) + int(site(id).get("danger", 1)) * 12
@@ -1400,6 +1436,7 @@ static func apply_month(force_roll: float = -1.0) -> String:
 				var drain_line := Locale.t("terr_29") % [site(id).name, int(st2.garrison)]
 				notes.append(drain_line)
 				drains.append({"id": id, "name": str(site(id).name), "garrison": int(st2.garrison), "text": drain_line})
+				CKEconomyState.month_echo_note("drain", Locale.t("terr_echo_drain", [str(site(id).name), int(st2.garrison)]))
 	for id in owned_ids():
 		var st3 := state(id)
 		if (st3.threat as Dictionary).is_empty():
@@ -1659,6 +1696,30 @@ static func hub_focus_chain(id: String = "") -> String:
 	if anchor != "":
 		GameState.set_meta("atlas_select", anchor)
 	GameState.set_meta("atlas_territory_site", id)
+	return id
+
+## Castle Todo / hourglass / ledger deep-link: focus atlas + re-queue ContestTug on open拉锯.
+## Returns the site id focused, or "".
+static func hub_focus_contest(id: String = "") -> String:
+	id = str(id)
+	var ids := pending_contest_ids()
+	if id == "":
+		if ids.is_empty():
+			return ""
+		id = str(ids[0])
+	else:
+		var ok := false
+		for x in ids:
+			if str(x) == id:
+				ok = true
+				break
+		if not ok:
+			return ""
+	var anchor := str(site(id).get("anchor", ""))
+	if anchor != "":
+		GameState.set_meta("atlas_select", anchor)
+	GameState.set_meta("atlas_territory_site", id)
+	_emit_neutral_contest(id)
 	return id
 
 ## Castle Todo chip deep-link: re-queue SiegeAlert for the most urgent threatened site.

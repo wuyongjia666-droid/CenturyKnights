@@ -169,6 +169,8 @@ func _show_forecast(months: int) -> void:
 	_paint_reclaim_pending(_forecast)
 	_paint_unrest_pending(_forecast)
 	_paint_chain_pending(_forecast)
+	_paint_contest_pending(_forecast)
+	_paint_drain_pending(_forecast)
 
 
 ## Territory closed-loop: pending siege threats on the forecast + deep-link to SiegeAlert.
@@ -237,6 +239,41 @@ func _paint_chain_pending(host: VBoxContainer) -> void:
 	btn.pressed.connect(func():
 		CKTerritory.hub_focus_chain()
 		CKNav.go("res://scenes/hub/atlas_view.tscn")
+	)
+	host.add_child(btn)
+	UIFX.wire_button(btn)
+
+
+## Territory closed-loop: open中立拉锯 on the forecast + deep-link atlas ContestTug.
+func _paint_contest_pending(host: VBoxContainer) -> void:
+	var ids: Array = CKTerritory.pending_contest_ids()
+	if ids.is_empty():
+		return
+	var warn := _line(Locale.t("lb_hg_contest_pending", [ids.size()]), UIKit.EMBER)
+	warn.name = "ContestPending"
+	host.add_child(warn)
+	var btn := CKPageKit.button(Locale.t("lb_hg_to_contest"), true, 220)
+	btn.name = "ToContest"
+	btn.pressed.connect(func():
+		CKTerritory.hub_focus_contest()
+		CKNav.go("res://scenes/hub/atlas_view.tscn")
+	)
+	host.add_child(btn)
+	UIFX.wire_button(btn)
+
+
+## Territory durability: unpaid garrison drain → forecast + deep-link ledger reinforce.
+func _paint_drain_pending(host: VBoxContainer) -> void:
+	var ids: Array = CKTerritory.pending_drain_ids()
+	if ids.is_empty():
+		return
+	var warn := _line(Locale.t("lb_hg_drain_pending", [ids.size()]), UIKit.DANGER)
+	warn.name = "DrainPending"
+	host.add_child(warn)
+	var btn := CKPageKit.button(Locale.t("lb_hg_to_reinforce"), true, 220)
+	btn.name = "ToReinforce"
+	btn.pressed.connect(func():
+		CKNav.go("res://scenes/hub/territory_ledger.tscn")
 	)
 	host.add_child(btn)
 	UIFX.wire_button(btn)

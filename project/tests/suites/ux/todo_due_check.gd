@@ -67,7 +67,7 @@ func _run() -> String:
 	return ""
 
 
-## J14 threat + §20 stockade credit + §21 reclaim + §22 unrest + §23 chain HubTodo chips.
+## J14 threat + §20 stockade credit + §21 reclaim + §22 unrest + §23 chain + §24 contest + §25 drain HubTodo chips.
 func _check_territory_todos() -> String:
 	var err := _check_threat()
 	if err != "":
@@ -81,7 +81,13 @@ func _check_territory_todos() -> String:
 	err = _check_unrest()
 	if err != "":
 		return err
-	return _check_chain()
+	err = _check_chain()
+	if err != "":
+		return err
+	err = _check_contest()
+	if err != "":
+		return err
+	return _check_drain()
 
 
 func _check_threat() -> String:
@@ -269,4 +275,82 @@ func _check_chain() -> String:
 	for item in Todo.snapshot():
 		if str(item.get("category", "")) == "territory_chain" and int(item.get("count", 0)) > 0:
 			return "cleared chain still shows territory_chain"
+	return ""
+
+
+## §24 contest: start_neutral_contest → chip+atlas focus; capture → chip gone.
+func _check_contest() -> String:
+	var site := "t_ash_cinderpit"
+	var st: Dictionary = CKTerritory.state(site)
+	st.owner = CKTerritory.NEUTRAL
+	st.garrison = 0
+	st.unrest = 0
+	st.threat = {}
+	st.contest = {}
+	CKTerritory._put(site, st)
+	World.last_neutral_contest = {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_contest" and int(item.get("count", 0)) > 0:
+			return "fresh/no-contest still shows territory_contest"
+	CKTerritory.start_neutral_contest(site, [
+		{"id": "rival:rv_a", "name": "灰烬狼团", "pressure": 3},
+		{"id": "rival:rv_b", "name": "盐湾镖旗", "pressure": 2},
+	])
+	var row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_contest":
+			row = item
+	if int(row.get("count", 0)) < 1:
+		return "contest chip missing after start (%s)" % str(row)
+	if Todo.link_for(row) != "res://scenes/hub/atlas_view.tscn":
+		return "territory_contest chip has no atlas link"
+	if GameState.has_meta("atlas_territory_site"):
+		GameState.remove_meta("atlas_territory_site")
+	Todo.prepare_nav(row)
+	if not GameState.has_meta("atlas_territory_site") or str(GameState.get_meta("atlas_territory_site")) != site:
+		return "prepare_nav did not focus contest site"
+	var anchor := str(CKTerritory.site(site).get("anchor", ""))
+	World.pos = anchor
+	World.arrive(anchor)
+	CKTerritory.capture(site, "contest")
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_contest" and int(item.get("count", 0)) > 0:
+			return "cleared contest still shows territory_contest"
+	return ""
+
+
+## §25 drain: seed drains → chip+ledger; reinforce → chip gone.
+func _check_drain() -> String:
+	var site := "t_ash_cinderpit"
+	var st: Dictionary = CKTerritory.state(site)
+	st.owner = CKTerritory.OWN
+	st.garrison = 1
+	st.unrest = 0
+	st.threat = {}
+	st.contest = {}
+	CKTerritory._put(site, st)
+	CKTerritory.last_month_report = {
+		"silver": 0, "food": 0, "owned": 1, "owned_before": 1,
+		"drains": [], "lost": [], "held": [], "threats": [], "line": "ok",
+		"reclaims": [], "contests": [], "contest_open": [],
+	}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_drain" and int(item.get("count", 0)) > 0:
+			return "fresh/no-drain still shows territory_drain"
+	CKTerritory.last_month_report["drains"] = [{"id": site, "name": str(CKTerritory.site(site).name), "garrison": 1, "text": "drain"}]
+	var row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_drain":
+			row = item
+	if int(row.get("count", 0)) < 1:
+		return "drain chip missing after seed (%s)" % str(row)
+	if Todo.link_for(row) != "res://scenes/hub/territory_ledger.tscn":
+		return "territory_drain chip has no ledger link"
+	GameState.silver = maxi(GameState.silver, 500)
+	var r: Dictionary = CKTerritory.reinforce(site)
+	if not bool(r.get("ok", false)):
+		return "reinforce fail: %s" % r.get("msg", "")
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_drain" and int(item.get("count", 0)) > 0:
+			return "cleared drain still shows territory_drain"
 	return ""
