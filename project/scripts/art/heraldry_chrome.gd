@@ -88,7 +88,10 @@ static func make_company_arms(size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	var tr := TextureRect.new()
 	tr.name = "CastleArms"
 	var spec := company_spec()
-	tr.texture = UnitArt.shield_arms(spec, int(size.x), int(size.y))
+	if CKHeraldry.has_achievement_ornament(spec):
+		tr.texture = UnitArt.achievement_arms(spec, int(size.x), int(size.y))
+	else:
+		tr.texture = UnitArt.shield_arms(spec, int(size.x), int(size.y))
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	tr.custom_minimum_size = size
@@ -98,6 +101,7 @@ static func make_company_arms(size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	tr.set_meta("arms_kind", "gen2_36")
 	tr.set_meta("arms_core", CKHeraldry.core_key(spec))
 	tr.set_meta("shield_shape", str(spec.get("shield_shape", "heater")))
+	CKHeraldry.stamp_achievement_meta(tr, spec)
 	return tr
 
 static func make_company_banner(size: Vector2 = Vector2(28, 38)) -> TextureRect:

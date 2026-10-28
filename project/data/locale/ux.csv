@@ -583,6 +583,20 @@ ux_name_nation_preset_strip,十国推荐套装,Nation recommended suits
 ux_name_nation_preset_btn,套上这国的推荐旗面,Apply this nation's recommended banner
 ux_nation_preset_tip,套上%s的推荐旗面（灰底心色可再微调）,Apply %s recommended banner (ash cloth; heart still tunable)
 ux_name_shield_shape,盾形,Shield shape
+ux_name_helm,盔,Helm
+ux_name_crown,冠,Crown
+ux_name_motto,格言,Motto
+ux_name_motto_hint,短铭 / 国别格言,Short motto
+ux_helm_none,无盔,No helm
+ux_helm_closed,闭盔,Closed helm
+ux_helm_grilled,栅盔,Grilled helm
+ux_helm_royal,王冠盔,Royal helm
+ux_crown_none,无冠,No crown
+ux_crown_knight,勋环,Knight circlet
+ux_crown_baron,男爵冠,Baron's crown
+ux_crown_count,伯爵冠,Count's crown
+ux_crown_duke,侯爵冠,Duke's crown
+ux_crown_royal,霜冕,Frost crown
 ux_shield_heater,尖底盾,Heater
 ux_shield_kite,鸢盾,Kite
 ux_shield_round,圆盾,Round
