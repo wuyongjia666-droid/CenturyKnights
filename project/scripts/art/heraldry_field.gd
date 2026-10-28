@@ -871,7 +871,10 @@ static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), 
 	if not raw_b.is_empty():
 		var spec := BannerSpec.normalize(raw_b)
 		tr = TextureRect.new()
-		tr.texture = UnitArt.shield_arms(spec, int(size.x), int(size.y))
+		if CKHeraldry.has_achievement_ornament(spec):
+			tr.texture = UnitArt.achievement_arms(spec, int(size.x), int(size.y))
+		else:
+			tr.texture = UnitArt.shield_arms(spec, int(size.x), int(size.y))
 		tr.custom_minimum_size = size
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -879,6 +882,7 @@ static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), 
 		tr.set_meta("arms_kind", "lb_slot_arms")
 		tr.set_meta("arms_core", CKHeraldry.core_key(spec))
 		tr.set_meta("shield_shape", str(spec.get("shield_shape", "heater")))
+		CKHeraldry.stamp_achievement_meta(tr, spec)
 		tr.tooltip_text = Locale.t("lb_slot_arms")
 	elif hx != "":
 		tr = TextureRect.new()
@@ -891,6 +895,7 @@ static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), 
 		tr.set_meta("arms_kind", "lb_slot_arms")
 		tr.set_meta("arms_core", CKHeraldry.core_key(crest_spec))
 		tr.set_meta("shield_shape", str(crest_spec.get("shield_shape", "heater")))
+		CKHeraldry.stamp_achievement_meta(tr, crest_spec)
 		tr.tooltip_text = Locale.t("lb_slot_arms")
 	else:
 		tr = CKHeraldryChrome.make_company_arms(size)
@@ -2177,6 +2182,10 @@ static func place_castle_hang_banner(parent: Node, at: Vector2, size: Vector2 = 
 	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.company_spec()))
 	# Cloth is always rectangular (render forces heater mask); do not claim nation shield silhouette.
 	tr.set_meta("shield_shape", "cloth")
+	# Hang cloth never carries achievement ornaments — meta stays bare.
+	tr.set_meta("arms_helm", "none")
+	tr.set_meta("arms_crown", "none")
+	tr.set_meta("arms_motto", "")
 	var w := maxi(24, int(size.x))
 	var h := maxi(32, int(size.y))
 	tr.texture = UnitArt.banner_layers({}, w, h)
