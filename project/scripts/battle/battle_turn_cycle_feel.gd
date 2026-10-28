@@ -6,7 +6,7 @@ extends RefCounted
 ## FeelLoop / AttackAim META 进敌方阶段不清；回场自动选中后信息栏可能仍
 ## 停在上一人收尾态；战技 Buff/Heal 闩进敌方仍画。本刀收口：交接前清窥视
 ## 与瞄准与战技闩；结束回合清 FeelLoop / 交接 META / 战技闩 / 取消戳；回场盖 cycle
-## 戳并刷信息栏。禁瞄准预告碎刀 / telegraph / EmptyHost / BoardInset 单点薄切。
+## 戳并刷信息栏；清敌方行动整链戳。禁瞄准预告碎刀 / telegraph / EmptyHost / BoardInset 单点薄切。
 
 const META := "m_turn_cycle"
 
@@ -70,6 +70,7 @@ static func before_enemy_phase(host) -> void:
 	BattleFeelLoop.clear(host)
 	BattleSkillFeelLoop.clear(host)
 	BattleCancelFeelLoop.clear(host)
+	BattleEnemyActFeel.clear(host)
 	if host.has_meta(BattleWaitHandoff.META):
 		host.remove_meta(BattleWaitHandoff.META)
 	_stamp(host, "enemy", {})
@@ -83,5 +84,6 @@ static func after_player_return(host) -> void:
 	if host == null:
 		return
 	clear_peek_chrome(host)
+	BattleEnemyActFeel.clear(host)
 	BattleBoardInset.refresh_info_block(host)
 	_stamp(host, "return", {"selected": int(host.get("selected"))})

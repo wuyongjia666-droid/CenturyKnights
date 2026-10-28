@@ -2600,7 +2600,7 @@ func _enemy_ai() -> void:
 		if units[i].char.hp <= 0:
 			continue
 		u = units[i]
-		BattlePhaseFeel.note_enemy_acting(self, i)
+		BattleEnemyActFeel.after_act_start(self, i)
 		var planned: Dictionary = ai_plan.get(str(u.char.id), {})
 		if str(planned.get("action", "")) == "summon" and not has_meta("ai_summoned"):
 			set_meta("ai_summoned", true)
@@ -2737,6 +2737,7 @@ func _enemy_ai() -> void:
 			_spawn_move_dust(best_pos)
 			_log_enemy_move(u, best_pos)
 			map_draw.queue_redraw()
+			BattleEnemyActFeel.after_move(self, best_pos, i)
 		if best_target >= 0:
 			var d2 = _manhattan(u.pos, units[best_target].pos)
 			var ok = BattleRules.in_weapon_range(u.char, d2, str(terrain[u.pos.y][u.pos.x]), _height_at(u.pos))
@@ -2747,13 +2748,16 @@ func _enemy_ai() -> void:
 				var pv = BattleRules.preview(u.char, tgt.char, terrain[tgt.pos.y][tgt.pos.x], _combat_extras(i, best_target))
 				_spawn_dmg(tgt.pos, "%d%%" % int(pv.hit), Color(0.85, 0.85, 0.95))
 				_do_attack(i, best_target)
+				BattleEnemyActFeel.after_strike(self, u.pos, units[best_target].pos, i)
 				skill_mode = false
 				active_skill_id = ""
+				BattleEnemyActFeel.after_unit_done(self, i)
 				await get_tree().create_timer(0.28).timeout
 				if battle_over:
 					return
 				continue
 		map_draw.queue_redraw()
+		BattleEnemyActFeel.after_unit_done(self, i)
 		await get_tree().create_timer(0.18).timeout
 		if battle_over:
 			return

@@ -250,8 +250,15 @@ func _source_controller() -> String:
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
 	if ctrl.find("BattlePhaseFeel.note_phase_switch") < 0:
 		return "controller missing phase switch wire"
-	if ctrl.find("BattlePhaseFeel.note_enemy_acting") < 0:
+	# #717 routes enemy acting through BattleEnemyActFeel.after_act_start
+	# (which still calls BattlePhaseFeel.note_enemy_acting).
+	if ctrl.find("BattlePhaseFeel.note_enemy_acting") < 0 \
+			and ctrl.find("BattleEnemyActFeel.after_act_start") < 0:
 		return "controller missing enemy acting wire"
+	if ctrl.find("BattleEnemyActFeel.after_act_start") >= 0:
+		var eaf := FileAccess.get_file_as_string("res://scripts/battle/battle_enemy_act_feel.gd")
+		if eaf.find("BattlePhaseFeel.note_enemy_acting") < 0:
+			return "EnemyActFeel must still call note_enemy_acting"
 	if ctrl.find("BattlePhaseFeel.note_attack_settle") < 0:
 		return "controller missing attack settle wire"
 	if ctrl.find("BattlePhaseFeel.draw_turn_banner") < 0:

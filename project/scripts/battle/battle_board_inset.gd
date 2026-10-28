@@ -36,11 +36,17 @@ extends RefCounted
 static func refresh_info_block(host) -> void:
 	if host == null:
 		return
-	var col := host.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		col = host.find_child("MobileSideCol", true, false) as Control
-	if col == null:
-		col = host.get_node_or_null("SideCol") as Control
+	var col: Control = null
+	if host is Node:
+		col = host.get_node_or_null("MobileSideCol") as Control
+		if col == null:
+			col = host.find_child("MobileSideCol", true, false) as Control
+		if col == null:
+			col = host.get_node_or_null("SideCol") as Control
+	elif host.has_method("get_node_or_null"):
+		col = host.get_node_or_null("MobileSideCol") as Control
+		if col == null:
+			col = host.get_node_or_null("SideCol") as Control
 	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
 		host.set_meta("m_info_block", Rect2(col.position, col.size))
 
