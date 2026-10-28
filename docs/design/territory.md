@@ -221,3 +221,16 @@ E2E：`territory_stockade_credit_loop_check` + mobile twin。
 
 E2E：`territory_reclaim_closed_loop_check` + mobile twin；`todo_due_check` 覆盖无反夺不显示 / 有反夺可链。
 
+
+## 22. 民心未附 / 安抚整链（Territory fat · 禁止再拆 chip/ledger/hourglass/echo）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **未附出现**：`capture(how=assault|contest|reclaim…)` 写入 `unrest` 月数；月结产出减半，每月自然 −1。
+2. **待办带路**：城堡 HubTodo `territory_unrest`（severity=block, count=`unrest_owned_ids()`）→ `territory_ledger`。
+3. **领地簿**：顶栏 `TerritoryUnrestBanner`；选中未附点可「安抚」：`appease(id)` 花银（`appease_cost` = 规则底 + 危险×12）立刻清零 unrest。
+4. **沙漏 Forecast**：`UnrestPending` + `ToAppease` 深链领地簿。
+5. **安抚得手**：`appease` → `month_echo.appease`（`terr_echo_appease`）→ chip / Forecast / 簿条随 unrest 清零。
+6. **月回报**：TerritoryMonth 既有 `UnrestLine`；有 echo 时贴 `EchoLine_appease`。
+
+E2E：`territory_unrest_appease_loop_check` + mobile twin；`todo_due_check` 覆盖无未附不显示 / 有未附可链。
