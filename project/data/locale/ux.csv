@@ -41,6 +41,7 @@ ux_todo_territory_threat,领地受威胁,Sites under threat
 ux_todo_stockade_credit,免费屯营待用,Free stockade ready
 ux_todo_territory_reclaim,失守待反夺,Sites awaiting reclaim
 ux_todo_territory_unrest,民心未附待安抚,Sites under unrest awaiting appease
+ux_todo_territory_chain,归附委托待交,Pledge commissions open
 ux_todo_festival,节庆,Festival
 ux_todo_train,可传习,Tutor open
 ux_todo_none,本月无待办,Nothing due this month
@@ -571,6 +572,9 @@ ux_territory_reclaim_banner,失守待反夺 %d 处 — 点「去反夺」跳舆�
 ux_territory_reclaim_goto,去反夺,Reclaim
 ux_territory_reclaim_fail,当前无反夺委托。,No reclaim commission open.
 ux_territory_unrest_banner,民心未附 %d 处 — 选点后点「安抚」花银清零。,Unrest at %d sites — pick one and tap Appease to clear with silver.
+ux_territory_chain_banner,归附委托待交 %d 处 — 点「去接令」跳舆图交令。,Pledge commissions open: %d — tap Take order to open the atlas board.
+ux_territory_chain_goto,去接令,Take order
+ux_territory_chain_fail,当前无归附委托。,No pledge commission open.
 ux_territory_appease,安抚,Appease
 ux_territory_appease_cost,安抚·%d银,Appease · %d silver
 ux_territory_detail_appease_cost,安抚花费 %d 银（清未附 %d 月）,Appease costs %d silver (clears %d mo unrest)
