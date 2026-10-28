@@ -1,0 +1,2793 @@
+{
+  "id": "cs10_03",
+  "title": "印泥上的灯",
+  "legacy_index": 430,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-09/NOVEL.md",
+  "beats": [
+    {
+      "id": "paste",
+      "title": "印泥",
+      "lines": [
+        {
+          "id": "cs1003_opn1",
+          "speaker": "旁白",
+          "text": "泥册贴着泥柱内侧。内侧潮，先离一指。"
+        },
+        {
+          "id": "cs1003_opn2",
+          "speaker": "岁吏",
+          "text": "泥钥挂腰后。后挂，推门不磕泥。"
+        },
+        {
+          "id": "cs1003_opn3",
+          "speaker": "书记官",
+          "text": "印泥页夹好。夹好，翻时不散。"
+        },
+        {
+          "id": "cs1003_opn4",
+          "speaker": "苇原·灯影",
+          "text": "门缝灯先认。认过，再侧身。栏泥守。"
+        },
+        {
+          "id": "cs1003_opn5",
+          "speaker": "槐里·青禾",
+          "text": "泥空指节松着。松着，不提前按。"
+        },
+        {
+          "id": "cs1003_opn6",
+          "speaker": "leader",
+          "text": "我进门。帖在袖，再进印泥。"
+        },
+        {
+          "id": "cs10_03_paste_0",
+          "speaker": "旁白",
+          "text": "印泥。上回泥席已入柜。印泥栏上还空着。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_1",
+          "speaker": "书记官",
+          "text": "正面栏写过了。印泥要能念，不能只剩绣线。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_2",
+          "speaker": "leader",
+          "text": "我要听干泥。空着也得说得出。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_3",
+          "speaker": "旁白",
+          "text": "柜门一响。泥席与印泥栏泥放上长桌。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_4",
+          "speaker": "老管事",
+          "text": "催路的人嗓门大。干泥的人说再等等。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_5",
+          "speaker": "岁吏",
+          "text": "泥迹旁多了一行「印泥夜」。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁挂栏。问今夜谁还空着行。干泥认。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_7",
+          "speaker": "旁白",
+          "text": "两行字第一次对视。册面亮，印泥暗。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_8",
+          "speaker": "书记官",
+          "text": "能念的字在册面。坐得住的行在印泥等。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_9",
+          "speaker": "leader",
+          "text": "把干泥念给我听。别念催路。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_10",
+          "speaker": "老管事",
+          "text": "催路可以喊。印泥撕不得。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_11",
+          "speaker": "旁白",
+          "text": "灯矮了一寸。干泥反而更清楚。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_12",
+          "speaker": "岁吏",
+          "text": "泥席已记账。印泥记账才算整幅。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_13",
+          "speaker": "书记官",
+          "text": "栏泥不是拖。是让干泥也有灯。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_14",
+          "speaker": "leader",
+          "text": "我听懂了。空着，也要栏泥·泥席。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_15",
+          "speaker": "旁白",
+          "text": "风从窗缝进来。栏角动，字不动。印泥留。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_16",
+          "speaker": "老管事",
+          "text": "催路的锣在门外。锣响不进印泥。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_paste_y17",
+          "speaker": "旁白",
+          "text": "印泥页贴着墙，墙皮壳落在「行」字上。"
+        },
+        {
+          "id": "cs10_03_paste_y18",
+          "speaker": "石垒·晚担",
+          "text": "壳落在泥上。圈还在，胜才算没白贴。泥边按。"
+        },
+        {
+          "id": "cs10_03_paste_y19",
+          "speaker": "leader",
+          "text": "印泥与碑栏泥。壳掉了也并着。"
+        },
+        {
+          "id": "cs1003_thm1",
+          "speaker": "旁白",
+          "text": "轴背写着印泥。背着的字要翻过来才见。"
+        },
+        {
+          "id": "cs1003_thm2",
+          "speaker": "岁吏",
+          "text": "翻得慢一点，字才不糊，场才齐。泥灯泥。"
+        },
+        {
+          "id": "cs1003_thm3",
+          "speaker": "石垒·晚担",
+          "text": "背字浅。浅处更见泥空。"
+        },
+        {
+          "id": "cs1003_thm4",
+          "speaker": "槐里·青禾",
+          "text": "印泥不绣花。绣花的训，挂不住夜。"
+        },
+        {
+          "id": "cs1003_thm5",
+          "speaker": "老旗手",
+          "text": "旗穗别缠轴绳。缠了，翻不开。泥空守。"
+        },
+        {
+          "id": "cs1003_thm6",
+          "speaker": "leader",
+          "text": "印泥我翻。泥空我留。留完再往下。"
+        },
+        {
+          "id": "cs1003_ods1",
+          "speaker": "旁白",
+          "text": "门内这一息，训栏泥空还平。平着，人先不迈出门楣。"
+        },
+        {
+          "id": "cs1003_ods2",
+          "speaker": "岁吏",
+          "text": "印泥翻过了。翻过，别急出——门风会把泥空吹皱。"
+        },
+        {
+          "id": "cs1003_ods3",
+          "speaker": "槐里·青禾",
+          "text": "印泥在袖。在袖，就让腕再停一息门影。"
+        },
+        {
+          "id": "cs1003_ods4",
+          "speaker": "旁白",
+          "text": "门缝静了半寸。半寸时，没人抢着先跨槛。泥帖按。"
+        },
+        {
+          "id": "cs1003_ods5",
+          "speaker": "老旗手",
+          "text": "旗角别扫印泥灰。扫了，泥空会花——先把门内站稳。"
+        },
+        {
+          "id": "cs1003_ods6",
+          "speaker": "leader",
+          "text": "门内落定。训栏泥空在，我先不迈。"
+        },
+        {
+          "id": "cs1003_rim1",
+          "speaker": "旁白",
+          "text": "门槛这一望，干泥还空着。空着，人先不把脚迈向泥角。廊风止。"
+        },
+        {
+          "id": "cs1003_rim2",
+          "speaker": "岁吏",
+          "text": "泥空留过了。留过，别急迈——门外契会压歪字。"
+        },
+        {
+          "id": "cs1003_rim3",
+          "speaker": "石垒·晚担",
+          "text": "印泥在怀。在怀，就让目光先停在门槛外那一角压平处。"
+        },
+        {
+          "id": "cs1003_rim4",
+          "speaker": "旁白",
+          "text": "契缝风歇了半寸。半寸里，没人抢着先掀帘。栏泥守。"
+        },
+        {
+          "id": "cs1003_rim5",
+          "speaker": "老旗手",
+          "text": "袖角别带出门灰。带了，契会花——先把门外望清。干泥认。"
+        },
+        {
+          "id": "cs1003_rim6",
+          "speaker": "leader",
+          "text": "门槛外望。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_crn1",
+          "speaker": "leader",
+          "text": "帘边这一停，印泥角还涩。涩着，指尖先别掀那道契帘。"
+        },
+        {
+          "id": "cs1003_crn2",
+          "speaker": "leader",
+          "text": "印泥验过了。验过，也别急——帘外契会糊泥口。"
+        },
+        {
+          "id": "cs1003_crn3",
+          "speaker": "leader",
+          "text": "印泥在袖。在袖，目光先停在帘边那一线契影。"
+        },
+        {
+          "id": "cs1003_crn4",
+          "speaker": "leader",
+          "text": "帘绳顿了半息。半息里，没人抢着先把契帘掀满。印泥留。"
+        },
+        {
+          "id": "cs1003_crn5",
+          "speaker": "leader",
+          "text": "泥角别拖进门灰。拖了，纹会花——先把帘外桩认清。泥边按。"
+        },
+        {
+          "id": "cs1003_crn6",
+          "speaker": "leader",
+          "text": "帘边驻足。印泥外的帖，我先不掀。"
+        },
+        {
+          "id": "cs1003_slv1",
+          "speaker": "leader",
+          "text": "门风这一过，印泥角先涩。涩着，指尖还压契——先让风把契影吹直。"
+        },
+        {
+          "id": "cs1003_slv2",
+          "speaker": "leader",
+          "text": "印泥验过了。验过，袖里别抖——门风会糊泥口。"
+        },
+        {
+          "id": "cs1003_slv3",
+          "speaker": "leader",
+          "text": "印泥在袖。在袖，就让这一阵门风先从袖口走干净。"
+        },
+        {
+          "id": "cs1003_slv4",
+          "speaker": "leader",
+          "text": "风顿了半息。半息里，没人抢着先把泥袖按死。泥灯泥。"
+        },
+        {
+          "id": "cs1003_slv5",
+          "speaker": "leader",
+          "text": "契角别灌进袖灰。灌了，泥会花——先把门风过完。泥空守。"
+        },
+        {
+          "id": "cs1003_slv6",
+          "speaker": "leader",
+          "text": "门风过袖。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_gln1",
+          "speaker": "leader",
+          "text": "缝光这一瞥，印泥角还涩。涩着，目光先停在那一线契缝。"
+        },
+        {
+          "id": "cs1003_gln2",
+          "speaker": "leader",
+          "text": "印泥验过了。验过，也别急——缝里契会糊泥口。"
+        },
+        {
+          "id": "cs1003_gln3",
+          "speaker": "leader",
+          "text": "印泥在袖。在袖，就让这一瞥先把缝外契影认清。"
+        },
+        {
+          "id": "cs1003_gln4",
+          "speaker": "leader",
+          "text": "光顿了半息。半息里，没人抢着先把契缝撕宽。泥帖按。"
+        },
+        {
+          "id": "cs1003_gln5",
+          "speaker": "leader",
+          "text": "泥缝别拖进门灰。拖了，纹会花——先把缝光瞥完。廊风止。"
+        },
+        {
+          "id": "cs1003_gln6",
+          "speaker": "leader",
+          "text": "缝光一瞥。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_hst1",
+          "speaker": "leader",
+          "text": "门槛这一半步，印泥角还潮。潮着，脚尖先停在那一道门坎。"
+        },
+        {
+          "id": "cs1003_hst2",
+          "speaker": "leader",
+          "text": "印泥验过了。验过，也别急——半步会抖契上的泥。"
+        },
+        {
+          "id": "cs1003_hst3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一半步先把门外契认清。栏泥守。"
+        },
+        {
+          "id": "cs1003_hst4",
+          "speaker": "leader",
+          "text": "步顿了半息。半息里，没人抢着先把印泥门坎跨尽。"
+        },
+        {
+          "id": "cs1003_hst5",
+          "speaker": "leader",
+          "text": "契影别扫进门灰。扫了，名会花——先把半步停稳。干泥认。"
+        },
+        {
+          "id": "cs1003_hst6",
+          "speaker": "leader",
+          "text": "门槛半步。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_blt1",
+          "speaker": "leader",
+          "text": "门闩这一触，印泥角还潮。潮着，指尖先停在那一道冷闩。"
+        },
+        {
+          "id": "cs1003_blt2",
+          "speaker": "leader",
+          "text": "印泥验过了。验过，也别急——一触会抖契上的泥。"
+        },
+        {
+          "id": "cs1003_blt3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一触先把印泥门闩凉意认清。"
+        },
+        {
+          "id": "cs1003_blt4",
+          "speaker": "leader",
+          "text": "闩顿了半息。半息里，没人抢着先把印泥门闩推开。"
+        },
+        {
+          "id": "cs1003_blt5",
+          "speaker": "leader",
+          "text": "契影别扫进闩灰。扫了，名会花——先把一触停稳。印泥留。"
+        },
+        {
+          "id": "cs1003_blt6",
+          "speaker": "leader",
+          "text": "门闩一触。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_hng1",
+          "speaker": "leader",
+          "text": "门枢这一转，印泥角还涩。涩着，指尖先试那一道旧枢。"
+        },
+        {
+          "id": "cs1003_hng2",
+          "speaker": "leader",
+          "text": "印泥验过了。验过，也别急——一转会抖起契上的泥。"
+        },
+        {
+          "id": "cs1003_hng3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一转先把印泥门枢涩意认清。"
+        },
+        {
+          "id": "cs1003_hng4",
+          "speaker": "leader",
+          "text": "枢顿了半息。半息里，没人抢着先把印泥门枢拧开。"
+        },
+        {
+          "id": "cs1003_hng5",
+          "speaker": "leader",
+          "text": "泥影别扫进枢灰。扫了，名会花——先把一转停稳。泥边按。"
+        },
+        {
+          "id": "cs1003_hng6",
+          "speaker": "leader",
+          "text": "门枢一转。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_axl1",
+          "speaker": "leader",
+          "text": "门轴这一响，印泥角还哑。哑着，掌缘先贴那一道旧轴。"
+        },
+        {
+          "id": "cs1003_axl2",
+          "speaker": "leader",
+          "text": "印泥听过了。听过，也别催——一响会抖起契边的锈。"
+        },
+        {
+          "id": "cs1003_axl3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一响先把印泥门轴哑意认清。"
+        },
+        {
+          "id": "cs1003_axl4",
+          "speaker": "leader",
+          "text": "轴顿了半息。半息里，没人抢着先把印泥门轴轧响。"
+        },
+        {
+          "id": "cs1003_axl5",
+          "speaker": "leader",
+          "text": "泥影别蹭进轴锈。蹭了，名会花——先把一响停稳。泥灯泥。"
+        },
+        {
+          "id": "cs1003_axl6",
+          "speaker": "leader",
+          "text": "门轴一响。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_knk1",
+          "speaker": "leader",
+          "text": "门环这一叩，印泥角还沉。沉着，指节先停在那一道旧环。"
+        },
+        {
+          "id": "cs1003_knk2",
+          "speaker": "leader",
+          "text": "印泥试过了。试过，也别催——一叩会抖起契边的铜屑。"
+        },
+        {
+          "id": "cs1003_knk3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一叩先把印泥门环沉意认清。"
+        },
+        {
+          "id": "cs1003_knk4",
+          "speaker": "leader",
+          "text": "环顿了半息。半息里，没人抢着先把印泥门环叩响。"
+        },
+        {
+          "id": "cs1003_knk5",
+          "speaker": "leader",
+          "text": "契影别蹭进环锈。蹭了，名会花——先把一叩停稳。泥空守。"
+        },
+        {
+          "id": "cs1003_knk6",
+          "speaker": "leader",
+          "text": "门环一叩。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_ans1",
+          "speaker": "leader",
+          "text": "门内这一应，印泥角还沉。沉着，耳先停在那一道旧应。"
+        },
+        {
+          "id": "cs1003_ans2",
+          "speaker": "leader",
+          "text": "印泥试过了。试过，也别催——一应会抖起契边的木屑。"
+        },
+        {
+          "id": "cs1003_ans3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一应先把印泥门内沉意认清。"
+        },
+        {
+          "id": "cs1003_ans4",
+          "speaker": "leader",
+          "text": "声顿了半息。半息里，没人抢着先把印泥应声揭开。"
+        },
+        {
+          "id": "cs1003_ans5",
+          "speaker": "leader",
+          "text": "契影别蹭进门缝。蹭了，名会花——先把一应停稳。泥帖按。"
+        },
+        {
+          "id": "cs1003_ans6",
+          "speaker": "leader",
+          "text": "门内应声。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_yld1",
+          "speaker": "leader",
+          "text": "门扇这一让，印泥角还沉。沉着，掌先停在那一道旧让。"
+        },
+        {
+          "id": "cs1003_yld2",
+          "speaker": "leader",
+          "text": "印泥试过了。试过，也别催——一让会抖起契边的尘屑。"
+        },
+        {
+          "id": "cs1003_yld3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一让先把印泥门扇沉意认清。"
+        },
+        {
+          "id": "cs1003_yld4",
+          "speaker": "leader",
+          "text": "扇顿了半息。半息里，没人抢着先把印泥门扇推开。"
+        },
+        {
+          "id": "cs1003_yld5",
+          "speaker": "leader",
+          "text": "泥影别蹭进扇缝。蹭了，名会花——先把一让停稳。廊风止。"
+        },
+        {
+          "id": "cs1003_yld6",
+          "speaker": "leader",
+          "text": "门扇微让。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_drf1",
+          "speaker": "leader",
+          "text": "缝风这一过，印泥角还沉。沉着，腕先停在那一道旧风。"
+        },
+        {
+          "id": "cs1003_drf2",
+          "speaker": "leader",
+          "text": "印泥试过了。试过，也别催——一风会抖起契边的灰屑。"
+        },
+        {
+          "id": "cs1003_drf3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一风先把印泥门缝沉意认清。"
+        },
+        {
+          "id": "cs1003_drf4",
+          "speaker": "leader",
+          "text": "风顿了半息。半息里，没人抢着先把印泥门缝堵严。"
+        },
+        {
+          "id": "cs1003_drf5",
+          "speaker": "leader",
+          "text": "契影别蹭进风缝。蹭了，名会花——先把一风停稳。栏泥守。"
+        },
+        {
+          "id": "cs1003_drf6",
+          "speaker": "leader",
+          "text": "缝风一过。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs1003_lmp1",
+          "speaker": "leader",
+          "text": "灯影这一沉，印泥角还沉。沉着，胸先停在那一道旧影。"
+        },
+        {
+          "id": "cs1003_lmp2",
+          "speaker": "leader",
+          "text": "印泥试过了。试过，也别催——一影会带起纸边的帖屑。"
+        },
+        {
+          "id": "cs1003_lmp3",
+          "speaker": "leader",
+          "text": "纸在袖。在袖，就让这一影先把印泥灯影沉意认清。"
+        },
+        {
+          "id": "cs1003_lmp4",
+          "speaker": "leader",
+          "text": "影顿了半息。半息里，没人抢着先把印泥灯影捂死。"
+        },
+        {
+          "id": "cs1003_lmp5",
+          "speaker": "leader",
+          "text": "风缝别漫进灯影。沾了，名会花——先把一影停稳。干泥认。"
+        },
+        {
+          "id": "cs1003_lmp6",
+          "speaker": "leader",
+          "text": "灯影一沉。印泥外的帖，我先不迈。"
+        },
+        {
+          "id": "cs10_03_paste_17",
+          "speaker": "槐里·青禾",
+          "text": "印泥比册面薄。薄的反而难装。",
+          "stage": {
+            "card": "一　印泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        }
+      ],
+      "next": "dry"
+    },
+    {
+      "id": "dry",
+      "title": "干泥",
+      "lines": [
+        {
+          "id": "cs10_03_dry_0",
+          "speaker": "旁白",
+          "text": "干泥摊开。做过的那格亮着，旁格还空。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_1",
+          "speaker": "老管事",
+          "text": "上回留栏泥的，干泥亮着空。只留训的，栏上有字、行仍空。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_2",
+          "speaker": "旁白",
+          "text": "两行字第二次吵架。回读逼它们对视·泥席。印泥留。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁印名。问今夜谁还空着行。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_4",
+          "speaker": "书记官",
+          "text": "有字的格能念。干泥要人敢看。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_5",
+          "speaker": "leader",
+          "text": "泥空不是错。催满才是错。泥边按。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_6",
+          "speaker": "岁吏",
+          "text": "泥迹不改行。只记你敢不敢对空。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_7",
+          "speaker": "旁白",
+          "text": "绣线干了。干泥的边还潮。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_8",
+          "speaker": "老管事",
+          "text": "催印锣又响。响在门外，进不了印泥行。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_9",
+          "speaker": "书记官",
+          "text": "栏泥留行，比硬填假堂干净。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_10",
+          "speaker": "leader",
+          "text": "假堂我不要。干泥我要听。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_11",
+          "speaker": "旁白",
+          "text": "灯把干泥照成浅坑。坑里没有字。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_12",
+          "speaker": "岁吏",
+          "text": "泥席上的字还在。印泥上的空也在。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_13",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写印泥，不写催。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_14",
+          "speaker": "老管事",
+          "text": "催印名叠得高。干泥叠不住。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_15",
+          "speaker": "书记官",
+          "text": "能念的在册面。敢留的在印泥。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_16",
+          "speaker": "旁白",
+          "text": "栏角又动。干泥仍空。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_dry_y17",
+          "speaker": "旁白",
+          "text": "干泥页上脚步声压过刻出来的口号。"
+        },
+        {
+          "id": "cs10_03_dry_y18",
+          "speaker": "石垒·晚担",
+          "text": "压过去的是走出来的。刻出来的，泥纹会谎。"
+        },
+        {
+          "id": "cs10_03_dry_y19",
+          "speaker": "leader",
+          "text": "我按走出来的步填干泥。印名靠后。"
+        },
+        {
+          "id": "cs1003_sec1",
+          "speaker": "旁白",
+          "text": "泥纸压在石下。石凉，纸不凉。"
+        },
+        {
+          "id": "cs1003_sec2",
+          "speaker": "岁吏",
+          "text": "桩阴写着未尽。未尽不是毁约。泥灯泥。"
+        },
+        {
+          "id": "cs1003_sec3",
+          "speaker": "石垒·晚担",
+          "text": "石移开再读。压着读，字会折。泥空守。"
+        },
+        {
+          "id": "cs1003_sec4",
+          "speaker": "槐里·青禾",
+          "text": "未尽要栏泥留。催尽的，先看自己行。"
+        },
+        {
+          "id": "cs1003_sec5",
+          "speaker": "老旗手",
+          "text": "旗穗别缠石绳。缠了，纸抽不出。泥帖按。"
+        },
+        {
+          "id": "cs1003_sec6",
+          "speaker": "leader",
+          "text": "泥我验。干泥留。留完再往下。"
+        },
+        {
+          "id": "cs1003_hlp1",
+          "speaker": "旁白",
+          "text": "厅角泥纸角压死。压死，墨味还在指缝。"
+        },
+        {
+          "id": "cs1003_hlp2",
+          "speaker": "书记官",
+          "text": "泥纹验过了。验过，别急掀帘——角上墨再干一息。"
+        },
+        {
+          "id": "cs1003_hlp3",
+          "speaker": "石垒·晚担",
+          "text": "未尽留着。留着，椅子再压一息泥迹。"
+        },
+        {
+          "id": "cs1003_hlp4",
+          "speaker": "旁白",
+          "text": "催印声远了。远了，杯沿才肯离开唇，人还在泥角。"
+        },
+        {
+          "id": "cs1003_hlp5",
+          "speaker": "老旗手",
+          "text": "泥迹在钉。在钉，出厅也别让风掀角上的帖。"
+        },
+        {
+          "id": "cs1003_hlp6",
+          "speaker": "leader",
+          "text": "厅角验泥纹。帖在，我先不迈。"
+        },
+        {
+          "id": "cs10_03_dry_17",
+          "speaker": "老旗手",
+          "text": "干泥灯还亮。亮着，才敢回读。",
+          "stage": {
+            "card": "二　干泥",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs1003_vop1",
+          "speaker": "旁白",
+          "text": "泥纸卷着不摊。摊开会抢沙漏的光。"
+        },
+        {
+          "id": "cs1003_vop2",
+          "speaker": "岁吏",
+          "text": "泥上的名今晚用不上。用得上的是漏上的月。廊风止。"
+        },
+        {
+          "id": "cs1003_vop3",
+          "speaker": "书记官",
+          "text": "泥匣朝下扣。扣着，人不拿它当漏具。"
+        },
+        {
+          "id": "cs1003_vop4",
+          "speaker": "苇原·灯影",
+          "text": "廊风止一息。一息够看清沙腰。栏泥守。"
+        },
+        {
+          "id": "cs1003_vop5",
+          "speaker": "槐里·青禾",
+          "text": "袖契角按平。平了，不扫漏座。干泥认。"
+        },
+        {
+          "id": "cs1003_vop6",
+          "speaker": "leader",
+          "text": "我到漏前。泥在袖，再看月份。"
+        },
+        {
+          "id": "cs10_03_hourglass_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行泥席、下行印泥。回读把两行按住。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_1",
+          "speaker": "老管事",
+          "text": "沙漏边上，回读只问一句：你敢不敢对行。印泥留。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_2",
+          "speaker": "岁吏",
+          "text": "泥迹旁多了一行「印泥回读」。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_3",
+          "speaker": "书记官",
+          "text": "能念的字在上行。空得住的桩还在下行等。泥边按。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_4",
+          "speaker": "leader",
+          "text": "两行都打开。我要听对看·泥席。泥灯泥。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_5",
+          "speaker": "旁白",
+          "text": "沙响。上行亮，下行仍暗·泥席。泥空守。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防牌上写印泥。不写急锣。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_7",
+          "speaker": "老管事",
+          "text": "催印的人在门外跺脚。跺不进沙漏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_8",
+          "speaker": "书记官",
+          "text": "栏泥不是拖月。是让干泥跟月份栏泥走。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_9",
+          "speaker": "岁吏",
+          "text": "月结不抹行。行也要入迹。泥帖按。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_10",
+          "speaker": "leader",
+          "text": "我听干泥。不听跺脚。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_11",
+          "speaker": "旁白",
+          "text": "沙又落一层。下行多了一点亮·泥席。廊风止。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_12",
+          "speaker": "老管事",
+          "text": "锣停了。干泥还在。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_13",
+          "speaker": "书记官",
+          "text": "回读夜的字，比催印长命。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_14",
+          "speaker": "岁吏",
+          "text": "带牌出去。沙漏还转·泥席。栏泥守。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_15",
+          "speaker": "旁白",
+          "text": "两行对准了。一对上，假填就站不住·泥席。干泥认。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_16",
+          "speaker": "老管事",
+          "text": "假堂进不了沙漏。干泥能。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_hourglass_y17",
+          "speaker": "旁白",
+          "text": "沙漏旁边印泥起壳，壳里夹着一块没干的泥纹。"
+        },
+        {
+          "id": "cs10_03_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "泥纹没干，说明场还在被走过，不是被念过。"
+        },
+        {
+          "id": "cs10_03_hourglass_y19",
+          "speaker": "leader",
+          "text": "走过的训与行并着。念过的放下。印泥留。"
+        },
+        {
+          "id": "cs10_03_hourglass_17",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写印泥，不写急。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs1003_aud1",
+          "speaker": "旁白",
+          "text": "泥纸折痕压平。压平了，再碰征兆栏。"
+        },
+        {
+          "id": "cs1003_aud2",
+          "speaker": "岁吏",
+          "text": "桩是给人守的。空是给灯认的。泥边按。"
+        },
+        {
+          "id": "cs1003_aud3",
+          "speaker": "书记官",
+          "text": "守桩的人，更要写得干净。泥灯泥。"
+        },
+        {
+          "id": "cs1003_aud4",
+          "speaker": "旁白",
+          "text": "窗外虫鸣一阵。鸣过，笔尖更稳。泥空守。"
+        },
+        {
+          "id": "cs1003_aud5",
+          "speaker": "岁吏",
+          "text": "稳的无，比花哨的吉签耐翻。泥帖按。"
+        },
+        {
+          "id": "cs1003_aud6",
+          "speaker": "leader",
+          "text": "我写空。泥在袖，字在泥。"
+        },
+        {
+          "id": "cs1003_vhg1",
+          "speaker": "书记官",
+          "text": "印泥写在轴背。背着的字，要翻过来才见。"
+        },
+        {
+          "id": "cs1003_vhg2",
+          "speaker": "书记官",
+          "text": "翻轴前先听沙。沙停，干泥才准你念。廊风止。"
+        },
+        {
+          "id": "cs1003_vhg3",
+          "speaker": "leader",
+          "text": "印泥空着一行。我翻过来念，不装没看见。"
+        },
+        {
+          "id": "cs1003_vhg4",
+          "speaker": "石垒·晚担",
+          "text": "轴背沾了沙。沙在，假补更显眼。栏泥守。"
+        },
+        {
+          "id": "cs1003_msr1",
+          "speaker": "旁白",
+          "text": "泥纸边压平。压平进袖，袖不鼓。"
+        },
+        {
+          "id": "cs1003_msr2",
+          "speaker": "老管事",
+          "text": "干泥行念过。念过勒腰带，带不松。"
+        },
+        {
+          "id": "cs1003_msr3",
+          "speaker": "岁吏",
+          "text": "月份从训旁走开。走开，整装归人。干泥认。"
+        },
+        {
+          "id": "cs1003_msr4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓不催路。催的是你自己起身。印泥留。"
+        },
+        {
+          "id": "cs1003_msr5",
+          "speaker": "石垒·晚担",
+          "text": "泥匣盖严。严了，桥上不掉泥砂。泥边按。"
+        },
+        {
+          "id": "cs1003_msr6",
+          "speaker": "leader",
+          "text": "泥我验过。整装完，上桥。"
+        },
+        {
+          "id": "cs1003_vis_mv1",
+          "speaker": "旁白",
+          "text": "时漏里沙色偏深——印泥记。深沙走得更慢。泥灯泥。"
+        },
+        {
+          "id": "cs1003_vis_mv2",
+          "speaker": "岁吏",
+          "text": "慢正好。印泥不怕慢。"
+        },
+        {
+          "id": "cs1003_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "慢着看，折痕藏不住。泥空守。"
+        },
+        {
+          "id": "cs1003_vst1",
+          "speaker": "岁吏",
+          "text": "月份从契缝里挤进一丝。丝细，却把年月钉住。泥帖按。"
+        },
+        {
+          "id": "cs1003_vst2",
+          "speaker": "书记官",
+          "text": "名录旁沙漏，最怕泥灰掀。廊风止。"
+        },
+        {
+          "id": "cs1003_vst3",
+          "speaker": "leader",
+          "text": "月份钉过。帖，我压。栏泥守。"
+        },
+        {
+          "id": "cs1003_vex1",
+          "speaker": "旁白",
+          "text": "印泥合页。堂面的批注，歇进夹层。"
+        },
+        {
+          "id": "cs1003_vex2",
+          "speaker": "岁吏",
+          "text": "契角按平。平了，出门不卷边。干泥认。"
+        },
+        {
+          "id": "cs1003_vex3",
+          "speaker": "书记官",
+          "text": "墨瓶盖严。严处，廊风灌不进。印泥留。"
+        },
+        {
+          "id": "cs1003_vex4",
+          "speaker": "老管事",
+          "text": "空签插回木槽。槽满，门槛才放行。泥边按。"
+        },
+        {
+          "id": "cs1003_vex5",
+          "speaker": "苇原·灯影",
+          "text": "灯芯拨短——印泥记。短了，影不拖出门外。泥灯泥。"
+        },
+        {
+          "id": "cs1003_vex6",
+          "speaker": "leader",
+          "text": "契收好。我离厅，字在袖去酒馆。泥空守。"
+        },
+        {
+          "id": "cs1003_vis_mv4",
+          "speaker": "leader",
+          "text": "慢看。去月份。泥帖按。"
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs10_03_bridge_0",
+          "speaker": "旁白",
+          "text": "门廊柱上钉着印泥，灯从纸背照来，刻出来的词是浮的，脚迹是凹的。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_1",
+          "speaker": "岁吏",
+          "text": "干泥这一栏不许刀去描。我只看你的步还是不是自己的。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_2",
+          "speaker": "leader",
+          "text": "步还在，再出锋。赢了也不把泥口号绣进还没走过的月。廊风止。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_3",
+          "speaker": "老旗手",
+          "text": "锋先别急。干泥不是刀背能踩出来的路。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_4",
+          "speaker": "旁白",
+          "text": "泥席的灯很小，只照到鞋底的泥，照不到对岸谁在敲锣。栏泥守。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_5",
+          "speaker": "书记官",
+          "text": "催路尽管喊。印泥这一本，线脚在纸背，撕开会抽丝。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_6",
+          "speaker": "苇原·灯影",
+          "text": "我守桥侧。不问胜负，问你还肯不肯回去对那一行脚。干泥认。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_7",
+          "speaker": "老管事",
+          "text": "城门的锣归仪式。桥上该听见的是鞋底，不是印名。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_8",
+          "speaker": "leader",
+          "text": "干泥写在印泥上。锣怎么敲，它都不改口。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_9",
+          "speaker": "岁吏",
+          "text": "锋放低了才许翻下一行。最好听的那句训，先别当干泥。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_10",
+          "speaker": "旁白",
+          "text": "水声把锣切碎。碎掉的是催路，不是泥里那只还深的泥。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_11",
+          "speaker": "老旗手",
+          "text": "脚上有伤也先去酒馆。选题谈的是走过没有，不是把伤说成仁。印泥留。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_12",
+          "speaker": "书记官",
+          "text": "先选题。假泥排在后头，后头的绣我拒收。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_13",
+          "speaker": "苇原·灯影",
+          "text": "牌扣在你手里。牌面还是印泥，没有换成锦旗上的词。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_14",
+          "speaker": "老管事",
+          "text": "催路的人针已经穿好了。你要等干泥，就让针空着。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_15",
+          "speaker": "leader",
+          "text": "我等这一行脚迹被看见。锣不必等我。泥边按。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_16",
+          "speaker": "旁白",
+          "text": "桥板颤了一下。印泥的灯没灭，浮词晃了，凹迹没晃。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_17",
+          "speaker": "岁吏",
+          "text": "不拔也行，酒馆的门开着。干泥不会因为你绕开刀就多出一步。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_18",
+          "speaker": "老旗手",
+          "text": "泥还在鞋上，人先去酒馆——印泥记。别在桥上把没走完的步说成训已完成。泥灯泥。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_bridge_y20",
+          "speaker": "旁白",
+          "text": "门廊石上脚步比印泥里的口号更清楚。"
+        },
+        {
+          "id": "cs10_03_bridge_y21",
+          "speaker": "石垒·晚担",
+          "text": "清楚的是鞋底。口号在风里，站不住。泥空守。"
+        },
+        {
+          "id": "cs10_03_bridge_y22",
+          "speaker": "leader",
+          "text": "鞋底算数。门廊不收口号。泥帖按。"
+        },
+        {
+          "id": "cs10_03_bridge_19",
+          "speaker": "岁吏",
+          "text": "催路可以喊。印泥这一本，喊不绣进去。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs1003_mid_mv1",
+          "speaker": "旁白",
+          "text": "印泥纸上有新折痕。折痕像被人当枕头枕过。"
+        },
+        {
+          "id": "cs1003_mid_mv2",
+          "speaker": "岁吏",
+          "text": "枕过的泥纸，边毛。边毛要验。廊风止。"
+        },
+        {
+          "id": "cs1003_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "边毛的人，干泥里爱插队。"
+        },
+        {
+          "id": "cs1003_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "插队的，锋一横就老实。栏泥守。"
+        },
+        {
+          "id": "cs1003_mid_mv5",
+          "speaker": "老旗手",
+          "text": "老实不是吓出来的。是试出来的。干泥认。"
+        },
+        {
+          "id": "cs1003_mid_mv6",
+          "speaker": "leader",
+          "text": "试。步实锋实。印泥留。"
+        },
+        {
+          "id": "cs1003_bpl1",
+          "speaker": "旁白",
+          "text": "印泥边角被折成一个小三角，三角里藏着半句没写完的「已行」。"
+        },
+        {
+          "id": "cs1003_bpl2",
+          "speaker": "岁吏",
+          "text": "「已站」两个字是后塞的。塞进去的，边不齐。泥边按。"
+        },
+        {
+          "id": "cs1003_bpl3",
+          "speaker": "石垒·晚担",
+          "text": "边不齐的人，最爱在别人的脚泥上描——印泥记。泥灯泥。"
+        },
+        {
+          "id": "cs1003_bpl4",
+          "speaker": "苇原·灯影",
+          "text": "描上去的泥，雨一来就漂。漂的别算干泥。"
+        },
+        {
+          "id": "cs1003_bpl5",
+          "speaker": "老旗手",
+          "text": "真迹凹着。凹着的，锋护着。泥空守。"
+        },
+        {
+          "id": "cs1003_bpl6",
+          "speaker": "leader",
+          "text": "三角我揭开。这一锋只认凹下去的步。泥帖按。"
+        },
+        {
+          "id": "cs1003_win1",
+          "speaker": "旁白",
+          "text": "锋再定。泥纸角压住，抢桩那拨退到廊外。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1003_win2",
+          "speaker": "掌柜",
+          "text": "泥要压。压住，才不像飞的。廊风止。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1003_win3",
+          "speaker": "槐里·青禾",
+          "text": "墨干了。干了，字才是自己的。栏泥守。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1003_win4",
+          "speaker": "leader",
+          "text": "锋护过帖。字，我签得。干泥认。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1003_wex1",
+          "speaker": "旁白",
+          "when": {
+            "flag": "cs10_mid_fought"
+          },
+          "text": "泥纸角压住。压处，抢桩那拨退到廊外。"
+        },
+        {
+          "id": "cs1003_wex2",
+          "speaker": "石垒·晚担",
+          "when": {
+            "flag": "cs10_mid_fought"
+          },
+          "text": "契要压。压住，才不像风里的叶子。印泥留。"
+        },
+        {
+          "id": "cs1003_wex3",
+          "speaker": "槐里·青禾",
+          "when": {
+            "flag": "cs10_mid_fought"
+          },
+          "text": "墨干了。干了，字才是自己的，不是借的。泥边按。"
+        },
+        {
+          "id": "cs1003_wex4",
+          "speaker": "苇原·灯影",
+          "when": {
+            "flag": "cs10_mid_fought"
+          },
+          "text": "泥灰边我捺净——印泥记。净了，签才不糊。泥灯泥。"
+        },
+        {
+          "id": "cs1003_wex5",
+          "speaker": "老旗手",
+          "when": {
+            "flag": "cs10_mid_fought"
+          },
+          "text": "旗杆压纸角。一杆之力，胜过十句嚷。泥空守。"
+        },
+        {
+          "id": "cs1003_wex6",
+          "speaker": "leader",
+          "when": {
+            "flag": "cs10_mid_fought"
+          },
+          "text": "锋护过帖。字我签得，廊外不理。泥帖按。"
+        },
+        {
+          "speaker": "旁白",
+          "text": "锋收回来。印泥纸还钉着。干泥旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs10_mid_lost"
+              },
+              {
+                "not_flag": "cs10_mid_fought"
+              }
+            ]
+          },
+          "id": "cs1003_br_lost"
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs10_mid_fought"
+              },
+              {
+                "not_flag": "cs10_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs10_mid_fought"
+              ],
+              "lose_flags": [
+                "cs10_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "印泥上的灯",
+                "outcome": "印泥旁试锋得手——锋镝压下，栏泥纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs10_mid_fought"
+              },
+              {
+                "flag": "cs10_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs10_mid_fought"
+              ],
+              "lose_flags": [
+                "cs10_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "印泥上的灯",
+                "outcome": "印泥旁试锋得手——锋镝压下，栏泥纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs10_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs10_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs10_03",
+              "choice": "mid_skirmish_skip",
+              "title": "印泥上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs10_mid_fought"
+                  },
+                  {
+                    "flag": "cs10_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs10_03",
+              "choice": "mid_skirmish_abort",
+              "title": "印泥上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs1003_arr1",
+          "speaker": "旁白",
+          "text": "泥纸边压在袖底。袖底不鼓，进店不惹眼。"
+        },
+        {
+          "id": "cs1003_arr2",
+          "speaker": "掌柜",
+          "text": "先喝半口温的。温了，手不抖着钉泥。廊风止。"
+        },
+        {
+          "id": "cs1003_arr3",
+          "speaker": "岁吏",
+          "text": "干泥行先别念出声。出声留给板。"
+        },
+        {
+          "id": "cs1003_arr4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓按在门外。门外催，店里不催。栏泥守。"
+        },
+        {
+          "id": "cs1003_arr5",
+          "speaker": "石垒·晚担",
+          "text": "泥匣不打开。打开是谱里的事。干泥认。"
+        },
+        {
+          "id": "cs1003_arr6",
+          "speaker": "leader",
+          "text": "我到店。泥在袖，再看挂板。"
+        },
+        {
+          "id": "cs10_03_tavern_0",
+          "speaker": "旁白",
+          "text": "酒馆。板上两道题。手按上去·泥席。印泥留。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_1",
+          "speaker": "掌柜",
+          "text": "一道栏泥仍并。一道先催印名。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_2",
+          "speaker": "leader",
+          "text": "我看题。不看谁嗓门大·泥席。帖边按。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_3",
+          "speaker": "老管事",
+          "text": "栏泥留真。催路快。快的未必真。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_4",
+          "speaker": "书记官",
+          "text": "干泥进谱，才算整幅泥席。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_5",
+          "speaker": "岁吏",
+          "text": "泥迹听选择。不听锣·泥席。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_6",
+          "speaker": "旁白",
+          "text": "酒气里训更白——印泥记。白得能看见行。泥灯泥。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_7",
+          "speaker": "掌柜",
+          "text": "选完入柜。印泥柜门会响。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_8",
+          "speaker": "苇原·灯影",
+          "text": "巡防在门外。门内只选题·泥席。泥空守。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_9",
+          "speaker": "leader",
+          "text": "栏泥仍并——我手按这道。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_10",
+          "speaker": "老管事",
+          "text": "按实了。别悬着·泥席。泥帖按。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_11",
+          "speaker": "书记官",
+          "text": "假泥那道我划掉。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_12",
+          "speaker": "旁白",
+          "text": "板面一热。字进手心·泥席。廊风止。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_13",
+          "speaker": "岁吏",
+          "text": "选择入账。印泥夜可结。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_14",
+          "speaker": "掌柜",
+          "text": "另一道也在。你不选它·泥席。栏泥守。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_15",
+          "speaker": "老管事",
+          "text": "催印的锣远了。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_16",
+          "speaker": "旁白",
+          "text": "两道题还在板上。只一道进柜·泥席。干泥认。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs10_03_tavern_y17",
+          "speaker": "旁白",
+          "text": "酒旗后印泥墙皮又壳了一块，块下字还全。"
+        },
+        {
+          "id": "cs10_03_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "字全，壳掉也没关系。字缺了，酒也不配喝。印泥留。"
+        },
+        {
+          "id": "cs10_03_tavern_y19",
+          "speaker": "leader",
+          "text": "字全的印泥带回。缺的留下补走。"
+        },
+        {
+          "id": "cs10_03_tavern_17",
+          "speaker": "老管事",
+          "text": "选完入柜。印泥柜门会响·泥席。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs1003_ret_mv1",
+          "speaker": "旁白",
+          "text": "印泥笑话停在半句。半句比整句危险。"
+        },
+        {
+          "id": "cs1003_ret_mv2",
+          "speaker": "掌柜",
+          "text": "半句补全再挂。泥边按。"
+        },
+        {
+          "id": "cs1003_ret_mv3",
+          "speaker": "岁吏",
+          "text": "挂完回——印泥记。泥灯泥。"
+        },
+        {
+          "id": "cs1003_brd1",
+          "speaker": "旁白",
+          "text": "泥纸在袖里温着。板钉一凉，温意就有了去处。"
+        },
+        {
+          "id": "cs1003_brd2",
+          "speaker": "掌柜",
+          "text": "泥迹要自己的字。借来的墨，钉子不认。"
+        },
+        {
+          "id": "cs1003_brd3",
+          "speaker": "听回",
+          "text": "盏沿墨点擦净再近。净了，契缝才清楚。泥空守。"
+        },
+        {
+          "id": "cs1003_brd4",
+          "speaker": "旁白",
+          "text": "风从后门进来，又被帘子挡回。板前只剩纸声。泥帖按。"
+        },
+        {
+          "id": "cs1003_brd5",
+          "speaker": "书记官",
+          "text": "契缝对印泥。抢契的风，掀不进钉孔。"
+        },
+        {
+          "id": "cs1003_brd6",
+          "speaker": "leader",
+          "text": "袖里契还温。我近板，把泥迹交给钉。"
+        },
+        {
+          "id": "cs1003_tvp1",
+          "speaker": "旁白",
+          "text": "印泥写在绢背，迎灯才见泥纹似的细字。"
+        },
+        {
+          "id": "cs1003_tvp2",
+          "speaker": "掌柜",
+          "text": "细字也要钉牢。钉不牢，绢一抖泥字就逃。廊风止。"
+        },
+        {
+          "id": "cs1003_tvp3",
+          "speaker": "苇原·灯影",
+          "text": "逃字的训，听着像劝别人。栏泥守。"
+        },
+        {
+          "id": "cs1003_tvp4",
+          "speaker": "石垒·晚担",
+          "text": "印名催得急，泥纹必乱。乱了明年拆。"
+        },
+        {
+          "id": "cs1003_tvp5",
+          "speaker": "老旗手",
+          "text": "旗边别刮绢。刮毛了，堂面更糊。干泥认。"
+        },
+        {
+          "id": "cs1003_tvp6",
+          "speaker": "leader",
+          "text": "栏泥仍并。催印名的，先看自己泥纹。"
+        },
+        {
+          "id": "cs1003_aft1",
+          "speaker": "旁白",
+          "text": "泥迹交钉后，泥纹的影还留在板纹里。"
+        },
+        {
+          "id": "cs1003_aft2",
+          "speaker": "掌柜",
+          "text": "印名催不得。板后先看泥纹，再听人教你绣。"
+        },
+        {
+          "id": "cs1003_aft3",
+          "speaker": "老旗手",
+          "text": "护契那锋要稳。稳着配字，板后更要稳。印泥留。"
+        },
+        {
+          "id": "cs1003_aft4",
+          "speaker": "旁白",
+          "text": "线头在袖里动了一下。动过，又自己静下。泥边按。"
+        },
+        {
+          "id": "cs1003_aft5",
+          "speaker": "岁吏",
+          "text": "栏泥仍并。并着，就让泥迹多咬一息木。"
+        },
+        {
+          "id": "cs1003_aft6",
+          "speaker": "leader",
+          "text": "泥迹在钉。板后这一息，我验泥纹，不接催印。"
+        },
+        {
+          "id": "cs1003_tvn1",
+          "speaker": "掌柜",
+          "text": "护契那一锋，酒要稳——稳着配字——印泥记。泥灯泥。"
+        },
+        {
+          "id": "cs1003_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "廊外那拨退了。退了，墨才干得成。泥空守。"
+        },
+        {
+          "id": "cs1003_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在泥案旁立过。立过，字有根。"
+        },
+        {
+          "id": "cs1003_tvn4",
+          "speaker": "leader",
+          "text": "泥在。墨干。酒，稳着。"
+        },
+        {
+          "id": "cs1003_sth1",
+          "speaker": "旁白",
+          "text": "席末泥纸角压死。压死，墨味还在指缝里。"
+        },
+        {
+          "id": "cs1003_sth2",
+          "speaker": "掌柜",
+          "text": "墨干了别急掀。席末先让泥纹再验一眼。"
+        },
+        {
+          "id": "cs1003_sth3",
+          "speaker": "老旗手",
+          "text": "帖在墨干。干了，椅子再压一息泥迹。"
+        },
+        {
+          "id": "cs1003_sth4",
+          "speaker": "旁白",
+          "text": "催印声远了。远了，杯沿才肯离开唇。"
+        },
+        {
+          "id": "cs1003_sth5",
+          "speaker": "岁吏",
+          "text": "泥迹在钉。在钉，离席也别让风掀角。"
+        },
+        {
+          "id": "cs1003_sth6",
+          "speaker": "leader",
+          "text": "席末验泥纹。帖在，我先不起。"
+        },
+        {
+          "id": "cs1003_tvx1",
+          "speaker": "旁白",
+          "text": "泥纸角压死。压死，风掀不开袖。"
+        },
+        {
+          "id": "cs1003_tvx2",
+          "speaker": "掌柜",
+          "text": "干泥的墨盖严。盖严，夜不洇。"
+        },
+        {
+          "id": "cs1003_tvx3",
+          "speaker": "岁吏",
+          "text": "月份从帘缝里探头。探头，催人离座。泥帖按。"
+        },
+        {
+          "id": "cs1003_tvx4",
+          "speaker": "苇原·灯影",
+          "text": "更鼓把店门敲薄。敲薄，人该让泥路。廊风止。"
+        },
+        {
+          "id": "cs1003_tvx5",
+          "speaker": "石垒·晚担",
+          "text": "泥匣不打开。打开是回堡后的事。栏泥守。"
+        },
+        {
+          "id": "cs1003_tvx6",
+          "speaker": "leader",
+          "text": "契收好。我出店，字回堡。干泥认。"
+        },
+        {
+          "id": "cs1003_rtn1",
+          "speaker": "旁白",
+          "text": "契角在袖里压平。压着走，折缝不重新翘。印泥留。"
+        },
+        {
+          "id": "cs1003_rtn2",
+          "speaker": "书记官",
+          "text": "签字的墨气还在。在袖里散尽，再碰西阁的案。泥边按。"
+        },
+        {
+          "id": "cs1003_rtn3",
+          "speaker": "石垒·晚担",
+          "text": "巷石干着——印泥记。干着踩，契角才不沾潮。泥灯泥。"
+        },
+        {
+          "id": "cs1003_rtn4",
+          "speaker": "旁白",
+          "text": "催契的话停在店里。店里的催，跟不出帘。泥空守。"
+        },
+        {
+          "id": "cs1003_rtn5",
+          "speaker": "老管事",
+          "text": "堡门认人。认人，不认袖里未干的慌。泥帖按。"
+        },
+        {
+          "id": "cs1003_rtn6",
+          "speaker": "leader",
+          "text": "泥在袖。我入堡，角交柜。"
+        },
+        {
+          "id": "cs1003_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡入印泥。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_paste",
+          "label": "栏泥仍并",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs10_paste_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs10_03",
+              "choice": "keep_paste",
+              "title": "印泥上的灯",
+              "outcome": "印泥回读后栏泥仍并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "push_paste",
+          "label": "先催印名",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs10_paste_push",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs10_03",
+              "choice": "push_paste",
+              "title": "印泥上的灯",
+              "outcome": "印泥回读后先催印名",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs1003_lop1",
+          "speaker": "旁白",
+          "text": "泥纸边压袖底。袖不鼓，进阁不惹眼。"
+        },
+        {
+          "id": "cs1003_lop2",
+          "speaker": "岁吏",
+          "text": "干泥先按住。按住，再开柜锁。"
+        },
+        {
+          "id": "cs1003_lop3",
+          "speaker": "苇原·灯影",
+          "text": "鼓声压在廊外。廊外催印，阁里不催。廊风止。"
+        },
+        {
+          "id": "cs1003_lop4",
+          "speaker": "老旗手",
+          "text": "旗靠廊柱。靠稳，再听锁一响。栏泥守。"
+        },
+        {
+          "id": "cs1003_lop5",
+          "speaker": "听回",
+          "text": "盏沿墨点擦净。净了，好对栏。干泥认。"
+        },
+        {
+          "id": "cs1003_lop6",
+          "speaker": "leader",
+          "text": "我到柜前。帖在袖，再看泥迹。"
+        },
+        {
+          "id": "cs10_03_ledger_0",
+          "speaker": "旁白",
+          "text": "入册。印泥与泥席栏泥进柜。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_1",
+          "speaker": "书记官",
+          "text": "干泥有灯。灯不灭。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_2",
+          "speaker": "leader",
+          "text": "我看见空了。空也在谱里·泥席。印泥留。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_3",
+          "speaker": "岁吏",
+          "text": "泥迹末行写：印泥栏泥留。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_4",
+          "speaker": "老管事",
+          "text": "催印锣再响，也撕不开柜门。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_5",
+          "speaker": "旁白",
+          "text": "柜门一合。灯还在缝里·泥席。帖边按。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防收牌。牌上印泥两字还热。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_7",
+          "speaker": "书记官",
+          "text": "整幅泥席，才算训。泥灯泥。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_8",
+          "speaker": "leader",
+          "text": "假迹没进来。好。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_9",
+          "speaker": "岁吏",
+          "text": "月结旁多一笔干泥。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_10",
+          "speaker": "老管事",
+          "text": "催泥叠在门外。谱在门内·泥席。泥空守。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_11",
+          "speaker": "旁白",
+          "text": "绣线干。干泥的边也干了。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_12",
+          "speaker": "书记官",
+          "text": "下次打开，干泥还在——带着灯。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_13",
+          "speaker": "leader",
+          "text": "够了。去灰旗堡·泥席。泥帖按。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_14",
+          "speaker": "苇原·灯影",
+          "text": "堡门亮着。印泥灯跟着。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_15",
+          "speaker": "岁吏",
+          "text": "泥迹合上。字还在·泥席。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_16",
+          "speaker": "老管事",
+          "text": "印泥可歇。谱不可假。廊风止。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_17",
+          "speaker": "旁白",
+          "text": "风停。训平。栏泥守。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_18",
+          "speaker": "书记官",
+          "text": "栏泥不是拖。是完整·泥席。",
+          "stage": {
+            "card": "六　入册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs10_03_ledger_y19",
+          "speaker": "旁白",
+          "text": "帖案底下的脚步，比门外的印名近。"
+        },
+        {
+          "id": "cs10_03_ledger_y20",
+          "speaker": "石垒·晚担",
+          "text": "纸上那一声轻响是笔尖，不是门外的口号。干泥认。"
+        },
+        {
+          "id": "cs10_03_ledger_y21",
+          "speaker": "leader",
+          "text": "干泥我按今天的鞋迹填。刻好的词，填不进这一格。"
+        },
+        {
+          "id": "cs1003_ldg1",
+          "speaker": "岁吏",
+          "text": "契缝与印泥栏泥，墨干才算自己的字。"
+        },
+        {
+          "id": "cs1003_ldg2",
+          "speaker": "书记官",
+          "text": "抢契的风，掀不进录。印泥留。"
+        },
+        {
+          "id": "cs1003_ldg3",
+          "speaker": "老旗手",
+          "text": "旗在泥案立过——字有根。"
+        },
+        {
+          "id": "cs1003_ldg4",
+          "speaker": "leader",
+          "text": "契压住。灯不灭，印泥在柜。"
+        },
+        {
+          "id": "cs1003_ldg_end",
+          "speaker": "leader",
+          "text": "契角压平处，灰旗堡印泥柜等签字。"
+        },
+        {
+          "id": "cs1003_ink1",
+          "speaker": "旁白",
+          "text": "泥角签字的墨边先收。收完，角才压得下去，不粘对面。泥边按。"
+        },
+        {
+          "id": "cs1003_ink2",
+          "speaker": "岁吏",
+          "text": "再往下是下月岁课——印泥记。今晚签字停在该停的栏，等干。泥灯泥。"
+        },
+        {
+          "id": "cs1003_ink3",
+          "speaker": "书记官",
+          "text": "契角我按住。风一来，潮墨最爱往折缝里躲。泥空守。"
+        },
+        {
+          "id": "cs1003_ink4",
+          "speaker": "旁白",
+          "text": "西阁的砂钟停过一声。停过，墨像听见了，才肯干。泥帖按。"
+        },
+        {
+          "id": "cs1003_ink5",
+          "speaker": "岁吏",
+          "text": "干了才压角。压早了，字花，泥就不算签完。廊风止。"
+        },
+        {
+          "id": "cs1003_ink6",
+          "speaker": "leader",
+          "text": "墨干了。契角压平，人走，不用守着看。栏泥守。"
+        },
+        {
+          "id": "cs1003_cls1",
+          "speaker": "旁白",
+          "text": "契上的墨干了。干了的字，才跟着人离开门廊。干泥认。"
+        },
+        {
+          "id": "cs1003_cls2",
+          "speaker": "老旗手",
+          "text": "旗在泥案旁立过，现在收回来。穗上没有墨。"
+        },
+        {
+          "id": "cs1003_cls3",
+          "speaker": "石垒·晚担",
+          "text": "从门廊走回柜前，鞋迹比口号深。印泥留。"
+        },
+        {
+          "id": "cs1003_cls4",
+          "speaker": "槐里·青禾",
+          "text": "印泥的泥空留着。走出来的步填进干泥，印名靠后。"
+        },
+        {
+          "id": "cs1003_cls5",
+          "speaker": "老管事",
+          "text": "泥角压平不是藏。是怕风再把今天的字掀开。泥边按。"
+        },
+        {
+          "id": "cs1003_cls6",
+          "speaker": "岁吏",
+          "text": "签字停在该停的栏——印泥记。再往下是下个月的岁课，不是今晚。泥灯泥。"
+        },
+        {
+          "id": "cs1003_cls7",
+          "speaker": "苇原·灯影",
+          "text": "灯贴着印泥的薄页。薄页亮着，厚话就进不来。"
+        },
+        {
+          "id": "cs1003_cls8",
+          "speaker": "leader",
+          "text": "契角压平，人就走。墨干了，不用守着看。泥空守。"
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "title_en": "The Lamp of the Seal Paste"
+}
