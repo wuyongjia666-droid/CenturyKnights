@@ -1360,7 +1360,7 @@ static func month_echo_lines() -> Array:
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
 		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade", "unlock",
 		"works", "caravan", "smith", "produce", "forge", "garrison", "stockade", "stockade_credit", "sister", "muster",
-		"convoy", "contest", "reclaim", "defend", "assault", "chain", "bribe", "scout",
+		"convoy", "contest", "reclaim", "defend", "assault", "chain", "bribe", "scout", "appease",
 		"threat_held", "threat_lost",
 	]:
 		var tx := str(d.get(k, ""))
