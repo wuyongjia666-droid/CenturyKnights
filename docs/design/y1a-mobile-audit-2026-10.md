@@ -327,6 +327,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 > | 战技整链手感 | **DONE（本 PR）**：Buff/Heal arm→aim→cast settle→交接清闩→敌方清戳；`BattleSkillFeelLoop` + `combat_skill_feel_loop_fat_check` 双图真 E2E；禁瞄准预告碎刀 / telegraph / EmptyHost |
 > | 取消整链手感 | **DONE（本 PR）**：preview→mode→select 每层刷信息栏盖戳；选中清 FeelLoop；敌方清取消戳；`BattleCancelFeelLoop` + `combat_cancel_feel_loop_fat_check` 双图真 E2E；禁瞄准预告碎刀 / telegraph / EmptyHost |
 > | 敌方行动整链手感 | **DONE（本 PR）**：开场/移动 settle 带威胁格（禁 mover-only）；打击/收尾盖戳刷栏；回场与进敌方清戳；`BattleEnemyActFeel` + `combat_enemy_act_feel_fat_check` 双图真 E2E；禁瞄准预告碎刀 / telegraph / EmptyHost |
+> | 战棋手感收口 | **DONE（本 PR）**：终局清全链戳/窥视/危险/回场脉冲并刷 BoardInset；桌面+手游 × 双图整链闭环；`BattleFeelCloseout` + `combat_feel_closeout_fat_check`；禁瞄准预告碎刀 / telegraph / EmptyHost |
 > | BoardInset 无再渗/统一 from_parts 肥刀 | **DONE（本 PR）**：`_cut_blocker` 去掉 72px floor 再渗；`from_parts` 纯代数路径；ConfirmAffordance / ActionSettle.readable_inset 共用；`combat_boardinset_norebleed_fat_check` 双图真 E2E；禁瞄准预告碎刀 |
 > | 打击/危险/循环肥刀 | **DONE（本 PR）**：合入 T-P18 撤退确认、T-P19 危险手感、T-P20 幽灵可打、T-P23 攻击瞄准、T-P25 Tab 循环；`combat_strike_danger_cycle_fat_check` 双图真 E2E；禁瞄准预告碎刀复活 |
 
@@ -347,3 +348,8 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5y. 敌方行动整链手感
 
 **DONE（本 PR）**。敌方单位开场：`note_enemy_acting` 跟焦后 `ActionSettle` 带可打玩家格（禁 mover-only `[]`）；移动后落点+威胁格 settle 并刷 BoardInset；打击后框攻方+目标盖 strike；单位收尾盖 done；玩家回场 / 再进敌方清 `m_enemy_act_feel`。`BattleEnemyActFeel` + `combat_enemy_act_feel_fat_check` 双图（ch0_pass / ch1_hill）真 E2E。禁瞄准预告碎刀 / telegraph / EmptyHost。
+
+## 5z. 战棋手感收口
+
+**DONE（本 PR）**。胜/负终局：`note_battle_end` 后清 FeelLoop / Cancel / EnemyAct / TurnCycle / SkillFeel / LandStrike / AttackAim / GhostStrike / WaitHandoff / 回场脉冲 / 危险区，刷 BoardInset，盖 `m_feel_closeout` end 戳，横幅独占舞台。`combat_feel_closeout_fat_check` 桌面+手游 × 双图（ch0_pass / ch1_hill）真 E2E：选中→移动→敌方行动→回场→终局清戳 + BoardInset 闭环。禁瞄准预告碎刀 / telegraph / EmptyHost。
+

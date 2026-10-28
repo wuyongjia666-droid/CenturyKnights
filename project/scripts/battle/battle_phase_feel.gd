@@ -342,6 +342,7 @@ static func crest_modulate_for_end(win: bool, side: String, alpha: float = 1.0) 
 
 
 ## Stamp end flash; clear settle/enemy actor chrome so the banner owns the stage.
+## FeelCloseout then drops whole-chain feel stamps / peeks under the banner.
 static func note_battle_end(host, win: bool) -> void:
 	host.set_meta("m_end_flash", {"win": win, "msec": Time.get_ticks_msec()})
 	host._turn_flash = maxf(float(host._turn_flash), END_FLASH_SEC * 0.35)
@@ -353,6 +354,7 @@ static func note_battle_end(host, win: bool) -> void:
 	if host.has_meta("m_enemy_actor_msec"):
 		host.remove_meta("m_enemy_actor_msec")
 	apply_end_crest_pulse(host, win)
+	BattleFeelCloseout.after_battle_end(host, win)
 
 
 static func end_alpha(host, now_msec: int = -1) -> float:
