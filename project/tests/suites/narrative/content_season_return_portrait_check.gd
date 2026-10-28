@@ -33,7 +33,6 @@ const CHOICE := {
 	"cs06_03": ["栏场仍并", "cs06_circle_parallel"],
 	"cs07_03": ["栏仪仍并", "cs07_seal_parallel"],
 	"cs08_03": ["栏祠仍并", "cs08_niche_parallel"],
-	"cs08_03": ["栏祠仍并", "cs08_niche_parallel"],
 	"cs09_03": ["栏验仍并", "cs09_strip_parallel"],
 	"cs07_01": ["仪典并排记", "cs07_kept_rite"],
 	"cs07_02": ["空条并排", "cs07_gene_parallel"],
