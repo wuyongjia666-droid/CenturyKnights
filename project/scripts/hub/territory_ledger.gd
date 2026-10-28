@@ -1,6 +1,6 @@
 extends Control
-## Territory Ledger (P1-UX-04 / design §19–§23) — owned sites whole-chain:
-## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease · chain pledge.
+## Territory Ledger (P1-UX-04 / design §19–§25) — owned sites whole-chain:
+## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease · chain · contest · drain.
 
 const _MAX_LIST := 48
 
@@ -19,6 +19,9 @@ var _unrest: Label
 var _btn_appease: Button
 var _chain: Label
 var _btn_chain: Button
+var _contest: Label
+var _btn_contest: Button
+var _drain: Label
 var _ids: Array = []
 var _pick := ""
 
@@ -97,18 +100,42 @@ func _build() -> void:
 	_btn_chain.pressed.connect(_on_chain_goto)
 	add_child(_btn_chain)
 
+	_contest = UIKit.body_label("", UIKit.EMBER, 13)
+	_contest.name = "TerritoryContestBanner"
+	_contest.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_contest.position = Vector2(42, 244)
+	_contest.size = Vector2(980, 24)
+	_contest.visible = false
+	add_child(_contest)
+
+	_btn_contest = UIKit.cta_button(Locale.t("ux_territory_contest_goto"), "T", 160, 28)
+	_btn_contest.name = "TerritoryContestGoto"
+	_btn_contest.position = Vector2(1040, 240)
+	_btn_contest.size = Vector2(160, 28)
+	_btn_contest.visible = false
+	_btn_contest.pressed.connect(_on_contest_goto)
+	add_child(_btn_contest)
+
+	_drain = UIKit.body_label("", UIKit.DANGER, 13)
+	_drain.name = "TerritoryDrainBanner"
+	_drain.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_drain.position = Vector2(42, 268)
+	_drain.size = Vector2(980, 24)
+	_drain.visible = false
+	add_child(_drain)
+
 	_empty = UIKit.body_label(Locale.t("ux_territory_empty"), UIKit.EMBER, 13)
 	_empty.name = "TerritoryEmpty"
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_empty.position = Vector2(42, 246)
+	_empty.position = Vector2(42, 292)
 	_empty.size = Vector2(1196, 28)
 	_empty.visible = false
 	add_child(_empty)
 
 	_list = ItemList.new()
 	_list.name = "TerritoryList"
-	_list.position = Vector2(42, 254)
-	_list.size = Vector2(420, 396)
+	_list.position = Vector2(42, 300)
+	_list.size = Vector2(420, 350)
 	_list.item_selected.connect(_on_pick)
 	add_child(_list)
 
@@ -117,13 +144,13 @@ func _build() -> void:
 	_detail.bbcode_enabled = true
 	_detail.fit_content = false
 	_detail.scroll_active = true
-	_detail.position = Vector2(480, 230)
-	_detail.size = Vector2(760, 276)
+	_detail.position = Vector2(480, 300)
+	_detail.size = Vector2(760, 220)
 	add_child(_detail)
 
 	var acts := HBoxContainer.new()
 	acts.name = "TerritoryActions"
-	acts.position = Vector2(480, 500)
+	acts.position = Vector2(480, 530)
 	acts.size = Vector2(760, 48)
 	acts.add_theme_constant_override("separation", 10)
 	add_child(acts)
@@ -213,6 +240,23 @@ func _refresh() -> void:
 		_chain.text = ""
 		_chain.visible = false
 		_btn_chain.visible = false
+	var contest_n := CKTerritory.pending_contest_ids().size()
+	if contest_n > 0:
+		_contest.text = Locale.t("ux_territory_contest_banner") % contest_n
+		_contest.visible = true
+		_btn_contest.visible = true
+		_btn_contest.disabled = false
+	else:
+		_contest.text = ""
+		_contest.visible = false
+		_btn_contest.visible = false
+	var drain_n := CKTerritory.pending_drain_ids().size()
+	if drain_n > 0:
+		_drain.text = Locale.t("ux_territory_drain_banner") % drain_n
+		_drain.visible = true
+	else:
+		_drain.text = ""
+		_drain.visible = false
 	var owned: Array = CKTerritory.owned_ids()
 	owned.sort()
 	for id in owned:
@@ -248,6 +292,8 @@ func _row_label(id: String) -> String:
 		tag = " · " + Locale.t("ux_territory_tag_threat")
 	elif int(CKTerritory.state(id).unrest) > 0:
 		tag = " · " + Locale.t("ux_territory_tag_unrest")
+	elif id in CKTerritory.pending_drain_ids():
+		tag = " · " + Locale.t("ux_territory_tag_drain")
 	elif bool(CKTerritory.state(id).stockade):
 		tag = " · " + Locale.t("ux_territory_tag_stockade")
 	return "%s%s" % [nm, tag]
@@ -383,5 +429,13 @@ func _on_chain_goto() -> void:
 	if focused == "":
 		_msg.add_theme_color_override("font_color", UIKit.DANGER)
 		_msg.text = Locale.t("ux_territory_chain_fail")
+		return
+	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": focused})
+
+func _on_contest_goto() -> void:
+	var focused := CKTerritory.hub_focus_contest()
+	if focused == "":
+		_msg.add_theme_color_override("font_color", UIKit.DANGER)
+		_msg.text = Locale.t("ux_territory_contest_fail")
 		return
 	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": focused})

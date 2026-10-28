@@ -28,6 +28,8 @@ const LINKS := {
 	"territory_reclaim": "res://scenes/hub/atlas_view.tscn",
 	"territory_unrest": "res://scenes/hub/territory_ledger.tscn",
 	"territory_chain": "res://scenes/hub/atlas_view.tscn",
+	"territory_contest": "res://scenes/hub/atlas_view.tscn",
+	"territory_drain": "res://scenes/hub/territory_ledger.tscn",
 }
 
 
@@ -40,6 +42,8 @@ static func prepare_nav(item: Dictionary) -> void:
 		CKTerritory.hub_focus_reclaim()
 	elif cat == "territory_chain":
 		CKTerritory.hub_focus_chain()
+	elif cat == "territory_contest":
+		CKTerritory.hub_focus_contest()
 
 static func link_for(item: Dictionary) -> String:
 	var link := str(item.get("link", ""))
@@ -100,6 +104,18 @@ static func snapshot() -> Array:
 		var crow := _row("territory_chain", "military", Locale.t("ux_todo_territory_chain"), chain_n)
 		crow["urgency"] = "block"
 		rows.append(crow)
+	# §24 中立拉锯仍开 — castle chip deep-links atlas ContestTug.
+	var contest_n := CKTerritory.pending_contest_ids().size()
+	if contest_n > 0:
+		var crow2 := _row("territory_contest", "military", Locale.t("ux_todo_territory_contest"), contest_n)
+		crow2["urgency"] = "block"
+		rows.append(crow2)
+	# §25 欠饷降驻 — castle chip deep-links ledger reinforce.
+	var drain_n := CKTerritory.pending_drain_ids().size()
+	if drain_n > 0:
+		var drow := _row("territory_drain", "military", Locale.t("ux_todo_territory_drain"), drain_n)
+		drow["urgency"] = "block"
+		rows.append(drow)
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)

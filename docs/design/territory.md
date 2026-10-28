@@ -248,3 +248,31 @@ E2E：`territory_unrest_appease_loop_check` + mobile twin；`todo_due_check` 覆
 6. **月回报**：`last_month_report.chains` 取 `pending_chain_ids()`；TerritoryMonth 既有 `ChainLine` + `EchoLine_chain`（§13）。
 
 E2E：`territory_chain_commission_loop_check` + mobile twin；`todo_due_check` 覆盖无归附不显示 / 有归附可链。
+
+
+## 24. 中立拉锯整链（Territory fat · 禁止再拆 chip/ledger/hourglass/echo）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **拉锯出现**：`start_neutral_contest` / 月结 `_roll_neutral_contests` → `contest` 字典；`pending_contest_ids()` = `contested_ids()`。
+2. **待办带路**：城堡 HubTodo `territory_contest`（urgency=block）→ `prepare_nav` → `hub_focus_contest`（写 atlas metas + `_emit_neutral_contest`）→ 舆图 ContestTug。
+3. **领地簿**：顶栏 `TerritoryContestBanner` + `TerritoryContestGoto` → 同深链跳舆图。
+4. **沙漏 Forecast**：`ContestPending` + `ToContest` 深链舆图焦点。
+5. **加码/截击/得手**：`contest_stake` / `contest_seize` / `capture(how=contest)` → `month_echo.contest`；chip / Forecast / 簿条随 contest 清空。
+6. **月回报**：`contest_open` / ContestLine + `EchoLine_contest`（§9/§14）。
+
+E2E：`territory_contest_closed_loop_check` + mobile twin；`todo_due_check` 覆盖无拉锯不显示 / 有拉锯可链。
+
+
+## 25. 欠饷降驻耐久整链（Territory fat · 禁止再拆 chip/ledger/hourglass/echo）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **欠饷降驻**：月结银不足 → 自有点 `garrison −1` → `last_month_report.drains` + `month_echo.drain`（`terr_echo_drain`）。
+2. **待办带路**：城堡 HubTodo `territory_drain`（urgency=block, count=`pending_drain_ids()`）→ 领地簿。
+3. **领地簿**：顶栏 `TerritoryDrainBanner`；选点「增派」`reinforce` → `_clear_drain_pending` 清 drains 条目。
+4. **沙漏 Forecast**：`DrainPending` + `ToReinforce` 深链领地簿。
+5. **增派得手**：chip / Forecast / 簿条随 drains 清零；月回报既有 drain 行 + `EchoLine_drain`。
+
+E2E：`territory_drain_reinforce_loop_check` + mobile twin；`todo_due_check` 覆盖无降驻不显示 / 有降驻可链。
+
