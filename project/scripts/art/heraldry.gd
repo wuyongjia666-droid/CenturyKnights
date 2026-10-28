@@ -230,6 +230,21 @@ static func migrate_v1(raw: Dictionary) -> Dictionary:
 	if not border_ids().has(str(base["border"])):
 		base["border"] = "none"
 	base["border_color"] = _hex(base.get("border_color", ""), "")
+	var gc := str(base.get("glyph_char", "")).strip_edges()
+	base["glyph_char"] = gc.left(1) if gc != "" else ""
+	# Keep surname charge glyph in sync with spec.glyph_char.
+	if str(base.get("emblem", "")) == "surname" and base["glyph_char"] != "":
+		var synced: Array = []
+		for c in base.get("charges", []):
+			if typeof(c) != TYPE_DICTIONARY:
+				continue
+			var row: Dictionary = (c as Dictionary).duplicate(true)
+			if str(row.get("id", "")) == "surname":
+				row["glyph"] = base["glyph_char"]
+			synced.append(row)
+		if synced.is_empty():
+			synced = [{"id": "surname", "tincture": str(base.get("emblem_color", "")), "placement": "center", "glyph": base["glyph_char"]}]
+		base["charges"] = synced
 	return base
 
 static func normalize(raw) -> Dictionary:
@@ -331,7 +346,7 @@ static func randomize_for_nation(nid: String, rng: RandomNumberGenerator = null)
 ## Map a nation-table charge id onto a company DIY emblem slot (BannerSpec.EMBLEMS).
 static func company_emblem_id(raw: String) -> String:
 	var id := str(raw).strip_edges()
-	if id in ["ring", "arc", "wave", "leaf", "chevron", "spark", "filament", "tide", "notch", "bars", "bend", "hollow"]:
+	if id in ["ring", "arc", "wave", "leaf", "chevron", "spark", "filament", "tide", "notch", "bars", "bend", "hollow", "surname"]:
 		return id
 	const MAP := {
 		"ash_plume": "bars", "plume": "bars", "tower": "bars", "bridge": "bend",
@@ -343,6 +358,88 @@ static func company_emblem_id(raw: String) -> String:
 		"zephyr": "leaf", "lozenge": "leaf", "bend_mark": "bend", "tide": "tide",
 	}
 	return str(MAP.get(id, "ring"))
+
+
+## First unicode character of a surname (empty if blank).
+static func surname_char(surname: String) -> String:
+	var s := str(surname).strip_edges()
+	if s.is_empty():
+		return ""
+	return s.left(1)
+
+
+## Force emblem=surname with glyph_char from surname (or existing glyph).
+static func with_surname_emblem(spec: Dictionary, surname: String = "") -> Dictionary:
+	var s := normalize(spec)
+	var ch := surname_char(surname) if str(surname).strip_edges() != "" else surname_char(str(s.get("glyph_char", "")))
+	if ch == "":
+		return s
+	s["glyph_char"] = ch
+	s["emblem"] = "surname"
+	var tint := str(s.get("emblem_color", s.get("ordinary_tincture", tincture_hex("argent"))))
+	if tint == "":
+		tint = tincture_hex("argent")
+	s["emblem_color"] = tint
+	s["charges"] = [{"id": "surname", "tincture": tint, "placement": "center", "glyph": ch}]
+	return normalize(s)
+
+
+## Procedural seal strokes in unit square [-1,1]^2 (font-free fallback / raster).
+static func surname_stroke_segments(glyph: String) -> Array:
+	var cp := 0
+	if str(glyph).length() > 0:
+		cp = str(glyph).unicode_at(0)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("surname_seal#%d" % cp)
+	var segs: Array = []
+	# Outer frame — geometric seal border.
+	segs.append([Vector2(-0.88, -0.88), Vector2(0.88, -0.88)])
+	segs.append([Vector2(0.88, -0.88), Vector2(0.88, 0.88)])
+	segs.append([Vector2(0.88, 0.88), Vector2(-0.88, 0.88)])
+	segs.append([Vector2(-0.88, 0.88), Vector2(-0.88, -0.88)])
+	var nh := 1 + (cp % 3)
+	for i in nh:
+		var y := -0.55 + float(i + 1) * (1.1 / float(nh + 1)) + (rng.randf() - 0.5) * 0.06
+		var x0 := -0.72 + rng.randf() * 0.12
+		var x1 := 0.72 - rng.randf() * 0.12
+		segs.append([Vector2(x0, y), Vector2(x1, y)])
+	var nv := 1 + ((cp >> 3) % 3)
+	for i in nv:
+		var x := -0.55 + float(i + 1) * (1.1 / float(nv + 1)) + (rng.randf() - 0.5) * 0.06
+		var y0 := -0.72 + rng.randf() * 0.12
+		var y1 := 0.72 - rng.randf() * 0.12
+		segs.append([Vector2(x, y0), Vector2(x, y1)])
+	if (cp >> 6) & 1:
+		segs.append([Vector2(-0.55, -0.55), Vector2(0.55, 0.55)])
+	if (cp >> 7) & 1:
+		segs.append([Vector2(0.55, -0.55), Vector2(-0.55, 0.55)])
+	if (cp >> 8) & 1:
+		segs.append([Vector2(-0.25, -0.72), Vector2(0.6, -0.15)])
+	if (cp >> 9) & 1:
+		segs.append([Vector2(-0.6, 0.15), Vector2(0.25, 0.72)])
+	if (cp >> 10) & 1:
+		segs.append([Vector2(-0.4, 0.0), Vector2(0.4, 0.0)])
+	return segs
+
+
+static func _dist_point_segment(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab := b - a
+	var len2 := ab.length_squared()
+	if len2 < 0.0001:
+		return p.distance_to(a)
+	var t := clampf((p - a).dot(ab) / len2, 0.0, 1.0)
+	return p.distance_to(a + ab * t)
+
+
+static func surname_stroke_hit(dx: float, dy: float, glyph: String, thickness: float = 0.11) -> bool:
+	for seg in surname_stroke_segments(glyph):
+		if typeof(seg) != TYPE_ARRAY or (seg as Array).size() < 2:
+			continue
+		var a: Vector2 = (seg as Array)[0]
+		var b: Vector2 = (seg as Array)[1]
+		if _dist_point_segment(Vector2(dx, dy), a, b) <= thickness:
+			return true
+	return false
 
 
 ## Company 团徽 preset: ash cloth (B-09) + nation division/ordinary/emblem + heart tincture.
@@ -421,6 +518,7 @@ static func cache_key(spec: Dictionary) -> String:
 		str(s.get("shield_shape", "")), str(s.get("nation", "")),
 		str(ach.get("helm", "")), str(ach.get("crown", "")),
 		str(ach.get("motto", "")),
+		str(s.get("glyph_char", "")),
 		str(s.get("castle_mark", {})), str(s.get("family_tier", "")),
 	])
 
@@ -449,12 +547,18 @@ static func core_key(spec: Dictionary) -> String:
 	var chs: Array = []
 	for c in s.get("charges", []):
 		if typeof(c) == TYPE_DICTIONARY:
-			chs.append("%s:%s" % [(c as Dictionary).get("id", ""), str((c as Dictionary).get("tincture", "")).to_lower()])
+			var cd: Dictionary = c
+			var g := str(cd.get("glyph", ""))
+			if g == "":
+				chs.append("%s:%s" % [cd.get("id", ""), str(cd.get("tincture", "")).to_lower()])
+			else:
+				chs.append("%s:%s:%s" % [cd.get("id", ""), str(cd.get("tincture", "")).to_lower(), g])
 	return "|".join([
 		str(s.get("division", "")), str(s.get("partition_line", "")),
 		str(s.get("field_a", "")).to_lower(), str(s.get("field_b", "")).to_lower(),
 		str(s.get("ordinary", "")), str(s.get("ordinary_tincture", "")).to_lower(),
 		",".join(chs), str(s.get("shield_shape", "")),
+		str(s.get("glyph_char", "")),
 	])
 
 static func generate_unique_arms(nation: String, seed_text: String, taken: Dictionary) -> Dictionary:
