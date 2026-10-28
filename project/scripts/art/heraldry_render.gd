@@ -315,7 +315,10 @@ static func _paint_charges(img: Image, mask: PackedByteArray, s: Dictionary) -> 
 		var emblem := str(s.get("emblem", ""))
 		if emblem == "" or emblem == "none":
 			return
-		charges = [{"id": emblem, "tincture": str(s.get("emblem_color", "")), "placement": "center"}]
+		var row := {"id": emblem, "tincture": str(s.get("emblem_color", "")), "placement": "center"}
+		if emblem == "surname":
+			row["glyph"] = str(s.get("glyph_char", ""))
+		charges = [row]
 	var w := img.get_width()
 	var h := img.get_height()
 	for ch in charges:
@@ -340,9 +343,12 @@ static func _paint_charges(img: Image, mask: PackedByteArray, s: Dictionary) -> 
 				cx = 0.28
 			"sinister":
 				cx = 0.72
-		_stamp_charge(img, mask, id, cx, cy, col, mini(w, h), 0.22 if charges.size() <= 1 else 0.13)
+		var glyph := str(cd.get("glyph", ""))
+		if glyph == "" and id == "surname":
+			glyph = str(s.get("glyph_char", ""))
+		_stamp_charge(img, mask, id, cx, cy, col, mini(w, h), 0.22 if charges.size() <= 1 else 0.13, glyph)
 
-static func _stamp_charge(img: Image, mask: PackedByteArray, id: String, cx: float, cy: float, col: Color, scale_px: int, r: float = 0.22) -> void:
+static func _stamp_charge(img: Image, mask: PackedByteArray, id: String, cx: float, cy: float, col: Color, scale_px: int, r: float = 0.22, glyph: String = "") -> void:
 	var w := img.get_width()
 	var h := img.get_height()
 	var shape := id
@@ -359,7 +365,12 @@ static func _stamp_charge(img: Image, mask: PackedByteArray, id: String, cx: flo
 			var v := float(y) / float(maxi(1, h - 1))
 			var dx := (u - cx) / r
 			var dy := (v - cy) / r
-			if _charge_hit(shape, dx, dy):
+			var hit := false
+			if shape == "surname":
+				hit = CKHeraldry.surname_stroke_hit(dx, dy, glyph)
+			else:
+				hit = _charge_hit(shape, dx, dy)
+			if hit:
 				img.set_pixel(x, y, col)
 
 static func _charge_hit(shape: String, dx: float, dy: float) -> bool:
