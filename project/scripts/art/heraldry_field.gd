@@ -878,16 +878,19 @@ static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), 
 		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tr.set_meta("arms_kind", "lb_slot_arms")
 		tr.set_meta("arms_core", CKHeraldry.core_key(spec))
+		tr.set_meta("shield_shape", str(spec.get("shield_shape", "heater")))
 		tr.tooltip_text = Locale.t("lb_slot_arms")
 	elif hx != "":
 		tr = TextureRect.new()
-		tr.texture = UnitArt.shield_arms(CKHeraldry.from_crest(hx), int(size.x), int(size.y))
+		var crest_spec := CKHeraldry.from_crest(hx)
+		tr.texture = UnitArt.shield_arms(crest_spec, int(size.x), int(size.y))
 		tr.custom_minimum_size = size
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tr.set_meta("arms_kind", "lb_slot_arms")
-		tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldry.from_crest(hx)))
+		tr.set_meta("arms_core", CKHeraldry.core_key(crest_spec))
+		tr.set_meta("shield_shape", str(crest_spec.get("shield_shape", "heater")))
 		tr.tooltip_text = Locale.t("lb_slot_arms")
 	else:
 		tr = CKHeraldryChrome.make_company_arms(size)
@@ -2172,6 +2175,8 @@ static func place_castle_hang_banner(parent: Node, at: Vector2, size: Vector2 = 
 	tr.set_meta("field_route", "castle_view_hang_cloth")
 	tr.set_meta("arms_kind", "lb_castle_hang_arms")
 	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.company_spec()))
+	# Cloth is always rectangular (render forces heater mask); do not claim nation shield silhouette.
+	tr.set_meta("shield_shape", "cloth")
 	var w := maxi(24, int(size.x))
 	var h := maxi(32, int(size.y))
 	tr.texture = UnitArt.banner_layers({}, w, h)
