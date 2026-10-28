@@ -10,6 +10,7 @@ const SCHEMA := 2
 
 static var _data: Dictionary = {}
 static var _ready := false
+static var _vector_cache: Dictionary = {}
 
 static func table() -> Dictionary:
 	if _ready:
@@ -129,14 +130,14 @@ static func border_ids() -> PackedStringArray:
 		out.append(str((d as Dictionary).get("id", "")))
 	return out
 
-static func achievement_for_rank(rank: String) -> Dictionary:
+static func achievement_for_rank(rank: String, nid: String = "") -> Dictionary:
 	var helm_map: Dictionary = table().get("rank_to_helm", {})
 	var crown_map: Dictionary = table().get("rank_to_crown", {})
 	var helm := str(helm_map.get(rank, "none"))
 	var crown := str(crown_map.get(rank, "none"))
 	var supporters: Array = ["none", "none"]
 	if rank in ["duke", "royal"]:
-		supporters = ["frost_beast", "frost_beast"]
+		supporters = nation_supporter_pair(nid)
 	return {
 		"helm": helm,
 		"crown": crown,
@@ -145,6 +146,60 @@ static func achievement_for_rank(rank: String) -> Dictionary:
 		"supporters": supporters,
 		"motto": "",
 	}
+
+
+static func _vector_table() -> Dictionary:
+	## Lazy read of heraldry_vector.json (nation_supporters / supporter art ids).
+	if not _vector_cache.is_empty():
+		return _vector_cache
+	var f := FileAccess.open("res://assets/art/heraldry_vector.json", FileAccess.READ)
+	if f:
+		var parsed = JSON.parse_string(f.get_as_text())
+		if typeof(parsed) == TYPE_DICTIONARY:
+			_vector_cache = parsed
+	return _vector_cache
+
+
+static func supporter_ids() -> PackedStringArray:
+	## DIY order: none + six frost beasts from the vector library.
+	var out := PackedStringArray(["none", "stag", "wolf", "crane", "eagle", "bear", "seadrake"])
+	var lib_sups: Dictionary = _vector_table().get("supporters", {})
+	for k in lib_sups.keys():
+		var id := str(k)
+		if id != "" and out.find(id) < 0:
+			out.append(id)
+	return out
+
+
+static func nation_supporter_pair(nid: String) -> Array:
+	var by: Dictionary = _vector_table().get("nation_supporters", {})
+	var pair: Array = by.get(str(nid), ["stag", "stag"])
+	if typeof(pair) != TYPE_ARRAY or pair.size() < 2:
+		return ["stag", "stag"]
+	var L := str(pair[0]).strip_edges()
+	var R := str(pair[1]).strip_edges()
+	if L == "" or L == "frost_beast" or L == "none":
+		L = "stag"
+	if R == "" or R == "frost_beast" or R == "none":
+		R = "stag"
+	return [L, R]
+
+
+static func _sanitize_supporters(raw, nid: String = "") -> Array:
+	var pair := nation_supporter_pair(nid)
+	var out: Array = ["none", "none"]
+	if typeof(raw) != TYPE_ARRAY:
+		return out
+	for i in range(2):
+		var want := str(raw[i]) if i < raw.size() else "none"
+		want = want.strip_edges()
+		if want == "" or want == "frost_beast":
+			# Legacy sentinel → real nation pair (or none when low rank left bare).
+			want = str(pair[i]) if want == "frost_beast" else "none"
+		if want != "none" and supporter_ids().find(want) < 0:
+			want = str(pair[i])
+		out[i] = want
+	return out
 
 static func _raw_defaults() -> Dictionary:
 	var base: Dictionary = (table().get("defaults", {}) as Dictionary).duplicate(true)
@@ -211,6 +266,7 @@ static func migrate_v1(raw: Dictionary) -> Dictionary:
 		for ak in def_ach.keys():
 			if not ach.has(ak):
 				ach[ak] = def_ach[ak]
+		ach["supporters"] = _sanitize_supporters(ach.get("supporters", []), str(base.get("nation", "")))
 		base["achievement"] = ach
 	# Arms belong to the castle, not a person/marriage: drop legacy marshalling / cadency / bastardy.
 	for legacy_key in ["marshalling", "cadency", "bastardy"]:
@@ -281,7 +337,7 @@ static func from_nation(nid: String, rank: String = "knight") -> Dictionary:
 		# Fix charge tincture against field.
 		if not tincture_ok(fa, str((chs[0] as Dictionary)["tincture"])):
 			(chs[0] as Dictionary)["tincture"] = tincture_hex("argent") if tincture_class(fa) == "colour" else tincture_hex("sable")
-	var ach := achievement_for_rank(rank)
+	var ach := achievement_for_rank(rank, nid)
 	ach["mantling_a"] = fa
 	ach["mantling_b"] = ot if ot != "" else fb
 	ach["motto"] = str(st.get("motto", ""))
@@ -518,7 +574,14 @@ static func has_achievement_ornament(spec: Dictionary) -> bool:
 		return true
 	if str(ach.get("crown", "none")) != "none":
 		return true
-	return str(ach.get("motto", "")).strip_edges() != ""
+	if str(ach.get("motto", "")).strip_edges() != "":
+		return true
+	var sups: Array = ach.get("supporters", [])
+	if typeof(sups) == TYPE_ARRAY:
+		for s_id in sups:
+			if str(s_id) != "" and str(s_id) != "none":
+				return true
+	return false
 
 static func stamp_achievement_meta(node: Object, spec: Dictionary) -> void:
 	if node == null:
@@ -530,11 +593,26 @@ static func stamp_achievement_meta(node: Object, spec: Dictionary) -> void:
 	node.set_meta("arms_helm", str(ach.get("helm", "none")))
 	node.set_meta("arms_crown", str(ach.get("crown", "none")))
 	node.set_meta("arms_motto", str(ach.get("motto", "")).strip_edges())
+	var sups := _sanitize_supporters(ach.get("supporters", []), str(s.get("nation", "")))
+	node.set_meta("arms_supporter_l", str(sups[0]))
+	node.set_meta("arms_supporter_r", str(sups[1]))
+
+
+static func clear_achievement_meta_cloth(node: Object) -> void:
+	## HangCloth / ShellBanner stay rectangular cloth — never claim achievement ornaments.
+	if node == null:
+		return
+	node.set_meta("arms_helm", "none")
+	node.set_meta("arms_crown", "none")
+	node.set_meta("arms_motto", "")
+	node.set_meta("arms_supporter_l", "none")
+	node.set_meta("arms_supporter_r", "none")
 
 static func apply_rank(spec: Dictionary, rank: String) -> Dictionary:
 	var s := normalize(spec)
 	var ach: Dictionary = (s.get("achievement", {}) as Dictionary).duplicate(true)
-	var built := achievement_for_rank(rank)
+	var nid := str(s.get("nation", ""))
+	var built := achievement_for_rank(rank, nid)
 	ach["helm"] = str(built.get("helm", ach.get("helm", "none")))
 	ach["crown"] = str(built.get("crown", ach.get("crown", "none")))
 	if str(ach.get("mantling_a", "")) == "":
@@ -542,7 +620,12 @@ static func apply_rank(spec: Dictionary, rank: String) -> Dictionary:
 	if str(ach.get("mantling_b", "")) == "":
 		ach["mantling_b"] = str(s.get("ordinary_tincture", s.get("field_b", "")))
 	if rank in ["duke", "royal"]:
-		ach["supporters"] = built.get("supporters", ["frost_beast", "frost_beast"])
+		ach["supporters"] = nation_supporter_pair(nid)
+	elif rank in ["knight", "baron", "count"]:
+		# Low ranks stay bare unless the player already DIY'd supporters.
+		var cur := _sanitize_supporters(ach.get("supporters", []), nid)
+		if str(cur[0]) == "frost_beast" or str(cur[1]) == "frost_beast":
+			ach["supporters"] = ["none", "none"]
 	s["achievement"] = ach
 	return normalize(s)
 
@@ -564,6 +647,7 @@ static func cache_key(spec: Dictionary) -> String:
 		str(s.get("shield_shape", "")), str(s.get("nation", "")),
 		str(ach.get("helm", "")), str(ach.get("crown", "")),
 		str(ach.get("motto", "")),
+		",".join(_sanitize_supporters(ach.get("supporters", []), str(s.get("nation", "")))),
 		str(s.get("glyph_char", "")),
 		str(s.get("castle_mark", {})), str(s.get("family_tier", "")),
 	])
