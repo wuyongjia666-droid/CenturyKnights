@@ -40,6 +40,7 @@ ux_todo_injured,伤病,Wounded
 ux_todo_territory_threat,领地受威胁,Sites under threat
 ux_todo_stockade_credit,免费屯营待用,Free stockade ready
 ux_todo_territory_reclaim,失守待反夺,Sites awaiting reclaim
+ux_todo_territory_unrest,民心未附待安抚,Sites under unrest awaiting appease
 ux_todo_festival,节庆,Festival
 ux_todo_train,可传习,Tutor open
 ux_todo_none,本月无待办,Nothing due this month
@@ -569,6 +570,10 @@ ux_hub_territory_sub,归旗属地 · 威胁告急 · 远程增派,Owned sites ·
 ux_territory_reclaim_banner,失守待反夺 %d 处 — 点「去反夺」跳舆图接令。,Awaiting reclaim: %d — tap Reclaim to open the atlas board.
 ux_territory_reclaim_goto,去反夺,Reclaim
 ux_territory_reclaim_fail,当前无反夺委托。,No reclaim commission open.
+ux_territory_unrest_banner,民心未附 %d 处 — 选点后点「安抚」花银清零。,Unrest at %d sites — pick one and tap Appease to clear with silver.
+ux_territory_appease,安抚,Appease
+ux_territory_appease_cost,安抚·%d银,Appease · %d silver
+ux_territory_detail_appease_cost,安抚花费 %d 银（清未附 %d 月）,Appease costs %d silver (clears %d mo unrest)
 ux_entry_banner_reedit,旗饰,Company banner
 ux_entry_banner_reedit_sub,再编队旗 · 存回城堡,Re-edit the company banner
 ux_banner_reedit_save,保存旗饰,Save banner

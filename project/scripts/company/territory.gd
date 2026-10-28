@@ -1536,6 +1536,43 @@ static func pending_reclaim_ids() -> Array:
 			out.append(str(id))
 	return out
 
+## Owned sites still under 民心未附 (unrest > 0). Castle HubTodo / ledger / hourglass.
+static func unrest_owned_ids() -> Array:
+	var out: Array = []
+	for id in owned_ids():
+		if int(state(str(id)).unrest) > 0:
+			out.append(str(id))
+	return out
+
+
+static func appease_cost(id: String) -> int:
+	return int(rule("appease_cost", 40)) + int(site(id).get("danger", 1)) * 12
+
+
+## Spend silver to clear 民心未附 immediately (whole-chain §22).
+static func appease(id: String) -> Dictionary:
+	id = str(id)
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("terr_34")}
+	var st := state(id)
+	var months := int(st.unrest)
+	if months <= 0:
+		return {"ok": false, "msg": Locale.t("terr_appease_none")}
+	var cost := appease_cost(id)
+	if GameState.silver < cost:
+		return {"ok": false, "msg": Locale.t("terr_27") % cost}
+	GameState.silver -= cost
+	st.unrest = 0
+	_put(id, st)
+	var nm := str(site(id).name)
+	var msg := Locale.t("terr_appease_ok") % [nm, cost, months]
+	_log(msg)
+	CKEconomyState.month_echo_note("appease", Locale.t("terr_echo_appease", [nm, cost, months]))
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "msg": msg, "cost": cost, "cleared": months}
+
+
 ## Castle Todo / hourglass / ledger deep-link: focus atlas on a pending reclaim site.
 ## Returns the site id focused, or "" if none.
 static func hub_focus_reclaim(id: String = "") -> String:
