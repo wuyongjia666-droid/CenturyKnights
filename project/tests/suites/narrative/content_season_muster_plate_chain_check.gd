@@ -25,6 +25,7 @@ const ROWS := [
 	{"cid": "cs07_03", "beat": "hourglass", "after": "bridge", "needle": "印我验过。整装完，上桥。"},
 	{"cid": "cs08_03", "beat": "hourglass", "after": "bridge", "needle": "香我验过。整装完，上桥。"},
 	{"cid": "cs09_03", "beat": "hourglass", "after": "bridge", "needle": "条我验过。整装完，上桥。"},
+	{"cid": "cs10_03", "beat": "hourglass", "after": "bridge", "needle": "泥我验过。整装完，上桥。"},
 	{"cid": "cs06_01", "beat": "hourglass", "after": "bridge", "needle": "校场我记过。整装完，去门廊。"},
 	{"cid": "cs06_02", "beat": "hourglass", "after": "bridge", "needle": "副鼓我听过。整装完，上桥。"},
 	{"cid": "cs07_01", "beat": "hourglass", "after": "bridge", "needle": "礼序我验过。整装完，去门廊。"},
