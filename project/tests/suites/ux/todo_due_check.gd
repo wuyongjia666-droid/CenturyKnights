@@ -67,7 +67,7 @@ func _run() -> String:
 	return ""
 
 
-## J14 threat + §20 stockade credit + §21 reclaim + §22 unrest HubTodo chips.
+## J14 threat + §20 stockade credit + §21 reclaim + §22 unrest + §23 chain HubTodo chips.
 func _check_territory_todos() -> String:
 	var err := _check_threat()
 	if err != "":
@@ -78,7 +78,10 @@ func _check_territory_todos() -> String:
 	err = _check_reclaim()
 	if err != "":
 		return err
-	return _check_unrest()
+	err = _check_unrest()
+	if err != "":
+		return err
+	return _check_chain()
 
 
 func _check_threat() -> String:
@@ -224,3 +227,46 @@ func _check_unrest() -> String:
 			return "cleared unrest still shows territory_unrest"
 	return ""
 
+## §23 chain pledge: post_chain → chip+atlas focus; capture → chip gone.
+func _check_chain() -> String:
+	# Prior captures may leave owned sites — reset target to neutral first.
+	World.active.clear()
+	var site := "t_ash_cinderpit"
+	var st: Dictionary = CKTerritory.state(site)
+	st.owner = CKTerritory.NEUTRAL
+	st.garrison = 0
+	st.unrest = 0
+	st.threat = {}
+	CKTerritory._put(site, st)
+	# Drop any leftover chain/reclaim offers on this anchor.
+	CKTerritory._clear_chain(site)
+	CKTerritory._clear_reclaim(site)
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_chain" and int(item.get("count", 0)) > 0:
+			return "fresh/no-chain still shows territory_chain"
+	var anchor := str(CKTerritory.site(site).get("anchor", ""))
+	World.pos = anchor
+	World.arrive(anchor)
+	var pr: Dictionary = CKTerritory.post_chain(site)
+	if not bool(pr.get("ok", false)):
+		return "post_chain failed: %s" % pr.get("msg", "")
+	var chain_row := {}
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_chain":
+			chain_row = item
+	if int(chain_row.get("count", 0)) < 1:
+		return "chain chip missing after post_chain (%s)" % str(chain_row)
+	if Todo.link_for(chain_row) != "res://scenes/hub/atlas_view.tscn":
+		return "territory_chain chip has no atlas link"
+	if GameState.has_meta("atlas_territory_site"):
+		GameState.remove_meta("atlas_territory_site")
+	if GameState.has_meta("atlas_select"):
+		GameState.remove_meta("atlas_select")
+	Todo.prepare_nav(chain_row)
+	if not GameState.has_meta("atlas_territory_site") or str(GameState.get_meta("atlas_territory_site")) != site:
+		return "prepare_nav did not focus chain site"
+	CKTerritory.capture(site, "chain")
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "territory_chain" and int(item.get("count", 0)) > 0:
+			return "cleared chain still shows territory_chain"
+	return ""

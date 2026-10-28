@@ -27,6 +27,7 @@ const LINKS := {
 	"stockade_credit": "res://scenes/hub/territory_ledger.tscn",
 	"territory_reclaim": "res://scenes/hub/atlas_view.tscn",
 	"territory_unrest": "res://scenes/hub/territory_ledger.tscn",
+	"territory_chain": "res://scenes/hub/atlas_view.tscn",
 }
 
 
@@ -37,6 +38,8 @@ static func prepare_nav(item: Dictionary) -> void:
 		CKTerritory.hub_requeue_siege_alert()
 	elif cat == "territory_reclaim":
 		CKTerritory.hub_focus_reclaim()
+	elif cat == "territory_chain":
+		CKTerritory.hub_focus_chain()
 
 static func link_for(item: Dictionary) -> String:
 	var link := str(item.get("link", ""))
@@ -91,6 +94,12 @@ static func snapshot() -> Array:
 		var urow := _row("territory_unrest", "military", Locale.t("ux_todo_territory_unrest"), unrest_n)
 		urow["urgency"] = "block"
 		rows.append(urow)
+	# §23 归附委托仍开 — castle chip deep-links atlas focus.
+	var chain_n := CKTerritory.pending_chain_ids().size()
+	if chain_n > 0:
+		var crow := _row("territory_chain", "military", Locale.t("ux_todo_territory_chain"), chain_n)
+		crow["urgency"] = "block"
+		rows.append(crow)
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)

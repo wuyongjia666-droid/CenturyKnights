@@ -234,3 +234,17 @@ E2E：`territory_reclaim_closed_loop_check` + mobile twin；`todo_due_check` 覆
 6. **月回报**：TerritoryMonth 既有 `UnrestLine`；有 echo 时贴 `EchoLine_appease`。
 
 E2E：`territory_unrest_appease_loop_check` + mobile twin；`todo_due_check` 覆盖无未附不显示 / 有未附可链。
+
+
+## 23. 归附委托整链（Territory fat · 禁止再拆 chip/ledger/hourglass/echo）
+
+玩家看得见的一条链，不拆薄片：
+
+1. **贴令**：中立点 `post_chain` → 锚点告示栏两阶归附委托（gather→hunt）；`pending_chain_ids` 扫描 board/active（`chain` 且非 reclaim）。
+2. **待办带路**：城堡 HubTodo `territory_chain`（urgency=block, count=待交数）→ `prepare_nav` → `hub_focus_chain`（写 `atlas_select` / `atlas_territory_site`）→ 舆图。
+3. **领地簿**：顶栏 `TerritoryChainBanner` + `TerritoryChainGoto` → 同深链跳舆图。
+4. **沙漏 Forecast**：`ChainPending` + `ToChain` 深链舆图焦点。
+5. **交令得手**：`turn_in` / `on_quest_done` 收尾 `capture(how=chain)` → `month_echo.chain`；chip / Forecast / 簿条随 `_clear_chain` 清零。
+6. **月回报**：`last_month_report.chains` 取 `pending_chain_ids()`；TerritoryMonth 既有 `ChainLine` + `EchoLine_chain`（§13）。
+
+E2E：`territory_chain_commission_loop_check` + mobile twin；`todo_due_check` 覆盖无归附不显示 / 有归附可链。
