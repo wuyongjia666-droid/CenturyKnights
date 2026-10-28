@@ -464,6 +464,10 @@ static func company_preset_from_nation(nid: String, heart_hex: String = "") -> D
 	var eid := company_emblem_id(raw_eid)
 	var ordinary := str(base.get("ordinary", "none"))
 	var division := str(base.get("division", "solid"))
+	# Keep nation motto + rank helm/crown; remantle onto company ash cloth + heart.
+	var ach: Dictionary = (base.get("achievement", {}) as Dictionary).duplicate(true)
+	ach["mantling_a"] = field
+	ach["mantling_b"] = heart
 	return normalize({
 		"schema": SCHEMA,
 		"nation": nid,
@@ -482,8 +486,50 @@ static func company_preset_from_nation(nid: String, heart_hex: String = "") -> D
 		"emblem_color": heart,
 		"border": str(base.get("border", "line")),
 		"border_color": str(base.get("border_color", tincture_hex("bleu_celeste"))),
+		"achievement": ach,
 	})
 
+
+
+static func helm_ids() -> PackedStringArray:
+	var out := PackedStringArray()
+	for row in table().get("helms", []):
+		if typeof(row) == TYPE_DICTIONARY:
+			out.append(str((row as Dictionary).get("id", "none")))
+	if out.is_empty():
+		out = PackedStringArray(["none", "closed", "grilled", "royal"])
+	return out
+
+static func crown_ids() -> PackedStringArray:
+	var out := PackedStringArray()
+	for row in table().get("crowns", []):
+		if typeof(row) == TYPE_DICTIONARY:
+			out.append(str((row as Dictionary).get("id", "none")))
+	if out.is_empty():
+		out = PackedStringArray(["none", "knight", "baron", "count", "duke", "royal"])
+	return out
+
+static func has_achievement_ornament(spec: Dictionary) -> bool:
+	var s := normalize(spec)
+	var ach: Dictionary = s.get("achievement", {})
+	if typeof(ach) != TYPE_DICTIONARY:
+		return false
+	if str(ach.get("helm", "none")) != "none":
+		return true
+	if str(ach.get("crown", "none")) != "none":
+		return true
+	return str(ach.get("motto", "")).strip_edges() != ""
+
+static func stamp_achievement_meta(node: Object, spec: Dictionary) -> void:
+	if node == null:
+		return
+	var s := normalize(spec)
+	var ach: Dictionary = s.get("achievement", {})
+	if typeof(ach) != TYPE_DICTIONARY:
+		ach = {}
+	node.set_meta("arms_helm", str(ach.get("helm", "none")))
+	node.set_meta("arms_crown", str(ach.get("crown", "none")))
+	node.set_meta("arms_motto", str(ach.get("motto", "")).strip_edges())
 
 static func apply_rank(spec: Dictionary, rank: String) -> Dictionary:
 	var s := normalize(spec)

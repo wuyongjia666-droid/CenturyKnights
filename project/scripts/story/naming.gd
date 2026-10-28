@@ -10,6 +10,8 @@ var _border_idx: int = 0
 var _emblem_idx: int = 0
 var _nation_idx: int = 0
 var _shape_idx: int = 0
+var _helm_idx: int = 0
+var _crown_idx: int = 0
 var _colors: Array = []
 var _color_names: Array = []
 var _divisions: PackedStringArray = []
@@ -17,6 +19,8 @@ var _partitions: PackedStringArray = []
 var _ordinaries: PackedStringArray = []
 var _nations: PackedStringArray = []
 var _shapes: PackedStringArray = []
+var _helms: PackedStringArray = []
+var _crowns: PackedStringArray = []
 var _preview: ColorRect
 var _banner: TextureRect
 ## Opening review B-03: the preview face is a real leader built once; on start its genome is
@@ -40,6 +44,9 @@ var _border_label: Label
 var _emblem_label: Label
 var _nation_label: Label
 var _shape_label: Label
+var _helm_label: Label
+var _crown_label: Label
+var _motto: LineEdit
 var _warn: Label
 var _scroll: ScrollContainer
 var _art_row: HBoxContainer
@@ -92,6 +99,20 @@ const SHAPE_KEYS := {
 	"lozenge": "ux_shield_lozenge",
 	"banner": "ux_shield_banner",
 }
+const HELM_KEYS := {
+	"none": "ux_helm_none",
+	"closed": "ux_helm_closed",
+	"grilled": "ux_helm_grilled",
+	"royal": "ux_helm_royal",
+}
+const CROWN_KEYS := {
+	"none": "ux_crown_none",
+	"knight": "ux_crown_knight",
+	"baron": "ux_crown_baron",
+	"count": "ux_crown_count",
+	"duke": "ux_crown_duke",
+	"royal": "ux_crown_royal",
+}
 const EMBLEM_KEYS := {
 	"ring": "ux_emblem_ring", "arc": "ux_emblem_arc", "wave": "ux_emblem_wave", "leaf": "ux_emblem_leaf",
 	"chevron": "ux_emblem_chevron", "chevron_mark": "ux_emblem_chevron", "spark": "ux_emblem_spark",
@@ -129,6 +150,8 @@ func _ready() -> void:
 	_shapes = PackedStringArray(CKHeraldry.table().get("shield_shapes", ["heater", "kite", "round", "lozenge", "banner"]))
 	if _shapes.is_empty():
 		_shapes = PackedStringArray(["heater", "kite", "round", "lozenge", "banner"])
+	_helms = CKHeraldry.helm_ids()
+	_crowns = CKHeraldry.crown_ids()
 	_build()
 	if _reedit:
 		_apply_reedit_mode()
@@ -174,6 +197,14 @@ func _current_spec() -> Dictionary:
 		"charges": [charge_row],
 		"nation": nation,
 		"shield_shape": str(_shapes[_shape_idx]) if _shapes.size() > 0 else "heater",
+		"achievement": {
+			"helm": str(_helms[_helm_idx]) if _helms.size() > 0 else "none",
+			"crown": str(_crowns[_crown_idx]) if _crowns.size() > 0 else "none",
+			"mantling_a": field,
+			"mantling_b": heart,
+			"supporters": ["none", "none"],
+			"motto": (_motto.text.strip_edges() if _motto else ""),
+		},
 	})
 
 ## Founding page: the preview pane (shield, banner, portrait, name fields, raise/back) never scrolls.
@@ -339,6 +370,23 @@ func _build() -> void:
 	_charge_label = _layer_row(box, Locale.t("ux_name_ordinary"), func(d): _shift_enum("charge", d))
 	_border_label = _layer_row(box, Locale.t("ux_name_border"), func(d): _shift_enum("border", d))
 	_emblem_label = _layer_row(box, Locale.t("ux_name_emblem"), func(d): _shift_enum("emblem", d))
+	_helm_label = _layer_row(box, Locale.t("ux_name_helm"), func(d): _shift_enum("helm", d))
+	_helm_label.name = "HelmLabel"
+	_crown_label = _layer_row(box, Locale.t("ux_name_crown"), func(d): _shift_enum("crown", d))
+	_crown_label.name = "CrownLabel"
+	box.add_child(UIKit.make_label(Locale.t("ux_name_motto")))
+	var motto_row := HBoxContainer.new()
+	motto_row.name = "MottoRow"
+	motto_row.add_theme_constant_override("separation", 8)
+	box.add_child(motto_row)
+	_motto = LineEdit.new()
+	_motto.name = "MottoEdit"
+	_motto.placeholder_text = Locale.t("ux_name_motto_hint")
+	_motto.max_length = 12
+	_motto.custom_minimum_size = Vector2(200, 48)
+	_motto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_motto.text_changed.connect(func(_t): _refresh_preview_art())
+	motto_row.add_child(_motto)
 
 	_build_nation_preset_strip(box)
 	var preset_btn = UIKit.make_button(Locale.t("ux_name_nation_preset_btn"), 280)
@@ -426,6 +474,10 @@ func _shift_enum(which: String, d: int) -> void:
 			_emblem_idx = (_emblem_idx + d + BannerSpec.EMBLEMS.size()) % maxi(1, BannerSpec.EMBLEMS.size())
 		"shape":
 			_shape_idx = (_shape_idx + d + _shapes.size()) % maxi(1, _shapes.size())
+		"helm":
+			_helm_idx = (_helm_idx + d + _helms.size()) % maxi(1, _helms.size())
+		"crown":
+			_crown_idx = (_crown_idx + d + _crowns.size()) % maxi(1, _crowns.size())
 		"nation":
 			_nation_idx = (_nation_idx + d + _nations.size()) % maxi(1, _nations.size())
 			# Nation style row also adopts that nation's shield silhouette (still fine-tunable).
@@ -534,6 +586,12 @@ func _sync_layer_labels() -> void:
 	if _shape_label and _shapes.size() > 0:
 		var sh := str(_shapes[_shape_idx])
 		_shape_label.text = Locale.t(str(SHAPE_KEYS.get(sh, "ux_shield_heater")))
+	if _helm_label and _helms.size() > 0:
+		var hm := str(_helms[_helm_idx])
+		_helm_label.text = Locale.t(str(HELM_KEYS.get(hm, "ux_helm_none")))
+	if _crown_label and _crowns.size() > 0:
+		var cr := str(_crowns[_crown_idx])
+		_crown_label.text = Locale.t(str(CROWN_KEYS.get(cr, "ux_crown_none")))
 
 func _on_name_typed() -> void:
 	## Typing only needs the banner tag + raise-button state — not a full portrait rebuild.
@@ -559,9 +617,13 @@ func _refresh_preview_art() -> void:
 	_banner.texture = UnitArt.banner_layers(spec, 280, 400)
 	BannerName.attach(_banner, GameState.surname)
 	if _shield:
-		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
+		if CKHeraldry.has_achievement_ornament(spec):
+			_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_arms(spec, 240, 300))
+		else:
+			_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
 		_shield.set_meta("shield_shape", str(spec.get("shield_shape", "heater")))
 		_shield.set_meta("arms_core", CKHeraldry.core_key(spec))
+		CKHeraldry.stamp_achievement_meta(_shield, spec)
 	var faces_before := _faces.size()
 	_ensure_faces()
 	if _face == null and not _faces.is_empty():
@@ -742,6 +804,15 @@ func _load_from_banner_spec(spec: Dictionary) -> void:
 	if six < 0:
 		six = _shapes.find("heater")
 	_shape_idx = maxi(0, six)
+	var ach: Dictionary = spec.get("achievement", {}) if typeof(spec.get("achievement", {})) == TYPE_DICTIONARY else {}
+	var hm := str(ach.get("helm", "none"))
+	var hix: int = _helms.find(hm)
+	_helm_idx = maxi(0, hix if hix >= 0 else _helms.find("none"))
+	var cr := str(ach.get("crown", "none"))
+	var cix: int = _crowns.find(cr)
+	_crown_idx = maxi(0, cix if cix >= 0 else _crowns.find("none"))
+	if _motto:
+		_motto.text = str(ach.get("motto", "")).strip_edges()
 	if _preview:
 		_preview.color = Color(str(_colors[_color_idx]))
 	if _color_name_label:

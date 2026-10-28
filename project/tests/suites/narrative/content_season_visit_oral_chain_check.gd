@@ -106,6 +106,12 @@ const CHAINS := [
 		"needle": "香龛写在轴背。背着的字，要翻过来才见。",
 	},
 	{
+		"cid": "cs09_03",
+		"beat": "hourglass",
+		"after": "bridge",
+		"needle": "验条写在轴背。背着的字，要翻过来才见。",
+	},
+	{
 		"cid": "cs06_01",
 		"beat": "hourglass",
 		"after": "bridge",
