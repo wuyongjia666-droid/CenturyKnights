@@ -581,3 +581,9 @@ ux_banner_reedit_hint,只改队旗；姓氏与面容仍是开局所立,Banner on
 ux_name_nation_preset_strip,十国推荐套装,Nation recommended suits
 ux_name_nation_preset_btn,套上这国的推荐旗面,Apply this nation's recommended banner
 ux_nation_preset_tip,套上%s的推荐旗面（灰底心色可再微调）,Apply %s recommended banner (ash cloth; heart still tunable)
+ux_name_shield_shape,盾形,Shield shape
+ux_shield_heater,尖底盾,Heater
+ux_shield_kite,鸢盾,Kite
+ux_shield_round,圆盾,Round
+ux_shield_lozenge,菱盾,Lozenge
+ux_shield_banner,旗幅形,Banner-shaped
