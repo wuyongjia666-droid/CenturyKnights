@@ -61,7 +61,7 @@
 | 盔 helm | none / closed（勋士）/ grilled（贵族）/ royal |
 | 冠 crown | none / knight / baron / count / duke / royal |
 | 幔 mantling | 主 / 辅两色（默认取 field + ordinary） |
-| 扶盾 supporters | 仅 royal / duke+；几何化霜兽剪影 |
+| 扶盾 supporters | 开局/再编 DIY 左右兽（none/stag/wolf/crane/eagle/bear/seadrake）；侯爵/王室默认挂国别对；几何化霜兽剪影；挂布/壳布不吃 |
 | 格言 motto | 短句；绘制于底饰带 |
 
 ### 3.6 团徽与族徽（设计决策 2026-10-12）

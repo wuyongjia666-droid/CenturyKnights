@@ -116,6 +116,9 @@ static func make_company_banner(size: Vector2 = Vector2(28, 38)) -> TextureRect:
 	tr.tooltip_text = company_label()
 	tr.set_meta("arms_kind", "gen2_36")
 	tr.set_meta("arms_core", CKHeraldry.core_key(company_spec()))
+	tr.set_meta("shield_shape", "cloth")
+	# Cloth strip (ShellBanner / CastleBanner) never carries achievement ornaments.
+	CKHeraldry.clear_achievement_meta_cloth(tr)
 	return tr
 
 static func make_person_arms(c, size: Vector2 = Vector2(40, 48)) -> TextureRect:

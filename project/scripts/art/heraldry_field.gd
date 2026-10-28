@@ -2183,9 +2183,7 @@ static func place_castle_hang_banner(parent: Node, at: Vector2, size: Vector2 = 
 	# Cloth is always rectangular (render forces heater mask); do not claim nation shield silhouette.
 	tr.set_meta("shield_shape", "cloth")
 	# Hang cloth never carries achievement ornaments — meta stays bare.
-	tr.set_meta("arms_helm", "none")
-	tr.set_meta("arms_crown", "none")
-	tr.set_meta("arms_motto", "")
+	CKHeraldry.clear_achievement_meta_cloth(tr)
 	var w := maxi(24, int(size.x))
 	var h := maxi(32, int(size.y))
 	tr.texture = UnitArt.banner_layers({}, w, h)

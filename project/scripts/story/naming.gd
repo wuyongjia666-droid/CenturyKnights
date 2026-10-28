@@ -12,6 +12,8 @@ var _nation_idx: int = 0
 var _shape_idx: int = 0
 var _helm_idx: int = 0
 var _crown_idx: int = 0
+var _supporter_l_idx: int = 0
+var _supporter_r_idx: int = 0
 var _colors: Array = []
 var _color_names: Array = []
 var _divisions: PackedStringArray = []
@@ -21,6 +23,7 @@ var _nations: PackedStringArray = []
 var _shapes: PackedStringArray = []
 var _helms: PackedStringArray = []
 var _crowns: PackedStringArray = []
+var _supporters: PackedStringArray = []
 var _preview: ColorRect
 var _banner: TextureRect
 ## Opening review B-03: the preview face is a real leader built once; on start its genome is
@@ -46,6 +49,8 @@ var _nation_label: Label
 var _shape_label: Label
 var _helm_label: Label
 var _crown_label: Label
+var _supporter_l_label: Label
+var _supporter_r_label: Label
 var _motto: LineEdit
 var _warn: Label
 var _scroll: ScrollContainer
@@ -113,6 +118,15 @@ const CROWN_KEYS := {
 	"duke": "ux_crown_duke",
 	"royal": "ux_crown_royal",
 }
+const SUPPORTER_KEYS := {
+	"none": "ux_supporter_none",
+	"stag": "ux_supporter_stag",
+	"wolf": "ux_supporter_wolf",
+	"crane": "ux_supporter_crane",
+	"eagle": "ux_supporter_eagle",
+	"bear": "ux_supporter_bear",
+	"seadrake": "ux_supporter_seadrake",
+}
 const EMBLEM_KEYS := {
 	"ring": "ux_emblem_ring", "arc": "ux_emblem_arc", "wave": "ux_emblem_wave", "leaf": "ux_emblem_leaf",
 	"chevron": "ux_emblem_chevron", "chevron_mark": "ux_emblem_chevron", "spark": "ux_emblem_spark",
@@ -152,6 +166,7 @@ func _ready() -> void:
 		_shapes = PackedStringArray(["heater", "kite", "round", "lozenge", "banner"])
 	_helms = CKHeraldry.helm_ids()
 	_crowns = CKHeraldry.crown_ids()
+	_supporters = CKHeraldry.supporter_ids()
 	_build()
 	if _reedit:
 		_apply_reedit_mode()
@@ -202,7 +217,10 @@ func _current_spec() -> Dictionary:
 			"crown": str(_crowns[_crown_idx]) if _crowns.size() > 0 else "none",
 			"mantling_a": field,
 			"mantling_b": heart,
-			"supporters": ["none", "none"],
+			"supporters": [
+				str(_supporters[_supporter_l_idx]) if _supporters.size() > 0 else "none",
+				str(_supporters[_supporter_r_idx]) if _supporters.size() > 0 else "none",
+			],
 			"motto": (_motto.text.strip_edges() if _motto else ""),
 		},
 	})
@@ -374,6 +392,10 @@ func _build() -> void:
 	_helm_label.name = "HelmLabel"
 	_crown_label = _layer_row(box, Locale.t("ux_name_crown"), func(d): _shift_enum("crown", d))
 	_crown_label.name = "CrownLabel"
+	_supporter_l_label = _layer_row(box, Locale.t("ux_name_supporter_l"), func(d): _shift_enum("supporter_l", d))
+	_supporter_l_label.name = "SupporterLLabel"
+	_supporter_r_label = _layer_row(box, Locale.t("ux_name_supporter_r"), func(d): _shift_enum("supporter_r", d))
+	_supporter_r_label.name = "SupporterRLabel"
 	box.add_child(UIKit.make_label(Locale.t("ux_name_motto")))
 	var motto_row := HBoxContainer.new()
 	motto_row.name = "MottoRow"
@@ -478,6 +500,10 @@ func _shift_enum(which: String, d: int) -> void:
 			_helm_idx = (_helm_idx + d + _helms.size()) % maxi(1, _helms.size())
 		"crown":
 			_crown_idx = (_crown_idx + d + _crowns.size()) % maxi(1, _crowns.size())
+		"supporter_l":
+			_supporter_l_idx = (_supporter_l_idx + d + _supporters.size()) % maxi(1, _supporters.size())
+		"supporter_r":
+			_supporter_r_idx = (_supporter_r_idx + d + _supporters.size()) % maxi(1, _supporters.size())
 		"nation":
 			_nation_idx = (_nation_idx + d + _nations.size()) % maxi(1, _nations.size())
 			# Nation style row also adopts that nation's shield silhouette (still fine-tunable).
@@ -592,6 +618,12 @@ func _sync_layer_labels() -> void:
 	if _crown_label and _crowns.size() > 0:
 		var cr := str(_crowns[_crown_idx])
 		_crown_label.text = Locale.t(str(CROWN_KEYS.get(cr, "ux_crown_none")))
+	if _supporter_l_label and _supporters.size() > 0:
+		var sl := str(_supporters[_supporter_l_idx])
+		_supporter_l_label.text = Locale.t(str(SUPPORTER_KEYS.get(sl, "ux_supporter_none")))
+	if _supporter_r_label and _supporters.size() > 0:
+		var sr := str(_supporters[_supporter_r_idx])
+		_supporter_r_label.text = Locale.t(str(SUPPORTER_KEYS.get(sr, "ux_supporter_none")))
 
 func _on_name_typed() -> void:
 	## Typing only needs the banner tag + raise-button state — not a full portrait rebuild.
@@ -811,6 +843,19 @@ func _load_from_banner_spec(spec: Dictionary) -> void:
 	var cr := str(ach.get("crown", "none"))
 	var cix: int = _crowns.find(cr)
 	_crown_idx = maxi(0, cix if cix >= 0 else _crowns.find("none"))
+	var sups: Array = ach.get("supporters", []) if typeof(ach.get("supporters", [])) == TYPE_ARRAY else []
+	var sl := str(sups[0]) if sups.size() > 0 else "none"
+	var sr := str(sups[1]) if sups.size() > 1 else "none"
+	if sl == "frost_beast" or sr == "frost_beast":
+		var pair: Array = CKHeraldry.nation_supporter_pair(nid if nid != "" else "ashbanner")
+		if sl == "frost_beast":
+			sl = str(pair[0])
+		if sr == "frost_beast":
+			sr = str(pair[1])
+	var slix: int = _supporters.find(sl)
+	_supporter_l_idx = maxi(0, slix if slix >= 0 else _supporters.find("none"))
+	var srix: int = _supporters.find(sr)
+	_supporter_r_idx = maxi(0, srix if srix >= 0 else _supporters.find("none"))
 	if _motto:
 		_motto.text = str(ach.get("motto", "")).strip_edges()
 	if _preview:

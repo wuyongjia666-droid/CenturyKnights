@@ -210,7 +210,7 @@ func _source_wiring() -> void:
 	var chrome := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
 	_ok(chrome.find("achievement_arms") >= 0 and chrome.find("stamp_achievement_meta") >= 0, "chrome company arms achievement")
 	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
-	_ok(field.find("arms_helm") >= 0, "field stamps/clears arms_helm")
+	_ok(field.find("clear_achievement_meta_cloth") >= 0, "field stamps/clears arms_helm")
 	var ux := FileAccess.get_file_as_string("res://data/locale/ux.csv")
 	_ok(ux.find("ux_name_helm") >= 0 and ux.find("ux_helm_closed") >= 0, "locale helm keys")
 	_ok(ux.find("ux_name_motto") >= 0 and ux.find("ux_crown_knight") >= 0, "locale motto/crown keys")
