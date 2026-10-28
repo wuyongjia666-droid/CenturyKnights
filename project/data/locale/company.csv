@@ -755,3 +755,4 @@ terr_echo_chain,归附得手·%s（月银%d·驻%d）,Chain attach · %s (yield 
 terr_appease_none,此处民心已附，无需安抚。,This site is already settled — no appease needed.
 terr_appease_ok,安抚·%s（耗银%d·清未附%d月）,Appease · %s (spent %d · cleared %d mo unrest)
 terr_echo_appease,安抚归心·%s（耗银%d·清%d月）,Appease settled · %s (spent %d · cleared %d mo)
+terr_echo_drain,欠饷降驻·%s（驻军现%d）,Unpaid drain · %s (garrison now %d)

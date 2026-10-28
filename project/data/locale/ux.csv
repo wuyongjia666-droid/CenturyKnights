@@ -42,6 +42,8 @@ ux_todo_stockade_credit,免费屯营待用,Free stockade ready
 ux_todo_territory_reclaim,失守待反夺,Sites awaiting reclaim
 ux_todo_territory_unrest,民心未附待安抚,Sites under unrest awaiting appease
 ux_todo_territory_chain,归附委托待交,Pledge commissions open
+ux_todo_territory_contest,中立拉锯待决,Neutral contests open
+ux_todo_territory_drain,欠饷驻军待补,Garrisons drained unpaid
 ux_todo_festival,节庆,Festival
 ux_todo_train,可传习,Tutor open
 ux_todo_none,本月无待办,Nothing due this month
@@ -555,6 +557,7 @@ ux_territory_atlas_fail,此地无锚点，无法跳舆图。,No atlas anchor for
 ux_territory_tag_threat,告急,THREAT
 ux_territory_tag_unrest,民心未附,UNREST
 ux_territory_tag_stockade,有屯营,STOCKADE
+ux_territory_tag_drain,欠饷降驻,DRAIN
 ux_territory_detail_meta,国别 %s · 月银 %d · 驻军 %d · 未附 %d 月,Nation %s · yield %d · garrison %d · unrest %d mo
 ux_territory_detail_stockade,已建屯营（驻军上限 +1 · 月产加额）。,Stockade up (garrison cap +1 · yield bump).
 ux_territory_detail_no_stockade,尚未建屯营。,No stockade yet.
@@ -576,6 +579,10 @@ ux_territory_unrest_banner,民心未附 %d 处 — 选点后点「安抚」花�
 ux_territory_chain_banner,归附委托待交 %d 处 — 点「去接令」跳舆图交令。,Pledge commissions open: %d — tap Take order to open the atlas board.
 ux_territory_chain_goto,去接令,Take order
 ux_territory_chain_fail,当前无归附委托。,No pledge commission open.
+ux_territory_contest_banner,中立拉锯待决 %d 处 — 点「去拉锯」跳舆图加码/截击。,Neutral contests open: %d — tap Contest to open the atlas board.
+ux_territory_contest_goto,去拉锯,Contest
+ux_territory_contest_fail,当前无拉锯。,No contest open.
+ux_territory_drain_banner,欠饷降驻 %d 处 — 选点后点「增派」补回驻军。,Unpaid drain at %d sites — pick one and tap Reinforce to restore garrison.
 ux_territory_appease,安抚,Appease
 ux_territory_appease_cost,安抚·%d银,Appease · %d silver
 ux_territory_detail_appease_cost,安抚花费 %d 银（清未附 %d 月）,Appease costs %d silver (clears %d mo unrest)
