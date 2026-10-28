@@ -48,11 +48,17 @@ static func apply(host, actor: Vector2i, also: Array, smooth: bool = true) -> vo
 	# confirm settle / range keep (T-P15 used to rebuild blockers here and
 	# skip the notch lip — banners and action settle then framed into a
 	# different rect than confirm chips).
-	var col := host.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		col = host.find_child("MobileSideCol", true, false) as Control
-	if col == null:
-		col = host.get_node_or_null("SideCol") as Control
+	var col: Control = null
+	if host is Node:
+		col = host.get_node_or_null("MobileSideCol") as Control
+		if col == null:
+			col = host.find_child("MobileSideCol", true, false) as Control
+		if col == null:
+			col = host.get_node_or_null("SideCol") as Control
+	elif host.has_method("get_node_or_null"):
+		col = host.get_node_or_null("MobileSideCol") as Control
+		if col == null:
+			col = host.get_node_or_null("SideCol") as Control
 	var block := Rect2()
 	if col != null and col.size.x > 1.0 and col.size.y > 1.0:
 		block = Rect2(col.position, col.size)
