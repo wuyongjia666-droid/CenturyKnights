@@ -2649,6 +2649,7 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	var echo_assault := str(CKEconomyState.month_echo_snapshot().get("assault", ""))
 	var echo_appease := str(CKEconomyState.month_echo_snapshot().get("appease", ""))
 	var echo_chain := str(CKEconomyState.month_echo_snapshot().get("chain", ""))
+	var echo_drain := str(CKEconomyState.month_echo_snapshot().get("drain", ""))
 	# ChainLine: open pledge commissions (board/active, chain, not reclaim).
 	var chain_rows: Array = []
 	var _seen_chain: Dictionary = {}
@@ -2695,6 +2696,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 	if echo_assault != "" and echo_appease != "":
 		h += 20.0
 	if echo_chain != "" or not chain_rows.is_empty():
+		h += 40.0
+	if echo_drain != "" or not drains.is_empty():
 		h += 40.0
 	var panel := _modal_panel(h)
 	panel.name = "TerritoryMonthModal"
@@ -2856,6 +2859,13 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		echo_c.position = Vector2(24, h - 96)
 		echo_c.size = Vector2(452, 20)
 		panel.add_child(echo_c)
+	# Territory fat §25: EchoLine_drain on month panel (pairs with drain bits).
+	if echo_drain != "":
+		var echo_dr := UIKit.body_label(echo_drain, UIKit.DANGER, 12)
+		echo_dr.name = "EchoLine_drain"
+		echo_dr.position = Vector2(24, (h - 116.0) if echo_chain != "" else (h - 96.0))
+		echo_dr.size = Vector2(452, 20)
+		panel.add_child(echo_dr)
 	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
 	later.name = "TerritoryMonthLater"
 	later.position = Vector2(24, h - 56)

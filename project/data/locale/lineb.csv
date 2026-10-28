@@ -408,6 +408,10 @@ lb_hg_unrest_pending,民心未附 %d 处 — 安抚前产出仍半额,Unrest at 
 lb_hg_to_appease,去安抚,To appease
 lb_hg_chain_pending,归附委托待交 %d 处 — 交令前点仍中立,Pledge commissions open: %d — site stays neutral until turned in
 lb_hg_to_chain,去接令,To pledge order
+lb_hg_contest_pending,中立拉锯待决 %d 处 — 加码/截击前点仍中立,Neutral contests open: %d — site stays contested until stake/seize
+lb_hg_to_contest,去拉锯,To contest
+lb_hg_drain_pending,欠饷降驻 %d 处 — 增派前驻军仍薄,Unpaid drain at %d sites — garrison stays thin until reinforced
+lb_hg_to_reinforce,去增派,To reinforce
 lb_dynasty_end_head,王朝终结,Dynasty ended
 lb_dynasty_end_title,灰旗无承,Banner without an heir
 lb_dynasty_end_why_no_heir,团长身后无人可承旗。本局以中途王朝终结收束；可回主菜单读档或新开一旗。,No one could take the banner after the captain. This run ends mid-way; return to the title to load or start anew.
