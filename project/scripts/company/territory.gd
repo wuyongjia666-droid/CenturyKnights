@@ -394,10 +394,14 @@ static func _has_chain(id: String) -> bool:
 	for q in World.active:
 		if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
 			return true
+	## Read boards map only — never World.board() (that lazy-rolls offers and
+	## desyncs campaign_sim silver / portrait seeds when pending_chain_ids
+	## runs every month, including the zero-holdings early path).
 	var anchor := str(site(id).anchor)
-	for q in World.board(anchor):
-		if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
-			return true
+	if anchor != "" and World.boards.has(anchor):
+		for q in World.boards[anchor].get("offers", []):
+			if str(q.get("territory", "")) == id and bool(q.get("chain", false)) and not bool(q.get("territory_reclaim", false)):
+				return true
 	return false
 
 ## Drop open「归附」commission for site (board offer + active). Chip / ledger / hourglass read this.
