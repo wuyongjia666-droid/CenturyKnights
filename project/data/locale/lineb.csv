@@ -404,6 +404,8 @@ lb_hg_threat_pending,领地受威胁 %d 处 — 未应战前月结仍会推进�
 lb_hg_to_siege,去围城告急,To siege alert
 lb_hg_reclaim_pending,失守待反夺 %d 处 — 接令前月结仍会推进,Awaiting reclaim: %d — month advance continues until you take the commission
 lb_hg_to_reclaim,去反夺,To reclaim
+lb_hg_unrest_pending,民心未附 %d 处 — 安抚前产出仍半额,Unrest at %d sites — yields stay halved until appeased
+lb_hg_to_appease,去安抚,To appease
 lb_dynasty_end_head,王朝终结,Dynasty ended
 lb_dynasty_end_title,灰旗无承,Banner without an heir
 lb_dynasty_end_why_no_heir,团长身后无人可承旗。本局以中途王朝终结收束；可回主菜单读档或新开一旗。,No one could take the banner after the captain. This run ends mid-way; return to the title to load or start anew.
