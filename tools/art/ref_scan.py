@@ -165,11 +165,15 @@ def _dynamic_keep(rel: str) -> bool:
         "art/terrain_v86/",
         "art/portraits/v84_geno_",
         "art/portraits/genome/",
+        "art/portraits/status/",
         "art/atlas/cities/v87_city_",
         "art/atlas/smiths/v87_smith_",
         "art/scenes/v8_scene_",
         "art/battle/v8_battle_biome_",
         "art/banners/banner_",
+        "art/castle/v92_castle_",
+        "art/story_bg/",
+        "art/items/glyph/",
     )):
         return True
     if rel.startswith("art/tokens/") and "/_src" not in "/" + rel:

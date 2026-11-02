@@ -1,8 +1,10 @@
 extends Node
 ## Android packs bank medium only (large + small excluded), drops expression/
 ## speaker large masters, excludes dead hireface/hire_*_plate (never shown),
-## and drops legacy music_*.wav duplicates. hireuniq stays (bank miss must not
-## fall to cartoon bust). Medium-only bank still lists stems / serves asks.
+## drops legacy music_*.wav duplicates, and excludes unused farm leftovers
+## v92_estate_* / v92_scene_* (runtime uses holding id png + v8_scene_* only).
+## hireuniq stays (bank miss must not fall to cartoon bust). Medium-only bank
+## still lists stems / serves asks.
 
 const BANK := "res://assets/art/portraits/genome/bank"
 
@@ -90,6 +92,9 @@ func _run() -> String:
 	var ex_err := _assert_exists_falls_to_medium_under_android()
 	if ex_err != "":
 		return ex_err
+	var v92_err := _assert_unused_v92_plates_excluded()
+	if v92_err != "":
+		return v92_err
 	return _fallback()
 
 
@@ -312,3 +317,48 @@ func _assert_legacy_music_wav_excluded() -> String:
 		if not _excluded(rel, filters):
 			return "legacy music wav still packed: " + need
 	return ""
+
+
+## Unused farm leftovers: estates load holding_id.png; scenes load v8_scene_*.
+## v92_estate_* / v92_scene_* are archived under tools/archive/art-unused-store-cap/
+## and excluded so a future farm re-ingest cannot silently reinflate the APK.
+func _assert_unused_v92_plates_excluded() -> String:
+	var filters := _android_filters()
+	var joined := ",".join(filters)
+	for need in ["estates/v92_estate_*.webp", "scenes/v92_scene_*.webp"]:
+		if not joined.contains(need):
+			return "Android filter missing " + need
+	# Holding icons + live chapter plates must stay packable.
+	for keep in ["fog_vale.png", "reed_ford.png", "stone_slope.png", "tide_bridge.png"]:
+		var krel: String = "assets/art/estates/" + keep
+		if _excluded(krel, filters):
+			return "live holding icon excluded: " + keep
+		if not FileAccess.file_exists("res://assets/art/estates/" + keep):
+			return "live holding icon missing: " + keep
+	var scene_dir := DirAccess.open("res://assets/art/scenes")
+	if scene_dir == null:
+		return "scenes dir missing"
+	var v8 := 0
+	for fn_name in scene_dir.get_files():
+		var name := str(fn_name)
+		if name.begins_with("v8_scene_") and name.ends_with(".webp"):
+			v8 += 1
+			var rel: String = "assets/art/scenes/" + name
+			if _excluded(rel, filters):
+				return "live v8 scene excluded: " + name
+		elif name.begins_with("v92_scene_") and name.ends_with(".webp"):
+			var rel2: String = "assets/art/scenes/" + name
+			if not _excluded(rel2, filters):
+				return "unused v92 scene still packed: " + name
+	if v8 < 5:
+		return "expected live v8_scene plates, got %d" % v8
+	var estate_dir := DirAccess.open("res://assets/art/estates")
+	if estate_dir != null:
+		for fn2 in estate_dir.get_files():
+			var ename := str(fn2)
+			if ename.begins_with("v92_estate_") and ename.ends_with(".webp"):
+				var erel: String = "assets/art/estates/" + ename
+				if not _excluded(erel, filters):
+					return "unused v92 estate still packed: " + ename
+	return ""
+

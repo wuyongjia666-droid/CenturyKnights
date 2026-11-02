@@ -18,14 +18,15 @@ python3 tools/ci/export_size_report.py
 退出码：`0` 未破预算且 Android medium_only；`1` 超预算或合同破；其它 = 脚本坏。  
 `store_prep` / `store_packaging_dry` 要求见到 `EXPORT SIZE PASS`。
 
-## 2026-10-27 干跑摘录（Asia/Shanghai）
+## 2026-11-03 干跑摘录（Asia/Shanghai）
 
 | 平台 | EXPORT SIZE | CAP_STATUS | BANK |
 |---|---:|---|---|
-| Windows Desktop | 827693373 | OVER（预期，含 master） | master+medium+small |
-| Android | 443497321 | OVER（~423 MiB 源估） | **medium_only=1** |
+| Windows Desktop | 795238247 | OVER（预期，含 master） | master+medium+small |
+| Android | 411042195 | UNDER | **medium_only=1** |
 
-预算 `EXPORT BUDGET` ≈ 847556000 → 双平台均未破预算 → `EXPORT SIZE PASS`。
+预算 `EXPORT BUDGET` ≈ 847556000 → 双平台均未破预算 → `EXPORT SIZE PASS`。  
+Android CAP≤400：本刀归档未用 `v92_estate_*` / `v92_scene_*`（ART-02）；**H/I 仍用户-only**。
 
 ## 按需资源（Year2 落地，今日文档化）
 
