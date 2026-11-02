@@ -538,23 +538,23 @@ static func _stage_names(stage: String) -> Array:
 			names.append(str(STAGES[j]))
 	return names
 
-static func _load_named(stem: String, tier: String = "large") -> Texture2D:
+static func _load_named(stem: String, tier: String = "") -> Texture2D:
+	var use := CKArtPaths.canonical_unit_tier(tier)
 	var abs_png := portrait_dir_abs().path_join(stem + ".png")
-	var hit := CKArtPaths.load_portrait(abs_png, tier)
+	var hit := CKArtPaths.load_portrait(abs_png, use)
 	if hit != null:
 		return hit
 	if dir_override != "":
 		return null
-	var res_hit := CKArtPaths.load_portrait(RES_DIR + stem + ".png", tier)
+	var res_hit := CKArtPaths.load_portrait(RES_DIR + stem + ".png", use)
 	if res_hit != null:
 		return res_hit
-	return CKArtPaths.load_portrait(USER_DIR + stem + ".png", tier)
+	return CKArtPaths.load_portrait(USER_DIR + stem + ".png", use)
 
 ## Current stage plate, else the nearest stage that has been rendered, else the unsuffixed legacy file.
-static func texture(c: Object, tier: String = "large") -> Texture2D:
-	var use_tier := "large"
-	if tier == "small" or tier == "medium":
-		use_tier = tier
+## Tier is canonicalized to the shared unit plate so desktop and Android match.
+static func texture(c: Object, tier: String = "") -> Texture2D:
+	var use_tier := CKArtPaths.canonical_unit_tier(tier)
 	var stem := file_stem(str(c.get("id")))
 	var stage := age_stage_of(c)
 	var key := "%s|%s|%s" % [stem, stage, use_tier]

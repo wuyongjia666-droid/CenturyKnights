@@ -102,7 +102,7 @@ static func warm_disk_index() -> void:
 
 ## Returns {texture: Texture2D|null, stem: String}. stem is the plate key actually loaded
 ## (hit or fallback). Board figures must look up plate_palettes by this stem — do not rematch.
-static func try_texture(c: Object, tier: String = "large") -> Dictionary:
+static func try_texture(c: Object, tier: String = "") -> Dictionary:
 	var miss := {"texture": null, "stem": ""}
 	if not has_plates():
 		return miss
@@ -118,7 +118,7 @@ static func try_texture(c: Object, tier: String = "large") -> Dictionary:
 
 
 ## Texture only (legacy callers). Prefer try_texture when the plate stem is needed.
-static func try_texture_only(c: Object, tier: String = "large") -> Texture2D:
+static func try_texture_only(c: Object, tier: String = "") -> Texture2D:
 	var pack: Dictionary = try_texture(c, tier)
 	return pack.get("texture") as Texture2D
 
@@ -673,7 +673,7 @@ static func _disk_stage_plate_salt(c: Object, stage: String, tier: String, salt:
 
 
 ## Same-stage plate by identity seed, ignoring the age-derived stage (UnitArt teen band at 15).
-static func stage_texture(c: Object, stage: String, tier: String = "large") -> Texture2D:
+static func stage_texture(c: Object, stage: String, tier: String = "") -> Texture2D:
 	if not has_plates():
 		return null
 	var pack: Dictionary = _disk_stage_plate(c, stage, tier)
@@ -681,13 +681,17 @@ static func stage_texture(c: Object, stage: String, tier: String = "large") -> T
 
 
 ## Same as stage_texture but also returns the plate stem (for board-figure palette lookup).
-static func stage_plate(c: Object, stage: String, tier: String = "large") -> Dictionary:
+static func stage_plate(c: Object, stage: String, tier: String = "") -> Dictionary:
 	if not has_plates():
 		return {"texture": null, "stem": ""}
 	return _disk_stage_plate(c, stage, tier)
 
 
-static func _load_plate(key: String, tier: String = "large") -> Texture2D:
+static func _load_plate(key: String, tier: String = "") -> Texture2D:
+	# Always the shared unit tier. try_texture/stage_* used to default to "large"
+	# or "small"; Windows ships those siblings, Android exclude_filter drops them,
+	# so board palette / stem probes painted different files per platform.
+	var use := CKArtPaths.canonical_unit_tier(tier)
 	if dir_override != "":
-		return CKArtPaths.load_portrait(dir_override.path_join(key + ".png"), tier)
-	return CKArtPaths.load_portrait("res://assets/art/portraits/genome/bank/%s.png" % key, tier)
+		return CKArtPaths.load_portrait(dir_override.path_join(key + ".png"), use)
+	return CKArtPaths.load_portrait("res://assets/art/portraits/genome/bank/%s.png" % key, use)

@@ -937,7 +937,7 @@ static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Tex
 	var key = "bust|%s|%s|%s|%s" % [str(c.id) if c.id != "" else c.name, team, str(done), arms_k]
 	if _cache.has(key):
 		return _cache[key]
-	var pt = portrait(c, 128, CKArtPaths.TIER_SMALL)
+	var pt = portrait(c, 128, CKArtPaths.UNIT_TIER)
 	if pt == null:
 		return null
 	var img: Image = pt.get_image()
