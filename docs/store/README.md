@@ -10,6 +10,7 @@
 | [`listing-copy-zh.md`](./listing-copy-zh.md) | 商店页文案草稿（中文；英译后补） |
 | [`crash-perf-gates.md`](./crash-perf-gates.md) | 崩溃闸 / 性能档清单（对脚本与预算文件） |
 | [`package-budget.md`](./package-budget.md) | 包体与按需资源报告口径 |
+| [`ondemand-assets.json`](./ondemand-assets.json) | 按需/deferred 清单（CI `store_ondemand_check`） |
 | [`CHECKLIST.md`](./CHECKLIST.md) | 上架前可勾选总清单（提审缴费项标「不做/未付费」） |
 | [`play-listing-full.md`](./play-listing-full.md) | Google Play 控制台字段完整稿 |
 | [`ms-store-listing-full.md`](./ms-store-listing-full.md) | Microsoft Store / Partner Center 完整稿 |

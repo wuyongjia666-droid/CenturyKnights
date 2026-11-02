@@ -36,6 +36,7 @@ run_lint() {
 	check i18n_ratchet "I18N RATCHET PASS" python3 "$ROOT/tools/ci/i18n_ratchet.py"
 	check gdlint "GDLINT PASS" python3 "$ROOT/tools/ci/gdlint_changed.py"
 	check export_size "EXPORT SIZE PASS" python3 "$ROOT/tools/ci/export_size_report.py"
+	check store_ondemand "STORE ONDEMAND PASS" python3 "$ROOT/tools/ci/store_ondemand_check.py"
 	check store_prep "STORE PREP PASS" python3 "$ROOT/tools/ci/store_prep_check.py"
 	check store_packaging_dry "STORE PACKAGING DRY PASS" python3 "$ROOT/tools/ci/store_packaging_dry_check.py"
 	check store_verify_records "STORE VERIFY RECORDS PASS" python3 "$ROOT/tools/ci/store_verify_records_check.py"

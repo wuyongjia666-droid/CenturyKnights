@@ -59,6 +59,8 @@ REQUIRED_SCRIPTS = [
     "tools/ci/store_packaging_dry_check.py",
     "tools/ci/store_verify_records_check.py",
     "tools/ci/store_shots_check.py",
+    "tools/ci/store_ondemand_check.py",
+    "docs/store/ondemand-assets.json",
     "scripts/capture_store_shots.sh",
     "tools/ci/perf_budget.json",
     "tools/ci/ratchet.json",
@@ -69,7 +71,7 @@ REQUIRED_PHRASES = {
     "docs/store/listing-copy-zh.md": ["短描述", "完整描述", "百年骑士"],
     "docs/store/export-paths.md": ["build_android.sh", "build_windows.sh", "release.yml"],
     "docs/store/crash-perf-gates.md": ["perf_budget.json", "mobile_gate"],
-    "docs/store/package-budget.md": ["export_size_report.py", "export_base_budget_bytes"],
+    "docs/store/package-budget.md": ["export_size_report.py", "export_base_budget_bytes", "ondemand-assets.json", "store_ondemand_check"],
     "docs/store/play-listing-full.md": ["完整说明", "无内购", "不付费"],
     "docs/store/ms-store-listing-full.md": ["Partner Center", "买断", "不缴费"],
     "docs/store/privacy-policy-draft.md": ["不收集", "不出售", "崩溃"],
@@ -188,6 +190,24 @@ def main() -> int:
         fails.append(f"store_shots_check failed: {exc}")
 
     # Nested verification-record gate (privacy / age / export / data-safety / support).
+    ondemand = ROOT / "tools/ci/store_ondemand_check.py"
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(ondemand)],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            timeout=240,
+        )
+        out = (proc.stdout or "") + (proc.stderr or "")
+        if proc.returncode != 0 or "STORE ONDEMAND PASS" not in out:
+            fails.append(
+                "store_ondemand_check failed:\n"
+                + out[-800:]
+            )
+    except Exception as exc:  # noqa: BLE001
+        fails.append(f"store_ondemand_check failed: {exc}")
+
     verify = ROOT / "tools/ci/store_verify_records_check.py"
     try:
         proc = subprocess.run(
