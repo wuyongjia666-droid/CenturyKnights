@@ -123,3 +123,39 @@
 | F 棋子 albedo | 与 Path C 质量锁冲突 |
 | G 重压 ogg | 可能可感音质损失；本刀只删未使用的 wav 副本 |
 | H / I | 需用户拍板 |
+
+
+## 7. 第四刀（未用农场板归档 — ART-02 精神）
+
+硬规则：不伤画质。不做 H/I，不降立绘/atlas 预设，不删血统库 medium 母版，不动 hireuniq。
+
+### 做了什么
+
+1. `tools/art/ref_scan.py` 复核零引用；交叉核对运行时加载器：
+   - 属地：`estates.gd` / `castle_hub.gd` 只加载 `assets/art/estates/<holding_id>.png`（`fog_vale` / `reed_ford` / `stone_slope` / `tide_bridge`）
+   - 章节景：`AtlasArt.scene_plate` 只解析 `v8_scene_*`
+2. 将未接线的农场遗留 `v92_estate_*.webp`（55）与 `v92_scene_*.webp`（50）连同 `.import` 移到 `tools/archive/art-unused-store-cap/`（保留相对路径；不改写 git 历史）。
+3. Windows / Android `exclude_filter` 追加 `assets/art/estates/v92_estate_*.webp`、`assets/art/scenes/v92_scene_*.webp`，防止日后农场再写入时静默撑包。
+4. `android_tier_pack_check`：断言上述 exclude，并断言四张属地 png + `v8_scene_*` 仍可打包。
+5. 清单：`docs/art/unused-store-cap-archive.json`。
+
+### 体积（源估算）
+
+| | 源估算 Android | 相对本刀前 |
+|---|---:|---:|
+| 本刀前（main @ 3ebeb8dd） | **424.34 MiB**（444,960,785 B） | — |
+| 本刀后（归档 v92 estate/scene） | **392.00 MiB**（411,042,195 B） | 源 **−32.35 MiB** |
+
+本刀后 Android 源估算 **UNDER CAP**（余 8.00 MiB）。APK 仍含导入开销+原生库，商店实包另测；H/I 仍勿静默动。
+
+### 明确跳过
+
+| 项 | 原因 |
+|---|---|
+| `farm_inbox/qwen_v830` | `unit_art.gd` 敌军精英回退仍指向此处（编辑器路径；导出本已 `*farm_inbox/*`） |
+| `story_bg/*` / 短名 stem | 章节 JSON `bg` 键动态拼路径，扫描器易误判 |
+| `portraits/status/*` | `portrait_status.gd` 运行时叠加 |
+| `castle/v92_castle_*_tN` | `annex.gd` / `castle_view.gd` 动态加载 |
+| `items/glyph/v92_glyph_*` | `AtlasArt.item_icon` 动态回退 |
+| hireuniq / bank medium / atlas 半分辨率 | 画质红线 |
+| H / I | 需用户拍板 |

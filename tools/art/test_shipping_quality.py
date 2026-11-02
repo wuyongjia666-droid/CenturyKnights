@@ -43,10 +43,17 @@ class ShippingQualityTest(unittest.TestCase):
         presets = (ROOT / "project" / "export_presets.cfg").read_text(encoding="utf-8")
         # Windows keeps the full bank (large+medium+small). Android drops large masters
         # (#316) and small siblings (export-cap-400): medium only, with tier fallback.
-        self.assertEqual(
-            presets.count('exclude_filter="tests/*,*.md,*farm_inbox/*,*stitch_exports/*,*_src_*/*"'),
-            1,
-        )
+        # Shared base excludes + unused v92 estate/scene leftovers (store CAP knife).
+        self.assertIn("*farm_inbox/*", presets)
+        self.assertIn("*stitch_exports/*", presets)
+        self.assertIn("*_src_*/*", presets)
+        self.assertIn("assets/art/estates/v92_estate_*.webp", presets)
+        self.assertIn("assets/art/scenes/v92_scene_*.webp", presets)
+        # Windows exclude must not drop the gene bank; Android medium-only contract stays.
+        self.assertEqual(presets.count('platform="Windows Desktop"'), 1)
+        self.assertEqual(presets.count('platform="Android"'), 1)
+        win = presets.split('platform="Windows Desktop"', 1)[1].split('platform=', 1)[0]
+        self.assertNotIn("genome/bank/", win)
         self.assertIn("genome/bank/*_????????????????.webp", presets)
         self.assertIn("genome/bank/*.small.webp", presets)
         self.assertNotIn("gene-bank", presets)
