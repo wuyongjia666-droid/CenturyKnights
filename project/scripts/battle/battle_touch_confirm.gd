@@ -22,6 +22,9 @@ extends RefCounted
 ## readable settle region so it does not fight T-P15.
 ## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel;
 ## invalid-target reject pulse lives here (keeps battle_controller under the line gate).
+## 手游选中整链: try_deselect → _cancel_selection now clears FeelLoop/BoardInset via
+## CancelFeel.after_select (was a sticky deselect fork that left m_feel_loop dirty).
+## note_reject refreshes BoardInset with the select card.
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -85,6 +88,9 @@ static func note_reject(host, cell: Vector2i, reason: String = "move") -> void:
 	# Keep the landscape/desktop card on the selected unit — a reject must not swap the panel.
 	if host.has_method("_refresh_info"):
 		host._refresh_info()
+	# BoardInset must follow the same refresh as select/cancel — reject used to leave
+	# a stale m_info_block while the side col pinned to the selected card.
+	BattleBoardInset.refresh_info_block(host)
 	if DeviceProfile.is_mobile():
 		UIFX.haptic(20)
 	if host.overlay:
@@ -228,6 +234,7 @@ static func overflow_menu(host) -> void:
 	host.add_child(popup)
 	popup.id_pressed.connect(func(id: int):
 		if id == 0:
+			# Full deselect — FeelLoop/BoardInset owned by _cancel_selection.
 			host._cancel_selection()
 		elif id == 1:
 			request_end_turn(host)

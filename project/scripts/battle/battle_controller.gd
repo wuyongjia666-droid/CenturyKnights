@@ -1615,6 +1615,8 @@ func cell_to_local(cell: Vector2i) -> Vector2:
 	return ORIGIN + Vector2(cell) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
 
 func _cancel_selection() -> void:
+	# Full deselect owns FeelLoop/CancelFeel/BoardInset. try_deselect + overflow
+	# used to call this without CancelDepth and leave m_feel_loop / reject dirty.
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
@@ -1622,10 +1624,12 @@ func _cancel_selection() -> void:
 	active_skill_id = ""
 	moved_this_select = false
 	BattleTouchConfirm.clear(self)
+	if has_meta("m_reject_flash"):
+		remove_meta("m_reject_flash")
 	_refresh_info()
 	_update_skill_hint()
-	overlay.queue_redraw()
-	map_draw.queue_redraw()
+	# after_select: clear FeelLoop, refresh BoardInset, stamp cancel, redraw.
+	BattleCancelFeelLoop.after_select(self)
 
 func _mouse_to_cell(pos: Vector2) -> Vector2i:
 	var local = pos - ORIGIN
@@ -1712,7 +1716,11 @@ func _click_cell(cell: Vector2i) -> void:
 							overlay.queue_redraw()
 							_refresh_info()
 							return
-						_do_attack(selected, ui)
+						# Desktop instant strike still hands FeelLoop settle/info — was a bare
+						# _do_attack fork that skipped after_attack_confirm / BoardInset.
+						preview_attack_ui = ui
+						preview_move_cell = Vector2i(-1, -1)
+						BattleTouchConfirm.confirm_attack(self)
 						return
 					_log("目标超出攻击范围")
 					BattleTouchConfirm.note_reject(self, cell, "attack")
@@ -1740,7 +1748,11 @@ func _click_cell(cell: Vector2i) -> void:
 					_log(Locale.t("ux_preview_move_log") % [su.char.name, cell.x, cell.y])
 					_refresh_info()
 					return
-				BattleTouchConfirm.commit_move(self, cell)
+				# Desktop instant commit still hands FeelLoop (land peek / settle / BoardInset)
+				# — same closed loop as mobile confirm_move; was a bare commit_move fork.
+				preview_move_cell = cell
+				preview_attack_ui = -1
+				BattleTouchConfirm.confirm_move(self)
 				return
 			if ui < 0 and not attack_mode and not move_cells.has(cell) and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
 				BattleRangePreview.flash_destination(self, cell, "move")

@@ -63,6 +63,8 @@ static func after_mode(host) -> void:
 
 
 ## 选中层取消后：清 FeelLoop 残留，刷信息栏，盖 select。
+## 由 CancelDepth.step 与 _cancel_selection（try_deselect / overflow）共用，
+## 避免手游重点选中/点空取消绕过 CancelDepth 留下 m_feel_loop。
 static func after_select(host) -> void:
 	if host == null:
 		return
