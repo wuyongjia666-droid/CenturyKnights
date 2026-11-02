@@ -2,50 +2,51 @@
 
 全部曲目由仓库内 `tools/audio/compose_v92.py` 以固定种子 `9202601` 程序化合成。
 没有第三方采样、录音或曲库。编码为双声道 44.1 kHz Ogg Vorbis（libvorbis quality 1）。
-重跑该脚本必须得到逐字节相同的文件。Ogg 页序列号在合成后被改写为曲目种子，以去掉 ffmpeg 的随机序列号。
+金样校验比对解码后的 PCM 指纹（samples / rms_db / pcm_sha256），不要求 Ogg 容器逐字节一致。
+Ogg 页序列号在合成后被改写为曲目种子，以去掉 ffmpeg 的随机序列号。
 
-| 文件 | 用途 | 时长 | sha256 |
+| 文件 | 用途 | 时长 | pcm_sha256 |
 |---|---|---|---|
-| `mus_title.ogg` | 主菜单 / 标题。霜灯动机的完整陈述。 | 75.8 s | `156bdc28fd917c477ceb6dd7229ddac07ba858057b02bd7019708b3a84360f43` |
-| `mus_castle_spring.ogg` | 城堡·春生。内殿与工坊，按季节换调。 | 72.0 s | `7bf39f59f3357e5cae60fae022a0750bc2ca4ad27adc21ca2be9461cf75a14f6` |
-| `mus_castle_summer.ogg` | 城堡·夏澄。内殿与工坊，按季节换调。 | 72.0 s | `8a0f3c405b24071d607082867ff4ef0c0ec37ea11d2f8de7c194a9472a2e2062` |
-| `mus_castle_autumn.ogg` | 城堡·秋落。内殿与工坊，按季节换调。 | 72.0 s | `5f2b93a8ee6f4a174eedcec2354f203f1028cce59b91992a499a1495e8c255d1` |
-| `mus_castle_winter.ogg` | 城堡·冬静。内殿与工坊，按季节换调。 | 72.0 s | `be67c259a42ab4f3036164109a8b0c69b7000606cd941dae7f6623b2ca88bcf7` |
-| `mus_atlas.ogg` | 舆图。陆桥上路的进行，霜灯动机作路标。 | 62.6 s | `a8bf0b18f05efb74be9993bd7ee8049fbaa2a0464556326ad39d4d3cf28b19f0` |
-| `mus_atlas_ashbanner.ogg` | 舆图·灰烬邦。同路不同国境的变奏。 | 62.6 s | `b29466108fc51ebdd1b529f56dcc4cf5d9c0bb3dd0d284d1c811779dc1c73a8f` |
-| `mus_atlas_shuoying.ogg` | 舆图·朔影国。同路不同国境的变奏。 | 62.6 s | `157320852a7ef3c8ff791ef38663466056080688851d71e01c9826c1bdb945f1` |
-| `mus_atlas_qinghe.ogg` | 舆图·清河国。同路不同国境的变奏。 | 62.6 s | `2bbf68ec24f85149e9025650377a6610cdff5e6a324a97d7cfa26adf7e39ab83` |
-| `mus_atlas_lantern.ogg` | 舆图·灯市联。同路不同国境的变奏。 | 62.6 s | `529c0e60a22bcde25d90507f5153674d12169186a74fe0dd949f51b73438b4fc` |
-| `mus_atlas_frostcrown.ogg` | 舆图·霜冕廷。同路不同国境的变奏。 | 62.6 s | `2bdd3e784940340f60dc0b46c1929ab3f7a7a9c22ed48e3f3bf93d5f730356bd` |
-| `mus_atlas_emberold.ogg` | 舆图·余烬旧邦。同路不同国境的变奏。 | 62.6 s | `e1e7c3e5c1aabaab66b10a59c832981d394ec27bcfb17b15e23206acd22c0122` |
-| `mus_atlas_saltmarsh.ogg` | 舆图·盐泽盟。同路不同国境的变奏。 | 62.6 s | `43661061e958c2a0401deadbdbb625605c58b96561c78259bd5ddfcc4e842ca5` |
-| `mus_atlas_irongorge.ogg` | 舆图·铁峡领。同路不同国境的变奏。 | 62.6 s | `2af33633631b087c29b267686c9023e1ca653cb9a10199a5966caa76a44a8c99` |
-| `mus_atlas_starriver.ogg` | 舆图·星津邦。同路不同国境的变奏。 | 62.6 s | `6417af500bbb1ebf53a52fc7872cf8886034aaaf6f2c0619257cf16768376ef4` |
-| `mus_atlas_southzephyr.ogg` | 舆图·南泽邦。同路不同国境的变奏。 | 62.6 s | `6e01c84fef96903b86592cc7e57ac2058bebc0c02e372f77f6c0b5f5b02b4b09` |
-| `mus_battle_era1.ogg` | 纪元一·灯起。玩家回合，动机逐渐加密。 | 73.8 s | `526fb85443fc802abb94ba7f6e89c1420a6a98003085d8fb0531230577a95367` |
-| `mus_battle_era2.ogg` | 纪元二·霜盟。玩家回合，动机逐渐加密。 | 68.6 s | `2366c00274a92d5f2db1f37659c1021cae72c2baa91f2681bdb6f4b58a9ebe37` |
-| `mus_battle_era3.ogg` | 纪元三·裂桥。玩家回合，动机逐渐加密。 | 65.1 s | `974366372f17a160a1e7c070132a06e0415541ecb8d5f48864e956a3e48f2779` |
-| `mus_battle_era4.ogg` | 纪元四·冕战。玩家回合，动机逐渐加密。 | 64.0 s | `af36e6f530a0ed9b55fc841815fa55a287fa356ff69159cc29e79082b9f1f776` |
-| `mus_battle_era5.ogg` | 纪元五·百年。玩家回合，动机逐渐加密。 | 64.0 s | `3ad4e37903fbd35adab64f79d9d1649087d27588f4e879ab26d5897f90b73867` |
-| `mus_battle_enemy.ogg` | 敌方回合。动机倒影，仍守 D 音踏板以便叠紧张层。 | 71.1 s | `476ab36a7e09aff911d84f8cb7a334d0eaa304a4d0aed189623b9ac2d32e9f83` |
-| `mus_battle_boss.ogg` | 首领。动机拉宽，低弦加倍，踏板不让路。 | 80.0 s | `c03b755cd938c37a53acfbcc611b3fca7ea2de4b2c716ff1427101fbed7645b3` |
-| `mus_tension.ogg` | 紧张。可单独播放的段落：悬置、抬升、回落，不是一条垫底循环。 | 72.0 s | `9eb6a48fad5c6e41557c430d817841deb5d112c177fb54b6b2edef92ba8b5469` |
-| `mus_tension_layer.ogg` | 紧张层。D 踏板与四度进行，叠在战斗曲下，不另起满音量旋律。 | 68.6 s | `3a14a6883a09ab3e1161035de124ec4bb24e79c0c17f77b0d3d1850a577f7573` |
-| `mus_victory.ogg` | 胜利。动机转入大调，玻璃质感的上升，不作成套铜管号角。 | 64.0 s | `09e948322b8b5eb49afc16f4207d74de42a744fc86405ec58e50255f88790482` |
-| `mus_defeat.ogg` | 失败。动机拆成下行碎片，停在空五度。 | 80.0 s | `8fb2d0b298b9f190243a4a57534cdc9f06aa0f5e4e07cefa7ff505d4f4c76693` |
-| `mus_marriage.ogg` | 联姻。动机以平行三度成对出现。 | 68.6 s | `deba78c89e7413375cddb1a6ab3ddc73f9b6f1cc7e4b1a60e3ca95b3a0b6e209` |
-| `mus_funeral.ogg` | 葬礼 / 先祖。动机拉成宽音，高玻璃铃回应低弦。 | 64.0 s | `226a8af61a2deef302fcf341a888131f2432b1b16ebfac9cfbffff2bc0a20dbc` |
-| `mus_birth.ogg` | 初啼。高音区的摇篮式动机，春令的颜色。 | 75.8 s | `82a6282dd5ce600183d2d9649ddec108ae42e10a31b07afd5738bc58cff8cd90` |
-| `mus_inheritance.ogg` | 继承。动机先在低音陈述，再交到高音。 | 80.0 s | `739816c874f9e6ed8528d6d78e743f7355842c4dff2ee59ba4439e5194a17d49` |
-| `mus_city_ashbanner.ogg` | 城市·灰烬邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `fadc267735d8a0ad9c084a68ed07b0507b8bd2ac0a07fd15a4cca1abd23cc18f` |
-| `mus_city_shuoying.ogg` | 城市·朔影国。十国城市变奏，城内比路上更稳。 | 73.8 s | `d626537de3561ac1b2c6eacc35df9bd75088883deec8afa45df03a1fe9f92398` |
-| `mus_city_qinghe.ogg` | 城市·清河国。十国城市变奏，城内比路上更稳。 | 73.8 s | `4ab054f8ce11f2528de514a0645b18fce866c7ade837aab62537b4a40483b3cb` |
-| `mus_city_lantern.ogg` | 城市·灯市联。十国城市变奏，城内比路上更稳。 | 73.8 s | `a72c1705cdb25799a2a557266eeb5f7c44a7a327e0afd7a192a56638868811cc` |
-| `mus_city_frostcrown.ogg` | 城市·霜冕廷。十国城市变奏，城内比路上更稳。 | 73.8 s | `7ab9d33179188d6763ced3edf90a7a441cd17a258a12992ff3955849bdf00fe3` |
-| `mus_city_emberold.ogg` | 城市·余烬旧邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `746b8ec2909a483f1f4e47fcd3bfa3725bf626025b38a652f1c3922b2d06e8b6` |
-| `mus_city_saltmarsh.ogg` | 城市·盐泽盟。十国城市变奏，城内比路上更稳。 | 73.8 s | `d8660840d0b4aa9ec99eaa8e3db0022bbc4e2dab7040846e7c9ed06c2a12b962` |
-| `mus_city_irongorge.ogg` | 城市·铁峡领。十国城市变奏，城内比路上更稳。 | 73.8 s | `487bb54b2e4782c8bd610f0ef685983ba9e14289330e0af83722b853026f7e58` |
-| `mus_city_starriver.ogg` | 城市·星津邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `2e7073e794411fbb540f62129ef1ead2f94ab0fee7181c4410dd43ca8fcbcea3` |
-| `mus_city_southzephyr.ogg` | 城市·南泽邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `58a74e5d4894f2015eeef4cbe79fd7ccb688c27dec1d2f32701a81e49f4e0767` |
+| `mus_title.ogg` | 主菜单 / 标题。霜灯动机的完整陈述。 | 75.8 s | `bbf642e58c02b9f9b9f53d351c787002717e592756baf7967766c6a56035edb0` |
+| `mus_castle_spring.ogg` | 城堡·春生。内殿与工坊，按季节换调。 | 72.0 s | `2f286a3ecd7d321fd07ce888794f6a40ea4bcf31144c5727de90be166f9b6770` |
+| `mus_castle_summer.ogg` | 城堡·夏澄。内殿与工坊，按季节换调。 | 72.0 s | `3ba0d7b81765fb45a051b6aefb09ade7aa34152bdb5bd5bcc9a30615813c026e` |
+| `mus_castle_autumn.ogg` | 城堡·秋落。内殿与工坊，按季节换调。 | 72.0 s | `06d9de0829a22311ec78387efb0aeb5d9baf9c03e19bc9460b313461052244dd` |
+| `mus_castle_winter.ogg` | 城堡·冬静。内殿与工坊，按季节换调。 | 72.0 s | `131919bee2231230b4dd47db5c5a44dfa5abc88f950759428d9737ee16ae2578` |
+| `mus_atlas.ogg` | 舆图。陆桥上路的进行，霜灯动机作路标。 | 62.6 s | `44b73febc19f59c8e1a6be59cb23eb15f103e672cce092f708a000a400871a3f` |
+| `mus_atlas_ashbanner.ogg` | 舆图·灰烬邦。同路不同国境的变奏。 | 62.6 s | `f09a7f9951983d5dca8907d8cf344a90a9c4f357963d7db063631efdea019b81` |
+| `mus_atlas_shuoying.ogg` | 舆图·朔影国。同路不同国境的变奏。 | 62.6 s | `28aa41057eca80923a4bd05bea1d73ae17ab0e7864191a373f097f88df169dda` |
+| `mus_atlas_qinghe.ogg` | 舆图·清河国。同路不同国境的变奏。 | 62.6 s | `3bf0d8e896a10894e074c551ef2361465d328f34b3797ed5f2487c0a95a02ae1` |
+| `mus_atlas_lantern.ogg` | 舆图·灯市联。同路不同国境的变奏。 | 62.6 s | `3280e9f970be588310bf4f3a5dbf70e5fb6da6cba55e20dc2665a309a4e9078f` |
+| `mus_atlas_frostcrown.ogg` | 舆图·霜冕廷。同路不同国境的变奏。 | 62.6 s | `a977455a5eba63193aa77b738cfe3c24dccfa4c83481c84756b18fab55a6c591` |
+| `mus_atlas_emberold.ogg` | 舆图·余烬旧邦。同路不同国境的变奏。 | 62.6 s | `5634191c47989a9d8d25d8669ad937c756634c26fd503291751402a7cb77768c` |
+| `mus_atlas_saltmarsh.ogg` | 舆图·盐泽盟。同路不同国境的变奏。 | 62.6 s | `4058b8dc596eb0fd798ce6db459afdf106a7d707d75284cd029169d84a8f003e` |
+| `mus_atlas_irongorge.ogg` | 舆图·铁峡领。同路不同国境的变奏。 | 62.6 s | `311a0285ce4be45d54844509469f0d05efcb0043718a5ea03726f160ef555add` |
+| `mus_atlas_starriver.ogg` | 舆图·星津邦。同路不同国境的变奏。 | 62.6 s | `d137fb668d10f7a5e5efc4466ea580bf9588ff911f5dd96320743a37c68d5ecf` |
+| `mus_atlas_southzephyr.ogg` | 舆图·南泽邦。同路不同国境的变奏。 | 62.6 s | `755b8bafcfe6a72f4bb9783eba3482e0005132c1278ce31479d4925b9b164854` |
+| `mus_battle_era1.ogg` | 纪元一·灯起。玩家回合，动机逐渐加密。 | 73.8 s | `c9ba49a873ad0c8b32ef4080caaff798b062b67bd43760880c00cf027e5e877f` |
+| `mus_battle_era2.ogg` | 纪元二·霜盟。玩家回合，动机逐渐加密。 | 68.6 s | `bde34410e2a44448c74adb9af3c8a8f5685ee1cd3778f4e9f776a6b6f2e3bf22` |
+| `mus_battle_era3.ogg` | 纪元三·裂桥。玩家回合，动机逐渐加密。 | 65.1 s | `424f84d36360b017afebf12e43f6cc33ddfa49775590314206135ff7d61ad265` |
+| `mus_battle_era4.ogg` | 纪元四·冕战。玩家回合，动机逐渐加密。 | 64.0 s | `c81597bc8b8263f6d32711a1ead52fcbeebab8f8c04f82abd514af1fb6f21359` |
+| `mus_battle_era5.ogg` | 纪元五·百年。玩家回合，动机逐渐加密。 | 64.0 s | `e7a847c301b6a99938738d096e0bbe7c5022c6463fd0f85ca0c03a8dc2b12e53` |
+| `mus_battle_enemy.ogg` | 敌方回合。动机倒影，仍守 D 音踏板以便叠紧张层。 | 71.1 s | `a938bd102b48aec441e8ccaa51e6dad2fb99ed341e6a646d292a9f58accc3ba5` |
+| `mus_battle_boss.ogg` | 首领。动机拉宽，低弦加倍，踏板不让路。 | 80.0 s | `f51c0dd32d143d8297483f8cd91923bf872786f009ff84fb29a2e2ab45aef23d` |
+| `mus_tension.ogg` | 紧张。可单独播放的段落：悬置、抬升、回落，不是一条垫底循环。 | 72.0 s | `a14386c6cb5eb09363c867c12edbec76bc3c80162c3e3b4e938a2f22e740b6f9` |
+| `mus_tension_layer.ogg` | 紧张层。D 踏板与四度进行，叠在战斗曲下，不另起满音量旋律。 | 68.6 s | `1c1616644012fbe24b5da980921a000f370a7a9f58b75f8b3ce455ad8262751f` |
+| `mus_victory.ogg` | 胜利。动机转入大调，玻璃质感的上升，不作成套铜管号角。 | 64.0 s | `30f0099fa586af5dcb7b99dc04508eb7f0ea43fd6e4647cc462d08c0cc62dde5` |
+| `mus_defeat.ogg` | 失败。动机拆成下行碎片，停在空五度。 | 80.0 s | `f160e1a21385eb40d9fdfb9e87dd9c9ca835efb21afdd7b1564dd12542f640ef` |
+| `mus_marriage.ogg` | 联姻。动机以平行三度成对出现。 | 68.6 s | `20b6287cb6b780a660df8ec78e183650a8b2c2ba8327f5b98b738507540e75fd` |
+| `mus_funeral.ogg` | 葬礼 / 先祖。动机拉成宽音，高玻璃铃回应低弦。 | 64.0 s | `9e3002d195052f51ff0f0abae2c96ef5c5f4294c80a36db4584498b4120e1fa7` |
+| `mus_birth.ogg` | 初啼。高音区的摇篮式动机，春令的颜色。 | 75.8 s | `38eb2627973d6ae050bb994229bfa3a3a072906c8e3d8590cf0f2985231f0925` |
+| `mus_inheritance.ogg` | 继承。动机先在低音陈述，再交到高音。 | 80.0 s | `6bee2bc6a64dad595d787d0427b8021c43ee2a5e47ce2bce07aa22d9ecb9b95b` |
+| `mus_city_ashbanner.ogg` | 城市·灰烬邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `6de33aa7bcc4cf6f3a9d132513514cf6a05faf85a1191eb1c3fa80574f941ff2` |
+| `mus_city_shuoying.ogg` | 城市·朔影国。十国城市变奏，城内比路上更稳。 | 73.8 s | `e74501e0c0bd34ca1a877da750644f7b47031b6010f72450dcb5d282925eff61` |
+| `mus_city_qinghe.ogg` | 城市·清河国。十国城市变奏，城内比路上更稳。 | 73.8 s | `bed0803b98fb6f3848fc30fafd06948645b89810a5eebaa7bd216d52dcb80c61` |
+| `mus_city_lantern.ogg` | 城市·灯市联。十国城市变奏，城内比路上更稳。 | 73.8 s | `2777fa36a3936bb7d5a9826dfcfa9ec312788813bf99c1d082a0c864d7a5d568` |
+| `mus_city_frostcrown.ogg` | 城市·霜冕廷。十国城市变奏，城内比路上更稳。 | 73.8 s | `ea7fe4a3dbc12ca8ea8a93f5995f3ca9c4f79e7004a1e08dd92bd6bbcb2673ae` |
+| `mus_city_emberold.ogg` | 城市·余烬旧邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `ac260e14251bc52dc52a9846312b74d01822195387651e40870559c9e768ed9c` |
+| `mus_city_saltmarsh.ogg` | 城市·盐泽盟。十国城市变奏，城内比路上更稳。 | 73.8 s | `394d7dda44280e30d406b504f1f147c60d7e38d694685435e6e16162fdc4f62d` |
+| `mus_city_irongorge.ogg` | 城市·铁峡领。十国城市变奏，城内比路上更稳。 | 73.8 s | `06de838d1a123c81f356318acbdd822a4004e17e1a5037924400035f99a178ab` |
+| `mus_city_starriver.ogg` | 城市·星津邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `2bcc1a0f74ca91b049abd8f31498471c1603054109a09708a32b231c5a5ffb55` |
+| `mus_city_southzephyr.ogg` | 城市·南泽邦。十国城市变奏，城内比路上更稳。 | 73.8 s | `51243b26848baf23715bd73ea31b0e49d94b98cafedbe74c7b7d1d96e8e0e9c7` |
 
 汇总体积：15374141 字节（14.66 MiB）。
