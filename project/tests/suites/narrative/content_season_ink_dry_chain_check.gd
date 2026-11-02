@@ -25,6 +25,8 @@ const ROWS := [
 	{"cid": "cs07_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏仪守。"},
 	{"cid": "cs08_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏祠守。"},
 	{"cid": "cs09_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏验守。"},
+	{"cid": "cs01_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏兆守。"},
+	{"cid": "cs02_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏脉守。"},
 	{"cid": "cs10_03", "beat": "ledger", "needle": "墨干了。契角压平，人走，不用守着看。栏泥守。"},
 	{"cid": "cs06_01", "beat": "ledger", "needle": "鼓点干了。胜名没钉，旗我带回旗杆下。"},
 	{"cid": "cs06_02", "beat": "ledger", "needle": "空条还空，可干了。册合上，不在酒醒前填。"},

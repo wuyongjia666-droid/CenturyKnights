@@ -25,6 +25,8 @@ const ROWS := [
 	{"cid": "cs07_03", "beat": "ink", "needle": "厅角验仪纹。帖在，我先不迈。"},
 	{"cid": "cs08_03", "beat": "ash", "needle": "厅角验祠纹。帖在，我先不迈。"},
 	{"cid": "cs09_03", "beat": "void", "needle": "厅角验血纹。帖在，我先不迈。"},
+	{"cid": "cs01_03", "beat": "shade", "needle": "厅角验兆纹。帖在，我先不迈。"},
+	{"cid": "cs02_03", "beat": "bias", "needle": "厅角验脉纹。帖在，我先不迈。"},
 	{"cid": "cs10_03", "beat": "dry", "needle": "厅角验泥纹。帖在，我先不迈。"},
 	{"cid": "cs06_01", "beat": "spar", "needle": "厅角拍净袖。牌在，我先不迈。"},
 	{"cid": "cs06_02", "beat": "spar", "needle": "厅角守空条。鼓歇了，我先不迈。"},
