@@ -33,6 +33,8 @@ const CASES := [
 	{"cid": "cs07_03", "mid": "hourglass"},
 	{"cid": "cs08_03", "mid": "hourglass"},
 	{"cid": "cs09_03", "mid": "hourglass"},
+	{"cid": "cs01_03", "mid": "hourglass"},
+	{"cid": "cs02_03", "mid": "hourglass"},
 	{"cid": "cs10_03", "mid": "hourglass"},
 	{"cid": "cs06_01", "mid": "hourglass"},
 	{"cid": "cs06_02", "mid": "hourglass"},
