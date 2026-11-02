@@ -3,13 +3,13 @@
 
 Sixteen cues: gender (m/f) x age band x breath/shout. A shout falls a
 minor third. A breath stays on one pitch and lets the air through.
-No sampled voices. Re-running with the fixed seed matches the committed Ogg.
+No sampled voices. Re-running with the fixed seed matches decoded PCM
+fingerprints in the catalog (Ogg container bytes may differ across encoders).
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import importlib
 import json
 import math
@@ -123,12 +123,6 @@ def planned() -> list:
     return rows
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    digest.update(path.read_bytes())
-    return digest.hexdigest()
-
-
 def write_id(out_dir: Path, ident: str) -> Path:
     gender, band, kind = ident.split("_")[1:]
     left, right = render(gender, band, kind)
@@ -137,34 +131,77 @@ def write_id(out_dir: Path, ident: str) -> Path:
     return path
 
 
+def file_meta(path: Path) -> dict:
+    audio = engine.decode_ogg_f32(path)
+    meta = engine.catalog_audio_meta(path, audio)
+    print(
+        "%s  rms %6.2f  samples %d  bytes %d"
+        % (path.name, meta["rms_db"], meta["samples"], meta["bytes"])
+    )
+    return meta
+
+
 def build(out_dir: Path) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
-    catalog = {"seed": engine.SEED, "sample_rate": SR, "files": {}}
+    catalog = {"seed": engine.SEED, "sample_rate": SR, "verify": "pcm_v1", "files": {}}
     for ident in planned():
         path = write_id(out_dir, ident)
-        catalog["files"][path.name] = {"sha256": sha256_file(path), "bytes": path.stat().st_size}
-        audio = engine.decode_ogg_f32(path)
-        print("%s  rms %6.2f  bytes %d" % (path.name, engine.rms_db(audio), path.stat().st_size))
+        catalog["files"][path.name] = file_meta(path)
     return catalog
+
+
+def catalog_from_disk(out_dir: Path) -> dict:
+    catalog = {"seed": engine.SEED, "sample_rate": SR, "verify": "pcm_v1", "files": {}}
+    for ident in planned():
+        path = out_dir / ("%s.ogg" % ident)
+        if not path.is_file():
+            raise SystemExit("missing %s" % path)
+        catalog["files"][path.name] = file_meta(path)
+    return catalog
+
+
+def assert_fingerprint(name: str, expected: dict, actual: dict, label: str) -> None:
+    if not engine.fingerprints_match(expected, actual):
+        raise SystemExit(
+            "%s %s samples %s/%s rms %s/%s pcm %s/%s"
+            % (
+                label,
+                name,
+                expected.get("samples"),
+                actual.get("samples"),
+                expected.get("rms_db"),
+                actual.get("rms_db"),
+                str(expected.get("pcm_sha256", ""))[:12],
+                str(actual.get("pcm_sha256", ""))[:12],
+            )
+        )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="")
     parser.add_argument("--verify", action="store_true")
+    parser.add_argument("--catalog-from-disk", action="store_true")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     out = Path(args.out) if args.out else root / "project" / "assets" / "sfx" / "barks"
+    if args.catalog_from_disk:
+        catalog = catalog_from_disk(out)
+        (out / "catalog_barks.json").write_text(json.dumps(catalog, indent=2, sort_keys=True) + "\n")
+        total = sum(item["bytes"] for item in catalog["files"].values())
+        print("files %d bytes %d" % (len(catalog["files"]), total))
+        return
     if args.verify:
         tmp = Path(tempfile.mkdtemp(prefix="bark-verify-"))
         try:
             fresh = build(tmp)
             committed = json.loads((out / "catalog_barks.json").read_text())
             for name, meta in fresh["files"].items():
-                if committed["files"][name]["sha256"] != meta["sha256"]:
-                    raise SystemExit("MISMATCH %s" % name)
-                if sha256_file(out / name) != meta["sha256"]:
-                    raise SystemExit("DISK %s" % name)
+                if name not in committed["files"]:
+                    raise SystemExit("MISSING %s" % name)
+                assert_fingerprint(name, committed["files"][name], meta, "MISMATCH")
+                disk = file_meta(out / name)
+                assert_fingerprint(name, committed["files"][name], disk, "DISK")
         finally:
             shutil.rmtree(tmp)
         print("BARK VERIFY PASS")

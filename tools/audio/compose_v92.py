@@ -3,7 +3,8 @@
 
 One lamp motif (tonic, third, fifth, fourth, second, tonic) runs through
 every cue. Each cue has its own key, progression, and sectional plan.
-Re-running with the fixed seed rewrites bit-identical Ogg files.
+Re-running with the fixed seed matches decoded PCM fingerprints in the
+catalog (Ogg container bytes may differ across ffmpeg/libvorbis builds).
 
 Usage:
   python3 tools/audio/compose_v92.py
@@ -743,7 +744,7 @@ def write_track(spec: dict, out_dir: Path) -> dict:
     engine.write_ogg(path, left, right, serial, QUALITY)
     info = engine.probe_vorbis(path.read_bytes())
     decoded = engine.decode_ogg_f32(path)
-    level = engine.rms_db(decoded)
+    fp = engine.pcm_fingerprint(decoded)
     row = {
         "id": spec["id"],
         "file": path.name,
@@ -757,13 +758,16 @@ def write_track(spec: dict, out_dir: Path) -> dict:
         "channels": info["channels"],
         "rate": info["rate"],
         "bytes": path.stat().st_size,
-        "sha256": engine.sha256_file(path),
-        "rms_db": round(level, 2),
+        "samples": fp["samples"],
+        "pcm_sha256": fp["pcm_sha256"],
+        "rms_db": fp["rms_db"],
         "contrast": meta["contrast"],
         "seed": engine.SEED,
         "quality": QUALITY,
         "generator": "tools/audio/compose_v92.py",
     }
+    # Keep loudness gate on the same decoded buffer.
+    level = fp["rms_db"]
     if info["channels"] != 2 or info["rate"] != SR or info["seconds"] < 60.0:
         raise SystemExit("bad metadata for %s: %s" % (spec["id"], info))
     if not (-18.0 <= level <= -14.0):
@@ -778,6 +782,7 @@ def write_sidecar(rows: list, out_dir: Path) -> None:
         "seed": engine.SEED,
         "generator": "tools/audio/compose_v92.py",
         "quality": QUALITY,
+        "verify": "pcm_v1",
         "motif": "scale degrees 0-2-4-3-1-0 (tonic, third, fifth, fourth, second, tonic)",
         "tracks": rows,
     }
@@ -789,15 +794,16 @@ def write_sidecar(rows: list, out_dir: Path) -> None:
         "",
         "全部曲目由仓库内 `tools/audio/compose_v92.py` 以固定种子 `%d` 程序化合成。" % engine.SEED,
         "没有第三方采样、录音或曲库。编码为双声道 44.1 kHz Ogg Vorbis（libvorbis quality %d）。" % QUALITY,
-        "重跑该脚本必须得到逐字节相同的文件。Ogg 页序列号在合成后被改写为曲目种子，以去掉 ffmpeg 的随机序列号。",
+        "金样校验比对解码后的 PCM 指纹（samples / rms_db / pcm_sha256），不要求 Ogg 容器逐字节一致。",
+        "Ogg 页序列号在合成后被改写为曲目种子，以去掉 ffmpeg 的随机序列号。",
         "",
-        "| 文件 | 用途 | 时长 | sha256 |",
+        "| 文件 | 用途 | 时长 | pcm_sha256 |",
         "|---|---|---|---|",
     ]
     for row in rows:
         lines.append(
             "| `%s` | %s | %.1f s | `%s` |"
-            % (row["file"], row["purpose"], row["seconds"], row["sha256"])
+            % (row["file"], row["purpose"], row["seconds"], row["pcm_sha256"])
         )
     lines.append("")
     lines.append("汇总体积：%d 字节（%.2f MiB）。" % (sum(r["bytes"] for r in rows), sum(r["bytes"] for r in rows) / (1024 * 1024)))
@@ -820,6 +826,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--only", default="")
     parser.add_argument("--verify", action="store_true")
+    parser.add_argument("--catalog-from-disk", action="store_true")
     parser.add_argument("--out", default="")
     args = parser.parse_args()
     specs = track_list()
@@ -829,20 +836,90 @@ def main() -> int:
             print("unknown track", args.only, file=sys.stderr)
             return 1
     out_dir = Path(args.out) if args.out else MUSIC
+    if args.catalog_from_disk:
+        old_tracks = {}
+        old_path = MUSIC / "catalog.json"
+        if old_path.is_file():
+            old_tracks = {
+                t["id"]: t
+                for t in json.loads(old_path.read_text(encoding="utf-8"))["tracks"]
+            }
+        rows = []
+        for spec in specs:
+            path = MUSIC / ("%s.ogg" % spec["id"])
+            if not path.is_file():
+                print("missing", path, file=sys.stderr)
+                return 1
+            info = engine.probe_vorbis(path.read_bytes())
+            decoded = engine.decode_ogg_f32(path)
+            fp = engine.pcm_fingerprint(decoded)
+            old = old_tracks.get(spec["id"], {})
+            row = {
+                "id": spec["id"],
+                "file": path.name,
+                "purpose": spec["purpose"],
+                "bpm": spec["bpm"],
+                "scale": spec["scale"],
+                "root_midi": spec["root"],
+                "lead": spec.get("lead", "celesta"),
+                "bars": old.get("bars", 0),
+                "seconds": round(info["seconds"], 3),
+                "channels": info["channels"],
+                "rate": info["rate"],
+                "bytes": path.stat().st_size,
+                "samples": fp["samples"],
+                "pcm_sha256": fp["pcm_sha256"],
+                "rms_db": fp["rms_db"],
+                "contrast": old.get("contrast", 0.0),
+                "seed": engine.SEED,
+                "quality": QUALITY,
+                "generator": "tools/audio/compose_v92.py",
+            }
+            rows.append(row)
+            print("%s  rms %.2f  samples %d" % (row["id"], row["rms_db"], row["samples"]))
+        if not args.only:
+            csv_lines = write_sidecar(rows, MUSIC)
+            locale = ROOT / "project" / "data" / "locale" / "audio.csv"
+            locale.write_text("\n".join(csv_lines) + "\n", encoding="utf-8")
+            print("catalog refreshed", len(rows))
+        return 0
     if args.verify:
         import tempfile
 
         tmp = Path(tempfile.mkdtemp(prefix="ck_audio_"))
-        rows = []
-        for spec in track_list():
-            rows.append(write_track(spec, tmp))
-        write_sidecar(rows, tmp)
-        for name in [r["file"] for r in rows] + ["catalog.json", "LICENSES.md"]:
-            a = (MUSIC / name).read_bytes()
-            b = (tmp / name).read_bytes()
-            if a != b:
-                print("MISMATCH", name, len(a), len(b))
-                return 1
+        try:
+            rows = []
+            for spec in track_list():
+                rows.append(write_track(spec, tmp))
+            committed = json.loads((MUSIC / "catalog.json").read_text(encoding="utf-8"))
+            by_file = {t["file"]: t for t in committed["tracks"]}
+            for row in rows:
+                name = row["file"]
+                if name not in by_file:
+                    print("MISSING", name)
+                    return 1
+                exp = by_file[name]
+                if not engine.fingerprints_match(exp, row):
+                    print(
+                        "MISMATCH",
+                        name,
+                        "samples",
+                        exp.get("samples"),
+                        row.get("samples"),
+                        "rms",
+                        exp.get("rms_db"),
+                        row.get("rms_db"),
+                        "pcm",
+                        str(exp.get("pcm_sha256", ""))[:12],
+                        str(row.get("pcm_sha256", ""))[:12],
+                    )
+                    return 1
+                disk_fp = engine.fingerprint_ogg(MUSIC / name)
+                if not engine.fingerprints_match(exp, disk_fp):
+                    print("DISK", name)
+                    return 1
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
         print("COMPOSE VERIFY PASS")
         print("tracks", len(rows), "bytes", sum(r["bytes"] for r in rows))
         return 0

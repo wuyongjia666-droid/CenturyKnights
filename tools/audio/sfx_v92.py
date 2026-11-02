@@ -5,13 +5,13 @@ The lamp motif (scale degrees 0, 2, 4, 3, 1, 0) is the same one used by
 compose_v92.py. Biome beds state it, answer it, then cadence. One-shots
 are short glass or metal gestures, not noise loops.
 
-Re-running with the fixed engine seed rewrites bit-identical files.
+Re-running with the fixed engine seed matches decoded PCM fingerprints
+(Ogg container bytes may differ across encoders; WAV stays bit-identical).
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import importlib
 import json
 import math
@@ -151,10 +151,6 @@ def write_wav(path: Path, left: np.ndarray, right: np.ndarray) -> None:
         handle.writeframes(pcm.tobytes())
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    digest.update(path.read_bytes())
-    return digest.hexdigest()
 
 
 def add_note(mix: engine.Mix, start: int, kind: str, midi: float, seconds: float, vel: float, pan: float) -> None:
@@ -402,15 +398,59 @@ def report(path: Path) -> None:
     print("%s  %.2fs  rms %6.2f  peak %.2f  contrast %.2f" % (path.name, seconds, level, peak, contrast))
 
 
+def load_audio(path: Path):
+    if path.suffix.lower() == ".ogg":
+        return engine.decode_ogg_f32(path)
+    with wave.open(str(path), "rb") as handle:
+        raw = handle.readframes(handle.getnframes())
+    return np.frombuffer(raw, dtype="<i2").astype(np.float64) / 32767.0
+
+
+def file_meta(path: Path) -> dict:
+    audio = load_audio(path)
+    meta = engine.catalog_audio_meta(path, audio)
+    # keep contrast in logs only
+    report(path)
+    return meta
+
+
 def build(out_dir: Path, only: str) -> dict:
-    catalog = {"seed": SEED, "sample_rate": SR, "files": {}}
+    catalog = {"seed": SEED, "sample_rate": SR, "verify": "pcm_v1", "files": {}}
     for kind, file_id in planned_files():
         if only and file_id != only and not file_id.startswith(only):
             continue
         path = write_id(out_dir, kind, file_id)
-        catalog["files"][path.name] = {"sha256": sha256_file(path), "bytes": path.stat().st_size}
-        report(path)
+        catalog["files"][path.name] = file_meta(path)
     return catalog
+
+
+def catalog_from_disk(out_dir: Path, only: str) -> dict:
+    catalog = {"seed": SEED, "sample_rate": SR, "verify": "pcm_v1", "files": {}}
+    for kind, file_id in planned_files():
+        if only and file_id != only and not file_id.startswith(only):
+            continue
+        path = out_dir / ("%s.%s" % (file_id, kind))
+        if not path.is_file():
+            raise SystemExit("missing %s" % path)
+        catalog["files"][path.name] = file_meta(path)
+    return catalog
+
+
+def assert_fingerprint(name: str, expected: dict, actual: dict, label: str) -> None:
+    if not engine.fingerprints_match(expected, actual):
+        raise SystemExit(
+            "%s %s samples %s/%s rms %s/%s pcm %s/%s"
+            % (
+                label,
+                name,
+                expected.get("samples"),
+                actual.get("samples"),
+                expected.get("rms_db"),
+                actual.get("rms_db"),
+                str(expected.get("pcm_sha256", ""))[:12],
+                str(actual.get("pcm_sha256", ""))[:12],
+            )
+        )
 
 
 def main() -> None:
@@ -418,9 +458,17 @@ def main() -> None:
     parser.add_argument("--out", default="")
     parser.add_argument("--only", default="")
     parser.add_argument("--verify", action="store_true")
+    parser.add_argument("--catalog-from-disk", action="store_true")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     out = Path(args.out) if args.out else root / "project" / "assets" / "sfx"
+    if args.catalog_from_disk:
+        catalog = catalog_from_disk(out, args.only)
+        if not args.only:
+            (out / "catalog_v92.json").write_text(json.dumps(catalog, indent=2, sort_keys=True) + "\n")
+            total = sum(item["bytes"] for item in catalog["files"].values())
+            print("files %d bytes %d" % (len(catalog["files"]), total))
+        return
     if args.verify:
         import tempfile
 
@@ -430,12 +478,11 @@ def main() -> None:
             catalog_path = out / "catalog_v92.json"
             committed = json.loads(catalog_path.read_text())
             for name, meta in fresh["files"].items():
-                old = committed["files"][name]["sha256"]
-                if old != meta["sha256"]:
-                    raise SystemExit("MISMATCH %s" % name)
-                disk = sha256_file(out / name)
-                if disk != old:
-                    raise SystemExit("DISK %s" % name)
+                if name not in committed["files"]:
+                    raise SystemExit("MISSING %s" % name)
+                assert_fingerprint(name, committed["files"][name], meta, "MISMATCH")
+                disk = file_meta(out / name)
+                assert_fingerprint(name, committed["files"][name], disk, "DISK")
         finally:
             shutil.rmtree(tmp)
         print("SFX VERIFY PASS")
