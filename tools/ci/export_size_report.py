@@ -11,9 +11,10 @@ Fails when either platform total is above tools/ci/ratchet.json export_budget_by
 
 Also fails when Android ships genome bank master or small tiers (medium-only contract).
 
-The hard CAP (400 MiB) is reported as EXPORT CAP_STATUS; Android OVER is advisory
-until user-approved levers in docs/art/export-cap-400.md land. Android is the
-packing target. Shipping photographs are WebP quality 92. The gene-portrait bank
+The hard CAP (400 MiB) is reported as EXPORT CAP_STATUS. Android source estimate
+is UNDER after unused-asset archive + medium_only; APK measured separately.
+store_ondemand_check enforces Android UNDER + ondemand manifest. H/I quality cuts
+remain user-only. Shipping photographs are WebP quality 92. The gene-portrait bank
 ships large+medium+small on Windows; Android packs medium only.
 """
 from __future__ import annotations

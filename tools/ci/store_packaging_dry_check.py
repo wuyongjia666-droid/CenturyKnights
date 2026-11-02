@@ -174,6 +174,7 @@ def check_store_docs(fails: list[str]) -> None:
         "docs/store/README.md": 1400,
         "docs/store/crash-perf-gates.md": 1400,
         "docs/store/package-budget.md": 1200,
+        "docs/store/ondemand-assets.json": 1500,
         "docs/store/support-contact-draft.md": 1200,
         "docs/store/listing-copy-en.md": 1400,
         "docs/store/privacy-verification-record.md": 1600,
@@ -211,6 +212,7 @@ def check_ci_wiring(fails: list[str]) -> None:
         "store_prep_check.py",
         "store_verify_records_check.py",
         "store_packaging_dry_check.py",
+        "store_ondemand_check.py",
     ):
         if needle not in body:
             _fail(fails, f"run_ci.sh lint path missing {needle}")

@@ -33,12 +33,13 @@ test -f scripts/build_android.sh
 test -f scripts/build_windows.sh
 test -f .github/workflows/release.yml
 python3 tools/ci/export_size_report.py
+python3 tools/ci/store_ondemand_check.py
 python3 tools/ci/store_packaging_dry_check.py
 python3 tools/ci/store_verify_records_check.py
 python3 tools/ci/store_prep_check.py
 ```
 
-干跑证据与 `EXPORT CAP_STATUS` / `medium_only` 合同见 [`export-paths-verification-record.md`](./export-paths-verification-record.md)。Android CAP OVER 时预算仍可通过；闭合 CAP 见 `docs/art/export-cap-400.md`（H/I 用户拍板）。
+干跑证据与 `EXPORT CAP_STATUS` / `medium_only` / 按需清单见 [`export-paths-verification-record.md`](./export-paths-verification-record.md) 与 [`ondemand-assets.json`](./ondemand-assets.json)。Android **源估 CAP 已 UNDER**；APK 实包另测。H/I 仍用户拍板，见 `docs/art/export-cap-400.md`。
 
 ## 正式提审包（人工，不缴费自动化）
 
@@ -48,7 +49,7 @@ python3 tools/ci/store_prep_check.py
 | Play 上传 | 业主 Play Console 人工 | **不缴费提审**则停在上传前 |
 | MS 商店包 | 需 MSIX/打包另刀 | 今日仅 zip 试玩 |
 | 签名 | Play App Signing / 本地 upload key | keystore **禁止**进 git |
-| 包体复核 | `python3 tools/ci/export_size_report.py` | 超预算先削按需资源，禁 H/I 砍画质 |
+| 包体复核 | `export_size_report.py` + `store_ondemand_check.py` | 超预算先削按需/exclude，禁 H/I 砍画质 |
 
 ## 与门禁的关系
 

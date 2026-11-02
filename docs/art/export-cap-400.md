@@ -159,3 +159,9 @@
 | `items/glyph/v92_glyph_*` | `AtlasArt.item_icon` 动态回退 |
 | hireuniq / bank medium / atlas 半分辨率 | 画质红线 |
 | H / I | 需用户拍板 |
+
+## 8. 按需脚手架与源估 CAP 收口（2026-11-03）
+
+- 源估 Android **UNDER**（见 `docs/store/package-budget.md` / `export-paths-verification-record.md`）。
+- 可跑合同：`docs/store/ondemand-assets.json` + `tools/ci/store_ondemand_check.py` + `CKOnDemandArt` + suite `ondemand_cap_closeout_check`。
+- **APK 实包另测**；**H/I 仍用户-only**；禁降画质充绿。PAD/CDN 未接线。

@@ -1,0 +1,173 @@
+{
+  "version": "ondemand-v1-2026-11-03",
+  "updated": "2026-11-03 Asia/Shanghai",
+  "platform_focus": "Android",
+  "note": "Minimal runnable on-demand scaffold for store CAP. Large/master/small genome plates and speaker/expression larges are deferred from the Android base pack via export_presets exclude_filter; runtime falls back to medium through CKArtPaths / CKOnDemandArt. No Play Asset Delivery / paid CDN in this knife. H/I quality cuts remain user-only.",
+  "cap": {
+    "hard_bytes": 419430400,
+    "source_status": "UNDER",
+    "source_bytes_android": 411044613,
+    "headroom_bytes": 8385787,
+    "apk_measured": "pending_release_or_local_jdk",
+    "h_i_user_only": true,
+    "forbid_quality_cut_to_pass": true
+  },
+  "fallback_policy": {
+    "missing_large_or_master": "medium",
+    "missing_small": "medium",
+    "unit_tier": "medium",
+    "runtime_helpers": [
+      "CKArtPaths.resolve_portrait",
+      "CKArtPaths.resolve (portrait tier fallthrough)",
+      "CKOnDemandArt.resolve_pack_safe",
+      "CKOnDemandArt.load_pack_safe"
+    ]
+  },
+  "deferred_classes": [
+    {
+      "id": "bank_master",
+      "exclude_globs": [
+        "assets/art/portraits/genome/bank/*_????????????????.webp"
+      ],
+      "fallback": "assets/art/portraits/genome/bank/*.medium.webp",
+      "reason": "Android medium_only bank contract; masters stay on Windows"
+    },
+    {
+      "id": "bank_small",
+      "exclude_globs": [
+        "assets/art/portraits/genome/bank/*.small.webp"
+      ],
+      "fallback": "assets/art/portraits/genome/bank/*.medium.webp",
+      "reason": "Android medium_only; small deferred with master"
+    },
+    {
+      "id": "expression_larges",
+      "exclude_globs": [
+        "assets/art/portraits/expressions/*_anger.webp",
+        "assets/art/portraits/expressions/*_joy.webp",
+        "assets/art/portraits/expressions/*_neutral.webp",
+        "assets/art/portraits/expressions/*_sorrow.webp",
+        "assets/art/portraits/expressions/*_surprise.webp"
+      ],
+      "fallback": "matching *.medium.webp sibling",
+      "reason": "Dialogue uses TIER_MEDIUM; large masters deferred on Android"
+    },
+    {
+      "id": "speaker_larges",
+      "exclude_globs": [
+        "assets/art/portraits/speakers/ally_kin.webp",
+        "assets/art/portraits/speakers/barkeep.webp",
+        "assets/art/portraits/speakers/batou.webp",
+        "assets/art/portraits/speakers/hengzhou.webp",
+        "assets/art/portraits/speakers/jingbo.webp",
+        "assets/art/portraits/speakers/leader_f1.webp",
+        "assets/art/portraits/speakers/leader_f2.webp",
+        "assets/art/portraits/speakers/leader_f3.webp",
+        "assets/art/portraits/speakers/leader_m1.webp",
+        "assets/art/portraits/speakers/leader_m2.webp",
+        "assets/art/portraits/speakers/leader_m3.webp",
+        "assets/art/portraits/speakers/midwife.webp",
+        "assets/art/portraits/speakers/newcomer.webp",
+        "assets/art/portraits/speakers/old_standard.webp",
+        "assets/art/portraits/speakers/qiaoniang.webp",
+        "assets/art/portraits/speakers/qiaoniang_lease.webp",
+        "assets/art/portraits/speakers/qiaoniang_needle.webp",
+        "assets/art/portraits/speakers/qiaoniang_rake.webp",
+        "assets/art/portraits/speakers/qiaoniang_shoes.webp",
+        "assets/art/portraits/speakers/qinghe.webp",
+        "assets/art/portraits/speakers/scout.webp",
+        "assets/art/portraits/speakers/spring_envoy.webp",
+        "assets/art/portraits/speakers/steward.webp",
+        "assets/art/portraits/speakers/survivor.webp",
+        "assets/art/portraits/speakers/wantan.webp",
+        "assets/art/portraits/speakers/xinyu.webp",
+        "assets/art/portraits/speakers/ahe.webp",
+        "assets/art/portraits/speakers/hutie.webp",
+        "assets/art/portraits/speakers/shouhuo.webp",
+        "assets/art/portraits/speakers/zhexian.webp",
+        "assets/art/portraits/speakers/lanzhi.webp",
+        "assets/art/portraits/speakers/jixun.webp",
+        "assets/art/portraits/speakers/qianzhan.webp",
+        "assets/art/portraits/speakers/guheng.webp"
+      ],
+      "fallback": "matching *.medium.webp sibling",
+      "reason": "Speaker larges deferred; medium stays packed"
+    },
+    {
+      "id": "dead_hire_cartoons",
+      "exclude_globs": [
+        "assets/art/portraits/hireface_*.webp",
+        "assets/art/portraits/hire_*_plate.webp"
+      ],
+      "fallback": "hireuniq / bank medium (never cartoon)",
+      "reason": "Dead plates never shown; hireuniq stays packed"
+    },
+    {
+      "id": "legacy_music_wav",
+      "exclude_globs": [
+        "assets/sfx/music_hub.wav",
+        "assets/sfx/music_castle.wav",
+        "assets/sfx/music_battle.wav"
+      ],
+      "fallback": "assets/music/*.ogg",
+      "reason": "Duplicate wav; ogg ships"
+    },
+    {
+      "id": "unused_v92_farm_leftovers",
+      "exclude_globs": [
+        "assets/art/estates/v92_estate_*.webp",
+        "assets/art/scenes/v92_scene_*.webp"
+      ],
+      "fallback": "estates/<holding_id>.png + scenes/v8_scene_*",
+      "reason": "Archived ART-02 leftovers; both platforms exclude"
+    }
+  ],
+  "always_packed_critical": [
+    {
+      "id": "bank_medium",
+      "globs": [
+        "assets/art/portraits/genome/bank/*.medium.webp"
+      ],
+      "must_not_match_android_exclude": true
+    },
+    {
+      "id": "speaker_medium_sample",
+      "paths": [
+        "assets/art/portraits/speakers/barkeep.medium.webp",
+        "assets/art/portraits/speakers/steward.medium.webp",
+        "assets/art/portraits/speakers/leader_m1.medium.webp"
+      ],
+      "must_not_match_android_exclude": true
+    },
+    {
+      "id": "holding_icons",
+      "paths": [
+        "assets/art/estates/fog_vale.png",
+        "assets/art/estates/reed_ford.png",
+        "assets/art/estates/stone_slope.png",
+        "assets/art/estates/tide_bridge.png"
+      ],
+      "must_not_match_android_exclude": true
+    },
+    {
+      "id": "live_v8_scenes_prefix",
+      "globs": [
+        "assets/art/scenes/v8_scene_*.webp"
+      ],
+      "must_not_match_android_exclude": true
+    },
+    {
+      "id": "hireuniq_kept",
+      "globs": [
+        "assets/art/portraits/hireuniq_*.webp"
+      ],
+      "must_not_match_android_exclude": true,
+      "note": "Bank miss must not fall to cartoon bust"
+    }
+  ],
+  "year2_not_in_scope": [
+    "Play Asset Delivery wiring",
+    "paid CDN / install-time download",
+    "store submission / billing"
+  ]
+}
