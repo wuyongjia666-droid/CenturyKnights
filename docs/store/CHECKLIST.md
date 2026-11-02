@@ -23,7 +23,7 @@
 - [ ] 短描述 / 完整描述定稿（见 `listing-copy-zh.md` / `listing-copy-en.md`）  
 - [ ] Play / MS 完整字段稿过目（`play-listing-full.md` / `ms-store-listing-full.md`）  
 - [ ] 隐私政策草稿 + 分级意图（`privacy-policy-draft.md` / `age-rating-draft.md`）  
-- [ ] 五张截图按清单拍齐（`screenshots-checklist.md`）  
+- [x] 五张截图按清单拍齐（`screenshots-checklist.md` + `capture_store_shots.sh` / `store_shots_check.py` / `shots-manifest.json`；PNG 本地 gitignore，不付费上传）  
 - [ ] 数据安全表预填过目（`data-safety-draft.md`；默认不收集）+ `data-safety-verification-record.md`  
 - [ ] 支持联系方式草稿过目（`support-contact-draft.md`）+ `support-contact-verification-record.md`  
 - [ ] 隐私政策 URL（若收崩溃日志）— **用户-only**（公网托管）  

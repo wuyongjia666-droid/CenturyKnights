@@ -19,7 +19,7 @@ MIN_LISTING_BYTES = {
     "docs/store/listing-copy-zh.md": 2800,
     "docs/store/privacy-policy-draft.md": 2800,
     "docs/store/age-rating-draft.md": 1600,
-    "docs/store/screenshots-checklist.md": 1400,
+    "docs/store/screenshots-checklist.md": 1800,
     "docs/store/data-safety-draft.md": 1400,
     "docs/store/support-contact-draft.md": 1200,
     "docs/store/listing-copy-en.md": 1400,
@@ -58,6 +58,8 @@ REQUIRED_SCRIPTS = [
     "tools/ci/export_size_report.py",
     "tools/ci/store_packaging_dry_check.py",
     "tools/ci/store_verify_records_check.py",
+    "tools/ci/store_shots_check.py",
+    "scripts/capture_store_shots.sh",
     "tools/ci/perf_budget.json",
     "tools/ci/ratchet.json",
     ".github/workflows/release.yml",
@@ -166,6 +168,24 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001
         fails.append(f"store_packaging_dry_check failed: {exc}")
 
+
+    # Nested store listing shots gate (五张横屏；PNG 可缺于 CI，见 CK_STORE_SHOTS).
+    shots = ROOT / "tools/ci/store_shots_check.py"
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(shots)],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        if proc.returncode != 0:
+            fails.append(
+                "store_shots_check failed:\n"
+                + (proc.stdout or proc.stderr or "")[-800:]
+            )
+    except Exception as exc:  # noqa: BLE001
+        fails.append(f"store_shots_check failed: {exc}")
 
     # Nested verification-record gate (privacy / age / export / data-safety / support).
     verify = ROOT / "tools/ci/store_verify_records_check.py"

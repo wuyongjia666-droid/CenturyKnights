@@ -22,3 +22,9 @@ tools/models/board_parts/farm_inbox/**
 docs/art/review/plate_palette/nr_focus/
 # Path C LOOK masters live outside git (see docs/art/review/PATHC_MASTERS_MANIFEST.json)
 docs/art/review/**/*.glb
+
+# Store listing PNG evidence (manifest JSON is committed separately)
+docs/store/shots/**/*.png
+docs/store/shots/**/*.webp
+docs/store/shots/manifest.json
+!docs/store/shots/.gitkeep
