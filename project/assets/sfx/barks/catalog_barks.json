@@ -2,69 +2,102 @@
   "files": {
     "bark_f_adult_breath.ogg": {
       "bytes": 8914,
-      "sha256": "0813ed2d92cd7ed4f459f9af0eaa9c3b7e1a4067aad285a2d6e7e18fb1bdde52"
+      "pcm_sha256": "de9120f33b3c930335d19a7f1b68f13f22189c0d9489f3da8c74bbe597dd4a82",
+      "rms_db": -16.17,
+      "samples": 28096
     },
     "bark_f_adult_shout.ogg": {
       "bytes": 7636,
-      "sha256": "6b121116662f68dd6bd24661bdd5ddf3c95474ed700c8701b7cae17f549806af"
+      "pcm_sha256": "9d38c08fc2860c8853b31e948290d36b643b4434358886d2d01d51ad256b9f5a",
+      "rms_db": -16.16,
+      "samples": 20158
     },
     "bark_f_child_breath.ogg": {
       "bytes": 8937,
-      "sha256": "eb71e0fa833116be4cf40052983e20abc8abe9c0dbbe3063e75630addd14868f"
+      "pcm_sha256": "076265e9fb2f034210ab8d7e192360ef653fa9bf802835f7ac82740d3aef8e1a",
+      "rms_db": -16.18,
+      "samples": 28096
     },
     "bark_f_child_shout.ogg": {
       "bytes": 7592,
-      "sha256": "c2373d732a0bfc3ee376b59c4d99974cb3b6ee935261e0ccc96a129dca24e09a"
+      "pcm_sha256": "d3b39f01b6a79bc4bfcc97bb1498895395c99533ed654f340af1b8f56eb91608",
+      "rms_db": -16.39,
+      "samples": 21184
     },
     "bark_f_elder_breath.ogg": {
       "bytes": 8897,
-      "sha256": "0ca2809fbd5320adfc6019d21e36733490e221e16dd50f4e30f2d8e6ab8c5401"
+      "pcm_sha256": "5b4691c7c0d65917e062a1f60efc174cb27ad8b531361833e7513e7efde530ce",
+      "rms_db": -16.19,
+      "samples": 28096
     },
     "bark_f_elder_shout.ogg": {
       "bytes": 7662,
-      "sha256": "2121adb4b15972f9c41bf9255e7aefcaf7771b131f99f35b5e985edfad1476c7"
+      "pcm_sha256": "dc183f7d957f346cb4d98351d80dc26916899e28823796e4b14d6950f24504bd",
+      "rms_db": -16.18,
+      "samples": 20158
     },
     "bark_f_youth_breath.ogg": {
       "bytes": 8821,
-      "sha256": "231b5a65e22444134f6b9230e4a3c19c141284abf34df5f096ed6341cf6547d1"
+      "pcm_sha256": "998313165e01114826c3f3b70bba80486edb2241d66d5b21546f8aa3ab3068b7",
+      "rms_db": -16.17,
+      "samples": 28096
     },
     "bark_f_youth_shout.ogg": {
       "bytes": 7632,
-      "sha256": "d12e852203f355244a45ae587cbaf19e1b8d0ae95ac4768a71f0d12b2edcde46"
+      "pcm_sha256": "f245b3bcf8e4606d69fe0c7e5be526619c2a03882cba0fdd316201d44ac95bd9",
+      "rms_db": -16.17,
+      "samples": 20158
     },
     "bark_m_adult_breath.ogg": {
       "bytes": 8965,
-      "sha256": "2e0e789b25f7ca01209abf903c307f0fe668a5c57bdda2509ebd4acc2ede90a4"
+      "pcm_sha256": "e7efda8f3e537a6f4a9d2b97b2c3238508015c5549c2822c07034a8e5d9013a3",
+      "rms_db": -16.22,
+      "samples": 28096
     },
     "bark_m_adult_shout.ogg": {
       "bytes": 7716,
-      "sha256": "07f6b1487cb8f0eab825b487e7ba263d1e0abcd73eec292189d61b29584c058a"
+      "pcm_sha256": "1fcbceb5317058102204e340204e9161ea818cc1fef6c3bcbfce43c123de42aa",
+      "rms_db": -16.2,
+      "samples": 20158
     },
     "bark_m_child_breath.ogg": {
       "bytes": 8826,
-      "sha256": "4641dd5d0bdd85e3381633464690173b76d0526d5457c73cb22acf9db7905583"
+      "pcm_sha256": "b6321e048e8501d0b926d9763aaf88dd3dc105dd01b7eebbd2db57f0b970cb75",
+      "rms_db": -16.17,
+      "samples": 28096
     },
     "bark_m_child_shout.ogg": {
       "bytes": 7594,
-      "sha256": "6a09ddf50b106d58df7ee7ad8c5cae2e054317563dbf0fae6261e17779981383"
+      "pcm_sha256": "ddd369960994d44d535acac74ff808e302ad30b068650879696b6e0cc33e9456",
+      "rms_db": -16.38,
+      "samples": 21184
     },
     "bark_m_elder_breath.ogg": {
       "bytes": 8877,
-      "sha256": "fca6bd496ef03355b516e21ef1430ec44e641ba4f6e2d153baa60363d9eb52bd"
+      "pcm_sha256": "c5828cc723c88ca9b9a9678845c2fc5517ad7e3dec96cc375e05163b1d2a42d6",
+      "rms_db": -16.2,
+      "samples": 28096
     },
     "bark_m_elder_shout.ogg": {
       "bytes": 7627,
-      "sha256": "b702eec7a3d51fcf3a30b6280abe35f55358b027e60a22058e88412ad9b42a37"
+      "pcm_sha256": "ea9fdd5e2092802f6905e560ccf362f43dd80792063289e8dccd562fafae5a9c",
+      "rms_db": -16.23,
+      "samples": 20158
     },
     "bark_m_youth_breath.ogg": {
       "bytes": 8858,
-      "sha256": "3e357af304da214dd2716d8a8cadb136c65604fc0aca3569a978ed6d31da134b"
+      "pcm_sha256": "8fe0af09cb83ea07145eb493ba5e209bdc1b3fcac67ab77730a86c67ac535802",
+      "rms_db": -16.19,
+      "samples": 28096
     },
     "bark_m_youth_shout.ogg": {
       "bytes": 7692,
-      "sha256": "eea78d1966d783facb5b4318fc3ccdd60c0575bb77b09be60f00eab7c90c56e7"
+      "pcm_sha256": "15638f73f0b40ace209b444b41c14030c67df6116ab822aa467ab05db6d55daf",
+      "rms_db": -16.22,
+      "samples": 20158
     }
   },
   "sample_rate": 44100,
-  "seed": 9202601
+  "seed": 9202601,
+  "verify": "pcm_v1"
 }
