@@ -3,8 +3,9 @@ extends RefCounted
 ## Shipping photographs are lossy WebP next to the old PNG name.
 ## Farm queues and tests still write PNG, so loaders try WebP first.
 ## Portrait tiers are siblings built from the sharp plate: foo.small.webp,
-## foo.medium.webp, and foo.webp (large, native). Lists use small, dialogue
-## uses medium, detail uses large. A missing tier falls through to a larger one.
+## foo.medium.webp, and foo.webp (large, native). Unit UI always loads the
+## shared UNIT_TIER (medium) so Windows and Android packs decode one plate.
+## A missing tier falls through via _tier_candidates.
 
 const TIER_SMALL := "small"
 const TIER_MEDIUM := "medium"
@@ -31,12 +32,10 @@ static var pack_excluded: Callable = Callable()
 static var last_loaded: String = ""
 
 
-static func tier_for_display(size: int) -> String:
-	if size <= 180:
-		return TIER_SMALL
-	if size <= 420:
-		return TIER_MEDIUM
-	return TIER_LARGE
+static func tier_for_display(_size: int) -> String:
+	# Size used to pick small/medium/large siblings. Android drops small and
+	# native larges from the genome bank; widget pixels must not fork the file.
+	return UNIT_TIER
 
 
 static func resolve(path: String) -> String:

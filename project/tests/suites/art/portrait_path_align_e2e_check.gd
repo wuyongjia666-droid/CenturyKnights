@@ -1,11 +1,15 @@
 extends Control
 ## Desktop and a portrait-phone viewport, under the Windows and Android export
 ## filters, resolve the same full Qwen plate for one unit id + genome.
-## Surfaces: hub, genealogy, tavern, battle select, marriage board, content-season cast.
+## Surfaces: hub, genealogy, tavern, battle select, marriage, season cast,
+## dossier, battle info, unit card, naming, estates, forge, deploy, chapter cast.
 ## Age bands 0-2 / 3-11 / 12-15 / 16+ swap the plate and stay stable inside a band.
 
 const AGES := [0, 2, 3, 11, 12, 15, 16, 40]
-const SURFACES := ["resolver", "hub", "genealogy", "tavern", "battle_select", "marriage", "season_cast"]
+const SURFACES := [
+	"resolver", "hub", "genealogy", "tavern", "battle_select", "marriage", "season_cast",
+	"dossier", "battle_info", "unit_card", "naming", "estates", "forge", "deploy", "chapter_cast",
+]
 const SEASON_SPEAKERS := ["barkeep", "sui_clerk", "clerk_seal"]
 
 
@@ -197,6 +201,26 @@ func _surfaces(c: CKCharacter) -> Dictionary:
 	out["marriage"] = str(c.get_meta("ck_portrait_path", ""))
 	var cast := UnitArt.dialogue_portrait(str(c.name), "", c, 420 if not DeviceProfile.is_mobile() else 180)
 	out["season_cast"] = "" if cast == null else str(c.get_meta("ck_portrait_path", ""))
+	# Closeout surfaces: same unit-tier plate via UnitArt / UIKit (no widget-size tier).
+	UIKit.portrait_plate(self, Rect2(18, 16, 264, 300), c, "")
+	out["dossier"] = str(c.get_meta("ck_portrait_path", ""))
+	CKArtPaths.last_loaded = ""
+	var _bi: Texture2D = UnitArt.unit_portrait(c)
+	out["battle_info"] = str(c.get_meta("ck_portrait_path", ""))
+	var _uc: Texture2D = UnitArt.unit_portrait(c)
+	out["unit_card"] = str(c.get_meta("ck_portrait_path", ""))
+	var _nm: Texture2D = UnitArt.unit_portrait(c)
+	out["naming"] = str(c.get_meta("ck_portrait_path", ""))
+	var _es: Texture2D = UnitArt.unit_portrait(c)
+	out["estates"] = str(c.get_meta("ck_portrait_path", ""))
+	var fr := UIKit.make_portrait_rect(c, 72)
+	fr.free()
+	out["forge"] = str(c.get_meta("ck_portrait_path", ""))
+	var dv := UIKit.make_portrait_rect(c, 220 if DeviceProfile.is_mobile() else 160)
+	dv.free()
+	out["deploy"] = str(c.get_meta("ck_portrait_path", ""))
+	var ch := UnitArt.dialogue_portrait(str(c.name), "", c, 420)
+	out["chapter_cast"] = "" if ch == null else str(c.get_meta("ck_portrait_path", ""))
 	return out
 
 
@@ -253,6 +277,17 @@ func _source_gate() -> String:
 	var bank := FileAccess.get_file_as_string("res://scripts/art/portrait_bank.gd")
 	if bank.find("static func plate_for_band") < 0:
 		return "bank lost plate_for_band"
+	var load_at := bank.find("static func _load_plate")
+	if load_at < 0:
+		return "bank lost _load_plate"
+	if bank.substr(load_at, 420).find("canonical_unit_tier") < 0:
+		return "bank _load_plate left the shared tier"
+	var gp_tex := FileAccess.get_file_as_string("res://scripts/art/genome_portrait.gd")
+	var tex_at := gp_tex.find("static func texture(")
+	if tex_at < 0:
+		return "genome texture missing"
+	if gp_tex.substr(tex_at, 280).find("canonical_unit_tier") < 0:
+		return "genome texture left the shared tier"
 	var fig := FileAccess.get_file_as_string("res://scripts/art/board_figure.gd")
 	var decal_at := fig.find("static func decal_portrait_image")
 	if decal_at < 0:
@@ -262,6 +297,21 @@ func _source_gate() -> String:
 		return "decal still forks off the unit resolver"
 	if decal.find("UnitArt.unit_portrait") < 0:
 		return "decal does not use unit_portrait"
+	if fig.find('try_texture(c, "small")') >= 0:
+		return "board_figure still probes small tier"
+	if fig.find("try_texture(c, CKArtPaths.UNIT_TIER)") < 0:
+		return "board_figure stem probe left UNIT_TIER"
+	var bust_at := ua.find("static func _bust_token")
+	if bust_at < 0:
+		return "bust token missing"
+	if ua.substr(bust_at, 480).find("TIER_SMALL") >= 0:
+		return "bust token still asks TIER_SMALL"
+	if ua.substr(bust_at, 480).find("UNIT_TIER") < 0:
+		return "bust token not on UNIT_TIER"
+	if paths.find("tier_for_display") >= 0:
+		var tfd := paths.find("static func tier_for_display")
+		if tfd >= 0 and paths.substr(tfd, 220).find("UNIT_TIER") < 0:
+			return "tier_for_display still maps by widget size"
 	var cp := FileAccess.get_file_as_string("res://scripts/story/chapter_player.gd")
 	if cp.find("UnitArt.dialogue_portrait") < 0:
 		return "chapter cast left dialogue_portrait"

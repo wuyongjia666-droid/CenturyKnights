@@ -994,7 +994,7 @@ static func _sample_portrait(c) -> Dictionary:
 	if c != null and c.has_meta("ck_plate_stem"):
 		stem = str(c.get_meta("ck_plate_stem"))
 	if stem == "":
-		var pack: Dictionary = CKPortraitBank.try_texture(c, "small")
+		var pack: Dictionary = CKPortraitBank.try_texture(c, CKArtPaths.UNIT_TIER)
 		stem = str(pack.get("stem", ""))
 		if c != null and stem != "":
 			c.set_meta("ck_plate_stem", stem)
