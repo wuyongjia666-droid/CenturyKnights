@@ -4,7 +4,7 @@
 Sixteen cues: gender (m/f) x age band x breath/shout. A shout falls a
 minor third. A breath stays on one pitch and lets the air through.
 No sampled voices. Re-running with the fixed seed matches decoded PCM
-fingerprints in the catalog (Ogg container bytes may differ across encoders).
+metrics in the catalog (samples + rms_db; Ogg bytes / pcm hash may drift).
 """
 
 from __future__ import annotations
@@ -163,7 +163,7 @@ def catalog_from_disk(out_dir: Path) -> dict:
 def assert_fingerprint(name: str, expected: dict, actual: dict, label: str) -> None:
     if not engine.fingerprints_match(expected, actual):
         raise SystemExit(
-            "%s %s samples %s/%s rms %s/%s pcm %s/%s"
+            "%s %s samples %s/%s rms %s/%s"
             % (
                 label,
                 name,
@@ -171,8 +171,6 @@ def assert_fingerprint(name: str, expected: dict, actual: dict, label: str) -> N
                 actual.get("samples"),
                 expected.get("rms_db"),
                 actual.get("rms_db"),
-                str(expected.get("pcm_sha256", ""))[:12],
-                str(actual.get("pcm_sha256", ""))[:12],
             )
         )
 

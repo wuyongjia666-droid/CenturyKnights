@@ -5,8 +5,8 @@ The lamp motif (scale degrees 0, 2, 4, 3, 1, 0) is the same one used by
 compose_v92.py. Biome beds state it, answer it, then cadence. One-shots
 are short glass or metal gestures, not noise loops.
 
-Re-running with the fixed engine seed matches decoded PCM fingerprints
-(Ogg container bytes may differ across encoders; WAV stays bit-identical).
+Re-running with the fixed engine seed matches decoded PCM metrics
+(samples + rms_db; Ogg bytes / pcm hash may drift; WAV stays bit-identical).
 """
 
 from __future__ import annotations
@@ -439,7 +439,7 @@ def catalog_from_disk(out_dir: Path, only: str) -> dict:
 def assert_fingerprint(name: str, expected: dict, actual: dict, label: str) -> None:
     if not engine.fingerprints_match(expected, actual):
         raise SystemExit(
-            "%s %s samples %s/%s rms %s/%s pcm %s/%s"
+            "%s %s samples %s/%s rms %s/%s"
             % (
                 label,
                 name,
@@ -447,8 +447,6 @@ def assert_fingerprint(name: str, expected: dict, actual: dict, label: str) -> N
                 actual.get("samples"),
                 expected.get("rms_db"),
                 actual.get("rms_db"),
-                str(expected.get("pcm_sha256", ""))[:12],
-                str(actual.get("pcm_sha256", ""))[:12],
             )
         )
 

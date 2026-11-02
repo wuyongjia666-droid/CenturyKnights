@@ -3,8 +3,8 @@
 
 One lamp motif (tonic, third, fifth, fourth, second, tonic) runs through
 every cue. Each cue has its own key, progression, and sectional plan.
-Re-running with the fixed seed matches decoded PCM fingerprints in the
-catalog (Ogg container bytes may differ across ffmpeg/libvorbis builds).
+Re-running with the fixed seed matches decoded PCM metrics in the catalog
+(exact samples + rms_db tolerance; Ogg bytes / pcm hash may drift).
 
 Usage:
   python3 tools/audio/compose_v92.py
@@ -794,7 +794,7 @@ def write_sidecar(rows: list, out_dir: Path) -> None:
         "",
         "全部曲目由仓库内 `tools/audio/compose_v92.py` 以固定种子 `%d` 程序化合成。" % engine.SEED,
         "没有第三方采样、录音或曲库。编码为双声道 44.1 kHz Ogg Vorbis（libvorbis quality %d）。" % QUALITY,
-        "金样校验比对解码后的 PCM 指纹（samples / rms_db / pcm_sha256），不要求 Ogg 容器逐字节一致。",
+        "金样校验比对解码后的 PCM 指标（samples 精确 + rms_db 容差），不要求 Ogg 容器或 pcm_sha256 一致。",
         "Ogg 页序列号在合成后被改写为曲目种子，以去掉 ffmpeg 的随机序列号。",
         "",
         "| 文件 | 用途 | 时长 | pcm_sha256 |",
@@ -909,9 +909,6 @@ def main() -> int:
                         "rms",
                         exp.get("rms_db"),
                         row.get("rms_db"),
-                        "pcm",
-                        str(exp.get("pcm_sha256", ""))[:12],
-                        str(row.get("pcm_sha256", ""))[:12],
                     )
                     return 1
                 disk_fp = engine.fingerprint_ogg(MUSIC / name)
