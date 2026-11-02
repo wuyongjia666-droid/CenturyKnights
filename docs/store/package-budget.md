@@ -45,3 +45,7 @@ python3 tools/ci/export_size_report.py
 | Windows | `build_windows.sh` + Release zip | MSIX 另刀 | 同上 |
 
 破预算时：先削按需/exclude，再议 ratchet；**禁止**用降画质预设充绿。
+
+## 截图证据轨（与 CAP 正交）
+
+商店五张横屏证据包见 `screenshots-checklist.md` / `shots-manifest.json`；**不**借截图轨关闭 Android CAP≤400。CAP H/I（砍基因库 / 降画质重导出）仍 **用户-only blocker**，本页口径不变：禁 H/I 压画质充绿。

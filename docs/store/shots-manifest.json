@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_by": "tools/ci/store_shots_check.py --write-manifest-from",
+  "capture_suite": "res://tests/suites/store/store_listing_shots.tscn",
+  "capture_script": "scripts/capture_store_shots.sh",
+  "min_short_side": 1080,
+  "landscape_required": true,
+  "note_zh": "PNG 本体 gitignore（docs/store/shots/ 或 /tmp/ck-store-shots）；本清单入库供门禁与工程自检。",
+  "shots": [
+    {
+      "id": "01_castle_hub",
+      "file": "01_castle_hub_1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "129005736fdf957c1675672d20f1523e6823238ee6cc0447e145bafa79bd1399",
+      "scene": "res://scenes/hub/castle_hub.tscn",
+      "listing_bullet": "castle_hub",
+      "selling_point_zh": "百年王朝"
+    },
+    {
+      "id": "02_battle",
+      "file": "02_battle_1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "e6e9ccefb642a83c7edc30ce9070f91fa5ba79b02e844c578a5dd770c7f51305",
+      "scene": "res://scenes/battle/battle.tscn",
+      "listing_bullet": "mid_battle",
+      "selling_point_zh": "战棋"
+    },
+    {
+      "id": "03_genealogy",
+      "file": "03_genealogy_1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "caacfedceadc89cf1cd0b973fa3b04fb4a859da56228b855dfa6aa26576526b3",
+      "scene": "res://scenes/hub/lineage_view.tscn",
+      "listing_bullet": "genealogy_atlas",
+      "selling_point_zh": "血脉"
+    },
+    {
+      "id": "04_cs_dialogue",
+      "file": "04_cs_dialogue_1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "17de76889b74d51368cc105847a21467c4b1fba974aef49d282a04869338c736",
+      "scene": "res://scenes/story/chapter_player.tscn",
+      "listing_bullet": "content_season_dialogue",
+      "selling_point_zh": "内容季"
+    },
+    {
+      "id": "05_month_echo",
+      "file": "05_month_echo_1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "4dbc3b6d698861d1776df0573328f7818c97fff7fffc439d85b98fe2aee610d4",
+      "scene": "res://scenes/hub/estates.tscn",
+      "listing_bullet": "month_echo_estates",
+      "selling_point_zh": "月回响"
+    }
+  ],
+  "listing_copy": "docs/store/listing-copy-zh.md",
+  "checklist": "docs/store/screenshots-checklist.md"
+}
