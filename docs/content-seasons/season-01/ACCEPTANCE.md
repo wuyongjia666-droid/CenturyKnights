@@ -13,3 +13,6 @@
 - [x] `scaffold_gate` — `suite_content_season_scaffold_check`：机器表、清单、验收 suite；`novel_allowed`；正文与可玩章体量
 - [x] `playable_dialogue` — `suite_content_season_playable_check`：`cs01_01` schema+lint；chapter_player 走进对白；可选「把无写进谱」
 - [x] `playable_dialogue_02` — `suite_content_season_playable_s01_02_check`：`cs01_02` schema+lint；走进对白；可选「空格并排留」
+
+| playable_dialogue_03 | 可玩章 cs01_03 对白可走 | `content_season_playable_s01_03_check` |
+| playable_gate_s01 | S01 同档门禁 01+02+03 | `content_season_playable_gate_s01_check` |

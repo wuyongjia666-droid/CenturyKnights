@@ -272,3 +272,18 @@
 - 各章首拍在 `_drf6` 后、离开该拍前加 `_lmp1`–`_lmp6` 灯影一沉口头，全库去重；收束非旁白。
 - 验收：`content_season_lamp_settle_chain_check` — hub chip → 灯影一沉针口头。
 - 不碰既有 `_drf`/`_yld`/`_ans`/`_knk`/`_axl`/`_hng`/`_blt`/`_hst`/`_gln`/`_slv`/`_crn`/`_rim` 等 plate 链。
+
+## 第三可玩章 · 脉痕上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs02_03` |
+| 标题 | 脉痕上的灯 |
+| legacy_index | 429 |
+| 文件 | `project/data/story/chapters/cs02_03.json` |
+
+脉痕与偏脉对照；栏脉并排可读。拍：脉痕 → 偏脉 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **栏脉仍并** → flag `cs02_mark_parallel`，进 `ledger`。
+- **先催偏名** → flag `cs02_mark_push`，仍进收束。
+- 验收：`content_season_playable_s02_03_check`；同档门禁 `content_season_playable_gate_s02_check`（cs02_01+02+03）。

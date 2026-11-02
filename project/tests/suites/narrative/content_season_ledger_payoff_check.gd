@@ -19,6 +19,8 @@ const WALKS := [
 	["res://data/story/chapters/cs07_03.json", "栏仪仍并", "cs07_03", "keep_seal", "栏仪"],
 	["res://data/story/chapters/cs08_03.json", "栏祠仍并", "cs08_03", "keep_niche", "栏祠"],
 	["res://data/story/chapters/cs09_03.json", "栏验仍并", "cs09_03", "keep_strip", "栏验"],
+["res://data/story/chapters/cs01_03.json", "栏兆仍并", "cs01_03", "keep_omen", "栏兆"],
+["res://data/story/chapters/cs02_03.json", "栏脉仍并", "cs02_03", "keep_mark", "栏脉"],
 ["res://data/story/chapters/cs10_03.json", "栏泥仍并", "cs10_03", "keep_paste", "栏泥"],
 	["res://data/story/chapters/cs10_02.json", "印底并排留", "cs10_02", "keep_base", "印底"],
 	["res://data/story/chapters/cs03_03.json", "工粮仍并", "cs03_03", "keep_lab", "工粮"],
