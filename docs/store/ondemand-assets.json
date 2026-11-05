@@ -1,13 +1,13 @@
 {
   "version": "ondemand-v1-2026-11-03",
-  "updated": "2026-11-03 Asia/Shanghai",
+  "updated": "2026-11-05 Asia/Shanghai",
   "platform_focus": "Android",
   "note": "Minimal runnable on-demand scaffold for store CAP. Large/master/small genome plates and speaker/expression larges are deferred from the Android base pack via export_presets exclude_filter; runtime falls back to medium through CKArtPaths / CKOnDemandArt. No Play Asset Delivery / paid CDN in this knife. H/I quality cuts remain user-only.",
   "cap": {
     "hard_bytes": 419430400,
     "source_status": "UNDER",
-    "source_bytes_android": 411044613,
-    "headroom_bytes": 8385787,
+    "source_bytes_android": 411052677,
+    "headroom_bytes": 8377723,
     "apk_measured": "pending_release_or_local_jdk",
     "h_i_user_only": true,
     "forbid_quality_cut_to_pass": true
