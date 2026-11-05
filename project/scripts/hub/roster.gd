@@ -59,7 +59,14 @@ func _ready() -> void:
 	_dossier.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_dossier)
 	if not roster.is_empty():
-		_select(roster[0])
+		var pick: CKCharacter = roster[0]
+		var nh := CKHireFeel.character()
+		if nh != null:
+			for c in roster:
+				if str(c.id) == str(nh.id):
+					pick = c
+					break
+		_select(pick)
 	UIKit.footer_bar(self, [["A", "确认选定"], ["B", "返回军营"], ["↑↓", "上下切换骑士"], ["ESC", "返回城堡"]], "CENTURY KNIGHTS · ROSTER v8.6")
 	UIFX.stagger_children(_list, 0.04, 0.24)
 	UIFX.page_enter(self)
@@ -137,7 +144,9 @@ func _row(c: CKCharacter, idx: int) -> Button:
 	var nm := UIKit.title_label(c.name, 16)
 	nm.add_theme_color_override("font_color", UIKit.DANGER if c.injured else UIKit.TEXT)
 	nh.add_child(nm)
-	if c.is_leader:
+	if CKHireFeel.is_new(str(c.id)):
+		nh.add_child(CKHireFeel.new_chip())
+	elif c.is_leader:
 		nh.add_child(UIKit.tag_chip("队长待命", UIKit.ACCENT))
 	elif c.injured or CKInjury.label(c) != "":
 		var chip := CKInjury.label(c)
@@ -392,19 +401,29 @@ func _mobile_build() -> void:
 	var i := 0
 	for c in roster:
 		i += 1
-		var b := MobilePage.button("%02d  %s\n%s · LV %d" % [i, c.name, str(GameState.get_job(c.job_id).get("name", "")), c.level], false, _select.bind(c))
+		var row_lab := "%02d  %s\n%s · LV %d" % [i, c.name, str(GameState.get_job(c.job_id).get("name", "")), c.level]
+		if CKHireFeel.is_new(str(c.id)):
+			row_lab = "%02d  %s · %s\n%s · LV %d" % [i, c.name, Locale.t("lb_hire_new_chip"), str(GameState.get_job(c.job_id).get("name", "")), c.level]
+		var b := MobilePage.button(row_lab, false, _select.bind(c))
 		b.custom_minimum_size = Vector2(0, 96)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.set_meta("cid", c.id)
+		if CKHireFeel.is_new(str(c.id)):
+			b.name = "NewHireRow"
 		if c.injured:
 			b.add_theme_color_override("font_color", UIKit.DANGER)
 		_m_list.add_child(b)
 		_rows.append(b)
 	_m_dossier = MobilePage.panel(self, Rect2(438, MobilePage.TOP, w - 438 - 24, 720 - MobilePage.TOP - 8), 14)
-	if _selected:
+	var nh_m := CKHireFeel.character()
+	if nh_m != null:
+		_select(nh_m)
+	elif _selected:
 		var c0 := _selected
 		_selected = null
 		_select(c0)
+	elif not roster.is_empty():
+		_select(roster[0])
 
 func _render_mobile() -> void:
 	for n in _m_dossier.get_children():

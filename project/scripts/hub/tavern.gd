@@ -362,9 +362,11 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 		hire_h = int(maxf(46.0, DeviceProfile.hit_px()))
 	if focus:
 		hire = UIKit.cta_button(_hire_text(c, true), "A", 352, hire_h)
+		hire.name = "HireFocus"
 		hire.call_deferred("grab_focus")
 	else:
 		hire = UIKit.ghost_button(_hire_text(c, false), 352, maxi(42, hire_h - 4))
+		hire.name = "HireStandby"
 	hire.position = Vector2(18, r.size.y - 18 - hire.custom_minimum_size.y)
 	hire.pressed.connect(func():
 		_selected = c
@@ -487,7 +489,24 @@ func _hire() -> void:
 	if r.get("ok"):
 		Sfx.confirm()
 		_selected = null
-	_refresh()
+		_refresh()
+		_show_hire_feel()
+	else:
+		_refresh()
+
+
+func _show_hire_feel() -> void:
+	var old := find_child("HireFeelPanel", true, false)
+	if old != null:
+		old.queue_free()
+	var panel := CKHireFeel.attach_panel(self, 420.0)
+	if panel == null:
+		return
+	panel.position = Vector2(838, 108)
+	if DeviceProfile.is_mobile():
+		var vp := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2(1280, 720)
+		panel.position = Vector2(24, 100)
+		panel.custom_minimum_size = Vector2(minf(420.0, vp.x - 48.0), 0)
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) == "0.2" and not GameState.flag("hub_open"):

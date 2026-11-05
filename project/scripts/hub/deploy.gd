@@ -29,10 +29,14 @@ func _ready() -> void:
 	_metrics.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_metrics)
 	var roster: Array = GameState.roster()
-	for c in roster:
-		if c.id in GameState.deploy_ids:
-			_focus = c
-			break
+	var nh := CKHireFeel.character()
+	if nh != null:
+		_focus = nh
+	else:
+		for c in roster:
+			if c.id in GameState.deploy_ids:
+				_focus = c
+				break
 	if _focus == null and not roster.is_empty():
 		_focus = roster[0]
 	UIKit.footer_bar(self, [["A", "切换出战"], ["←→", "移动选位"], ["ENTER", "出战"], ["ESC", "返回城堡"]], "DEPLOYMENT // MAX %d · v8.6" % GameState.max_deploy())
@@ -153,6 +157,9 @@ func _unhandled_input(e: InputEvent) -> void:
 		_nudge_slot(1)
 
 func _fight() -> void:
+	var nhf := CKHireFeel.character()
+	if nhf != null and str(nhf.id) in GameState.deploy_ids:
+		CKHireFeel.clear()
 	GameState.set_meta("battle_return", "res://scenes/hub/castle_hub.tscn")
 	GameState.set_meta("battle_map", "quest_bandit")
 	GameState.set_meta("battle_sortie", true)
@@ -275,7 +282,13 @@ func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 	b.add_child(hd)
 	var chip := hurt if hurt != "" else ("出战" if on else "待命")
 	var chip_col := UIKit.DANGER if hurt != "" else (UIKit.ACCENT if on else UIKit.TEXT_FAINT)
+	if hurt == "" and CKHireFeel.is_new(str(c.id)):
+		chip = Locale.t("lb_hire_new_chip")
+		chip_col = UIKit.OK
 	var st := UIKit.tag_chip(chip, chip_col, on and hurt == "")
+	st.name = "DeployCardTag"
+	if CKHireFeel.is_new(str(c.id)):
+		b.name = "NewHireCard"
 	st.position = Vector2(r.size.x - 10 - st.get_minimum_size().x, 8)
 	b.add_child(st)
 	var compact := r.size.y < 320.0
@@ -404,7 +417,13 @@ func _render_metrics() -> void:
 	var ff := UIKit.mono("FOCUSED UNIT METRICS // PLATE #%02d" % (GameState.roster().find(c) + 1), 8, UIKit.TEXT_FAINT, false)
 	ff.position = Vector2(x, R.position.y + 56)
 	_metrics.add_child(ff)
-	var tag := UIKit.tag_chip("主力队长" if c.is_leader else ("已上阵" if c.id in GameState.deploy_ids else "待命"), UIKit.ACCENT if c.id in GameState.deploy_ids else UIKit.TEXT_DIM)
+	var tag_txt := "主力队长" if c.is_leader else ("已上阵" if c.id in GameState.deploy_ids else "待命")
+	var tag_col := UIKit.ACCENT if c.id in GameState.deploy_ids else UIKit.TEXT_DIM
+	if CKHireFeel.is_new(str(c.id)):
+		tag_txt = Locale.t("lb_hire_new_chip")
+		tag_col = UIKit.OK
+	var tag := UIKit.tag_chip(tag_txt, tag_col)
+	tag.name = "DeployFocusTag"
 	tag.position = Vector2(R.end.x - 20 - tag.get_minimum_size().x, R.position.y + 24)
 	_metrics.add_child(tag)
 	DeployBrief.attach(_metrics, DeployBrief.practice_map_id(), Rect2(x, R.position.y + 78, w, 128))
@@ -574,7 +593,13 @@ func _phone_card(c: CKCharacter, i: int, card_h: float) -> Button:
 	head.add_child(hd)
 	var chip_txt := hurt if hurt != "" else (Locale.t("ux_dep_on") if on else Locale.t("ux_dep_tap"))
 	var chip_col := UIKit.DANGER if hurt != "" else (UIKit.ACCENT if on else UIKit.TEXT_DIM)
+	if hurt == "" and CKHireFeel.is_new(str(c.id)):
+		chip_txt = Locale.t("lb_hire_new_chip")
+		chip_col = UIKit.OK
 	var chip := UIKit.tag_chip(chip_txt, chip_col, on and hurt == "")
+	chip.name = "DeployCardTag"
+	if CKHireFeel.is_new(str(c.id)):
+		b.name = "NewHireCard"
 	head.add_child(chip)
 	var pr := UIKit.make_portrait_rect(c, 220)
 	pr.custom_minimum_size = Vector2(0, maxf(180.0, card_h - 300.0))
@@ -637,7 +662,13 @@ func _phone_metrics(r: Rect2) -> void:
 	var nm := MobilePage.label(c.name, UIKit.TEXT, 28, false)
 	head.add_child(nm)
 	var tag_txt := Locale.t("ux_dep_leader") if c.is_leader else (Locale.t("ux_dep_fielded") if on else Locale.t("ux_dep_idle"))
-	head.add_child(UIKit.tag_chip(tag_txt, UIKit.ACCENT if on else UIKit.TEXT_DIM))
+	var tag_col := UIKit.ACCENT if on else UIKit.TEXT_DIM
+	if CKHireFeel.is_new(str(c.id)):
+		tag_txt = Locale.t("lb_hire_new_chip")
+		tag_col = UIKit.OK
+	var focus_tag := UIKit.tag_chip(tag_txt, tag_col)
+	focus_tag.name = "DeployFocusTag"
+	head.add_child(focus_tag)
 	v.add_child(MobilePage.label(Locale.t("ux_dep_stats2", [str(GameState.get_job(c.job_id).get("name", "")), c.hp, c.max_hp, c.derived_atk(), c.derived_move()]), UIKit.ACCENT))
 	var board := DeployMinimap.new()
 	board.map_id = DeployBrief.practice_map_id()
