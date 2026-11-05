@@ -472,3 +472,6 @@ lb_blood_kin_to_hourglass,去沙漏细读,Read in hourglass
 lb_handoff_heir,承旗人 · %s,Banner heir · %s
 lb_handoff_to_deploy,编制出战,Deploy roster
 lb_handoff_to_roster,花名册整编,Open roster
+lb_dynasty_end_to_new_game,再开百年,Start a new century
+lb_dynasty_end_new_century_tip,灰旗可再立。点「再开百年」立新团，不脏读本局终结态。,The ash banner can rise again. Start a new century without dirty-reading this run's end state.
+lb_handoff_to_genealogy,族谱追旗,Trace on genealogy
