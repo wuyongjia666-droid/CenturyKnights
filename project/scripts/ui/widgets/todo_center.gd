@@ -30,6 +30,7 @@ const LINKS := {
 	"territory_chain": "res://scenes/hub/atlas_view.tscn",
 	"territory_contest": "res://scenes/hub/atlas_view.tscn",
 	"territory_drain": "res://scenes/hub/territory_ledger.tscn",
+	"unpaid_wages": "res://scenes/hub/market.tscn",
 }
 
 
@@ -116,6 +117,12 @@ static func snapshot() -> Array:
 		var drow := _row("territory_drain", "military", Locale.t("ux_todo_territory_drain"), drain_n)
 		drow["urgency"] = "block"
 		rows.append(drow)
+	# Month-loop harden: company payroll unpaid → market CTA (earn silver before next payday).
+	var unpaid_n := CKMorale.unpaid_months(GameState)
+	if unpaid_n >= 1:
+		var uw := _row("unpaid_wages", "home", Locale.t("ux_todo_unpaid_wages"), unpaid_n)
+		uw["urgency"] = "block"
+		rows.append(uw)
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)
