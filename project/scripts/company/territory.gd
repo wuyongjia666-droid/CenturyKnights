@@ -1543,6 +1543,7 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 		st.threat = {}
 		st.garrison = maxi(0, before - 1)
 		_put(id, st)
+		_clear_siege_alert_for(id)
 		_log(Locale.t("terr_53") % [site_name, before, int(st.garrison), hold_pct])
 		if looted > 0:
 			_log(Locale.t("atlas_siege_loot_hold_log") % [site_name, looted])
@@ -1594,6 +1595,7 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 			"anchor": anchor,
 		})
 		CKEconomyState.month_echo_note("threat_lost", Locale.t("terr_echo_threat_lost", [site_name, by_name, hold_pct]))
+		_clear_siege_alert_for(id)
 		lose(id, by)
 
 static func threatened_at(anchor: String) -> Array:
@@ -1610,6 +1612,30 @@ static func threatened_owned() -> Array:
 		if not (state(id).threat as Dictionary).is_empty():
 			out.append(id)
 	return out
+
+## Fat #4: drop stale SiegeAlert when threat clears (fight / unanswered settle).
+static func _clear_siege_alert_for(id: String) -> void:
+	if str(World.last_siege_alert.get("id", "")) == str(id):
+		World.dismiss_siege_alert()
+
+
+## Fat #4: HubTodo / ledger / hourglass agree on live threat (count + bribed downgrade).
+static func threat_surface_state() -> Dictionary:
+	var ids := threatened_owned()
+	var bribed := 0
+	for tid in ids:
+		if bool(state(str(tid)).threat.get("bribed", false)):
+			bribed += 1
+	var n := ids.size()
+	return {
+		"count": n,
+		"bribed": bribed,
+		"hub_todo": n > 0,
+		"ledger_banner": n > 0,
+		"hourglass_pending": n > 0,
+		"cleared": n == 0,
+	}
+
 
 ## Sites with an open「反夺」commission (board or active). Castle HubTodo / ledger / hourglass.
 static func pending_reclaim_ids() -> Array:
@@ -1803,11 +1829,16 @@ static func bribe_threat(id: String) -> Dictionary:
 	st.threat["bribed"] = true
 	st.threat["months"] = 0
 	_put(id, st)
+	# Fat #4: keep queued SiegeAlert in sync with downgrade (months→0 / bribed).
+	if str(World.last_siege_alert.get("id", "")) == id:
+		World.last_siege_alert["bribed"] = true
+		World.last_siege_alert["months"] = 0
+		World.last_siege_alert["phase"] = "declared"
 	_log(Locale.t("terr_56") % [site(id).name, cost])
 	CKEconomyState.month_echo_note("bribe", Locale.t("terr_echo_bribe", [site(id).name, cost]))
 	GameState.mark_dirty()
 	World.world_changed.emit()
-	return {"ok": true, "msg": Locale.t("terr_56") % [site(id).name, cost]}
+	return {"ok": true, "msg": Locale.t("terr_56") % [site(id).name, cost], "downgraded": true}
 
 ## Spend a little silver to learn the exact hold chance and attacker.
 static func scout_threat(id: String) -> Dictionary:
@@ -1876,12 +1907,15 @@ static func on_battle(enc: Dictionary, win: bool) -> String:
 				var by_name := str(st.threat.get("name", ""))
 				st.threat = {}
 				_put(id, st)
+				# Fat #4: fight resolve clears queued SiegeAlert so HubTodo/ledger/hourglass agree.
+				_clear_siege_alert_for(id)
 				World.add_city_rep(str(site(id).anchor), 3)
 				_log(Locale.t("terr_36") % site(id).name)
 				CKEconomyState.month_echo_note("defend", Locale.t("terr_echo_defend",
 					[str(site(id).name), by_name, int(st.garrison)]))
 				return Locale.t("terr_37") % site(id).name
 			var by := str(state(id).threat.get("by", NEUTRAL))
+			_clear_siege_alert_for(id)
 			lose(id, by)
 			return Locale.t("terr_38") % site(id).name
 	return ""

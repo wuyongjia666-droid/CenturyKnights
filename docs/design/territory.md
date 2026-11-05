@@ -276,3 +276,18 @@ E2E：`territory_contest_closed_loop_check` + mobile twin；`todo_due_check` 覆
 
 E2E：`territory_drain_reinforce_loop_check` + mobile twin；`todo_due_check` 覆盖无降驻不显示 / 有降驻可链。
 
+## 26. 属地威胁→围城→解决整链（Territory fat · 禁止再拆威胁/围城/抚民）
+
+玩家看得见的一条链，不拆薄片（深化 §17–§18 / #711/#721/#723/#727 同型）：
+
+1. **威胁出现**：`start_threat` → `threat` 字典 + `SiegeAlert` 入队；`threat_surface_state()` 汇总 count/bribed + hub/ledger/hourglass 三面是否亮。
+2. **待办带路**：城堡 HubTodo `territory_threat` → `hub_requeue_siege_alert` → 舆图 SiegeAlertModal（SiegeRelief 出战 / SiegeBribe 缓兵 / SiegeScout）。
+3. **领地簿**：顶栏 `TerritoryThreatBanner`（缓兵后用 bribed 文案）+ `TerritoryThreatGoto` → 同深链入围城；详栏 rival 读 `threat.name`/`by`，剩余月 = 3−months。
+4. **沙漏 Forecast**：`ThreatPending` + `ToSiegeThreat`；缓兵后加 `ThreatBribedNote`；月回响 `EchoLine_bribe` / `EchoLine_defend`。
+5. **解决**：
+   - **出战**：`intercept`/`defend` → `on_battle` 胜清 threat + `_clear_siege_alert_for`；败则失守同清告急。
+   - **缓兵**：`bribe_threat` → months=0 / bribed=true，告急载荷同步；威胁仍在但降级可读。
+   - **未应战月结**：`_resolve_unanswered` 清 threat + 清告急 + `threat_held`/`threat_lost` echo。
+6. **三面一致**：解决后军务 chip / 领地簿 banner / 沙漏 pending 至少两处与 `threat_surface_state` 对齐（清则全灭，缓则仍亮且 bribed>0）。
+
+E2E：`territory_threat_siege_resolve_fat_check` + mobile twin；shots：威胁提示、解决中、解决后。
