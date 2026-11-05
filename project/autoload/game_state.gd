@@ -282,6 +282,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	started = true
 	_court_derived = false
 	play_seconds = 0.0
+	if has_meta("lineage_focus"):
+		remove_meta("lineage_focus")
 	save_notice = ""
 	save_backup_used = ""
 	Calendar.reset()

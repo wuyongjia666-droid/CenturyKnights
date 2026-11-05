@@ -648,8 +648,8 @@ func _generation_depth(c: CKCharacter, seen: Dictionary, guard: int) -> int:
 ## in-house order in pick_heir; with no adult left, the eldest child inherits under a regency.
 ## A roster with no living person at all (not even a child) still returns ok=false.
 
-## Y1-B stub: mid-run「王朝终结」when succession finds no heir (roadmap §7).
-## Persists in house_mods.dynasty_end; hub/hourglass/estates re-read + ToTitle CTA.
+## Fat #9 / Y1-B: mid-run「王朝终结」when succession finds no heir (roadmap §7).
+## Persists in house_mods.dynasty_end; hub/hourglass/estates re-read ending board (ToTitle + ToNewGame).
 func is_dynasty_ended() -> bool:
 	var d: Variant = GameState.house_mods.get("dynasty_end", {})
 	if typeof(d) != TYPE_DICTIONARY:
@@ -693,7 +693,7 @@ func note_dynasty_end(reason: String, msg: String = "", last_id: String = "", he
 	return d
 
 
-## Hub feel: DynastyEndPanel + named ToTitle → main menu (replace, clears stack).
+## Hub feel: DynastyEndPanel + ToTitle (main menu) + ToNewGame (naming / 再开百年).
 func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	if parent == null or not is_dynasty_ended():
 		return null
@@ -716,16 +716,28 @@ func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	elif reason == "wipeout":
 		why = Locale.t("lb_dynasty_end_why_wipeout")
 	panel.add_child(CKPageKit.empty(Locale.t("lb_dynasty_end_title"), why, str(snap.get("msg", "")), maxf(280.0, width - 24.0)))
-	var to_t := CKPageKit.button(Locale.t("lb_dynasty_end_to_title"), true, mini(280.0, width))
+	panel.add_child(CKPageKit.text(Locale.t("lb_dynasty_end_new_century_tip"), UIKit.TEXT_DIM, 12, maxf(280.0, width - 24.0)))
+	var acts := HBoxContainer.new()
+	acts.name = "DynastyEndActions"
+	acts.add_theme_constant_override("separation", 10)
+	panel.add_child(acts)
+	var bw := mini(240.0, maxf(140.0, (width - 24.0) / 2.0))
+	var to_t := CKPageKit.button(Locale.t("lb_dynasty_end_to_title"), false, bw)
 	to_t.name = "ToTitle"
 	to_t.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
-	panel.add_child(to_t)
+	acts.add_child(to_t)
 	UIFX.wire_button(to_t)
+	## 再开百年: naming clears stack and starts a fresh century (new_game isolation).
+	var to_n := CKPageKit.button(Locale.t("lb_dynasty_end_to_new_game"), true, bw)
+	to_n.name = "ToNewGame"
+	to_n.pressed.connect(func(): CKNav.replace("res://scenes/story/naming.tscn"))
+	acts.add_child(to_n)
+	UIFX.wire_button(to_n)
 	return panel
 
 
 ## Hub tip after a successful 传旗: BannerHandoffPanel + crest strip + heir name
-## + deploy/roster follow-on (编制入口), not toast-only. Cleared on dismiss or dynasty_end.
+## + deploy/roster/genealogy follow-on (编制+族谱可追), not toast-only. Cleared on dismiss or dynasty_end.
 func is_banner_handoff_pending() -> bool:
 	var raw: Variant = GameState.house_mods.get("banner_handoff", {})
 	return typeof(raw) == TYPE_DICTIONARY and not (raw as Dictionary).is_empty()
@@ -760,7 +772,7 @@ func attach_banner_handoff_feel(parent: Node, width: float = 520.0) -> Control:
 	acts.name = "HandoffActions"
 	acts.add_theme_constant_override("separation", 10)
 	panel.add_child(acts)
-	var bw := mini(200.0, maxf(140.0, (width - 24.0) / 3.0))
+	var bw := mini(180.0, maxf(120.0, (width - 36.0) / 4.0))
 	var to_d := CKPageKit.button(Locale.t("lb_handoff_to_deploy"), true, bw)
 	to_d.name = "ToDeploy"
 	to_d.pressed.connect(func(): CKNav.go("res://scenes/hub/deploy.tscn"))
@@ -771,6 +783,16 @@ func attach_banner_handoff_feel(parent: Node, width: float = 520.0) -> Control:
 	to_r.pressed.connect(func(): CKNav.go("res://scenes/hub/roster.tscn"))
 	acts.add_child(to_r)
 	UIFX.wire_button(to_r)
+	var to_g := CKPageKit.button(Locale.t("lb_handoff_to_genealogy"), false, bw)
+	to_g.name = "ToGenealogy"
+	var heir_focus := str(heir.id) if heir != null else str(snap.get("heir_id", ""))
+	to_g.pressed.connect(func():
+		if heir_focus != "":
+			GameState.set_meta("lineage_focus", heir_focus)
+		CKNav.go("res://scenes/hub/lineage_view.tscn", {"focus": heir_focus})
+	)
+	acts.add_child(to_g)
+	UIFX.wire_button(to_g)
 	var dismiss := CKPageKit.button(Locale.t("lb_handoff_dismiss"), false, bw)
 	dismiss.name = "DismissHandoff"
 	dismiss.pressed.connect(func():
@@ -976,6 +998,8 @@ func transfer_banner(reason: String) -> Dictionary:
 		"via": via,
 		"label": Calendar.label(),
 	}
+	## Genealogy wall can open focused on the new banner-bearer.
+	GameState.set_meta("lineage_focus", str(heir.id))
 	GameState.mark_dirty()
 	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason, "via": via, "regency": minor}
 

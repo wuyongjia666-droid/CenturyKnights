@@ -50,7 +50,7 @@ func _build() -> void:
 		var host := Control.new()
 		host.name = "DynastyEndHost"
 		host.position = Vector2(190, 72)
-		host.size = Vector2(700, 140)
+		host.size = Vector2(700, 220)
 		add_child(host)
 		Lineage.attach_dynasty_end_feel(host, 680.0)
 	elif Lineage.is_banner_handoff_pending():
@@ -888,6 +888,36 @@ func apply_mobile_layout() -> void:
 	if not _m_tabs.has(pick):
 		pick = "military" if _m_tabs.has("military") else str(_m_tabs.keys()[0]) if not _m_tabs.is_empty() else ""
 	_m_select(pick)
+	_m_attach_lineage_boards(w, h)
+
+## Fat #9: mobile relayout drops desktop DynastyEnd/BannerHandoff/BloodKin hosts —
+## re-pin them over the dossier so wipeout/承旗/再开 remain reachable on phone.
+func _m_attach_lineage_boards(w: float, h: float) -> void:
+	var right_w := 400.0 if w >= 1500.0 else 372.0
+	var host_w := mini(680.0, maxf(360.0, right_w - 8.0))
+	var at := Vector2(w - right_w - 24.0, M_TOP + 8.0)
+	var host_h := mini(280.0, maxf(160.0, h - M_TOP - 40.0))
+	if Lineage.is_dynasty_ended():
+		var host := Control.new()
+		host.name = "DynastyEndHost"
+		host.position = at
+		host.size = Vector2(host_w + 20.0, host_h)
+		add_child(host)
+		Lineage.attach_dynasty_end_feel(host, host_w)
+	elif Lineage.is_banner_handoff_pending():
+		var hhost := Control.new()
+		hhost.name = "BannerHandoffHost"
+		hhost.position = at
+		hhost.size = Vector2(host_w + 20.0, host_h)
+		add_child(hhost)
+		Lineage.attach_banner_handoff_feel(hhost, host_w)
+	elif Lineage.is_blood_kin_pending():
+		var khost := Control.new()
+		khost.name = "BloodKinHookHost"
+		khost.position = at
+		khost.size = Vector2(host_w + 20.0, mini(160.0, host_h))
+		add_child(khost)
+		Lineage.attach_blood_kin_hook(khost, host_w)
 
 func _m_top_bar(w: float) -> void:
 	var house := Locale.latin(str(GameState.surname), "House")
