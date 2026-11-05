@@ -27,7 +27,7 @@ python3 tools/ci/store_ondemand_check.py
 | 平台 | EXPORT SIZE | CAP_STATUS | BANK |
 |---|---:|---|---|
 | Windows Desktop | 795240665 | OVER（预期，含 master） | master+medium+small |
-| Android | 411044613 | **UNDER**（约 392.00 MiB，余 ~8.00 MiB） | **medium_only=1** |
+| Android | 411052677 | **UNDER**（约 392.00 MiB，余 ~7.99 MiB） | **medium_only=1** |
 
 预算 `EXPORT BUDGET` ≈ 847556000 → 双平台均未破预算 → `EXPORT SIZE PASS`。  
 Android **源估 CAP≤400 已闭合（UNDER）**：#734 归档未用 `v92_estate_*` / `v92_scene_*`（ART-02）后达成。  

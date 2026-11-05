@@ -158,8 +158,18 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	keys.visible = not DeviceProfile.is_mobile()
 	root.add_child(keys)
 	var back_word := Locale.t("shell_7c9e016b") if host._world_enc else Locale.t("shell_1e62632d")
-	var lose_keys: Array = [["A", back_word]] if host._world_enc else [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("defeat_back_castle")]]
-	for kh in ([["A", Locale.t("shell_22841003")], ["ESC", back_word]] if win else lose_keys):
+	var rematch_hint := Locale.t(BattleRematchJuice.rematch_locale_key())
+	var hub_hint := Locale.t(BattleRematchJuice.hub_locale_key())
+	var rematchable_keys := BattleRematchJuice.offers_rematch(host, win)
+	var lose_keys: Array
+	if host._world_enc:
+		lose_keys = [["A", back_word]]
+	elif rematchable_keys:
+		lose_keys = [["A", rematch_hint], ["ESC", hub_hint]]
+	else:
+		lose_keys = [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("defeat_back_castle")]]
+	var win_keys: Array = [["A", rematch_hint], ["ESC", hub_hint]] if rematchable_keys else [["A", Locale.t("shell_22841003")], ["ESC", back_word]]
+	for kh in (win_keys if win else lose_keys):
 		keys.add_child(UIKit.keycap(str(kh[0])))
 		var kl := UIKit.body_label(str(kh[1]), UIKit.TEXT_DIM, 11)
 		kl.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -169,22 +179,41 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 		keys.add_child(gp)
 	var back_path := BattleDefeat.back_path(win, host._world_enc, str(GameState.get_meta("battle_return", "")))
 	host.set_meta("result_back", back_path)
-	if win or host._world_enc:
+	var rematchable := BattleRematchJuice.offers_rematch(host, win)
+	if rematchable:
+		var rematch_word := Locale.t(BattleRematchJuice.rematch_locale_key())
+		var hub_word := Locale.t(BattleRematchJuice.hub_locale_key())
+		var r := UIKit.cta_button(rematch_word, "A", 200, 48)
+		r.name = "RematchCta"
+		r.position = Vector2(1038, 620)
+		r.pressed.connect(func(): BattleRematchJuice.do_rematch(host))
+		root.add_child(r)
+		var b2 := UIKit.ghost_button(hub_word, 150, 48)
+		b2.name = "HubCta"
+		b2.position = Vector2(874, 620)
+		b2.pressed.connect(func(): BattleRematchJuice.do_hub(host, back_path))
+		root.add_child(b2)
+		r.call_deferred("grab_focus")
+	elif win or host._world_enc:
 		var b := UIKit.cta_button(back_word, "A", 220, 48)
+		b.name = "BackCta"
 		b.position = Vector2(1018, 620)
 		b.pressed.connect(func(): CKNav.replace(back_path))
 		root.add_child(b)
 		b.call_deferred("grab_focus")
 	else:
-		var r := UIKit.cta_button(Locale.t("shell_55cfd979"), "A", 200, 48)
-		r.position = Vector2(1038, 620)
-		r.pressed.connect(func(): host.get_tree().reload_current_scene())
-		root.add_child(r)
-		var b2 := UIKit.ghost_button(Locale.t("defeat_back_castle"), 150, 48)
-		b2.position = Vector2(874, 620)
-		b2.pressed.connect(func(): CKNav.replace(back_path))
-		root.add_child(b2)
-		r.call_deferred("grab_focus")
+		# Chapter-owned lose: legacy retry reload — do NOT stamp rematch drill meta.
+		var r2 := UIKit.cta_button(Locale.t("shell_55cfd979"), "A", 200, 48)
+		r2.name = "RetryCta"
+		r2.position = Vector2(1038, 620)
+		r2.pressed.connect(func(): host.get_tree().reload_current_scene())
+		root.add_child(r2)
+		var b3 := UIKit.ghost_button(Locale.t("defeat_back_castle"), 150, 48)
+		b3.name = "HubCta"
+		b3.position = Vector2(874, 620)
+		b3.pressed.connect(func(): CKNav.replace(back_path))
+		root.add_child(b3)
+		r2.call_deferred("grab_focus")
 	UIFX.page_enter(root)
 
 static func _kpi_card(root: Control, r: Rect2, label: String, value: String, col: Color) -> void:

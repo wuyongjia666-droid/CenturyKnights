@@ -1310,6 +1310,7 @@ func _draw_overlay() -> void:
 	BattlePhaseFeel.draw_turn_banner(self, overlay)
 	BattlePhaseFeel.draw_enemy_actor_ring(self, overlay)
 	BattlePhaseFeel.draw_settle_flash(self, overlay)
+	BattleRematchJuice.draw_hit_pop(self, overlay)
 	BattlePhaseFeel.draw_end_banner(self, overlay)
 	# T-P7: FE engage bridge (atk↔def) — overlay only, no input steal
 	BattleEngageCutscene.draw_engage_bridge(self, overlay)
@@ -1379,6 +1380,9 @@ func _zoc_hover_audio(cell: Vector2i) -> void:
 		Sfx.play_spatial("zoc_leave", world, vol - 1.5)
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if battle_over and BattleRematchJuice.handle_result_key(self, event):
+		get_viewport().set_input_as_handled()
+		return
 	if battle_over and has_meta("result_back") and event is InputEventKey and event.pressed and (event as InputEventKey).keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		CKNav.replace(str(get_meta("result_back")))
@@ -2164,7 +2168,6 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		msg += "命中 %d%s（掷骰相对命中率 %d%%）" % [result.damage, "（暴击）" if result.crit else "", int(result.hit_chance)]
 		var col = Color(1.0, 0.85, 0.3) if result.crit else Color(1.0, 0.45, 0.35)
 		_spawn_dmg(def.pos, ("暴%d" % result.damage) if result.crit else ("-%d" % result.damage), col)
-		_shake = maxf(_shake, 0.28 if result.crit else 0.12)
 		if result.killed:
 			msg += " · 击退！"
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
@@ -2185,6 +2188,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 	# T-P6: confirm→hit settle flash/shake (miss/kill/crit readable)
 	var settle_kind := BattlePhaseFeel.settle_kind_from_result(bool(result.hit), bool(result.get("crit", false)), def.char.hp <= 0)
 	BattlePhaseFeel.note_attack_settle(self, settle_kind, def.pos)
+	BattleRematchJuice.after_attack_hit(self, settle_kind, def.pos)
 	_combat_rec.append({"a": ai, "d": di, "hit": bool(result.hit), "crit": bool(result.get("crit", false)), "dmg": int(result.get("damage", 0)),
 		"killed": def.char.hp <= 0, "skill": str(sk.get("name", skill_id)) if skill_id != "" else "", "hp_before": _hp_before,
 		"hp_after": int(def.char.hp), "hit_chance": int(result.get("hit_chance", 0))})
@@ -2830,7 +2834,8 @@ func _finish(win: bool) -> void:
 	for u in units:
 		if u.team == "player":
 			exp_before[u.char.id] = [int(u.char.exp), int(u.char.hp) <= 0]
-	var drill := win and BattleVictory.sortie_is_drill(GameState)
+	var rematch_round := BattleRematchJuice.claim_rematch_drill()
+	var drill := rematch_round or (win and BattleVictory.sortie_is_drill(GameState))
 	if win:
 		GameState.set_flag("battle_done")
 		purse = 0 if drill else BattleVictory.base_purse(GameState.house_mods)
