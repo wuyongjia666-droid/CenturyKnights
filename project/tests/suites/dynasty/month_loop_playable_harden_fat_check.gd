@@ -1,7 +1,7 @@
 extends Node
 ## Fat knife #3: 月循环耐玩一季硬化 —
 ## 招募|委托 → 一战 → Calendar 月结(沙漏 UI) → hourglass/estates 可读回响 → 下月；
-## 欠饷/败战失败出口。真实 Calendar/World/GameState 路径，禁 inject month_echo。
+## 欠饷/败战失败出口。真实 Calendar/World/GameState 路径，禁手动 inject month_echo。
 
 const CASTLE_SCN := preload("res://scenes/hub/castle_hub.tscn")
 const HOURGLASS_SCN := preload("res://scenes/hub/hourglass.tscn")
@@ -63,7 +63,6 @@ func _algebra() -> String:
 	var eco := FileAccess.get_file_as_string("res://scripts/company/economy_state.gd")
 	if eco.find("\"unpaid\"") < 0:
 		return "month_echo_lines must list unpaid"
-	# Ban inject theatre: suite must drive echo via recruit/battle/Calendar, not stamp APIs.
 	var self_body := FileAccess.get_file_as_string("res://tests/suites/dynasty/month_loop_playable_harden_fat_check.gd")
 	var stamp_api := "CKEconomy" + "State.month_echo_note"
 	if self_body.find(stamp_api) >= 0:
@@ -99,7 +98,29 @@ func _setup() -> void:
 
 func _happy_month_loop() -> String:
 	_setup()
-	# 1) Recruit (real GameState.recruit)
+	var err := _step_recruit()
+	if err != "":
+		return err
+	err = await _step_commission_todos()
+	if err != "":
+		return err
+	err = _step_battle_win()
+	if err != "":
+		return err
+	err = await _step_settle_echo()
+	if err != "":
+		return err
+	err = await _step_estates_echo()
+	if err != "":
+		return err
+	err = await _step_next_month()
+	if err != "":
+		return err
+	print("month-loop happy path ok calendar=%s" % Calendar.label())
+	return ""
+
+
+func _step_recruit() -> String:
 	if GameState.tavern_candidates.is_empty():
 		GameState.refresh_tavern()
 	if GameState.tavern_candidates.is_empty():
@@ -112,8 +133,10 @@ func _happy_month_loop() -> String:
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	if str(snap.get("recruit", "")).find(cname) < 0:
 		return "recruit echo missing after GameState.recruit: %s" % str(snap)
+	return ""
 
-	# 2) Commission (real World.accept_quest) — 月前待办
+
+func _step_commission_todos() -> String:
 	var offer: Dictionary = World.seed_deliver_offer("ash_capital")
 	if offer.is_empty():
 		return "seed_deliver_offer empty"
@@ -128,8 +151,6 @@ func _happy_month_loop() -> String:
 			quest_n = int(item.get("count", 0))
 	if quest_n < 1:
 		return "HubTodo quests count %d after accept" % quest_n
-
-	# Shot A: 月前待办 (castle TodoRow with quests)
 	var castle: Control = CASTLE_SCN.instantiate()
 	get_tree().root.add_child(castle)
 	castle.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -143,8 +164,10 @@ func _happy_month_loop() -> String:
 	await _shot("pre-month-todos")
 	castle.queue_free()
 	await _settle(2)
+	return ""
 
-	# 3) One battle (real World.on_battle_end)
+
+func _step_battle_win() -> String:
 	World.encounter = {
 		"id": "month_loop_seed",
 		"kind": "ambush",
@@ -161,14 +184,15 @@ func _happy_month_loop() -> String:
 	var br: Dictionary = World.on_battle_end(true)
 	if not bool(br.get("ok", false)) or not bool(br.get("win", false)):
 		return "battle win fail: %s" % str(br)
-	snap = CKEconomyState.month_echo_snapshot()
+	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	if str(snap.get("battle", "")) == "":
 		return "battle echo empty after World.on_battle_end: %s" % str(snap)
+	return ""
 
+
+func _step_settle_echo() -> String:
 	var y0 := int(Calendar.year)
 	var m0 := int(Calendar.month)
-
-	# 4) Hourglass AdvanceMonth — real Calendar.advance via UI
 	var hg: Control = HOURGLASS_SCN.instantiate()
 	get_tree().root.add_child(hg)
 	hg.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -184,32 +208,29 @@ func _happy_month_loop() -> String:
 	if int(Calendar.year) * 12 + int(Calendar.month) <= y0 * 12 + m0:
 		hg.queue_free()
 		return "Calendar did not advance after AdvanceMonth"
-	# Settle board must show player-action echoes (the deepen)
-	var echo_r := hg.find_child("EchoLine_recruit", true, false)
-	var echo_b := hg.find_child("EchoLine_battle", true, false)
-	if echo_r == null:
+	if hg.find_child("EchoLine_recruit", true, false) == null:
 		hg.queue_free()
 		return "after advance missing EchoLine_recruit (settle board)"
-	if echo_b == null:
+	if hg.find_child("EchoLine_battle", true, false) == null:
 		hg.queue_free()
 		return "after advance missing EchoLine_battle (settle board)"
-	var to_e := hg.find_child("ToEstates", true, false)
-	if to_e == null:
+	if hg.find_child("ToEstates", true, false) == null:
 		hg.queue_free()
 		return "after advance missing ToEstates"
 	await _shot("settle-hourglass-echo")
 	hg.queue_free()
 	await _settle(2)
+	return ""
 
-	# Estates MonthEchoPanel readout
+
+func _step_estates_echo() -> String:
 	var est: Control = ESTATES_SCN.instantiate()
 	get_tree().root.add_child(est)
 	est.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	est.position = Vector2.ZERO
 	est.size = Vector2(1280, 720)
 	await _settle(8)
-	var panel := est.find_child("MonthEchoPanel", true, false)
-	if panel == null:
+	if est.find_child("MonthEchoPanel", true, false) == null:
 		est.queue_free()
 		return "estates missing MonthEchoPanel"
 	if est.find_child("EchoLine_recruit", true, false) == null:
@@ -220,17 +241,19 @@ func _happy_month_loop() -> String:
 		return "estates missing EchoLine_battle"
 	est.queue_free()
 	await _settle(2)
+	return ""
 
-	# 5) Next month start state
+
+func _step_next_month() -> String:
 	var y1 := int(Calendar.year)
 	var m1 := int(Calendar.month)
-	hg = HOURGLASS_SCN.instantiate()
+	var hg: Control = HOURGLASS_SCN.instantiate()
 	get_tree().root.add_child(hg)
 	hg.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	hg.position = Vector2.ZERO
 	hg.size = Vector2(1280, 720)
 	await _settle(8)
-	adv = hg.find_child("AdvanceMonth", true, false) as BaseButton
+	var adv := hg.find_child("AdvanceMonth", true, false) as BaseButton
 	if adv == null or adv.disabled:
 		hg.queue_free()
 		return "next-month AdvanceMonth missing/disabled"
@@ -239,7 +262,6 @@ func _happy_month_loop() -> String:
 	if int(Calendar.year) * 12 + int(Calendar.month) <= y1 * 12 + m1:
 		hg.queue_free()
 		return "second advance did not move calendar"
-	# KPIs should show new date; advance still available (not dynasty-ended)
 	adv = hg.find_child("AdvanceMonth", true, false) as BaseButton
 	if adv == null or adv.disabled:
 		hg.queue_free()
@@ -247,13 +269,22 @@ func _happy_month_loop() -> String:
 	await _shot("next-month-start")
 	hg.queue_free()
 	await _settle(2)
-	print("month-loop happy path ok recruit=%s calendar=%s" % [cname, Calendar.label()])
 	return ""
 
 
 func _failure_exits() -> String:
+	var err := await _fail_battle_lose()
+	if err != "":
+		return err
+	err = await _fail_unpaid_exit()
+	if err != "":
+		return err
+	print("month-loop failure exits ok")
+	return ""
+
+
+func _fail_battle_lose() -> String:
 	_setup()
-	# --- Battle lose exit: echo + can still open hub/hourglass ---
 	World.encounter = {
 		"id": "month_loop_lose",
 		"kind": "ambush",
@@ -291,19 +322,20 @@ func _failure_exits() -> String:
 		return "lose path missing AdvanceMonth exit"
 	hg.queue_free()
 	await _settle(2)
+	return ""
 
-	# --- Unpaid wages exit: Calendar settle stamps unpaid → HubTodo + hourglass CTA ---
+
+func _fail_unpaid_exit() -> String:
 	_setup()
 	GameState.silver = 0
 	GameState.food = 200
-	# Ensure payroll pressure: leader wage alone is enough when silver is 0.
 	var before_unpaid := CKMorale.unpaid_months(GameState)
 	Calendar.advance(1)
 	await _settle(2)
 	var unpaid_n := CKMorale.unpaid_months(GameState)
 	if unpaid_n < 1:
 		return "unpaid_months still %d after zero-silver advance (before=%d)" % [unpaid_n, before_unpaid]
-	snap = CKEconomyState.month_echo_snapshot()
+	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	if str(snap.get("unpaid", "")) == "":
 		return "unpaid month_echo empty after payday: %s" % str(snap)
 	var found_todo := false
@@ -314,18 +346,22 @@ func _failure_exits() -> String:
 				return "unpaid_wages link want market got %s" % str(item.get("link", ""))
 	if not found_todo:
 		return "HubTodo missing unpaid_wages after payday"
+	var err := await _fail_unpaid_ui(unpaid_n)
+	if err != "":
+		return err
+	return ""
 
+
+func _fail_unpaid_ui(unpaid_n: int) -> String:
 	var castle: Control = CASTLE_SCN.instantiate()
 	get_tree().root.add_child(castle)
 	castle.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	castle.position = Vector2.ZERO
 	castle.size = Vector2(1280, 720)
 	await _settle(8)
-	var chip := castle.find_child("Todo_unpaid_wages", true, false) as BaseButton
-	if chip == null:
+	if castle.find_child("Todo_unpaid_wages", true, false) == null:
 		castle.queue_free()
 		return "castle missing Todo_unpaid_wages"
-	# Chip CTA is wired; market scene must load as the exit.
 	var market: Control = MARKET_SCN.instantiate()
 	get_tree().root.add_child(market)
 	market.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -338,8 +374,7 @@ func _failure_exits() -> String:
 	market.queue_free()
 	castle.queue_free()
 	await _settle(2)
-
-	hg = HOURGLASS_SCN.instantiate()
+	var hg: Control = HOURGLASS_SCN.instantiate()
 	get_tree().root.add_child(hg)
 	hg.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	hg.position = Vector2.ZERO
@@ -356,7 +391,7 @@ func _failure_exits() -> String:
 		return "hourglass missing EchoLine_unpaid after unpaid settle"
 	hg.queue_free()
 	await _settle(2)
-	print("month-loop failure exits ok unpaid=%d" % unpaid_n)
+	print("month-loop unpaid ui ok n=%d" % unpaid_n)
 	return ""
 
 
