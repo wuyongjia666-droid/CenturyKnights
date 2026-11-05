@@ -80,6 +80,8 @@ static func after_attack_hit(host, kind: String, cell: Vector2i) -> void:
 				"weight": hit_weight(kind),
 			}
 		)
+	# 音层与 juice 同事件：半拍内同拍（CombatSfx 读 META_HIT.msec）。
+	BattleCombatSfx.on_settle(host, kind)
 	kick_hit_stop(host, kind)
 	if DeviceProfile.is_mobile() and kind != "miss":
 		UIFX.haptic(30 if kind == "kill" or kind == "crit" else 18)

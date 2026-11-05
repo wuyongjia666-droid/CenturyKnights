@@ -2132,7 +2132,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 			dmg = BattleRules.royal_damage(atk.char, str(sk.get("blood_sig", "")), dmg)
 			if rng.randi_range(1, 100) <= atk.char.derived_crit():
 				crit = true
-				Sfx.crit()
+				# crit SFX owned by BattleCombatSfx.on_settle (same event as RematchJuice)
 				_spawn_slash(def.pos, "crit")
 				if _unit_panel:
 					UIFX.flash_modulate(_unit_panel, Color(1.35, 1.15, 0.7), 0.2)
@@ -2158,7 +2158,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
 	if _unit_layer != null: CKBoardUnits.on_strike(self, atk, def, result)
 	if result.hit:
-		Sfx.play_weapon(_weapon_for(atk.char))
+		# hit/crit/kill SFX owned by BattleCombatSfx via RematchJuice.after_attack_hit
 		_bark(atk.char, "shout")
 		_spawn_slash(def.pos, "crit" if result.crit else "slash")
 		if result.crit:
@@ -2182,7 +2182,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		elif int(def.char.hp) < _hp_before:
 			_bark(def.char, "breath")
 	else:
-		Sfx.miss()
+		# miss SFX owned by BattleCombatSfx via RematchJuice.after_attack_hit
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
 	# T-P6: confirm→hit settle flash/shake (miss/kill/crit readable)
@@ -2853,7 +2853,7 @@ func _finish(win: bool) -> void:
 				u.char.hp = maxi(1, int(u.char.max_hp * 0.3))
 				u.char.injured = true
 		Music.play_victory()
-		Sfx.win()
+		BattleCombatSfx.on_result(self, true)
 		var _tut := bool(BattleVictory.spec(map_id).get("tutorial", false))
 		if not _tut:
 			Sfx.fanfare()
@@ -2872,7 +2872,7 @@ func _finish(win: bool) -> void:
 		phase_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	else:
 		Music.play_defeat()
-		Sfx.lose()
+		BattleCombatSfx.on_result(self, false)
 		_log("【败北】可重试，进度旗标保留。")
 		var why := BattleObjectives.defeat_line(str(get_meta("battle_verdict", {}).get("reason", "")))
 		if why != "":
