@@ -269,6 +269,12 @@ func _render() -> void:
 		)
 
 
+	if not World.last_commission_reward.is_empty():
+		var rw := UIKit.body_label(
+			Locale.t("wq_last_reward_line") % World.commission_reward_summary(), UIKit.OK, 12)
+		rw.name = "LastCommissionReward"
+		rw.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_list.add_child(rw)
 	_section(Locale.t("wq_tab_done"))
 	if World.quest_log.is_empty():
 		var tip := UIKit.make_dim_label(Locale.t("wq_done_empty"))
