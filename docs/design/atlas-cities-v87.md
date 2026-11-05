@@ -165,6 +165,16 @@
 
 以上 AC-1 … AC-9、AC-11 由 `project/tests/atlas_e2e.gd` 自动验证，并已接入 `scripts/run_ci.sh`；AC-10 由入库脚本把关。
 
+## 11b. 大地图城·委托·补给闭环（fat #5 / 2026-11-05）
+
+抬分整链（可玩 atlas，非画册）：
+
+1. **进城可点**：`World.city_playable_surface(city)` 报告铁匠/委托榜/物产；城内概览 `CityPlayableSurface` 露出可玩面。
+2. **委托接交**：指定城接 → 条件满足 → 同城或指定城交；`turn_in` 盖章 `last_commission_reward`，城内 `CommissionRewardCard` / 舆图 `CommissionRewardModal` / 军务 `LastCommissionReward` 可读银·声望·物产，可 dismiss。
+3. **行程补给**：`active_commission_march_preview` 硬化 `CommissionMarchNote` / `CommissionMarchStrip` / `BoardSupplyMarch`（天数/粮）。
+
+E2E：`atlas_city_commission_supply_fat_check` + mobile twin；shots：大地图、城内、委托完成（reward 面）。
+
 ## 12. 后续可扩展（不在本版范围）
 
 - 委托链（多城连续剧情）、商队雇佣与护送车队可视化、季节对道路/价格的影响、对手佣兵团在地图上移动。

@@ -92,6 +92,7 @@ var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
 var last_contest_resolve: Dictionary = {}  # contest settled → ContestResolveModal
 var last_threat_resolve: Dictionary = {}  # unanswered threat settle → ThreatResolveModal
+var last_commission_reward: Dictionary = {}  # turn_in payoff card: silver/rep/goods readable
 var march_hold: Dictionary = {}  # halted march dest; survives city enter/exit
 var seal_detour: Dictionary = {}  # winter detour {dest, path}; survives food-halt so resume stays off sealed edges
 var march_resume: Dictionary = {}  # readable chip while a halted march is moving again
@@ -218,6 +219,7 @@ func reset() -> void:
 	last_neutral_contest = {}
 	last_contest_resolve = {}
 	last_threat_resolve = {}
+	last_commission_reward = {}
 	march_hold = {}
 	march_resume = {}
 	city_gate = {}
@@ -315,6 +317,7 @@ func from_save(d: Dictionary) -> void:
 	last_neutral_contest = {}
 	last_contest_resolve = {}
 	last_threat_resolve = {}
+	last_commission_reward = {}
 	march_hold = _saved_dict(d.get("march_hold", {}))
 	march_resume = _saved_dict(d.get("march_resume", {}))
 	seal_detour = _saved_dict(d.get("seal_detour", {}))
@@ -1336,6 +1339,96 @@ func _note_sortie_turned_in(q: Dictionary, silver: int) -> void:
 	last_city_sortie["reward_silver"] = silver
 	last_city_sortie["quest_title"] = str(q.get("title", ""))
 	last_city_sortie["guide"] = ""
+
+## Fat #5: every successful turn_in stamps a durable reward card for city/atlas/quests UI.
+func _stamp_commission_reward(q: Dictionary, silver: int, extra: String = "") -> void:
+	var issuer := str(q.get("issuer", ""))
+	var turn := turn_in_city(q)
+	var good := ""
+	var qty := 0
+	if q.has("reward_good"):
+		good = str(q.get("reward_good", ""))
+		qty = int(q.get("reward_qty", 0))
+	last_commission_reward = {
+		"quest_id": str(q.get("id", "")),
+		"title": str(q.get("title", "")),
+		"kind": str(q.get("kind", "")),
+		"silver": silver,
+		"rep": int(q.get("reward_rep", 0)),
+		"reward_good": good,
+		"reward_qty": qty,
+		"issuer": issuer,
+		"issuer_name": str(node(issuer).get("name", issuer)) if nodes.has(issuer) else issuer,
+		"turn_in": turn,
+		"turn_in_name": str(node(turn).get("name", turn)) if nodes.has(turn) else turn,
+		"day": days_total,
+		"extra": extra,
+		"shown": false,
+	}
+
+
+func dismiss_commission_reward() -> void:
+	last_commission_reward = {}
+
+
+func commission_reward_summary() -> String:
+	if last_commission_reward.is_empty():
+		return ""
+	var goods := ""
+	if str(last_commission_reward.get("reward_good", "")) != "" and int(last_commission_reward.get("reward_qty", 0)) > 0:
+		goods = " · %s ×%d" % [good_name(str(last_commission_reward.get("reward_good", ""))), int(last_commission_reward.get("reward_qty", 0))]
+	return Locale.t("atlas_commission_reward_summary", [
+		str(last_commission_reward.get("title", "")),
+		int(last_commission_reward.get("silver", 0)),
+		int(last_commission_reward.get("rep", 0)),
+		goods,
+	])
+
+
+## Active commission march preview: first active quest whose guide is away from party.
+func active_commission_march_preview() -> Dictionary:
+	for q in active:
+		var guide := quest_guide_node(q)
+		if guide == "" or guide == pos or not nodes.has(guide):
+			continue
+		var pv: Dictionary = seal_aware_travel_preview(guide)
+		if pv.is_empty():
+			pv = {"days": 0, "food": 0, "danger": 0}
+		return {
+			"quest_id": str(q.get("id", "")),
+			"title": str(q.get("title", "")),
+			"guide": guide,
+			"guide_name": str(node(guide).get("name", guide)),
+			"days": int(pv.get("days", 0)),
+			"food": int(pv.get("food", 0)),
+			"danger": int(pv.get("danger", 0)),
+			"kind": str(q.get("kind", "")),
+			"state": str(q.get("state", "")),
+		}
+	return {}
+
+
+func city_playable_surface(city: String) -> Dictionary:
+	## Fat #5: enterable city must expose smith / board / produce (one is enough; report all).
+	if not nodes.has(city):
+		return {"ok": false, "smith": false, "board": false, "produce": false}
+	var n: Dictionary = node(city)
+	var kind := str(n.get("kind", ""))
+	if kind in ["castle", "hq"]:
+		return {"ok": false, "smith": false, "board": false, "produce": false, "kind": kind}
+	var smith_ok := smith_tier(city) > 0 or not smith_stock(city).is_empty() or not city_signatures(city).is_empty()
+	_ensure_board(city)
+	var board_ok := true  # every non-castle settlement has a commission board tab
+	var produce_ok := (n.get("produce", []) as Array).size() > 0 or str(n.get("specialty", "")) != ""
+	var ok := smith_ok or board_ok or produce_ok
+	return {
+		"ok": ok,
+		"smith": smith_ok,
+		"board": board_ok,
+		"produce": produce_ok,
+		"kind": kind,
+		"name": str(n.get("name", city)),
+	}
 
 ## Days still owed on the active march (skips a leg already paid via pending_arrive).
 func remaining_route_days() -> int:
@@ -2890,7 +2983,9 @@ func turn_in(qid: String) -> Dictionary:
 	GameState.mark_dirty()
 	world_changed.emit()
 	_note_sortie_turned_in(q, silver)
+	_stamp_commission_reward(q, silver, extra)
 	var out := {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
+	out["reward"] = last_commission_reward.duplicate(true)
 	if not follow.is_empty():
 		out["follow"] = follow
 		out["chain_id"] = str(follow.get("scripted_chain", follow.get("chain_from", "")))

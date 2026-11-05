@@ -756,3 +756,17 @@ terr_appease_none,此处民心已附，无需安抚。,This site is already sett
 terr_appease_ok,安抚·%s（耗银%d·清未附%d月）,Appease · %s (spent %d · cleared %d mo unrest)
 terr_echo_appease,安抚归心·%s（耗银%d·清%d月）,Appease settled · %s (spent %d · cleared %d mo)
 terr_echo_drain,欠饷降驻·%s（驻军现%d）,Unpaid drain · %s (garrison now %d)
+atlas_commission_reward_en,委托交付,COMMISSION PAYOFF
+atlas_commission_reward_title,委托已交付,Commission turned in
+atlas_commission_reward_body,「%s」· +%d 银 · 声望 +%d%s,"%s" · +%d silver · rep +%d%s
+atlas_commission_reward_summary,交付「%s」· +%d 银 · 声望 +%d%s,Turned in "%s" · +%d silver · rep +%d%s
+atlas_commission_reward_ok,收下报酬,Claim reward
+atlas_commission_reward_goods, · %s ×%d, · %s ×%d
+atlas_commission_march_strip,委托行军 · %s · %d 日 · 粮 %d,Commission march · %s · %d d · food %d
+atlas_commission_march_here,委托目标就在此地 · %s,Commission objective here · %s
+city_commission_reward_head,报酬入账,REWARD POSTED
+city_playable_surface_line,可点：%s,Playable: %s
+city_playable_smith,铁匠,Smith
+city_playable_board,委托榜,Board
+city_playable_produce,物产,Produce
+wq_last_reward_line,刚交付：%s,Just turned in: %s

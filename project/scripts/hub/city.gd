@@ -789,7 +789,9 @@ func _tab_overview() -> void:
 		p.add_child(aff)
 	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
-	var v2 := _scroll(p2, Rect2(18, 56, 384, 236))
+	_paint_commission_march_strip(p2, Vector2(18, 40), 380)
+	_paint_playable_surface_chip(p2, Vector2(220, 16), 180)
+	var v2 := _scroll(p2, Rect2(18, 62, 384, 230))
 	var any := false
 	for q in World.active:
 		if not World.can_turn_in(q, city):
@@ -1531,6 +1533,7 @@ func _tab_board() -> void:
 	var al := UIKit.mono("ACTIVE %d/%d" % [World.active.size(), int(World.rules.get("active_limit", 5))], 9, UIKit.ACCENT)
 	al.position = Vector2(18, 366)
 	p.add_child(al)
+	_paint_commission_march_strip(p, Vector2(160, 366), 240)
 	var v2 := _scroll(p, Rect2(12, 384, 400, 184))
 	for q in World.active:
 		all_q.append(q)
@@ -1883,6 +1886,118 @@ func _do(r: Dictionary) -> void:
 	else:
 		UIFX.soft_deny(_body)
 	_refresh_all()
+	if ok and not World.last_commission_reward.is_empty() and not bool(World.last_commission_reward.get("shown", false)):
+		_show_commission_reward_panel()
+
+
+## Fat #5: durable payoff card after turn_in — silver/rep/goods readable, not toast-only.
+func _show_commission_reward_panel() -> void:
+	var card: Dictionary = World.last_commission_reward
+	if card.is_empty():
+		return
+	World.last_commission_reward["shown"] = true
+	var old := find_child("CommissionRewardPanel", true, false)
+	if old != null:
+		old.queue_free()
+	var overlay := ColorRect.new()
+	overlay.name = "CommissionRewardPanel"
+	overlay.color = Color(0, 0, 0, 0.55)
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	var panel := Panel.new()
+	panel.name = "CommissionRewardCard"
+	panel.custom_minimum_size = Vector2(420, 220)
+	panel.size = Vector2(420, 220)
+	panel.position = Vector2((size.x - 420.0) * 0.5, (size.y - 220.0) * 0.4)
+	panel.add_theme_stylebox_override("panel", UIKit.flat_box(Color("#1A1612"), Color(UIKit.ACCENT, 0.55), 10))
+	overlay.add_child(panel)
+	var en := UIKit.mono(Locale.t("atlas_commission_reward_en"), 9, UIKit.ACCENT)
+	en.position = Vector2(20, 14)
+	panel.add_child(en)
+	var title := UIKit.title_label(Locale.t("atlas_commission_reward_title"), 20, UIKit.OK)
+	title.position = Vector2(20, 34)
+	title.size = Vector2(380, 28)
+	panel.add_child(title)
+	var goods := ""
+	if str(card.get("reward_good", "")) != "" and int(card.get("reward_qty", 0)) > 0:
+		goods = Locale.t("atlas_commission_reward_goods") % [World.good_name(str(card.get("reward_good", ""))), int(card.get("reward_qty", 0))]
+	var body := UIKit.body_label(Locale.t("atlas_commission_reward_body") % [
+		str(card.get("title", "")), int(card.get("silver", 0)), int(card.get("rep", 0)), goods,
+	], UIKit.TEXT, 13)
+	body.name = "CommissionRewardText"
+	body.position = Vector2(20, 72)
+	body.size = Vector2(380, 70)
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	panel.add_child(body)
+	var ok := UIKit.cta_button(Locale.t("atlas_commission_reward_ok"), "A", 380, 40)
+	ok.name = "CommissionRewardOk"
+	ok.position = Vector2(20, 160)
+	ok.pressed.connect(func():
+		World.dismiss_commission_reward()
+		var p := find_child("CommissionRewardPanel", true, false)
+		if p != null:
+			p.queue_free()
+		_refresh_all())
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
+
+
+func _paint_commission_march_strip(parent: Node, pos: Vector2, width: float) -> void:
+	## Fat #5: active commission travel cost/food when objective is away.
+	var old := parent.find_child("CommissionMarchStrip", true, false)
+	if old != null:
+		old.queue_free()
+	var pv: Dictionary = World.active_commission_march_preview()
+	var txt := ""
+	var col := UIKit.ACCENT
+	if pv.is_empty():
+		# Show "here" when a ready turn-in is local.
+		var local := false
+		var title := ""
+		for q in World.active:
+			if World.can_turn_in(q, city):
+				local = true
+				title = str(q.get("title", ""))
+				break
+		if not local:
+			return
+		txt = Locale.t("atlas_commission_march_here") % title
+		col = UIKit.OK
+	else:
+		txt = Locale.t("atlas_commission_march_strip") % [
+			str(pv.get("guide_name", "")), int(pv.get("days", 0)), int(pv.get("food", 0)),
+		]
+		if int(pv.get("food", 0)) > GameState.food:
+			col = UIKit.DANGER
+	var lab := UIKit.body_label(txt, col, 11)
+	lab.name = "CommissionMarchStrip"
+	lab.position = pos
+	lab.size = Vector2(width, 18)
+	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+	lab.clip_text = true
+	parent.add_child(lab)
+
+
+func _paint_playable_surface_chip(parent: Node, pos: Vector2, width: float) -> void:
+	var surf: Dictionary = World.city_playable_surface(city)
+	if not bool(surf.get("ok", false)):
+		return
+	var bits: Array = []
+	if bool(surf.get("smith", false)):
+		bits.append(Locale.t("city_playable_smith"))
+	if bool(surf.get("board", false)):
+		bits.append(Locale.t("city_playable_board"))
+	if bool(surf.get("produce", false)):
+		bits.append(Locale.t("city_playable_produce"))
+	if bits.is_empty():
+		return
+	var lab := UIKit.mono(Locale.t("city_playable_surface_line") % " · ".join(bits), 9, UIKit.ACCENT)
+	lab.name = "CityPlayableSurface"
+	lab.position = pos
+	lab.size = Vector2(width, 14)
+	parent.add_child(lab)
+
 
 func _toast_msg(text: String, col: Color) -> void:
 	if text == "":

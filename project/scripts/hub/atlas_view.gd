@@ -1028,6 +1028,15 @@ func _render_left() -> void:
 	var ration_row := UIKit.kv_row(Locale.t("atlas_ration_label"), World.food_ration_text(), UIKit.TEXT, 140)
 	ration_row.name = "MarchRationRow"
 	kv.add_child(ration_row)
+	var cm: Dictionary = World.active_commission_march_preview()
+	if not cm.is_empty():
+		var cm_col := UIKit.DANGER if int(cm.get("food", 0)) > GameState.food else UIKit.EMBER
+		var cm_row := UIKit.kv_row(
+			Locale.t("wq_board_supply_march"),
+			Locale.t("wq_board_supply_days") % [int(cm.get("days", 0)), int(cm.get("food", 0))],
+			cm_col, 140)
+		cm_row.name = "CommissionMarchStrip"
+		kv.add_child(cm_row)
 	var seal_chip: Dictionary = World.seal_bypass_chip()
 	if bool(seal_chip.get("show", false)):
 		var seal_col: Color = UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER
@@ -1539,6 +1548,12 @@ func _render_hud() -> void:
 	legs_box.add_theme_constant_override("separation", 1)
 	p.add_child(legs_box)
 	var sortie_note := World.city_sortie_route_note(_sel)
+	if sortie_note == "":
+		var cm2: Dictionary = World.active_commission_march_preview()
+		if not cm2.is_empty() and str(cm2.get("guide", "")) == _sel:
+			sortie_note = Locale.t("atlas_commission_march_strip") % [
+				str(cm2.get("guide_name", "")), int(cm2.get("days", 0)), int(cm2.get("food", 0)),
+			]
 	if sortie_note != "":
 		var sn := UIKit.body_label(sortie_note, UIKit.EMBER, 10)
 		sn.name = "CommissionMarchNote"
@@ -1949,8 +1964,58 @@ func _resume_state() -> void:
 		_run_travel()
 	elif _check_stockade_cache():
 		return
+	elif _check_commission_reward():
+		return
 	elif _check_city_sortie():
 		return
+
+
+func _check_commission_reward() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_commission_reward.is_empty():
+		return false
+	if bool(World.last_commission_reward.get("shown", false)):
+		return false
+	World.last_commission_reward["shown"] = true
+	_show_commission_reward_modal(World.last_commission_reward)
+	return true
+
+
+func _show_commission_reward_modal(card: Dictionary) -> void:
+	var h := 280.0
+	var panel := _modal_panel(h)
+	panel.name = "CommissionRewardModal"
+	var el := UIKit.mono(Locale.t("atlas_commission_reward_en"), 9, UIKit.ACCENT)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var title := UIKit.title_label(Locale.t("atlas_commission_reward_title"), 22, UIKit.OK)
+	title.position = Vector2(24, 34)
+	title.size = Vector2(452, 28)
+	panel.add_child(title)
+	var goods := ""
+	if str(card.get("reward_good", "")) != "" and int(card.get("reward_qty", 0)) > 0:
+		goods = Locale.t("atlas_commission_reward_goods") % [
+			World.good_name(str(card.get("reward_good", ""))), int(card.get("reward_qty", 0)),
+		]
+	var body := UIKit.body_label(Locale.t("atlas_commission_reward_body") % [
+		str(card.get("title", "")), int(card.get("silver", 0)), int(card.get("rep", 0)), goods,
+	], UIKit.TEXT, 13)
+	body.name = "CommissionRewardBody"
+	body.position = Vector2(24, 78)
+	body.size = Vector2(452, 80)
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	panel.add_child(body)
+	var ok := UIKit.cta_button(Locale.t("atlas_commission_reward_ok"), "A", 452, 42)
+	ok.name = "CommissionRewardOk"
+	ok.position = Vector2(24, h - 70)
+	ok.pressed.connect(func():
+		World.dismiss_commission_reward()
+		_clear_modal()
+		_render_left()
+		_render_hud())
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
 
 
 func _check_city_sortie() -> bool:
@@ -2279,6 +2344,8 @@ func _show_turnin_modal(readies: int) -> void:
 			_show_toast(Locale.t("atlas_turnin_now_toast") % [titles.size(), gained], UIKit.OK)
 		else:
 			_show_toast(Locale.t("atlas_turnin_now_none"), UIKit.DANGER)
+		if _check_commission_reward():
+			return
 		if not follow.is_empty():
 			await _show_chain_advance_modal(follow))
 	p.add_child(now)
@@ -4767,6 +4834,12 @@ func _m_route(box: Control) -> void:
 		names.append(str(World.node(str(id)).get("name", id)))
 	box.add_child(_m_label("→ " + " › ".join(names) if not names.is_empty() else "→ %s" % dest.get("name", ""), UIKit.TEXT))
 	var sortie_note := World.city_sortie_route_note(_sel)
+	if sortie_note == "":
+		var cm_m: Dictionary = World.active_commission_march_preview()
+		if not cm_m.is_empty() and str(cm_m.get("guide", "")) == _sel:
+			sortie_note = Locale.t("atlas_commission_march_strip") % [
+				str(cm_m.get("guide_name", "")), int(cm_m.get("days", 0)), int(cm_m.get("food", 0)),
+			]
 	if sortie_note != "":
 		var sn := _m_label(sortie_note, UIKit.EMBER)
 		sn.name = "CommissionMarchNote"
