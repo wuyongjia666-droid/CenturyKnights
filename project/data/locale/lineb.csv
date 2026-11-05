@@ -467,3 +467,8 @@ lb_castle_hang_arms,城堡悬旗,Castle hang banner
 lb_echo_unpaid,欠饷第 %d 月·军饷未足,Unpaid month %d · wages short
 lb_hg_unpaid_pending,军饷欠了 %d 月·去市集筹银,Wages unpaid %d mo · raise silver at market
 lb_hg_to_market,去市集筹银,To the market
+lb_blood_kin_head,血脉回响,Bloodline echo
+lb_blood_kin_to_hourglass,去沙漏细读,Read in hourglass
+lb_handoff_heir,承旗人 · %s,Banner heir · %s
+lb_handoff_to_deploy,编制出战,Deploy roster
+lb_handoff_to_roster,花名册整编,Open roster
