@@ -402,6 +402,7 @@ lb_hg_echo_head,上月回响（离开后仍在）,Last month echo (kept)
 lb_hg_to_estates,去领地营建,To estates
 lb_hg_threat_pending,领地受威胁 %d 处 — 未应战前月结仍会推进威胁,Sites under threat: %d — month advance still ticks the siege
 lb_hg_to_siege,去围城告急,To siege alert
+lb_hg_threat_bribed,其中 %d 处已收买缓兵（月计清零）,Of those, %d bribed (month counter reset)
 lb_hg_reclaim_pending,失守待反夺 %d 处 — 接令前月结仍会推进,Awaiting reclaim: %d — month advance continues until you take the commission
 lb_hg_to_reclaim,去反夺,To reclaim
 lb_hg_unrest_pending,民心未附 %d 处 — 安抚前产出仍半额,Unrest at %d sites — yields stay halved until appeased

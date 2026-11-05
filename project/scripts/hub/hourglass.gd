@@ -164,13 +164,20 @@ func _show_forecast(months: int) -> void:
 
 
 ## Territory closed-loop: pending siege threats on the forecast + deep-link to SiegeAlert.
+## Fat #4: surface bribed (downgraded) count so hourglass agrees with ledger after 安抚缓兵.
 func _paint_threat_pending(host: VBoxContainer) -> void:
-	var ids: Array = CKTerritory.threatened_owned()
-	if ids.is_empty():
+	var surf: Dictionary = CKTerritory.threat_surface_state()
+	var n := int(surf.get("count", 0))
+	if n <= 0:
 		return
-	var warn := _line(Locale.t("lb_hg_threat_pending", [ids.size()]), UIKit.DANGER)
+	var warn := _line(Locale.t("lb_hg_threat_pending", [n]), UIKit.DANGER)
 	warn.name = "ThreatPending"
 	host.add_child(warn)
+	var bribed := int(surf.get("bribed", 0))
+	if bribed > 0:
+		var note := _line(Locale.t("lb_hg_threat_bribed", [bribed]), UIKit.OK)
+		note.name = "ThreatBribedNote"
+		host.add_child(note)
 	var btn := CKPageKit.button(Locale.t("lb_hg_to_siege"), true, 220)
 	btn.name = "ToSiegeThreat"
 	btn.pressed.connect(func():

@@ -623,3 +623,6 @@ ux_supporter_eagle,霜鹰,Frost eagle
 ux_supporter_bear,霜熊,Frost bear
 ux_supporter_seadrake,海龙,Sea-drake
 ux_todo_unpaid_wages,军饷欠发,Wages unpaid
+ux_territory_threat_banner,属地告急 %d 处 — 点「应战/缓兵」进围城,Sites under threat: %d — tap Fight/bribe for siege alert
+ux_territory_threat_banner_bribed,属地告急 %d 处（其中 %d 处已缓兵）— 仍可应战或再缓,Sites under threat: %d (%d bribed) — fight or bribe again
+ux_territory_threat_goto,应战/缓兵,Fight / bribe

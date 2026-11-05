@@ -1,6 +1,6 @@
 extends Control
-## Territory Ledger (P1-UX-04 / design §19–§25) — owned sites whole-chain:
-## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease · chain · contest · drain.
+## Territory Ledger (P1-UX-04 / design §19–§26) — owned sites whole-chain:
+## list · yield/garrison/threat · remote reinforce · siege alert · atlas · free stockade · reclaim · unrest/appease · chain · contest · drain · threat banner→SiegeAlert.
 
 const _MAX_LIST := 48
 
@@ -22,6 +22,8 @@ var _btn_chain: Button
 var _contest: Label
 var _btn_contest: Button
 var _drain: Label
+var _threat: Label
+var _btn_threat: Button
 var _ids: Array = []
 var _pick := ""
 
@@ -124,10 +126,26 @@ func _build() -> void:
 	_drain.visible = false
 	add_child(_drain)
 
+	# Fat #4: rival threat / siege — HubTodo→ledger→SiegeAlert (fight or bribe).
+	_threat = UIKit.body_label("", UIKit.DANGER, 13)
+	_threat.name = "TerritoryThreatBanner"
+	_threat.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_threat.position = Vector2(42, 292)
+	_threat.size = Vector2(980, 24)
+	_threat.visible = false
+	add_child(_threat)
+	_btn_threat = UIKit.cta_button(Locale.t("ux_territory_threat_goto"), "S", 160, 28)
+	_btn_threat.name = "TerritoryThreatGoto"
+	_btn_threat.position = Vector2(1040, 288)
+	_btn_threat.size = Vector2(160, 28)
+	_btn_threat.visible = false
+	_btn_threat.pressed.connect(_on_threat_goto)
+	add_child(_btn_threat)
+
 	_empty = UIKit.body_label(Locale.t("ux_territory_empty"), UIKit.EMBER, 13)
 	_empty.name = "TerritoryEmpty"
 	_empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_empty.position = Vector2(42, 292)
+	_empty.position = Vector2(42, 316)
 	_empty.size = Vector2(1196, 28)
 	_empty.visible = false
 	add_child(_empty)
@@ -257,6 +275,21 @@ func _refresh() -> void:
 	else:
 		_drain.text = ""
 		_drain.visible = false
+	var surf: Dictionary = CKTerritory.threat_surface_state()
+	var threat_n := int(surf.get("count", 0))
+	var bribed_n := int(surf.get("bribed", 0))
+	if threat_n > 0:
+		if bribed_n > 0:
+			_threat.text = Locale.t("ux_territory_threat_banner_bribed") % [threat_n, bribed_n]
+		else:
+			_threat.text = Locale.t("ux_territory_threat_banner") % threat_n
+		_threat.visible = true
+		_btn_threat.visible = true
+		_btn_threat.disabled = false
+	else:
+		_threat.text = ""
+		_threat.visible = false
+		_btn_threat.visible = false
 	var owned: Array = CKTerritory.owned_ids()
 	owned.sort()
 	for id in owned:
@@ -333,11 +366,12 @@ func _on_pick(idx: int) -> void:
 		lines.append(Locale.t("ux_territory_detail_calm"))
 	else:
 		var months := int(th.get("months", 0))
-		var rival := str(th.get("rival", "?"))
+		var left := maxi(0, 3 - months)
+		var rival := str(th.get("name", th.get("by", "?")))
 		var scouted := bool(th.get("scouted", false))
 		var bribed := bool(th.get("bribed", false))
 		var phase := Locale.t("ux_territory_phase_imminent") if months >= 1 else Locale.t("ux_territory_phase_declared")
-		lines.append(Locale.t("ux_territory_detail_threat") % [rival, months, phase])
+		lines.append(Locale.t("ux_territory_detail_threat") % [rival, left, phase])
 		if scouted:
 			lines.append(Locale.t("ux_territory_detail_scouted"))
 		if bribed:
@@ -439,3 +473,17 @@ func _on_contest_goto() -> void:
 		_msg.text = Locale.t("ux_territory_contest_fail")
 		return
 	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": focused})
+
+## Fat #4: ledger threat banner → SiegeAlert (fight / bribe / scout) for most urgent site.
+func _on_threat_goto() -> void:
+	var queued := CKTerritory.hub_requeue_siege_alert()
+	if queued == "":
+		_msg.add_theme_color_override("font_color", UIKit.DANGER)
+		_msg.text = Locale.t("ux_territory_alert_fail")
+		return
+	var s: Dictionary = CKTerritory.site(queued)
+	var anchor := str(s.get("anchor", ""))
+	if anchor != "":
+		GameState.set_meta("atlas_select", anchor)
+	GameState.set_meta("atlas_territory_site", queued)
+	CKNav.go("res://scenes/hub/atlas_view.tscn", {"site": queued})
