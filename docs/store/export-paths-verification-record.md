@@ -44,7 +44,7 @@ STORE PACKAGING DRY PASS
 exit:0
 --- store ondemand ---
 STORE ONDEMAND PASS
-STORE ONDEMAND CAP Android UNDER 411058034
+STORE ONDEMAND CAP Android UNDER 411059808
 --- export_size_report ---
 EXPORT PLATFORM Windows Desktop
 EXPORT EXCLUDED 7579984
@@ -58,10 +58,10 @@ EXPORT NOTE Windows active budget is above the 400MiB cap (ships large bank mast
 EXPORT PLATFORM Android
 EXPORT EXCLUDED 391776036
 EXPORT BANK_TIERS master=0 medium=132107832 small=0 other=0
-EXPORT SIZE 411058034
+EXPORT SIZE 411059808
 EXPORT BUDGET 847556000
 EXPORT CAP 419430400
-EXPORT CAP_STATUS Android UNDER 411058034
+EXPORT CAP_STATUS Android UNDER 411059808
 EXPORT ANDROID_BANK_CONTRACT medium_only=1
 
 EXPORT SIZE PASS
@@ -97,7 +97,7 @@ godot --headless --path project --scene res://tests/suites/art/ondemand_cap_clos
 
 ## 包体备注
 
-- `EXPORT CAP_STATUS Android UNDER`：源估 **411058034**（约 392.02 MiB）≤ CAP 419430400；余约 7.98 MiB。`medium_only=1` 已硬闸。**APK 实包另测**（导入开销 + 原生库）。H/I 仍 **用户-only**，**禁止**用降画质预设充绿。
+- `EXPORT CAP_STATUS Android UNDER`：源估 **411059808**（约 392.02 MiB）≤ CAP 419430400；余约 7.98 MiB。`medium_only=1` 已硬闸。**APK 实包另测**（导入开销 + 原生库）。H/I 仍 **用户-only**，**禁止**用降画质预设充绿。
 - Windows CAP OVER 为预期（含 master bank）；打包主目标仍是 Android。
 - 按需脚手架：deferred 类见 `ondemand-assets.json`；运行时缺大图回落 medium（`CKOnDemandArt` / `CKArtPaths`）。PAD/CDN Year2 未接线。
 
