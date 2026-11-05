@@ -49,40 +49,36 @@ func _run() -> String:
 
 func _algebra() -> String:
 	var src := FileAccess.get_file_as_string("res://autoload/lineage.gd")
-	if src.find('name = "ToNewGame"') < 0:
-		return "missing ToNewGame on dynasty end board"
-	if src.find("res://scenes/story/naming.tscn") < 0:
-		return "ToNewGame must target naming.tscn"
-	if src.find('name = "ToTitle"') < 0:
-		return "missing ToTitle on dynasty end board"
-	if src.find('name = "DynastyEndPanel"') < 0:
-		return "missing DynastyEndPanel"
-	if src.find('name = "ToGenealogy"') < 0:
-		return "missing ToGenealogy on handoff board"
-	if src.find("res://scenes/hub/lineage_view.tscn") < 0:
-		return "ToGenealogy must target lineage_view"
-	if src.find("lineage_focus") < 0:
-		return "handoff must stamp lineage_focus for genealogy track"
-	## Ban: external heir hire — succession stays company-only (descendants → roster → minor).
+	var need := [
+		['name = "ToNewGame"', "missing ToNewGame on dynasty end board"],
+		["res://scenes/story/naming.tscn", "ToNewGame must target naming.tscn"],
+		['name = "ToTitle"', "missing ToTitle on dynasty end board"],
+		['name = "DynastyEndPanel"', "missing DynastyEndPanel"],
+		['name = "ToGenealogy"', "missing ToGenealogy on handoff board"],
+		["res://scenes/hub/lineage_view.tscn", "ToGenealogy must target lineage_view"],
+		["lineage_focus", "handoff must stamp lineage_focus for genealogy track"],
+		["pick_roster_heir", "company-only succession helpers missing"],
+		["pick_minor_heir", "company-only succession helpers missing"],
+		["attach_dynasty_end_feel", "ban risk: dynasty_end field without board"],
+	]
+	for row in need:
+		if src.find(str(row[0])) < 0:
+			return str(row[1])
+	## Ban: external heir hire — succession stays company-only.
 	if src.find("CharacterFactory.make_heir") >= 0 or src.find("外招") >= 0:
 		return "ban: external heir hire path must not return"
-	if src.find("pick_roster_heir") < 0 or src.find("pick_minor_heir") < 0:
-		return "company-only succession helpers missing"
-	## Ban: field-only dynasty_end — attach must build a panel, not just stamp.
-	if src.find("attach_dynasty_end_feel") < 0 or src.find("DynastyEndPanel") < 0:
-		return "ban risk: dynasty_end field without board"
 	var loc := FileAccess.get_file_as_string("res://data/locale/lineb.csv")
-	if loc.find("lb_dynasty_end_to_new_game") < 0:
-		return "missing lb_dynasty_end_to_new_game"
-	if loc.find("lb_handoff_to_genealogy") < 0:
-		return "missing lb_handoff_to_genealogy"
+	for key in ["lb_dynasty_end_to_new_game", "lb_handoff_to_genealogy"]:
+		if loc.find(str(key)) < 0:
+			return "missing %s" % key
 	var gs := FileAccess.get_file_as_string("res://autoload/game_state.gd")
-	if gs.find("house_mods = {}") < 0:
-		return "new_game must clear house_mods for isolation"
-	if gs.find("lineage_log.clear()") < 0:
-		return "new_game must clear lineage_log"
-	if gs.find('remove_meta("lineage_focus")') < 0:
-		return "new_game must clear lineage_focus meta"
+	for pair in [
+		["house_mods = {}", "new_game must clear house_mods for isolation"],
+		["lineage_log.clear()", "new_game must clear lineage_log"],
+		['remove_meta("lineage_focus")', "new_game must clear lineage_focus meta"],
+	]:
+		if gs.find(str(pair[0])) < 0:
+			return str(pair[1])
 	return ""
 
 
@@ -121,6 +117,25 @@ func _wipe_all_living() -> void:
 		c.retired = true
 
 
+
+func _open_page(path: String) -> Control:
+	var page: Control = (load(path) as PackedScene).instantiate()
+	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	page.position = Vector2.ZERO
+	page.size = Vector2(DESK)
+	get_tree().root.add_child(page)
+	return page
+
+
+func _btn_ok(page: Node, nm: String) -> String:
+	var btn := page.find_child(nm, true, false) as BaseButton
+	if btn == null or not btn.visible or btn.disabled:
+		return "%s missing/unusable" % nm
+	if btn.get_signal_connection_list("pressed").is_empty():
+		return "%s not wired" % nm
+	return ""
+
+
 func _path_wipeout_end_board() -> String:
 	_boot("团灭终局")
 	var leader: CKCharacter = GameState.get_leader()
@@ -130,64 +145,48 @@ func _path_wipeout_end_board() -> String:
 	_wipe_all_living()
 	leader.is_leader = true
 	var closed: Dictionary = Lineage.close_after_battle()
+	var err := ""
 	if bool(closed.get("ok", false)):
-		return "wipeout: expected dynasty end, got ok"
-	if not Lineage.is_dynasty_ended():
-		return "wipeout: dynasty_end not stamped"
-	if str(Lineage.dynasty_end_snapshot().get("reason", "")) != "wipeout":
-		return "wipeout: reason want=wipeout"
+		err = "wipeout: expected dynasty end, got ok"
+	elif not Lineage.is_dynasty_ended():
+		err = "wipeout: dynasty_end not stamped"
+	elif str(Lineage.dynasty_end_snapshot().get("reason", "")) != "wipeout":
+		err = "wipeout: reason want=wipeout"
+	if err != "":
+		return err
 	## Castle hub end board.
-	var page: Control = (load(CASTLE_SCN) as PackedScene).instantiate()
-	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	page.position = Vector2.ZERO
-	page.size = Vector2(1600, 900)
-	get_tree().root.add_child(page)
+	var page := _open_page(CASTLE_SCN)
 	await _settle(14)
-	var panel := page.find_child("DynastyEndPanel", true, false)
-	if panel == null:
+	if page.find_child("DynastyEndPanel", true, false) == null:
 		page.queue_free()
 		return "wipeout castle DynastyEndPanel missing"
-	var to_t := page.find_child("ToTitle", true, false) as BaseButton
-	var to_n := page.find_child("ToNewGame", true, false) as BaseButton
-	if to_t == null or not to_t.visible or to_t.disabled:
+	err = _btn_ok(page, "ToTitle")
+	if err == "":
+		err = _btn_ok(page, "ToNewGame")
+	if err == "" and page.find_child("DynastyEndActions", true, false) == null:
+		err = "wipeout DynastyEndActions missing"
+	if err == "":
+		var to_n := page.find_child("ToNewGame", true, false) as BaseButton
+		var want_new := Locale.t("lb_dynasty_end_to_new_game")
+		if to_n != null and str(to_n.text) != want_new and str(to_n.text).find(want_new) < 0:
+			err = "wipeout ToNewGame text want=%s got=%s" % [want_new, to_n.text]
+	if err != "":
 		page.queue_free()
-		return "wipeout ToTitle missing/unusable"
-	if to_n == null or not to_n.visible or to_n.disabled:
-		page.queue_free()
-		return "wipeout ToNewGame missing/unusable"
-	if to_t.get_signal_connection_list("pressed").is_empty():
-		page.queue_free()
-		return "wipeout ToTitle not wired"
-	if to_n.get_signal_connection_list("pressed").is_empty():
-		page.queue_free()
-		return "wipeout ToNewGame not wired"
-	var want_new := Locale.t("lb_dynasty_end_to_new_game")
-	if str(to_n.text).find(want_new) < 0 and to_n.text != want_new:
-		## Allow exact or contains.
-		if str(to_n.text) != want_new:
-			page.queue_free()
-			return "wipeout ToNewGame text want=%s got=%s" % [want_new, to_n.text]
-	if page.find_child("DynastyEndActions", true, false) == null:
-		page.queue_free()
-		return "wipeout DynastyEndActions missing"
+		return err
 	_shot("end_board_wipeout")
 	page.queue_free()
 	await _settle(2)
 	## Hourglass also hosts the same board.
-	page = (load(HOURGLASS_SCN) as PackedScene).instantiate()
-	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	page.position = Vector2.ZERO
-	page.size = Vector2(1600, 900)
-	get_tree().root.add_child(page)
+	page = _open_page(HOURGLASS_SCN)
 	await _settle(12)
 	if page.find_child("DynastyEndPanel", true, false) == null:
-		page.queue_free()
-		return "wipeout hourglass DynastyEndPanel missing"
-	if page.find_child("ToNewGame", true, false) == null:
-		page.queue_free()
-		return "wipeout hourglass ToNewGame missing"
+		err = "wipeout hourglass DynastyEndPanel missing"
+	elif page.find_child("ToNewGame", true, false) == null:
+		err = "wipeout hourglass ToNewGame missing"
 	page.queue_free()
 	await _settle(2)
+	if err != "":
+		return err
 	print("wipeout end board ok ToTitle+ToNewGame")
 	return ""
 
@@ -218,65 +217,56 @@ func _path_handoff_roster_genealogy() -> String:
 	if not heir.id in lead.children_ids:
 		lead.children_ids.append(heir.id)
 	_heir_id = heir.id
-	## Company-only: heir is already a descendant on the roster — never an outside hire.
 	var rr: Dictionary = Lineage.transfer_banner("abdicate")
+	var err := ""
 	if not bool(rr.get("ok", false)):
-		return "handoff: transfer_banner failed: %s" % str(rr.get("msg", ""))
-	if Lineage.is_dynasty_ended():
-		return "handoff: must not dynasty_end when heir lives"
-	if not Lineage.is_banner_handoff_pending():
-		return "handoff: banner_handoff not pending"
-	var now: CKCharacter = GameState.get_leader()
-	if now == null or str(now.id) != _heir_id:
-		return "handoff: new leader want=%s got=%s" % [_heir_id, str(now.id if now else "")]
-	if not now.in_roster:
-		return "handoff: new banner-bearer not in roster/编制"
-	if not GameState.has_meta("lineage_focus") or str(GameState.get_meta("lineage_focus")) != _heir_id:
-		return "handoff: lineage_focus not stamped on heir"
+		err = "handoff: transfer_banner failed: %s" % str(rr.get("msg", ""))
+	elif Lineage.is_dynasty_ended():
+		err = "handoff: must not dynasty_end when heir lives"
+	elif not Lineage.is_banner_handoff_pending():
+		err = "handoff: banner_handoff not pending"
+	else:
+		var now: CKCharacter = GameState.get_leader()
+		if now == null or str(now.id) != _heir_id:
+			err = "handoff: new leader want=%s got=%s" % [_heir_id, str(now.id if now else "")]
+		elif not now.in_roster:
+			err = "handoff: new banner-bearer not in roster/编制"
+		elif not GameState.has_meta("lineage_focus") or str(GameState.get_meta("lineage_focus")) != _heir_id:
+			err = "handoff: lineage_focus not stamped on heir"
+	if err != "":
+		return err
 	## Hub board with crest + ToDeploy/ToRoster/ToGenealogy.
-	var page: Control = (load(CASTLE_SCN) as PackedScene).instantiate()
-	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	page.position = Vector2.ZERO
-	page.size = Vector2(1600, 900)
-	get_tree().root.add_child(page)
+	var page := _open_page(CASTLE_SCN)
 	await _settle(14)
 	if page.find_child("BannerHandoffPanel", true, false) == null:
+		err = "handoff castle BannerHandoffPanel missing"
+	elif page.find_child("BannerHandoffCrestStrip", true, false) == null:
+		err = "handoff castle BannerHandoffCrestStrip missing"
+	else:
+		var heir_lab := page.find_child("HandoffHeirName", true, false)
+		var heir_tx := ""
+		if heir_lab == null:
+			err = "handoff HandoffHeirName missing"
+		else:
+			if heir_lab is Label:
+				heir_tx = str((heir_lab as Label).text)
+			elif heir_lab.get("text") != null:
+				heir_tx = str(heir_lab.get("text"))
+			if heir_tx.find(_heir_name) < 0:
+				err = "handoff HandoffHeirName missing name: %s" % heir_tx
+		for nm in ["ToDeploy", "ToRoster", "ToGenealogy"]:
+			if err != "":
+				break
+			err = _btn_ok(page, str(nm))
+	if err != "":
 		page.queue_free()
-		return "handoff castle BannerHandoffPanel missing"
-	if page.find_child("BannerHandoffCrestStrip", true, false) == null:
-		page.queue_free()
-		return "handoff castle BannerHandoffCrestStrip missing"
-	var heir_lab := page.find_child("HandoffHeirName", true, false)
-	if heir_lab == null:
-		page.queue_free()
-		return "handoff HandoffHeirName missing"
-	var heir_tx := ""
-	if heir_lab is Label:
-		heir_tx = str((heir_lab as Label).text)
-	elif heir_lab.get("text") != null:
-		heir_tx = str(heir_lab.get("text"))
-	if heir_tx.find(_heir_name) < 0:
-		page.queue_free()
-		return "handoff HandoffHeirName missing name: %s" % heir_tx
-	for nm in ["ToDeploy", "ToRoster", "ToGenealogy"]:
-		var btn := page.find_child(nm, true, false) as BaseButton
-		if btn == null or not btn.visible or btn.disabled:
-			page.queue_free()
-			return "handoff %s missing/unusable" % nm
-		if btn.get_signal_connection_list("pressed").is_empty():
-			page.queue_free()
-			return "handoff %s not wired" % nm
+		return err
 	_shot("hub_after_handoff")
 	page.queue_free()
 	await _settle(2)
 	## Genealogy wall can focus the new banner-bearer.
-	page = (load(LINEAGE_SCN) as PackedScene).instantiate()
-	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	page.position = Vector2.ZERO
-	page.size = Vector2(1600, 900)
-	get_tree().root.add_child(page)
+	page = _open_page(LINEAGE_SCN)
 	await _settle(14)
-	## Focus via nav params is set by ToGenealogy; suite stamps meta already — wall should resolve.
 	var hit := false
 	for n in page.find_children("*", "Label", true, false):
 		var tx := str((n as Label).text)
@@ -284,7 +274,6 @@ func _path_handoff_roster_genealogy() -> String:
 			hit = true
 			break
 	if not hit:
-		## Soft fallback: character still in GameState and selectable via focus meta.
 		if GameState.characters.get(_heir_id) == null:
 			page.queue_free()
 			return "handoff genealogy: heir missing from characters"
@@ -295,11 +284,7 @@ func _path_handoff_roster_genealogy() -> String:
 	page.queue_free()
 	await _settle(2)
 	## Roster still lists the new captain.
-	page = (load(ROSTER_SCN) as PackedScene).instantiate()
-	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	page.position = Vector2.ZERO
-	page.size = Vector2(1600, 900)
-	get_tree().root.add_child(page)
+	page = _open_page(ROSTER_SCN)
 	await _settle(12)
 	hit = false
 	for n in page.find_children("*", "Label", true, false):
