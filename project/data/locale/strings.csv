@@ -894,3 +894,9 @@ shell_lock_tip_title,交战锁定,Engagement lock
 shell_lock_tip_body,跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。,"After you lock with someone, leaving costs +%d move; the locked foe counters more accurately. Break free with the art Step Out."
 shell_link_mark,连携,Link
 shell_foe_opening_mark,未刃,Unblooded
+lb_hire_feel_head,新入编闭环,New-hire closed loop
+lb_hire_feel_name,已入花名册：%s,%s joined the roster
+lb_hire_feel_to_roster,去花名册看脸,See them on the roster
+lb_hire_feel_to_deploy,编入出战,Put them on the field
+lb_hire_feel_dismiss,知道了,Got it
+lb_hire_new_chip,新入编,New hire

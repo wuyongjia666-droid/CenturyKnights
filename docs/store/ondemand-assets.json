@@ -6,7 +6,7 @@
   "cap": {
     "hard_bytes": 419430400,
     "source_status": "UNDER",
-    "source_bytes_android": 411081797,
+    "source_bytes_android": 411088675,
     "headroom_bytes": 8348603,
     "apk_measured": "pending_release_or_local_jdk",
     "h_i_user_only": true,

@@ -414,9 +414,11 @@ func recruit(candidate: CKCharacter, cost: int = -1) -> Dictionary:
 	log_event("招募 %s（-%d 银）" % [candidate.name, cost])
 	## Y1-B: 酒馆招募 → month_echo；属地/沙漏回读（耐玩招募闭环可感）.
 	CKEconomyState.month_echo_note("recruit", Locale.t("lb_echo_recruit", [candidate.name, cost]))
+	## Fat #8: stamp last_hire so tavern/roster/deploy close the hire→see→deploy loop.
+	CKHireFeel.stamp(candidate)
 	mark_dirty()
 	check_ambitions()
-	return {"ok": true, "msg": "招募成功", "cost": cost}
+	return {"ok": true, "msg": "招募成功", "cost": cost, "id": candidate.id}
 
 
 func exp_to_next(level: int) -> int:
