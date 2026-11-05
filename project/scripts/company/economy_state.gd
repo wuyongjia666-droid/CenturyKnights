@@ -1358,7 +1358,7 @@ static func month_echo_lines() -> Array:
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
-		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade", "unlock",
+		"death", "succession", "adult", "dues", "unpaid", "rival", "job_seal", "patrol", "steward", "upgrade", "unlock",
 		"works", "caravan", "smith", "produce", "forge", "garrison", "stockade", "stockade_credit", "sister", "muster",
 		"convoy", "contest", "reclaim", "defend", "assault", "chain", "bribe", "scout", "appease",
 		"threat_held", "threat_lost", "drain",

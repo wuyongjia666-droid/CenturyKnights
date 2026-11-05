@@ -92,18 +92,7 @@ func apply_mobile_layout() -> void:
 func _paint_result_initial() -> void:
 	## Re-read last holdings/territory echo after leave; empty still nudges advance.
 	if CKEconomyState.month_echo_has_any():
-		_log.add_child(UIKit.mono(Locale.t("lb_hg_echo_head"), 11, UIKit.ACCENT, false))
-		var snap := CKEconomyState.month_echo_snapshot()
-		_log.add_child(CKPageKit.text(Locale.t("lb_est_echo_when", [str(snap.get("label", ""))]), UIKit.TEXT_DIM, 12, 520))
-		for row in CKEconomyState.month_echo_lines():
-			var line := _line(str(row.get("text", "")), UIKit.OK)
-			line.name = "EchoLine_%s" % str(row.get("kind", "x"))
-			_log.add_child(line)
-		var to_e := CKPageKit.button(Locale.t("lb_hg_to_estates"), false, 220)
-		to_e.name = "ToEstates"
-		to_e.pressed.connect(func(): CKNav.go("res://scenes/hub/estates.tscn"))
-		_log.add_child(to_e)
-		UIFX.wire_button(to_e)
+		_paint_echo_board(_log)
 	else:
 		## Y1-B: no month echo yet → EmptyHost + how + ToCourtNews (advance stays on-page).
 		var host := VBoxContainer.new()
@@ -171,6 +160,7 @@ func _show_forecast(months: int) -> void:
 	_paint_chain_pending(_forecast)
 	_paint_contest_pending(_forecast)
 	_paint_drain_pending(_forecast)
+	_paint_unpaid_wages_pending(_forecast)
 
 
 ## Territory closed-loop: pending siege threats on the forecast + deep-link to SiegeAlert.
@@ -279,6 +269,41 @@ func _paint_drain_pending(host: VBoxContainer) -> void:
 	UIFX.wire_button(btn)
 
 
+## Company payroll durability: unpaid wages → forecast CTA to market (earn silver).
+func _paint_unpaid_wages_pending(host: VBoxContainer) -> void:
+	var n := CKMorale.unpaid_months(GameState)
+	if n < 1:
+		return
+	var warn := _line(Locale.t("lb_hg_unpaid_pending", [n]), UIKit.DANGER)
+	warn.name = "UnpaidWagesPending"
+	host.add_child(warn)
+	var btn := CKPageKit.button(Locale.t("lb_hg_to_market"), true, 220)
+	btn.name = "ToMarket"
+	btn.pressed.connect(func():
+		CKNav.go("res://scenes/hub/market.tscn")
+	)
+	host.add_child(btn)
+	UIFX.wire_button(btn)
+
+
+## After Calendar.advance: keep player-action month_echo on the settle board (not calendar-only).
+func _paint_echo_board(host: VBoxContainer) -> void:
+	if not CKEconomyState.month_echo_has_any():
+		return
+	host.add_child(UIKit.mono(Locale.t("lb_hg_echo_head"), 11, UIKit.ACCENT, false))
+	var snap := CKEconomyState.month_echo_snapshot()
+	host.add_child(CKPageKit.text(Locale.t("lb_est_echo_when", [str(snap.get("label", ""))]), UIKit.TEXT_DIM, 12, 520))
+	for row in CKEconomyState.month_echo_lines():
+		var line := _line(str(row.get("text", "")), UIKit.OK)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		host.add_child(line)
+	var to_e := CKPageKit.button(Locale.t("lb_hg_to_estates"), false, 220)
+	to_e.name = "ToEstates"
+	to_e.pressed.connect(func(): CKNav.go("res://scenes/hub/estates.tscn"))
+	host.add_child(to_e)
+	UIFX.wire_button(to_e)
+
+
 func _line(t: String, col: Color) -> Control:
 	var r := CKPageKit.row(col, 40)
 	(r[1] as VBoxContainer).add_child(CKPageKit.text(t, col, 14, 520))
@@ -317,6 +342,8 @@ func _advance(months: int, btn: Control) -> void:
 	for e in evs:
 		var deal := str(e.get("type", "")) == "rival_deal"
 		_log.add_child(_line(str(e.get("text", "")), UIKit.ACCENT if deal else UIKit.TEXT))
+	## Month-loop harden: settle board must re-read recruit/battle/commission/unpaid echoes.
+	_paint_echo_board(_log)
 	CKPageKit.drag_through(_log)
 	UIFX.stagger_children(_log, 0.03, 0.2)
 	_paint_kpis()

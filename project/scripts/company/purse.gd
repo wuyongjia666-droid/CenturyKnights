@@ -414,6 +414,12 @@ static func apply_monthly_wages(host) -> String:
 	var pay_note: String = CKMorale.on_payday(host, paid)
 	if pay_note != "":
 		msg += "；" + pay_note
+	if not paid:
+		## Month-loop harden: unpaid payroll → month_echo.unpaid for hourglass/estates readout.
+		CKEconomyState.month_echo_note(
+			"unpaid",
+			Locale.t("lb_echo_unpaid", [CKMorale.unpaid_months(host)])
+		)
 	if host.food < 0:
 		host.morale = maxi(0, host.morale - 20)
 		host.food = 0

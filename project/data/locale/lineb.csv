@@ -463,3 +463,6 @@ lb_vow_arms,誓约徽,Vow arms
 lb_handoff_head,传旗落定,Banner handed on
 lb_handoff_dismiss,收下旗徽,Dismiss handoff
 lb_castle_hang_arms,城堡悬旗,Castle hang banner
+lb_echo_unpaid,欠饷第 %d 月·军饷未足,Unpaid month %d · wages short
+lb_hg_unpaid_pending,军饷欠了 %d 月·去市集筹银,Wages unpaid %d mo · raise silver at market
+lb_hg_to_market,去市集筹银,To the market
