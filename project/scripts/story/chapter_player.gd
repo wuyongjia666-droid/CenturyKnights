@@ -231,9 +231,15 @@ func _build() -> void:
 	var leave_hub := UIKit.make_button(Locale.t("story_back_to_hub"), 168)
 	leave_hub.name = "StoryLeaveHub"
 	leave_hub.custom_minimum_size = Vector2(168, TOUCH)
+	leave_hub.clip_text = true
+	leave_hub.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	leave_hub.pressed.connect(_return_to_hub)
 	top.add_child(leave_hub)
 	_place_top_buttons()
+	# Text shaping finishes after the first frame; re-pin so leave stays on-screen.
+	call_deferred("_place_top_buttons")
+	if not resized.is_connected(_place_top_buttons):
+		resized.connect(_place_top_buttons)
 
 
 func _place_dialogue_crests() -> void:
@@ -319,15 +325,32 @@ func _offer_hub_exit(hint: String) -> void:
 	_add_action(Locale.t("story_back_to_hub"), func(): _return_to_hub())
 
 func _place_top_buttons() -> void:
+	## EN "Back to the castle" lays out wider than custom_minimum; measuring
+	## mins alone left StoryLeaveHub ~10px past the 1280 edge (no-exit chrome).
 	var top := get_node_or_null("StoryTopButtons") as Control
 	if top == null:
 		return
-	var cluster := top.get_combined_minimum_size().x
+	var sep := float(top.get_theme_constant("separation"))
+	var cluster := 0.0
+	var n := top.get_child_count()
+	for i in n:
+		var child := top.get_child(i) as Control
+		if child == null:
+			continue
+		var w := maxf(child.get_combined_minimum_size().x, child.size.x)
+		if w < 8.0:
+			w = child.custom_minimum_size.x
+		cluster += w
+		if i < n - 1:
+			cluster += sep
 	if cluster < 8.0:
-		var n := top.get_child_count()
 		cluster = 120.0 * float(maxi(n, 1))
-	top.position.x = 1280.0 - 48.0 - cluster
+	var view_w := maxf(size.x, 1280.0)
+	var margin := 24.0 if DeviceProfile.is_mobile() else 48.0
+	top.position.x = maxf(8.0, view_w - margin - cluster)
 	top.position.y = 12.0
+	test_capture["top_buttons_cluster"] = cluster
+	test_capture["top_buttons_x"] = top.position.x
 
 func _resume_line(beat_id: String) -> int:
 	var mark = GameState.house_mods.get("story_line", {})
@@ -1175,12 +1198,12 @@ func apply_mobile_layout() -> void:
 
 ## C-07: on wide phone viewports the skip/save pair hugs the right edge instead of the 1280 column.
 func _pin_top_right() -> void:
+	_place_top_buttons()
 	var top := get_node_or_null("StoryTopButtons") as Control
 	if top == null:
 		return
 	var w := maxf(size.x, 1280.0)
-	top.position.x = w - 24.0 - top.get_combined_minimum_size().x
-	test_capture["top_right_gap"] = w - (top.position.x + top.get_combined_minimum_size().x)
+	test_capture["top_right_gap"] = w - (top.position.x + maxf(top.get_combined_minimum_size().x, top.size.x))
 
 ## C-05: the portrait plate has a pale studio backdrop; a dark vignette keeps it from glaring
 ## in night scenes without touching the face in the middle.
