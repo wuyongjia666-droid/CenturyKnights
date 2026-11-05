@@ -89,9 +89,29 @@ func _build() -> void:
 		pace.text = _pace_label()
 		Sfx.click())
 	jumps.add_child(pace)
+	## Fat #6: marriage→pregnancy→birth readable on genealogy (with hourglass/hub).
+	_mount_blood_kin_hook()
 	if not DeviceProfile.is_mobile():
 		UIKit.footer_bar(self, [["A", Locale.t("gen2_31")], ["ESC", Locale.t("gen2_27")]], "GENEALOGY v2")
 	UIFX.page_enter(self)
+
+
+func _mount_blood_kin_hook() -> void:
+	var old := get_node_or_null("BloodKinHookHost")
+	if old != null:
+		old.queue_free()
+	if not Lineage.is_blood_kin_pending():
+		return
+	var host := Control.new()
+	host.name = "BloodKinHookHost"
+	## Sit above the jump row / below the wall so genealogy keeps both readable.
+	host.position = Vector2(24, 500)
+	host.size = Vector2(820, 100)
+	host.mouse_filter = Control.MOUSE_FILTER_PASS
+	add_child(host)
+	Lineage.attach_blood_kin_hook(host, 800.0)
+	if _scroll != null:
+		_scroll.size.y = mini(_scroll.size.y, 420.0)
 
 func _pace_label() -> String:
 	return Locale.t("fertility_to_term") if CKFamilyState.fast_family(GameState) else Locale.t("fertility_to_fast")

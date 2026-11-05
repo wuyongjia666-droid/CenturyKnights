@@ -724,8 +724,8 @@ func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	return panel
 
 
-## Hub tip after a successful 传旗: BannerHandoffPanel + crest strip + dismiss.
-## Cleared on dismiss or when dynasty_end stamps.
+## Hub tip after a successful 传旗: BannerHandoffPanel + crest strip + heir name
+## + deploy/roster follow-on (编制入口), not toast-only. Cleared on dismiss or dynasty_end.
 func is_banner_handoff_pending() -> bool:
 	var raw: Variant = GameState.house_mods.get("banner_handoff", {})
 	return typeof(raw) == TYPE_DICTIONARY and not (raw as Dictionary).is_empty()
@@ -752,7 +752,26 @@ func attach_banner_handoff_feel(parent: Node, width: float = 520.0) -> Control:
 	CKHeraldryField.place_banner_handoff_crest_strip(panel, outgoing, heir, Vector2.ZERO, Vector2(32, 38), Vector2(20, 28))
 	panel.add_child(UIKit.mono(Locale.t("lb_handoff_head"), 11, UIKit.ACCENT, false))
 	panel.add_child(CKPageKit.text(str(snap.get("msg", "")), UIKit.TEXT, 14, maxf(280.0, width - 24.0)))
-	var dismiss := CKPageKit.button(Locale.t("lb_handoff_dismiss"), false, mini(280.0, width))
+	if heir != null:
+		var heir_lab := UIKit.mono(Locale.t("lb_handoff_heir", [str(heir.name)]), 12, UIKit.OK, false)
+		heir_lab.name = "HandoffHeirName"
+		panel.add_child(heir_lab)
+	var acts := HBoxContainer.new()
+	acts.name = "HandoffActions"
+	acts.add_theme_constant_override("separation", 10)
+	panel.add_child(acts)
+	var bw := mini(200.0, maxf(140.0, (width - 24.0) / 3.0))
+	var to_d := CKPageKit.button(Locale.t("lb_handoff_to_deploy"), true, bw)
+	to_d.name = "ToDeploy"
+	to_d.pressed.connect(func(): CKNav.go("res://scenes/hub/deploy.tscn"))
+	acts.add_child(to_d)
+	UIFX.wire_button(to_d)
+	var to_r := CKPageKit.button(Locale.t("lb_handoff_to_roster"), false, bw)
+	to_r.name = "ToRoster"
+	to_r.pressed.connect(func(): CKNav.go("res://scenes/hub/roster.tscn"))
+	acts.add_child(to_r)
+	UIFX.wire_button(to_r)
+	var dismiss := CKPageKit.button(Locale.t("lb_handoff_dismiss"), false, bw)
 	dismiss.name = "DismissHandoff"
 	dismiss.pressed.connect(func():
 		GameState.house_mods.erase("banner_handoff")
@@ -760,8 +779,53 @@ func attach_banner_handoff_feel(parent: Node, width: float = 520.0) -> Control:
 		if is_instance_valid(panel):
 			panel.queue_free()
 	)
-	panel.add_child(dismiss)
+	acts.add_child(dismiss)
 	UIFX.wire_button(dismiss)
+	return panel
+
+
+## Marriage / pregnancy / birth month_echo rows — readable kin hook for genealogy + hub.
+func blood_kin_kinds() -> Array:
+	return ["marriage", "pregnancy", "birth"]
+
+
+func blood_kin_echo_rows() -> Array:
+	var snap := CKEconomyState.month_echo_snapshot()
+	var out: Array = []
+	for k in blood_kin_kinds():
+		var tx := str(snap.get(str(k), ""))
+		if tx != "":
+			out.append({"kind": str(k), "text": tx})
+	return out
+
+
+func is_blood_kin_pending() -> bool:
+	return not blood_kin_echo_rows().is_empty()
+
+
+func attach_blood_kin_hook(parent: Node, width: float = 520.0) -> Control:
+	if parent == null or not is_blood_kin_pending():
+		return null
+	var rows := blood_kin_echo_rows()
+	var panel := VBoxContainer.new()
+	panel.name = "BloodKinHookPanel"
+	panel.add_theme_constant_override("separation", 6)
+	panel.custom_minimum_size = Vector2(width, 0)
+	parent.add_child(panel)
+	panel.add_child(UIKit.mono(Locale.t("lb_blood_kin_head"), 11, UIKit.ACCENT, false))
+	var snap := CKEconomyState.month_echo_snapshot()
+	var when := str(snap.get("label", ""))
+	if when != "":
+		panel.add_child(CKPageKit.text(Locale.t("lb_est_echo_when", [when]), UIKit.TEXT_DIM, 12, maxf(240.0, width - 16.0)))
+	for row in rows:
+		var line := CKPageKit.text(str(row.get("text", "")), UIKit.OK, 14, maxf(240.0, width - 16.0))
+		line.name = "BloodKinLine_%s" % str(row.get("kind", "x"))
+		panel.add_child(line)
+	var to_h := CKPageKit.button(Locale.t("lb_blood_kin_to_hourglass"), false, mini(280.0, width))
+	to_h.name = "ToHourglass"
+	to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
+	panel.add_child(to_h)
+	UIFX.wire_button(to_h)
 	return panel
 
 

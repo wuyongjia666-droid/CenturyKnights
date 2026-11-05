@@ -317,6 +317,47 @@ static func portrait_rect(c, sz: Vector2) -> Control:
 		box.modulate = Color(0.55, 0.55, 0.55, 1.0)
 	return box
 
+## Direct-kin portrait likeness via heritable tokens (genome seed / Mendelian cross).
+## Empty when the person has no recorded parents.
+static func kin_likeness_of(c) -> Dictionary:
+	if c == null:
+		return {}
+	var parents: Array = []
+	for pid in c.parent_ids:
+		var p = GameState.characters.get(str(pid))
+		if p != null:
+			parents.append(p)
+	if parents.is_empty():
+		return {}
+	var fa = parents[0]
+	var mo = parents[1] if parents.size() > 1 else parents[0]
+	return CKGenomePortrait.kinship_report(fa, mo, c)
+
+
+static func kin_likeness_label(c) -> String:
+	var report := kin_likeness_of(c)
+	if report.is_empty():
+		return ""
+	var shared: Array = report.get("shared", [])
+	var frac := float(report.get("fraction", 0.0))
+	if shared.is_empty() or frac < 0.20:
+		return Locale.t("gen2_likeness_weak")
+	return Locale.t("gen2_likeness", [shared.size(), int(round(frac * 100.0))])
+
+
+static func _mount_likeness_chip(host: Control, c, at: Vector2, width: float) -> Control:
+	var line := kin_likeness_label(c)
+	if line == "":
+		return null
+	var lab := UIKit.body_label(line, UIKit.OK, 12)
+	lab.name = "BloodLikenessChip"
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lab.position = at
+	lab.size = Vector2(width, 36)
+	host.add_child(lab)
+	return lab
+
+
 ## Builds the panel into `host` (cleared first). `action_text` "" hides the action button.
 static func render(host: Control, c, action_text: String, action_cb: Callable, extra_text: String = "", extra_cb: Callable = Callable()) -> Panel:
 	for n in host.get_children():
@@ -406,6 +447,7 @@ static func render(host: Control, c, action_text: String, action_cb: Callable, e
 	bl.autowrap_mode = TextServer.AUTOWRAP_OFF
 	bl.position = Vector2(20, yt_y + 114.0)
 	p.add_child(bl)
+	_mount_likeness_chip(p, c, Vector2(20, yt_y + 136.0), 354.0)
 	_place_actions(p, action_text, action_cb, extra_text, extra_cb, false)
 	return p
 
@@ -475,6 +517,11 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	var pb := str(c.primary_bloodline())
 	var mix := int(round(float(c.blood_mix.get(pb, 1.0)) * 100))
 	v.add_child(MobilePage.label(Locale.t("gen2_10") % [GameState.get_bloodline(pb).get("name", pb), mix], UIKit.TEXT_DIM))
+	var like := kin_likeness_label(c)
+	if like != "":
+		var chip := MobilePage.label(like, UIKit.OK)
+		chip.name = "BloodLikenessChip"
+		v.add_child(chip)
 	GameState.set_meta("yeartrace_back", "res://scenes/hub/lineage_view.tscn")
 	YeartraceUi.mount_for(v, c, 420.0, 4)
 	MobilePage.spacer(v)

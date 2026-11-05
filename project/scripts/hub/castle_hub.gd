@@ -57,9 +57,17 @@ func _build() -> void:
 		var hhost := Control.new()
 		hhost.name = "BannerHandoffHost"
 		hhost.position = Vector2(190, 72)
-		hhost.size = Vector2(700, 160)
+		hhost.size = Vector2(700, 220)
 		add_child(hhost)
 		Lineage.attach_banner_handoff_feel(hhost, 680.0)
+	## Fat #6: hub-side blood-kin echo (marriage / pregnancy / birth) — pairs with genealogy.
+	if Lineage.is_blood_kin_pending() and not Lineage.is_banner_handoff_pending() and not Lineage.is_dynasty_ended():
+		var khost := Control.new()
+		khost.name = "BloodKinHookHost"
+		khost.position = Vector2(190, 72)
+		khost.size = Vector2(700, 140)
+		add_child(khost)
+		Lineage.attach_blood_kin_hook(khost, 680.0)
 
 	# ── NAVIGATION ─────────────────────────────────────────
 	var nav_panel := UIKit.panel_at(self, Rect2(26, 72, 150, 612), 10)

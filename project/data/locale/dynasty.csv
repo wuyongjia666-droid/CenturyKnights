@@ -257,3 +257,5 @@ lb_quests_board_empty,木板上暂时空着,The castle board is empty
 lb_quests_board_empty_why,本堡委托下个月再刷。先把在途的办完，或过月后再来看木板。,Castle jobs refresh next month. Finish active ones, or advance a month and check again.
 lb_quests_board_empty_how,点下方去沙漏过月。,Tap below to open the hourglass and advance a month.
 lb_quests_to_hourglass,去沙漏过月,To the hourglass
+gen2_likeness,亲缘相似 · 共 %d 征象（%d%%）,Kin likeness · %d shared (%d%%)
+gen2_likeness_weak,亲缘相似偏淡,Kin likeness faint
