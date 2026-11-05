@@ -29,37 +29,58 @@ func _run() -> String:
 	await _set_phone_window()
 	_boot()
 	World.take_siege_alert()
+	var err := await _ui_castle()
+	if err != "":
+		return err
+	err = await _ui_ledger_requeue()
+	if err != "":
+		return err
+	err = await _ui_siege_bribe()
+	if err != "":
+		return err
+	err = await _ui_hourglass_bribed()
+	if err != "":
+		return err
+	return ""
+
+
+func _ui_castle() -> String:
 	var castle: Node = CASTLE_SCN.instantiate()
 	add_child(castle)
 	for _i in 16:
 		await get_tree().process_frame
-	if castle.find_child("Todo_territory_threat", true, false) == null:
-		castle.queue_free()
-		return "mobile Todo_territory_threat missing"
+	var miss := castle.find_child("Todo_territory_threat", true, false) == null
 	castle.queue_free()
 	for _j in 4:
 		await get_tree().process_frame
+	if miss:
+		return "mobile Todo_territory_threat missing"
+	return ""
+
+
+func _ui_ledger_requeue() -> String:
 	var ledger: Control = LEDGER_SCN.instantiate()
 	get_tree().root.add_child(ledger)
 	for _i in 14:
 		await get_tree().process_frame
 	var banner := ledger.find_child("TerritoryThreatBanner", true, false) as Control
 	var goto_btn := ledger.find_child("TerritoryThreatGoto", true, false) as Button
+	var err := ""
 	if banner == null or not banner.visible:
-		ledger.queue_free()
-		return "mobile TerritoryThreatBanner missing"
-	if goto_btn == null or not goto_btn.visible:
-		ledger.queue_free()
-		return "mobile TerritoryThreatGoto missing"
-	if goto_btn.size.x < 40 or goto_btn.size.y < 20:
-		ledger.queue_free()
-		return "mobile TerritoryThreatGoto clipped"
-	if CKTerritory.hub_requeue_siege_alert() == "":
-		ledger.queue_free()
-		return "mobile threat goto requeue empty"
+		err = "mobile TerritoryThreatBanner missing"
+	elif goto_btn == null or not goto_btn.visible:
+		err = "mobile TerritoryThreatGoto missing"
+	elif goto_btn.size.x < 40 or goto_btn.size.y < 20:
+		err = "mobile TerritoryThreatGoto clipped"
+	elif CKTerritory.hub_requeue_siege_alert() == "":
+		err = "mobile threat goto requeue empty"
 	ledger.queue_free()
 	for _j2 in 4:
 		await get_tree().process_frame
+	return err
+
+
+func _ui_siege_bribe() -> String:
 	var atlas: Control = ATLAS_SCN.instantiate()
 	get_tree().root.add_child(atlas)
 	for _i in 10:
@@ -69,46 +90,48 @@ func _run() -> String:
 	for _j3 in 10:
 		await get_tree().process_frame
 	var panel := atlas.find_child("SiegeAlertModal", true, false) as Control
+	var err := ""
 	if panel == null:
-		atlas.queue_free()
-		return "mobile SiegeAlertModal missing"
-	var bribe := panel.find_child("SiegeBribe", true, false) as Button
-	var relief := panel.find_child("SiegeRelief", true, false) as Button
-	if bribe == null or relief == null:
-		atlas.queue_free()
-		return "mobile siege CTAs missing"
-	if bribe.size.x < 40 or relief.size.x < 40:
-		atlas.queue_free()
-		return "mobile siege CTAs clipped"
-	bribe.pressed.emit()
-	for _k2 in 12:
-		await get_tree().process_frame
+		err = "mobile SiegeAlertModal missing"
+	else:
+		var bribe := panel.find_child("SiegeBribe", true, false) as Button
+		var relief := panel.find_child("SiegeRelief", true, false) as Button
+		if bribe == null or relief == null:
+			err = "mobile siege CTAs missing"
+		elif bribe.size.x < 40 or relief.size.x < 40:
+			err = "mobile siege CTAs clipped"
+		else:
+			bribe.pressed.emit()
+			for _k2 in 12:
+				await get_tree().process_frame
 	atlas.queue_free()
 	for _j4 in 4:
 		await get_tree().process_frame
+	return err
+
+
+func _ui_hourglass_bribed() -> String:
 	var hg: Control = HOURGLASS_SCN.instantiate()
 	get_tree().root.add_child(hg)
 	for _i in 14:
 		await get_tree().process_frame
+	var err := ""
 	if hg.find_child("ThreatPending", true, false) == null:
-		hg.queue_free()
-		return "mobile ThreatPending missing"
-	if hg.find_child("ThreatBribedNote", true, false) == null:
-		hg.queue_free()
-		return "mobile ThreatBribedNote missing"
-	var to_siege := hg.find_child("ToSiegeThreat", true, false) as Control
-	if to_siege == null:
-		hg.queue_free()
-		return "mobile ToSiegeThreat missing"
-	if to_siege.size.x < 40:
-		hg.queue_free()
-		return "mobile ToSiegeThreat clipped"
-	var surf: Dictionary = CKTerritory.threat_surface_state()
-	if int(surf.get("count", 0)) < 1 or int(surf.get("bribed", 0)) < 1:
-		hg.queue_free()
-		return "mobile surface bribed disagree: %s" % str(surf)
+		err = "mobile ThreatPending missing"
+	elif hg.find_child("ThreatBribedNote", true, false) == null:
+		err = "mobile ThreatBribedNote missing"
+	else:
+		var to_siege := hg.find_child("ToSiegeThreat", true, false) as Control
+		if to_siege == null:
+			err = "mobile ToSiegeThreat missing"
+		elif to_siege.size.x < 40:
+			err = "mobile ToSiegeThreat clipped"
+		else:
+			var surf: Dictionary = CKTerritory.threat_surface_state()
+			if int(surf.get("count", 0)) < 1 or int(surf.get("bribed", 0)) < 1:
+				err = "mobile surface bribed disagree: %s" % str(surf)
 	hg.queue_free()
-	return ""
+	return err
 
 
 func _boot() -> void:
