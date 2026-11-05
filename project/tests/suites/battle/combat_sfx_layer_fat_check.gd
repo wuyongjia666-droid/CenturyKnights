@@ -61,13 +61,23 @@ func _algebra() -> String:
 
 
 func _algebra_api() -> String:
+	var err := _algebra_api_meta()
+	if err == "":
+		err = _algebra_api_layers()
+	if err == "":
+		err = _algebra_api_surface()
+	return err
+
+
+func _algebra_api_meta() -> String:
 	if BattleCombatSfx.META_LAST != "m_combat_sfx":
 		return "META_LAST"
 	if BattleCombatSfx.HALF_BEAT_MSEC > 250:
 		return "half-beat window too loose"
-	var layer_err := BattleCombatSfx.assert_layers_ordered()
-	if layer_err != "":
-		return layer_err
+	return BattleCombatSfx.assert_layers_ordered()
+
+
+func _algebra_api_layers() -> String:
 	for ev in NEED_EVENTS:
 		if BattleCombatSfx.sfx_id_for(ev) == "":
 			return "sfx id empty for %s" % ev
@@ -85,6 +95,10 @@ func _algebra_api() -> String:
 		return "hit must route SFX bus"
 	if BattleCombatSfx.bus_for_event("win") != "SFX":
 		return "win must route SFX bus"
+	return ""
+
+
+func _algebra_api_surface() -> String:
 	var body := FileAccess.get_file_as_string("res://scripts/battle/battle_combat_sfx.gd")
 	for fn in [
 		"static func emit",
@@ -337,6 +351,18 @@ func _arrange() -> String:
 
 
 func _scene_attack_chain(tag: String) -> String:
+	var err := await _scene_select_confirm(tag)
+	if err == "":
+		err = await _scene_settle_sync(tag)
+	if err == "":
+		err = await _scene_win_lose(tag)
+	if err == "":
+		err = _scene_stream_buses(tag)
+	Engine.time_scale = 1.0
+	return err
+
+
+func _scene_select_confirm(tag: String) -> String:
 	# 1) select
 	_battle._select_player(_player_i)
 	await _settle(2)
@@ -360,12 +386,15 @@ func _scene_attack_chain(tag: String) -> String:
 	_battle.units[_player_i].has_struck = false
 	_battle.preview_attack_ui = _foe_i
 	_battle.units[_player_i].char.temp_hit_bonus = 100
-	# Keep foe alive for a hit event first.
 	_battle.units[_foe_i].char.hp = maxi(12, int(_battle.units[_foe_i].char.hp))
 	BattleTouchConfirm.confirm_attack(_battle)
 	await _settle(3)
 	if BattleCombatSfx.last_for("confirm_attack").is_empty():
 		return "%s confirm_attack SFX missing" % tag
+	return ""
+
+
+func _scene_settle_sync(tag: String) -> String:
 	var hit_row := BattleCombatSfx.last_for("hit")
 	var crit_row := BattleCombatSfx.last_for("crit")
 	var kill_row := BattleCombatSfx.last_for("kill")
@@ -380,7 +409,6 @@ func _scene_attack_chain(tag: String) -> String:
 	if not BattleCombatSfx.within_half_beat(sfx_msec, juice_msec):
 		return "%s SFX desync %dms > half-beat (sfx=%d juice=%d)" % [tag, absi(sfx_msec - juice_msec), sfx_msec, juice_msec]
 	await _shot("%s-hit" % tag)
-	# Force crit settle path (algebra already covered emit; runtime force via on_settle after juice stamp).
 	BattleRematchJuice.after_attack_hit(_battle, "crit", _battle.units[_foe_i].pos)
 	await _settle(1)
 	if BattleCombatSfx.last_for("crit").is_empty():
@@ -388,12 +416,14 @@ func _scene_attack_chain(tag: String) -> String:
 	var crit2 := BattleCombatSfx.last_for("crit")
 	if not BattleCombatSfx.within_half_beat(int(crit2.get("msec", 0)), int(crit2.get("juice_msec", -99999))):
 		return "%s crit desync" % tag
-	# Force kill / 击破
 	BattleRematchJuice.after_attack_hit(_battle, "kill", _battle.units[_foe_i].pos)
 	await _settle(1)
 	if BattleCombatSfx.last_for("kill").is_empty():
 		return "%s kill/break settle SFX missing" % tag
-	# 4) win
+	return ""
+
+
+func _scene_win_lose(tag: String) -> String:
 	_battle.battle_over = false
 	for u in _battle.units:
 		if str(u.team) == "enemy":
@@ -403,26 +433,27 @@ func _scene_attack_chain(tag: String) -> String:
 	if BattleCombatSfx.last_for("win").is_empty():
 		return "%s win SFX missing" % tag
 	await _shot("%s-win" % tag)
-	# 5) lose on fresh finish path
 	_battle.battle_over = false
-	BattleCombatSfx.clear_log()  # keep lose assert clean; prior events already proven
-	# Re-seed required earlier events for full-chain log on this surface? Spec: full attack chain asserts key hooks — already asserted above. Lose separately:
+	BattleCombatSfx.clear_log()
 	_battle._finish(false)
 	await _settle(3)
 	if BattleCombatSfx.last_for("lose").is_empty():
 		return "%s lose SFX missing" % tag
 	await _shot("%s-lose" % tag)
-	# Playing players exist for key ids (event→play call)
+	return ""
+
+
+func _scene_stream_buses(tag: String) -> String:
 	for pair in [["select", "ui_click"], ["hit", "hit"], ["crit", "crit"], ["kill", "drum_thump"], ["win", "win"], ["lose", "lose"]]:
 		var id := str(pair[1])
-		var p: AudioStreamPlayer = Sfx.get_node_or_null(id) as AudioStreamPlayer
-		if p == null or p.stream == null:
+		var player: AudioStreamPlayer = Sfx.get_node_or_null(id) as AudioStreamPlayer
+		if player == null or player.stream == null:
 			return "%s missing stream for %s" % [tag, id]
 		var want_bus := "UI" if id.begins_with("ui_") else "SFX"
-		if p.bus != want_bus:
-			return "%s bus for %s want %s got %s" % [tag, id, want_bus, p.bus]
-	Engine.time_scale = 1.0
+		if player.bus != want_bus:
+			return "%s bus for %s want %s got %s" % [tag, id, want_bus, player.bus]
 	return ""
+
 
 
 func _set_window() -> void:
