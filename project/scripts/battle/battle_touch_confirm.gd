@@ -179,6 +179,7 @@ static func confirm_move(host) -> void:
 	var cell: Vector2i = host.preview_move_cell
 	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan!=drag contract).
 	BattlePick.focus_follow_preview(host)
+	BattleCombatSfx.on_confirm(host, "move")
 	clear(host, false)
 	commit_move(host, cell)
 	# 战棋手感整块: land peek + settle with threatened foes (not mover-only).
@@ -204,6 +205,7 @@ static func confirm_attack(host) -> void:
 		return
 	# T-P6: confirm→hit settle path — stamp confirm; resolve refreshes hit/miss/kill juice.
 	host.set_meta("m_attack_confirm_msec", Time.get_ticks_msec())
+	BattleCombatSfx.on_confirm(host, "attack")
 	host._do_attack(host.selected, ui)
 	if actor_i >= 0 and actor_i < host.units.size():
 		actor = host.units[actor_i].pos

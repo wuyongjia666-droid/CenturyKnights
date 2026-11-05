@@ -38,6 +38,7 @@ static func after_select(host) -> void:
 	if host == null:
 		return
 	BattleBoardInset.refresh_info_block(host)
+	BattleCombatSfx.on_select(host)
 	_stamp(host, "select", {"ui": int(host.get("selected"))})
 
 

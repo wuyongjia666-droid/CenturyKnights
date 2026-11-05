@@ -18,10 +18,25 @@ func _ready() -> void:
 
 func _source() -> String:
 	var src := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
-	for needle in ["play_player_turn", "play_enemy_turn", "play_boss", "set_tension", "play_victory", "play_defeat", "play_weapon", "play_footstep", "play_ambience", "play_battle", "play_bark"]:
+	# Hit/crit/kill SFX owned by BattleCombatSfx (same event as RematchJuice); not raw Sfx.play_weapon.
+	var needles := [
+		"play_player_turn", "play_enemy_turn", "play_boss", "set_tension",
+		"play_victory", "play_defeat", "BattleCombatSfx", "play_footstep",
+		"play_ambience", "play_battle", "play_bark",
+	]
+	for needle in needles:
 		if src.find(needle) < 0:
 			return "missing %s" % needle
-	for call in ["_bark(atk.char, \"shout\")", "_bark(def.char, \"shout\")", "_bark(def.char, \"breath\")", "_bark(u.char, \"shout\")", "_bark(o.char, \"shout\")", "_bark(o.char, \"breath\")"]:
+	if src.find("BattleCombatSfx.on_result") < 0:
+		return "missing BattleCombatSfx.on_result"
+	if src.find("BattleRematchJuice.after_attack_hit") < 0:
+		return "missing RematchJuice settle (CombatSfx.on_settle co-trigger)"
+	var bark_calls := [
+		"_bark(atk.char, \"shout\")", "_bark(def.char, \"shout\")",
+		"_bark(def.char, \"breath\")", "_bark(u.char, \"shout\")",
+		"_bark(o.char, \"shout\")", "_bark(o.char, \"breath\")",
+	]
+	for call in bark_calls:
 		if src.find(call) < 0:
 			return "missing %s" % call
 	if src.find("Sfx.play_bark(str(c.gender), int(c.age), kind)") < 0:
