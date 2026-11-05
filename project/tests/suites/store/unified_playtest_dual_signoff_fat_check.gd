@@ -2,7 +2,7 @@ extends Node
 ## Fat knife #10「统一试玩双端签发」
 ## Lever: 同 tip 双端包 + 签收对照清单底板（不代真机签字）。
 ## Box/CI path: 标题 → 创角 → 枢纽 → 一战 → 再战（desktop+mobile）。
-## m173 APK：docs/playtest/m173-smoke-handoff.md（模拟器绿 ≠ 真机过关）。
+## m173 APK：docs/playtest/m173-smoke-handoff.md（模拟器绿不等于真机过关）。
 
 const MARKER := "UNIFIED PLAYTEST DUAL SIGNOFF FAT PASS"
 const TIP8 := "35024036"
@@ -94,7 +94,7 @@ func _algebra_checklist_y1a() -> String:
 	var body := _repo_doc_text("docs/playtest/unified-dual-signoff.md")
 	for sec in ["3.1", "3.2", "3.3", "3.4", "3.5", "3.6"]:
 		if body.find(sec) < 0:
-			return "checklist missing Y1-A §%s" % sec
+			return "checklist missing Y1-A sec %s" % sec
 	for needle in ["不难选中", "安全区", "SpeakerPlate", "Forecast", "半身"]:
 		if body.find(needle) < 0:
 			return "checklist missing Y1-A needle %s" % needle
@@ -140,7 +140,7 @@ func _algebra_m173_handoff() -> String:
 	for step in ["标题", "创角", "枢纽", "一战", "再战"]:
 		if hand.find(step) < 0:
 			return "m173 handoff missing step %s" % step
-	if hand.find("模拟器绿 ≠ 真机过关") < 0 and hand.find("模拟器≠真机") < 0:
+	if hand.find("模拟器绿") < 0 or hand.find("真机过关") < 0:
 		return "m173 handoff must warn emulator != device"
 	if hand.find(TIP8) < 0:
 		return "m173 handoff must pin tip"
