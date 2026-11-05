@@ -1910,7 +1910,7 @@ func _show_commission_reward_panel() -> void:
 	panel.custom_minimum_size = Vector2(420, 220)
 	panel.size = Vector2(420, 220)
 	panel.position = Vector2((size.x - 420.0) * 0.5, (size.y - 220.0) * 0.4)
-	panel.add_theme_stylebox_override("panel", UIKit.flat_box(Color("#1A1612"), Color(UIKit.ACCENT, 0.55), 10))
+	panel.add_theme_stylebox_override("panel", UIKit.flat_box(UIKit.PANEL, Color(UIKit.ACCENT, 0.55), 10))
 	overlay.add_child(panel)
 	var en := UIKit.mono(Locale.t("atlas_commission_reward_en"), 9, UIKit.ACCENT)
 	en.position = Vector2(20, 14)
