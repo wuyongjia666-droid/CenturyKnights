@@ -333,6 +333,32 @@ func _chain_likeness_and_portraits() -> String:
 
 
 func _chain_banner_handoff_board() -> String:
+	var err := _seed_banner_handoff()
+	if err != "":
+		return err
+	var page: Control = (load(CASTLE_SCN) as PackedScene).instantiate()
+	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	page.position = Vector2.ZERO
+	page.size = Vector2(1600, 900)
+	get_tree().root.add_child(page)
+	await _settle(14)
+	err = _assert_handoff_board(page)
+	if err != "":
+		page.queue_free()
+		return err
+	err = _assert_handoff_entries(page)
+	if err != "":
+		page.queue_free()
+		return err
+	_shot("banner_handoff_board")
+	err = await _assert_handoff_dismiss(page)
+	if err != "":
+		return err
+	print("banner handoff board ok name+crest+ToDeploy/ToRoster wired")
+	return ""
+
+
+func _seed_banner_handoff() -> String:
 	_boot("承旗板")
 	var lead: CKCharacter = GameState.get_leader()
 	lead.age = 50
@@ -357,23 +383,16 @@ func _chain_banner_handoff_board() -> String:
 		return "transfer_banner failed: %s" % str(rr.get("msg", ""))
 	if not Lineage.is_banner_handoff_pending():
 		return "banner_handoff not pending"
-	var page: Control = (load(CASTLE_SCN) as PackedScene).instantiate()
-	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	page.position = Vector2.ZERO
-	page.size = Vector2(1600, 900)
-	get_tree().root.add_child(page)
-	await _settle(14)
-	var panel := page.find_child("BannerHandoffPanel", true, false)
-	if panel == null:
-		page.queue_free()
+	return ""
+
+
+func _assert_handoff_board(page: Control) -> String:
+	if page.find_child("BannerHandoffPanel", true, false) == null:
 		return "castle BannerHandoffPanel missing"
-	var strip := page.find_child("BannerHandoffCrestStrip", true, false)
-	if strip == null:
-		page.queue_free()
+	if page.find_child("BannerHandoffCrestStrip", true, false) == null:
 		return "castle BannerHandoffCrestStrip missing"
 	var heir_lab := page.find_child("HandoffHeirName", true, false)
 	if heir_lab == null:
-		page.queue_free()
 		return "HandoffHeirName missing"
 	var heir_tx := ""
 	if heir_lab is Label:
@@ -381,33 +400,30 @@ func _chain_banner_handoff_board() -> String:
 	elif heir_lab.get("text") != null:
 		heir_tx = str(heir_lab.get("text"))
 	if heir_tx.find("承旗嗣甲") < 0:
-		page.queue_free()
 		return "HandoffHeirName missing heir name: %s" % heir_tx
+	return ""
+
+
+func _assert_handoff_entries(page: Control) -> String:
 	var to_d := page.find_child("ToDeploy", true, false) as BaseButton
 	if to_d == null:
-		page.queue_free()
 		return "ToDeploy missing on handoff board"
 	var to_r := page.find_child("ToRoster", true, false) as BaseButton
 	if to_r == null:
-		page.queue_free()
 		return "ToRoster missing on handoff board"
-	_shot("banner_handoff_board")
-	## Follow-on entry must be wired (编制入口), not toast-only — assert connections, do not CKNav.go (hangs headless).
-	var d_conns: Array = to_d.get_signal_connection_list("pressed")
-	var r_conns: Array = to_r.get_signal_connection_list("pressed")
-	if d_conns.is_empty():
-		page.queue_free()
+	if to_d.get_signal_connection_list("pressed").is_empty():
 		return "ToDeploy pressed not wired"
-	if r_conns.is_empty():
-		page.queue_free()
+	if to_r.get_signal_connection_list("pressed").is_empty():
 		return "ToRoster pressed not wired"
 	var src := FileAccess.get_file_as_string("res://autoload/lineage.gd")
 	if src.find("res://scenes/hub/deploy.tscn") < 0:
-		page.queue_free()
 		return "ToDeploy missing deploy.tscn target"
 	if src.find("res://scenes/hub/roster.tscn") < 0:
-		page.queue_free()
 		return "ToRoster missing roster.tscn target"
+	return ""
+
+
+func _assert_handoff_dismiss(page: Control) -> String:
 	var dismiss := page.find_child("DismissHandoff", true, false) as BaseButton
 	if dismiss == null:
 		page.queue_free()
@@ -419,5 +435,4 @@ func _chain_banner_handoff_board() -> String:
 		return "banner_handoff not cleared on dismiss"
 	page.queue_free()
 	await _settle(2)
-	print("banner handoff board ok name+crest+ToDeploy/ToRoster wired")
 	return ""
